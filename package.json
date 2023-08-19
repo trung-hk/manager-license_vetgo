@@ -1,0 +1,30 @@
+{
+  "name": "vetgo",
+  "version": "1.0.0",
+  "description": "Vet go",
+  "scripts": {
+    "default" : "gulp serve ",
+    "watch" : "gulp watch ",
+    "start": "gulp start",
+    "build": "gulp fileinclude",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinhthanh/tinhthanh.github.io.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tinhthanh/tinhthanh.github.io/issues"
+  },
+  "homepage": "https://github.com/tinhthanh/tinhthanh.github.io#readme",
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-file-include": "^2.3.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.29.3"
+  }
+}

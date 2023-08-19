@@ -1,1 +1,0 @@
-# manager-license_vetgo
