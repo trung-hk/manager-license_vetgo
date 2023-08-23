@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- index.html  21 Nov 2019 03:44:50 GMT -->
 <head>
     <meta charset="UTF-8">
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
@@ -12,7 +11,10 @@
 <!-- Custom style CSS -->
 <link rel="stylesheet" href="../assets/css/custom.css">
 <link rel='shortcut icon' type='image/x-icon' href='../assets/img/favicon.ico' />
-    <title>Thêm sản phẩm</title>
+    <link rel="stylesheet" href="assets/bundles/datatables/datatables.min.css">
+<link rel="stylesheet" href="assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="assets/bundles/izitoast/css/iziToast.min.css">
+    <title>Quản lý config app</title>
 </head>
 <body>
 <div class="loader"></div>
@@ -185,15 +187,12 @@
             <li class="dropdown manager-config-app">
                 <a href="manager-config-app.html" class="nav-link"><i data-feather="monitor"></i><span>Quản lý Config App</span></a>
             </li>
-            <li class="dropdown categories">
-                <a href="categories.html" class="nav-link"><i data-feather="grid"></i><span>Danh mục</span></a>
-            </li>
             <li class="dropdown product">
                 <a href="#" class="menu-toggle nav-link has-dropdown"><i
                         data-feather="briefcase"></i><span>Sản phẩm</span></a>
                 <ul class="dropdown-menu">
-                    <li class="product-list"><a class="nav-link" href="product.html">Danh sách sản phẩm</a></li>
-                    <li class="add-product-list"><a class="nav-link" href="add-product-list.html">Thêm sản phẩm</a></li>
+                    <li class="product-list"><a class="nav-link" href="product.html">Sản phẩm bán hàng</a></li>
+                    <li class="add-product-list"><a class="nav-link" href="product-service.html">Sản phẩm dịch vụ</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -387,52 +386,106 @@
 </div>
         <!-- Main Content -->
         <div class="main-content">
-            <div class="alert messageInfo" style="display: none"></div>
             <section class="section">
-                <div class="row ">
-                    <div class="col-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <form class="form-submit needs-validation" action="#" novalidate="">
+                <div class="section-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
                                 <div class="card-header">
-                                    <h4>Thêm sản phẩm</h4>
+                                    <div class="col-3">
+                                        <h4>Danh sách config app</h4>
+                                    </div>
+                                    <div class="col-9">
+                                        <button type="button"  data-toggle="modal" data-target="#add-config-app-modal" class="btn btn-success pull-right note-btn" onclick="openModal(this);"><i class="fas fa-plus"></i> Thêm mới Config</button>
+                                    </div>
+
                                 </div>
                                 <div class="card-body">
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Mã sản phẩm</label>
-                                        <div class="col-sm-9">
-                                            <input id="code-product" type="text" class="form-control" required="">
-                                            <div class="invalid-feedback">
-                                                Hãy nhập mã sản phẩm
+                                    <div class="table-responsive">
+                                        <div class="text-center" id="loadingData">
+                                            <span >Đang cập nhật dữ liệu...</span>
+                                            <div class="spinner-border" role="status">
+                                                <span class="sr-only">Loading...</span>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Tên sản phẩm</label>
-                                        <div class="col-sm-9">
-                                            <input id="name-product" type="text" class="form-control" required="">
-                                            <div class="invalid-feedback">
-                                                Hãy nhập tên sản phẩm
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-0 row">
-                                        <label class="col-sm-3 col-form-label">Mô tả</label>
-                                        <div class="col-sm-9">
-                                            <textarea id="description-product" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-0 row">
-                                        <label class="col-sm-3 col-form-label"> </label>
-                                        <div class="col-sm-9">
-                                            <button id="btn-submit" class="btn btn-primary " style="margin-top: 1em;">Thêm sản phẩm</button>
-                                        </div>
+                                        <table class="table table-striped" id="config-app-table">
+                                            <thead>
+                                            <tr>
+                                                <th>Thông tin Firebase</th>
+                                                <th>Thông tin Sheet Id</th>
+                                                <th>Khách hàng</th>
+                                                <th>Ngày cập nhật</th>
+                                                <th>Trạng thái</th>
+                                                <th>Thao tác</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
+            <div class="modal fade" id="add-config-app-modal" tabindex="-1" role="dialog" aria-labelledby="formModal"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-center" id="formModal">Thêm Config App</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="#">
+                                <input type="hidden" id="id-config-app">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-3 col-form-label-sm">Config Firebase</label>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" placeholder="Config fireBase" name="config-firebase" id="config-firebase">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-3 col-form-label-sm">Config Sheet Id</label>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" placeholder="Sheet Id" name="config-sheet-id" id="config-sheet-id">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-3 col-form-label-sm">Khách hàng</label>
+                                        <div class="col-md-9">
+                                            <select name="customer" class="form-control form-control-sm select-scroll" id="customer">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-3 col-form-label-sm">Trạng thái</label>
+                                        <div class="col-md-9">
+                                            <select name="status" class="form-control form-control-sm select-scroll" id="status">
+                                                <option value="0">Chưa sử dụng</option>
+                                                <option value="1">Đang sử dụng</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="btn-add-new-config" type="button" class="add-category btn btn-success waves-effect pull-right save-config-app" ><i class="fas fa-save"></i> Thêm mới</button>
+                                <button id="btn-delete-config" type="button" class="add-category btn btn-danger waves-effect pull-right"><i class="fas fa-trash"></i> Xóa</button>
+                                <button id="btn-update-config"  type="button" class="add-category btn btn-success waves-effect pull-right save-config-app m-r-15"><i class="fas fa-save"></i> Cập nhật</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
            
         </div>
         <footer class="main-footer">
@@ -450,9 +503,17 @@
 <script src="../assets/js/scripts.js"></script>
 <!-- App Script JS File -->
 <script src="../assets/js/appScript.js"></script>
+<!-- JS Libraies -->
+<script src="assets/bundles/datatables/datatables.min.js"></script>
+<script src="assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script src="assets/bundles/jquery-ui/jquery-ui.min.js"></script>
+<script src="assets/js/page/datatables.js"></script>
+<!-- JS Libraies -->
+<script src="assets/bundles/izitoast/js/iziToast.min.js"></script>
 <!-- Page Specific JS File -->
-<script src="assets/js/page/product.js"></script>
-<script src="assets/js/page/add-product-list.js"></script>
+<script src="assets/js/page/toastr.js"></script>
+<!-- Page Specific JS File -->
+<script src="assets/js/page/manager-config-app.js"></script>
 </body>
 <!-- index.html  21 Nov 2019 03:47:04 GMT -->
 </html>

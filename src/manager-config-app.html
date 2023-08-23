@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     @@include('partials/css-common.html')
-    @@include('partials/css-datatable.html')
-    @@include('partials/css-toast.html')
+    @@include('partials/datatable/css-datatable.html')
+    @@include('partials/toast/css-toast.html')
     <title>Quản lý config app</title>
 </head>
 <body>
@@ -30,13 +30,8 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <div class="text-center" id="loadingData">
-                                            <span >Đang cập nhật dữ liệu...</span>
-                                            <div class="spinner-border" role="status">
-                                                <span class="sr-only">Loading...</span>
-                                            </div>
-                                        </div>
-                                        <table class="table table-striped" id="config-app-table">
+                                        @@include('partials/loading-data.html')
+                                        <table class="table table-hover" id="config-app-table">
                                             <thead>
                                             <tr>
                                                 <th>Thông tin Firebase</th>
@@ -121,8 +116,8 @@
 </div>
 @@include('partials/script-common.html')
 <!-- JS Libraies -->
-@@include('partials/script-datatable.html')
-@@include('partials/script-toast.html')
+@@include('partials/datatable/script-datatable.html')
+@@include('partials/toast/script-toast.html')
 <!-- Page Specific JS File -->
 <script src="assets/js/page/manager-config-app.js"></script>
 </body>

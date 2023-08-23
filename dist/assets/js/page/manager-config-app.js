@@ -12,18 +12,21 @@ $( document ).ready(async function() {
             { width: "105px", targets: [3] },
             { width: "70px", targets: [4] },
             { width: "50px", targets: [5] },
-        ]
+        ],
+        fnRowCallback: function (nRow, aData, iDisplayIndex) {
+            $(nRow).find('td:eq(5) button').attr('data-index', iDisplayIndex);
+        }
     });
 
     await loadDataCustomer();
-    dataMap = await loadDataConfigApp();
-    console.log(dataMap);
+    await loadDataConfigApp();
     $('.save-config-app').on("click", async function() {
         let config_id = $("#id-config-app").val().trim();
         let config_firebase = $("#config-firebase").val().trim();
         let config_sheetid = $("#config-sheet-id").val().trim();
         let customer = $("#customer").val().trim();
         let status = $("#status").val().trim();
+        const indexRow = $(this).data('index');
         let isError = false;
         if (config_firebase === '') {
             iziToast.error({
@@ -44,7 +47,8 @@ $( document ).ready(async function() {
         if (isError) return;
         const isAddNew = config_id == null || false || config_id === "";
         $(this).addClass('disabled btn-progress');
-        let data = await vetgoSheet.getById(config_id, TBL_CONFIG_APP);
+        let data;
+        if (!isAddNew) data = await vetgoSheet.getById(config_id, TBL_CONFIG_APP);
         if (data == null) data = {id: null};
         data.firebase = config_firebase;
         data.sheet_id = config_sheetid;
@@ -60,13 +64,9 @@ $( document ).ready(async function() {
             });
             $("#add-config-app-modal").modal("hide");
             const config_app_table = $('#config-app-table').DataTable();
-            if (isAddNew) {
-                addRowConfigApp(result, config_app_table, dataMap);
-            } else {
-                config_app_table.clear().draw();
-                $("#loadingData").show();
-                dataMap = await loadDataConfigApp();
-            }
+            if (!isAddNew) config_app_table.row(`:eq(${indexRow})`).remove().draw(false);
+            addRowConfigApp(result, config_app_table);
+            dataMap.set(result.id, result);
         } else {
             iziToast.error({
                 title: 'Config App',
@@ -78,6 +78,7 @@ $( document ).ready(async function() {
     });
     $('#btn-delete-config').on("click", async function() {
         const idConfig = $(this).data('id');
+        const indexRow = $(this).data('index');
         $(this).addClass('disabled btn-progress');
         const result = await vetgoSheet.deleteById(idConfig, TBL_CONFIG_APP);
         if (result) {
@@ -88,9 +89,8 @@ $( document ).ready(async function() {
             });
             $("#add-config-app-modal").modal("hide");
             const config_app_table = $('#config-app-table').DataTable();
-            config_app_table.clear().draw();
-            $("#loadingData").show();
-            dataMap = await loadDataConfigApp();
+            config_app_table.row(`:eq(${indexRow})`).remove().draw(false);
+            dataMap.delete(idConfig);
         } else {
             iziToast.error({
                 title: 'Config App',
@@ -102,18 +102,15 @@ $( document ).ready(async function() {
     });
 });
 async function loadDataConfigApp() {
-    let dataMap = new Map();
     const dataList = (await vetgoSheet.getAll(TBL_CONFIG_APP)).filter(data => data.deleted === "false");
+    dataMap = new Map(dataList.map(configApp => [configApp.id, configApp]));
     const config_app_table = $('#config-app-table').DataTable();
-    // let count = 1;
     for (let data of dataList) {
-        addRowConfigApp(data, config_app_table, dataMap);
-        // count++;
+        addRowConfigApp(data, config_app_table);
     }
     $("#loadingData").hide();
-    return dataMap;
 }
-function addRowConfigApp(data, config_app_table, dataMap) {
+function addRowConfigApp(data, config_app_table) {
     config_app_table.row
         .add([
             data.firebase,
@@ -124,7 +121,6 @@ function addRowConfigApp(data, config_app_table, dataMap) {
             `<button type="button"  data-id='${data.id}' data-toggle="modal" data-target="#add-config-app-modal" class="btn btn-success note-btn" onclick="openModal(this);"><i class="fas fa-edit"></i></button>`
         ])
         .draw(false);
-    dataMap.set(data.id, data);
 }
 async function loadDataCustomer() {
     const element = $("#customer");
@@ -136,6 +132,7 @@ async function loadDataCustomer() {
 }
 function openModal(element) {
     const idConfig = $(element).data('id');
+    const indexRow = $(element).data('index');
     const id = $("#id-config-app");
     const config_firebase = $("#config-firebase");
     const config_sheetid = $("#config-sheet-id");
@@ -155,8 +152,10 @@ function openModal(element) {
         $("#add-config-app-modal .modal-header h5").html('Cập nhật Config App');
         $("#btn-add-new-config").hide();
         $("#btn-update-config").show();
+        $("#btn-update-config").attr("data-index", indexRow);
         $("#btn-delete-config").show();
         $("#btn-delete-config").attr("data-id", idConfig);
+        $("#btn-delete-config").attr("data-index", indexRow);
         const data = dataMap.get(idConfig);
         id.val(data.id);
         config_firebase.val(data.firebase);

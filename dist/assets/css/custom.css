@@ -65,3 +65,18 @@ table thead{
 #config-app-table{
     width: 100% !important;
 }
+.title-modal {
+    background-color: #dcf4fc;
+}
+.a-icon {
+    color: black !important;
+
+}
+.package-view {
+    border-radius: unset;
+    margin: 1px;
+    width: 100%;
+}
+.status-package-view {
+    width: 100%;
+}

@@ -14,7 +14,7 @@ gulp.task('fileinclude', function() {
 })
 
 gulp.task('watch', function () {
-    gulp.watch('src/partials/*.html', gulp.series('fileinclude'));
+    gulp.watch('src/partials/**', gulp.series('fileinclude'));
     gulp.watch('src/*.html', gulp.series('fileinclude')); // Reload khi file .html trong thư mục src thay đổi
 });
 
