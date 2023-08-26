@@ -72,6 +72,7 @@
                         <div class="modal-body">
                             <form action="#">
                                 <input type="hidden" id="id-product">
+                                <input type="hidden" id="index-row">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-12 align-center title-modal">
@@ -148,7 +149,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text font-bold">Giá gói</span>
                     </div>
-                    <input type="text" class="form-control price-package" onkeyup="inputKeyUpFormatMoney(this)" onblur="inputKeyUpFormatMoney(this)" data-type="currency" placeholder="Hãy nhập giá gói">
+                    <input type="text" class="form-control price-package" onkeyup="inputKeyUpFormatMoney(this)" onblur="inputBlurFormatMoney(this)" placeholder="Hãy nhập giá gói">
                     <div class="input-group-prepend">
                         <span class="input-group-text font-bold">VNĐ</span>
                     </div>

@@ -26,78 +26,57 @@ $( document ).ready(async function() {
         let config_sheetid = $("#config-sheet-id").val().trim();
         let customer = $("#customer").val().trim();
         let status = $("#status").val().trim();
-        const indexRow = $(this).data('index');
+        const indexRow = parseInt($("#index-row").val());
         let isError = false;
         if (config_firebase === '') {
-            iziToast.error({
-                title: 'Config firebase',
-                message: 'không được để trống',
-                position: 'topRight'
-            });
+            alertIziToastError('Config firebase', 'không được để trống');
             isError = true;
         }
         if (config_sheetid === '') {
-            iziToast.error({
-                title: 'Config sheetId',
-                message: 'không được để trống',
-                position: 'topRight'
-            });
+            alertIziToastError('Config sheetId', 'không được để trống');
             isError = true;
         }
         if (isError) return;
         const isAddNew = config_id == null || false || config_id === "";
         $(this).addClass('disabled btn-progress');
-        let data;
-        if (!isAddNew) data = await vetgoSheet.getById(config_id, TBL_CONFIG_APP);
-        if (data == null) data = {id: null};
-        data.firebase = config_firebase;
-        data.sheet_id = config_sheetid;
-        data.status = status;
-        data.id_customer = customer;
-        data.lastUpdated = new Date().toISOString();
-        const result = await vetgoSheet.add(data, TBL_CONFIG_APP);
-        if (result) {
-            iziToast.success({
-                title: 'Config App',
-                message: isAddNew ?'thêm mới thành công' : 'Cập nhật thành công',
-                position: 'topRight'
-            });
+        try {
+            let data;
+            if (!isAddNew) data = await vetgoSheet.getById(config_id, TBL_CONFIG_APP);
+            if (data == null) data = {id: null};
+            data.firebase = config_firebase;
+            data.sheet_id = config_sheetid;
+            data.status = status;
+            data.id_customer = customer;
+            data.lastUpdated = new Date().toISOString();
+            const result = await vetgoSheet.add(data, TBL_CONFIG_APP);
             $("#add-config-app-modal").modal("hide");
             const config_app_table = $('#config-app-table').DataTable();
             if (!isAddNew) config_app_table.row(`:eq(${indexRow})`).remove().draw(false);
             addRowConfigApp(result, config_app_table);
             dataMap.set(result.id, result);
-        } else {
-            iziToast.error({
-                title: 'Config App',
-                message: isAddNew ?'thêm mới thất bại' : 'Cập nhật thất bại',
-                position: 'topRight'
-            });
+            alertIziToastSuccess('Config App', 'Lưu thành công');
+        } catch (error) {
+            console.error(error);
+            alertIziToastSuccess('Config App', 'Lưu thất bại');
         }
         $(this).removeClass('disabled btn-progress');
     });
     $('#btn-delete-config').on("click", async function() {
-        const idConfig = $(this).data('id');
-        const indexRow = $(this).data('index');
+        const idDelete = $("#id-config-app").val();
+        const indexRow = parseInt($("#index-row").val());
         $(this).addClass('disabled btn-progress');
-        const result = await vetgoSheet.deleteById(idConfig, TBL_CONFIG_APP);
-        if (result) {
-            iziToast.success({
-                title: 'Config App',
-                message: 'Xóa thành công',
-                position: 'topRight'
-            });
+        try {
+            await vetgoSheet.deleteById(idDelete, TBL_CONFIG_APP);
             $("#add-config-app-modal").modal("hide");
             const config_app_table = $('#config-app-table').DataTable();
             config_app_table.row(`:eq(${indexRow})`).remove().draw(false);
-            dataMap.delete(idConfig);
-        } else {
-            iziToast.error({
-                title: 'Config App',
-                message: 'Xóa thất bại',
-                position: 'topRight'
-            });
+            dataMap.delete(idDelete);
+            alertIziToastSuccess('Config App', 'Xóa thành công');
+        } catch (error) {
+            console.error(error);
+            alertIziToastSuccess('Config App', 'Xóa thất bại');
         }
+
         $(this).removeClass('disabled btn-progress');
     });
 });
@@ -132,7 +111,7 @@ async function loadDataCustomer() {
 }
 function openModal(element) {
     const idConfig = $(element).data('id');
-    const indexRow = $(element).data('index');
+    $("#index-row").val($(element).data('index'));
     const id = $("#id-config-app");
     const config_firebase = $("#config-firebase");
     const config_sheetid = $("#config-sheet-id");
@@ -152,10 +131,7 @@ function openModal(element) {
         $("#add-config-app-modal .modal-header h5").html('Cập nhật Config App');
         $("#btn-add-new-config").hide();
         $("#btn-update-config").show();
-        $("#btn-update-config").attr("data-index", indexRow);
         $("#btn-delete-config").show();
-        $("#btn-delete-config").attr("data-id", idConfig);
-        $("#btn-delete-config").attr("data-index", indexRow);
         const data = dataMap.get(idConfig);
         id.val(data.id);
         config_firebase.val(data.firebase);

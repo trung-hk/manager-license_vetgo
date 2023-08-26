@@ -195,13 +195,12 @@
                     <li class="product-service"><a class="nav-link" href="product-service.html">Sản phẩm dịch vụ</a></li>
                 </ul>
             </li>
-            <li class="dropdown">
-                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="command"></i><span>Apps</span></a>
+            <li class="dropdown agent">
+                <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                        data-feather="briefcase"></i><span>Đại lý</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="chat.html">Chat</a></li>
-                    <li><a class="nav-link" href="portfolio.html">Portfolio</a></li>
-                    <li><a class="nav-link" href="blog.html">Blog</a></li>
-                    <li><a class="nav-link" href="calendar.html">Calendar</a></li>
+                    <li class="agent-list"><a class="nav-link" href="agent.html">Danh sách đại lý</a></li>
+                    <li class="product-service"><a class="nav-link" href="#">Gói sản phẩm</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -449,6 +448,7 @@
                         <div class="modal-body">
                             <form action="#">
                                 <input type="hidden" id="id-product">
+                                <input type="hidden" id="index-row">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-12 align-center title-modal">
@@ -615,7 +615,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text font-bold">Giá gói</span>
                     </div>
-                    <input type="text" class="form-control price-package" onkeyup="inputKeyUpFormatMoney(this)" onblur="inputKeyUpFormatMoney(this)" data-type="currency" placeholder="Hãy nhập giá gói">
+                    <input type="text" class="form-control price-package" onkeyup="inputKeyUpFormatMoney(this)" onblur="inputBlurFormatMoney(this)" placeholder="Hãy nhập giá gói">
                     <div class="input-group-prepend">
                         <span class="input-group-text font-bold">VNĐ</span>
                     </div>

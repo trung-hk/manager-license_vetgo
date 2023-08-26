@@ -7,14 +7,14 @@ $(document).ready(async function () {
     $("#product-list-table").dataTable({
         order: [[4, 'desc']],
         columnDefs: [
-            { sortable: false, targets: [0, 3, 6] },
-            { width: "40px", targets: [0] },
-            { width: "200px", targets: [0] },
-            { width: "500px", targets: [2] },
-            { width: "105px", targets: [3] },
-            { width: "120px", targets: [4] },
-            { width: "120px", targets: [5] },
-            { width: "60px", targets: [6] }
+            {sortable: false, targets: [0, 3, 6]},
+            {width: "40px", targets: [0]},
+            {width: "200px", targets: [1]},
+            {width: "500px", targets: [2]},
+            {width: "105px", targets: [3]},
+            {width: "120px", targets: [4]},
+            {width: "120px", targets: [5]},
+            {width: "60px", targets: [6]}
         ],
         fnRowCallback: function (nRow, aData, iDisplayIndex) {
             $(nRow).find('td:eq(0) input').attr('id', `checkbox-${iDisplayIndex + 1}`);
@@ -33,37 +33,28 @@ $(document).ready(async function () {
         const nameProduct = $("#name-product").val().trim();
         const descriptionProduct = $("#description-product").val().trim();
         const status = $("#status-product").val().trim();
-        const indexRow = parseInt($(this).data('index'));
+        const indexRow = parseInt($("#index-row").val());
         let isError = false;
         if (nameProduct === '') {
-            iziToast.error({
-                title: 'Tên sản phẩm',
-                message: 'không được để trống',
-                position: 'topRight'
-            });
+            alertIziToastError('Tên sản phẩm', 'không được để trống');
             isError = true;
         }
         if (descriptionProduct === '') {
-            iziToast.error({
-                title: 'Mô tả sản phâm ',
-                message: 'không được để trống',
-                position: 'topRight'
-            });
+            alertIziToastError('Mô tả sản phâm', 'không được để trống');
             isError = true;
         }
         if (isError) return;
         const isAddNew = idProduct == null || false || idProduct === "";
         $(this).addClass('disabled btn-progress');
-        let data;
-        if (!isAddNew) data = await vetgoSheet.getById(idProduct, TBL_PRODUCT);
-        if (data == null) data = {id: null};
-        data.name = nameProduct;
-        data.description = descriptionProduct;
-        data.type = TYPE_PRODUCT_SERVICE;
-        data.status = status;
-        data.lastUpdated = new Date().toISOString();
-
         try {
+            let data;
+            if (!isAddNew) data = await vetgoSheet.getById(idProduct, TBL_PRODUCT);
+            if (data == null) data = {id: null};
+            data.name = nameProduct;
+            data.description = descriptionProduct;
+            data.type = TYPE_PRODUCT_SERVICE;
+            data.status = status;
+            data.lastUpdated = new Date().toISOString();
             const result = await vetgoSheet.add(data, TBL_PRODUCT);
             const packageMap = isAddNew ?
                 new Map() :
@@ -90,55 +81,38 @@ $(document).ready(async function () {
                 for (let idDelete of packageMap.keys()) {
                     await vetgoSheet.deleteById(idDelete, TBL_PACKAGE_PRODUCT)
                 }
-
             }
-            iziToast.success({
-                title: 'Sản phẩm',
-                message: isAddNew ? 'thêm mới thành công' : 'Cập nhật thành công',
-                position: 'topRight'
-            });
             $("#save-product-service-modal").modal("hide");
             const productListTable = $('#product-list-table').DataTable();
             if (!isAddNew) productListTable.row(`:eq(${indexRow})`).remove().draw(false);
             addRowTable(result, updatePackageList, productListTable);
             dataProductMap.set(result.id, result);
             dataPackageMap.set(result.id, updatePackageList);
+            alertIziToastSuccess('Sản phẩm', 'Lưu thành công');
         } catch (error) {
             console.error(error);
-            iziToast.error({
-                title: 'Sản phẩm',
-                message: 'lưu thất bại, kiểm tra lại kết nối',
-                position: 'topRight'
-            });
+            alertIziToastError('Sản phẩm', 'lưu thất bại, kiểm tra lại kết nối');
         }
         $(this).removeClass('disabled btn-progress');
     });
-    $('#btn-delete-product').on("click", async function() {
-        const idProduct = $(this).data('id');
-        const indexRow = parseInt($(this).data('index'));
+    $('#btn-delete-product').on("click", async function () {
+        const idDelete = $("#id-product").val();
+        const indexRow = parseInt($("#index-row").val());
         $(this).addClass('disabled btn-progress');
         try {
-            await vetgoSheet.deleteById(idProduct, TBL_PRODUCT);
-            for (let dataPackage of dataPackageMap.get(idProduct)) {
+            await vetgoSheet.deleteById(idDelete, TBL_PRODUCT);
+            for (let dataPackage of dataPackageMap.get(idDelete)) {
                 await vetgoSheet.deleteById(dataPackage.id, TBL_PACKAGE_PRODUCT);
             }
-            dataProductMap.delete(idProduct);
-            dataPackageMap.delete(idProduct);
-            iziToast.success({
-                title: 'Sản phẩm',
-                message: 'xóa thành công',
-                position: 'topRight'
-            });
+            dataProductMap.delete(idDelete);
+            dataPackageMap.delete(idDelete);
             $("#save-product-service-modal").modal("hide");
             const productListTable = $('#product-list-table').DataTable();
             productListTable.row(`:eq(${indexRow})`).remove().draw(false);
+            alertIziToastSuccess('Sản phẩm', 'xóa thành công');
         } catch (error) {
             console.error(error);
-            iziToast.error({
-                title: 'Sản phẩm',
-                message: 'Xóa thất bại, kiểm tra lại kết nối',
-                position: 'topRight'
-            });
+            alertIziToastSuccess('Sản phẩm', 'xóa thất bại, kiểm tra lại kết nối');
         }
         $(this).removeClass('disabled btn-progress');
     });
@@ -159,10 +133,18 @@ async function loadDataProduct() {
 function addRowTable(data, dataPackageList, table) {
     let labelStatus;
     switch (data.status) {
-        case "0": labelStatus = `<div class="status-package-view badge badge-success badge-shadow">Đã phát triển</div>`; break;
-        case "1": labelStatus = `<div class="status-package-view badge badge-warning badge-shadow">Đang phát triển</div>`; break;
-        case "2": labelStatus = `<div class="status-package-view badge badge-danger badge-shadow">Ngừng phát triển</div>`; break;
-        default: labelStatus = `<div class="status-package-view badge badge-success badge-shadow">Đã phát triển</div>`; break;
+        case "0":
+            labelStatus = `<div class="status-package-view badge badge-success badge-shadow">Đã phát triển</div>`;
+            break;
+        case "1":
+            labelStatus = `<div class="status-package-view badge badge-warning badge-shadow">Đang phát triển</div>`;
+            break;
+        case "2":
+            labelStatus = `<div class="status-package-view badge badge-danger badge-shadow">Ngừng phát triển</div>`;
+            break;
+        default:
+            labelStatus = `<div class="status-package-view badge badge-success badge-shadow">Đã phát triển</div>`;
+            break;
     }
     let packageView = ``;
     if (dataPackageList != null && dataPackageList.length > 0) {
@@ -188,18 +170,9 @@ function addRowTable(data, dataPackageList, table) {
 
 }
 
-async function loadDataCustomer() {
-    const element = $("#customer");
-    element.append('<option value="">--</option>');
-    const dataList = await vetgoSheet.getAll(TBL_CUSTOMER);
-    for (let data of dataList) {
-        element.append(`<option value="${data.id}">${data.name}</option>`);
-    }
-}
-
 function openModal(element) {
     const idProductOpen = $(element).data('id');
-    const indexRow = $(element).data('index');
+    $("#index-row").val($(element).data('index'));
     const idProduct = $("#id-product");
     const nameProduct = $("#name-product");
     const descriptionProduct = $("#description-product");
@@ -218,10 +191,7 @@ function openModal(element) {
         $("#save-product-service-modal .modal-header h2").html('Cập nhật sản phẩm');
         $("#btn-add-new-product").hide();
         $("#btn-update-product").show();
-        $("#btn-update-product").attr("data-index", indexRow);
         $("#btn-delete-product").show();
-        $("#btn-delete-product").attr("data-id", idProductOpen);
-        $("#btn-delete-product").attr("data-index", indexRow);
         const dataProduct = dataProductMap.get(idProductOpen);
         idProduct.val(dataProduct.id);
         nameProduct.val(dataProduct.name);

@@ -739,6 +739,14 @@ $("input[data-type='currency']").on({
     formatCurrency($(this), "blur");
   }
 });
+$("input[data-type='phone']").on({
+  keyup: function() {
+    formatPhoneNumber($(this));
+  },
+  blur: function() {
+    //formatPhoneNumber($(this), "blur");
+  }
+});
 
 function formatNumber(n) {
   // format number 1000000 to 1,234,567
@@ -810,4 +818,72 @@ function formatCurrency(input, blur) {
   var updated_len = input_val.length;
   caret_pos = updated_len - original_len + caret_pos;
   input[0].setSelectionRange(caret_pos, caret_pos);
+}
+
+function formatPhoneNumber(input, blur) {
+  // get input value
+  var input_val = input.val();
+
+  // don't validate empty input
+  if (input_val === "") { return; }
+
+  // original length
+  var original_len = input_val.length;
+
+  // initial caret position
+  var caret_pos = input.prop("selectionStart");
+
+  // remove all non-digits
+  input_val = replaceInputToNumber(input_val);
+
+  // format phone number
+  var formatted_number = formatPhone(input_val);
+  input.value = formatted_number;
+
+  // On blur, if necessary, add extra zeros
+  if (blur === "blur") {
+    formatted_number += "0000";
+  }
+
+  // send updated string to input
+  input.val(formatted_number);
+
+  // put caret back in the right position
+  var updated_len = formatted_number.length;
+  caret_pos = updated_len - original_len + caret_pos;
+  input[0].setSelectionRange(caret_pos, caret_pos);
+}
+function formatPhone(value) {
+  return '(' + value.substring(0, 3) + ') ' + value.substring(3, 6) + '-' + value.substring(6, 10);
+}
+function replaceInputToNumber(value) {
+  return value.replace(/\D/g, "");
+}
+function alertIziToastSuccess(title, message) {
+  iziToast.success({
+    title: title,
+    message: message,
+    position: 'topRight'
+  });
+}
+function alertIziToastError(title, message) {
+  iziToast.error({
+    title: title,
+    message: message,
+    position: 'topRight'
+  });
+}
+function isValidEmail(email) {
+  // Biểu thức chính quy kiểm tra định dạng email
+  var emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+
+  // Sử dụng test() để kiểm tra email với biểu thức chính quy
+  return emailRegex.test(email);
+}
+function isValidPhoneNumber(phoneNumber) {
+  // Biểu thức chính quy kiểm tra định dạng số điện thoại
+  var phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+  // Sử dụng test() để kiểm tra số điện thoại với biểu thức chính quy
+  return phoneRegex.test(phoneNumber);
 }
