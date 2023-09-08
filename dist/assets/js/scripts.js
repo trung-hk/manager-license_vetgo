@@ -787,9 +787,9 @@ function formatCurrency(input, blur) {
     right_side = formatNumber(right_side);
 
     // On blur make sure 2 numbers after decimal
-    if (blur === "blur") {
-      right_side += "00";
-    }
+    // if (blur === "blur") {
+    //   right_side += "00";
+    // }
 
     // Limit decimal to only 2 digits
     right_side = right_side.substring(0, 2);
@@ -806,9 +806,9 @@ function formatCurrency(input, blur) {
     //input_val = "$" + input_val;
 
     // final formatting
-    if (blur === "blur") {
-      input_val += ".00";
-    }
+    // if (blur === "blur") {
+    //   input_val += ".00";
+    // }
   }
 
   // send updated string to input
@@ -819,7 +819,6 @@ function formatCurrency(input, blur) {
   caret_pos = updated_len - original_len + caret_pos;
   input[0].setSelectionRange(caret_pos, caret_pos);
 }
-
 function formatPhoneNumber(input, blur) {
   // get input value
   var input_val = input.val();
@@ -886,4 +885,35 @@ function isValidPhoneNumber(phoneNumber) {
 
   // Sử dụng test() để kiểm tra số điện thoại với biểu thức chính quy
   return phoneRegex.test(phoneNumber);
+}
+
+function generateUUID() { // Public Domain/MIT
+  var d = new Date().getTime();//Timestamp
+  var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16;//random number between 0 and 16
+    if (d > 0) {//Use timestamp until depleted
+      r = (d + r) % 16 | 0;
+      d = Math.floor(d / 16);
+    } else {//Use microseconds since page-load if supported
+      r = (d2 + r) % 16 | 0;
+      d2 = Math.floor(d2 / 16);
+    }
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+function autoIncreaseCode(code) {
+  var d = new Date().getTime();//Timestamp
+  var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+  return code + 'xxxxxxxxxx'.replace(/[x]/g, function (c) {
+    var r = Math.random() * 10;//random number between 0 and 16
+    if (d > 0) {//Use timestamp until depleted
+      r = (d + r) % 10 | 0;
+      d = Math.floor(d / 10);
+    } else {//Use microseconds since page-load if supported
+      r = (d2 + r) % 10 | 0;
+      d2 = Math.floor(d2 / 10);
+    }
+    return r.toString(10);
+  });
 }

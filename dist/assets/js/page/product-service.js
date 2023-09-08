@@ -1,6 +1,5 @@
 "use strict";
 var dataProductMap;
-var dataPackageMap;
 $(document).ready(async function () {
     $('.product-service').addClass('active');
     $('.product-service a').addClass('toggled');
@@ -23,7 +22,7 @@ $(document).ready(async function () {
             $(nRow).find('td:eq(6) button').attr('data-index', iDisplayIndex);
         }
     });
-    await loadDataProduct();
+    await init();
     $("#btn-add-new-package").click(function () {
         $("#content-package").append($("#template-add-package").html());
         viewEmptyPackageDiv();
@@ -52,42 +51,26 @@ $(document).ready(async function () {
             if (data == null) data = {id: null};
             data.name = nameProduct;
             data.description = descriptionProduct;
+            data.idCategory = null;
             data.type = TYPE_PRODUCT_SERVICE;
+            data.price = null;
             data.status = status;
-            data.lastUpdated = new Date().toISOString();
-            const result = await vetgoSheet.add(data, TBL_PRODUCT);
-            const packageMap = isAddNew ?
-                new Map() :
-                new Map((await vetgoSheet.getAll(TBL_PACKAGE_PRODUCT)).filter(pp => pp.idProduct === result.id && pp.deleted === "false").map(p => [p.id, p]));
-            let updatePackageList = [];
+            const packages = [];
             for (let element of $('#content-package .row-parent-package')) {
-                let idPackage = $(element).find('.id-package').val().trim();
+                let idPackage = $(element).find('.id-package').val();
                 let namePackage = $(element).find('.name-package').val();
                 let pricePackage = $(element).find('.price-package').val().replaceAll(",", "");
-
-                let packageProduct;
-                if (idPackage != null && idPackage !== '') {
-                    packageProduct = packageMap.get(idPackage);
-                    packageMap.delete(idPackage);
-                }
-                if (packageProduct == null) packageProduct = {id: null};
-                packageProduct.idProduct = result.id;
-                packageProduct.name = namePackage;
-                packageProduct.price = pricePackage;
-                updatePackageList.push(packageProduct);
+                if (idPackage == null || idPackage === '' || idPackage === undefined) idPackage = generateUUID();
+                packages.push({id: idPackage,packageName: namePackage, packagePrice: pricePackage});
             }
-            if (updatePackageList.length > 0) updatePackageList = await vetgoSheet.addAll(updatePackageList, TBL_PACKAGE_PRODUCT);
-            if (!isAddNew) {
-                for (let idDelete of packageMap.keys()) {
-                    await vetgoSheet.deleteById(idDelete, TBL_PACKAGE_PRODUCT)
-                }
-            }
+            data.attributes = JSON.stringify(packages);
+            data.lastUpdated = new Date().toISOString();
+            const result = await vetgoSheet.add(data, TBL_PRODUCT);
             $("#save-product-service-modal").modal("hide");
             const productListTable = $('#product-list-table').DataTable();
             if (!isAddNew) productListTable.row(`:eq(${indexRow})`).remove().draw(false);
-            addRowTable(result, updatePackageList, productListTable);
+            addRowTable(result, productListTable);
             dataProductMap.set(result.id, result);
-            dataPackageMap.set(result.id, updatePackageList);
             alertIziToastSuccess('Sản phẩm', 'Lưu thành công');
         } catch (error) {
             console.error(error);
@@ -101,11 +84,7 @@ $(document).ready(async function () {
         $(this).addClass('disabled btn-progress');
         try {
             await vetgoSheet.deleteById(idDelete, TBL_PRODUCT);
-            for (let dataPackage of dataPackageMap.get(idDelete)) {
-                await vetgoSheet.deleteById(dataPackage.id, TBL_PACKAGE_PRODUCT);
-            }
             dataProductMap.delete(idDelete);
-            dataPackageMap.delete(idDelete);
             $("#save-product-service-modal").modal("hide");
             const productListTable = $('#product-list-table').DataTable();
             productListTable.row(`:eq(${indexRow})`).remove().draw(false);
@@ -118,28 +97,37 @@ $(document).ready(async function () {
     });
 });
 
-async function loadDataProduct() {
+async function init() {
     const dataProductList = (await vetgoSheet.getAll(TBL_PRODUCT)).filter(data => data.deleted === "false");
     dataProductMap = new Map(dataProductList.map(product => [product.id, product]));
-    const dataPackageList = (await vetgoSheet.getAll(TBL_PACKAGE_PRODUCT)).filter(data => data.deleted === "false");
-    dataPackageMap = new Map(dataProductList.map(product => [product.id, dataPackageList.filter(pac => pac.idProduct === product.id)]));
     const table = $('#product-list-table').DataTable();
-    for (let i = 0; i < dataProductList.length; i++) {
-        addRowTable(dataProductList[i], dataPackageMap.get(dataProductList[i].id), table);
+    for (let data of dataProductList) {
+        addRowTable(data, table);
     }
+    loadDataStatus();
+    loadDataSuccess();
+}
+function loadDataSuccess() {
     $("#loadingData").hide();
+    $('button[data-target="#save-product-service-modal"]').removeAttr('disabled');
+}
+function loadDataStatus() {
+    let selectStatus = $("#status-product");
+    for (let status of STATUS_PRODUCT_SERVICE_LIST) {
+        selectStatus.append(`<option value="${status.value}">${status.name}</option>`)
+    }
 }
 
-function addRowTable(data, dataPackageList, table) {
+function addRowTable(data, table) {
     let labelStatus;
     switch (data.status) {
-        case "0":
+        case STATUS_PRODUCT_SERVICE_DEVELOPED:
             labelStatus = `<div class="status-package-view badge badge-success badge-shadow">Đã phát triển</div>`;
             break;
-        case "1":
+        case STATUS_PRODUCT_SERVICE_DEVELOPING:
             labelStatus = `<div class="status-package-view badge badge-warning badge-shadow">Đang phát triển</div>`;
             break;
-        case "2":
+        case STATUS_PRODUCT_SERVICE_STOP_DEVELOP:
             labelStatus = `<div class="status-package-view badge badge-danger badge-shadow">Ngừng phát triển</div>`;
             break;
         default:
@@ -147,9 +135,10 @@ function addRowTable(data, dataPackageList, table) {
             break;
     }
     let packageView = ``;
+    let dataPackageList = JSON.parse(data.attributes);
     if (dataPackageList != null && dataPackageList.length > 0) {
         for (let dataPackage of dataPackageList) {
-            packageView += `<div class="package-view badge badge-success">${dataPackage.name}: ${formatNumber(dataPackage.price)} VNĐ</div><br>`
+            packageView += `<div class="package-view badge badge-success">${dataPackage.packageName}: ${formatNumber(dataPackage.packagePrice)} VNĐ</div><br>`
         }
     } else packageView = '<div class="package-view badge badge-primary">Chưa đăng ký gói</div>';
 
@@ -182,7 +171,7 @@ function openModal(element) {
         idProduct.val("");
         nameProduct.val("");
         descriptionProduct.val("");
-        status.val("0");
+        status.val(STATUS_PRODUCT_SERVICE_DEVELOPED);
         $("#save-product-service-modal .modal-header h2").html('Thêm Sản phẩm');
         $("#btn-add-new-product").show();
         $("#btn-update-product").hide();
@@ -197,12 +186,12 @@ function openModal(element) {
         nameProduct.val(dataProduct.name);
         descriptionProduct.val(dataProduct.description);
         status.val(dataProduct.status);
-        const dataPackageList = dataPackageMap.get(idProductOpen);
+        const dataPackageList = JSON.parse(dataProduct.attributes);
         for (let i = 0; i < dataPackageList.length; i++) {
             $("#content-package").append($("#template-add-package").html());
             $(`#content-package .id-package:eq(${i})`).val(dataPackageList[i].id);
-            $(`#content-package .name-package:eq(${i})`).val(dataPackageList[i].name);
-            $(`#content-package .price-package:eq(${i})`).val(formatNumber(dataPackageList[i].price));
+            $(`#content-package .name-package:eq(${i})`).val(dataPackageList[i].packageName);
+            $(`#content-package .price-package:eq(${i})`).val(formatNumber(dataPackageList[i].packagePrice));
         }
     }
     viewEmptyPackageDiv();

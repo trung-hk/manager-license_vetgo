@@ -182,14 +182,19 @@
             <li class="dropdown index">
                 <a href="index.html" class="nav-link"><i data-feather="monitor"></i><span>Tổng quan</span></a>
             </li>
-            <li class="dropdown manager-config-app">
-                <a href="manager-config-app.html" class="nav-link"><i data-feather="monitor"></i><span>Quản lý Config App</span></a>
+            <li class="dropdown config">
+                <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                        data-feather="briefcase"></i><span>Cấu hình</span></a>
+                <ul class="dropdown-menu">
+                    <li class="manager-config-app"><a class="nav-link" href="manager-config-app.html">Ứng dụng</a></li>
+                    <li class="product-service"><a class="nav-link" href="#">License zalo</a></li>
+                </ul>
             </li>
             <li class="dropdown product">
                 <a href="#" class="menu-toggle nav-link has-dropdown"><i
                         data-feather="briefcase"></i><span>Sản phẩm</span></a>
                 <ul class="dropdown-menu">
-                    <li class="product-list"><a class="nav-link" href="product.html">Sản phẩm bán hàng</a></li>
+                    <!--<li class="product-list"><a class="nav-link" href="product.html">Sản phẩm bán hàng</a></li>-->
                     <li class="product-service"><a class="nav-link" href="product-service.html">Sản phẩm dịch vụ</a></li>
                 </ul>
             </li>
@@ -197,17 +202,32 @@
                 <a href="#" class="menu-toggle nav-link has-dropdown"><i
                         data-feather="briefcase"></i><span>Đại lý</span></a>
                 <ul class="dropdown-menu">
-                    <li class="agent-list"><a class="nav-link" href="agent.html">Danh sách đại lý</a></li>
-                    <li class="agent-product"><a class="nav-link" href="agent-product.html">Sản phẩm đăng ký</a></li>
+                    <li class="agent-list"><a class="nav-link" href="agent.html">Danh sách</a></li>
+                    <li class="agent-user"><a class="nav-link" href="#">User</a></li>
                 </ul>
             </li>
-            <li class="dropdown">
-                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Email</span></a>
+            <li class="menu-header">Đại lý</li>
+            <li class="dropdown agent-product">
+                <a class="nav-link" href="agent-product.html"><i data-feather="monitor"></i><span>Sản phẩm đăng ký</span></a>
+            </li>
+            <li class="dropdown agent-distributor">
+                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Nhà phân phối</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="email-inbox.html">Inbox</a></li>
-                    <li><a class="nav-link" href="email-compose.html">Compose</a></li>
-                    <li><a class="nav-link" href="email-read.html">read</a></li>
+                    <li class="distributor-list"><a class="nav-link" href="distributor.html">Danh sách</a></li>
+                    <li><a class="nav-link" href="#">User</a></li>
                 </ul>
+            </li>
+            <li class="menu-header">Nhà phân phối</li>
+            <li class="dropdown distributor">
+                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Cộng tác viên</span></a>
+                <ul class="dropdown-menu distributor-partner">
+                    <li class="partner-list"><a class="nav-link" href="partner.html">Danh sách</a></li>
+                    <li><a class="nav-link" href="#">User</a></li>
+                </ul>
+            </li>
+            <li class="menu-header">Cộng tác viên</li>
+            <li class="dropdown partner">
+                <a class="customer-order" href="customer-order.html" class="nav-link"><i data-feather="mail"></i><span>Đơn hàng</span></a>
             </li>
             <li class="menu-header">UI Elements</li>
             <li class="dropdown">

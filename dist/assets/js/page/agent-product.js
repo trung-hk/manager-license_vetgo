@@ -1,5 +1,5 @@
 "use strict";
-var dataAgentMap, dataProductMap, dataPackageProductMap, dataAgentProductMap;
+var dataAgentMap, dataProductMap, dataAgentProductMap;
 $(document).ready(async function () {
     $('.agent-product').addClass('active');
     $('.agent-product a').addClass('toggled');
@@ -21,7 +21,7 @@ $(document).ready(async function () {
             $(nRow).find('td:eq(5) button').attr('data-index', iDisplayIndex);
         }
     });
-    await loadDataProductAgent();
+    await init();
     $('.save-data').on("click", async function () {
         const idProductRegister = $("#id-product-register").val().trim();
         const idAgent = $("#agent-register").val().trim();
@@ -79,18 +79,16 @@ $(document).ready(async function () {
         }
         $(this).removeClass('disabled btn-progress');
     });
-    $("#product-register").change(function(){
-       loadPackageView($(this).val());
+    $("#product-register").change(function () {
+        loadPackageView($(this).val());
     });
 });
 
-async function loadDataProductAgent() {
+async function init() {
     const dataAgentList = (await vetgoSheet.getAll(TBL_AGENT)).filter(data => data.deleted === "false");
     dataAgentMap = new Map(dataAgentList.map(agent => [agent.id, agent]));
     const dataProductList = (await vetgoSheet.getAll(TBL_PRODUCT)).filter(data => data.deleted === "false");
     dataProductMap = new Map(dataProductList.map(product => [product.id, product]));
-    const dataPackageProductList = (await vetgoSheet.getAll(TBL_PACKAGE_PRODUCT)).filter(data => data.deleted === "false");
-    dataPackageProductMap = new Map(dataProductList.map(product => [product.id, dataPackageProductList.filter(pac => pac.idProduct === product.id)]));
     const dataAgentProductList = (await vetgoSheet.getAll(TBL_AGENT_PRODUCT)).filter(data => data.deleted === "false");
     dataAgentProductMap = new Map(dataAgentProductList.map(ap => [ap.id, ap]));
     const table = $('#agent-product-table').DataTable();
@@ -101,10 +99,12 @@ async function loadDataProductAgent() {
     loadDataProduct(dataProductList);
     loadDataSuccess();
 }
+
 function loadDataSuccess() {
     $("#loadingData").hide();
     $('button[data-target="#register-modal"]').removeAttr('disabled');
 }
+
 function loadDataAgent(dataAgentList) {
     let selectAgent = $("#agent-register");
     selectAgent.append('<option value="">--</option>');
@@ -112,6 +112,7 @@ function loadDataAgent(dataAgentList) {
         selectAgent.append(`<option value="${agent.id}">${agent.name}</option>`);
     }
 }
+
 function loadDataProduct(dataProductList) {
     let selectProduct = $("#product-register");
     selectProduct.append('<option value="">--</option>');
@@ -122,10 +123,10 @@ function loadDataProduct(dataProductList) {
 
 function addRowTable(data, table) {
     let packageView = ``;
-    let dataPackageList = dataPackageProductMap.get(data.idProduct);
+    let dataPackageList = JSON.parse(dataProductMap.get(data.idProduct).attributes);
     if (dataPackageList != null && dataPackageList.length > 0) {
         for (let dataPackage of dataPackageList) {
-            packageView += `<div class="package-view badge badge-success">${dataPackage.name}: ${formatNumber(dataPackage.price)} VNĐ</div><br>`
+            packageView += `<div class="package-view badge badge-success">${dataPackage.packageName}: ${formatNumber(dataPackage.packagePrice)} VNĐ</div><br>`
         }
     } else packageView = '<div class="package-view badge badge-primary">Chưa đăng ký gói</div>';
     table.row
@@ -167,21 +168,22 @@ function openModal(element) {
         loadPackageView(data.idProduct);
     }
 }
+
 function loadPackageView(idProduct) {
     let contentPackage = $("#content-package");
     contentPackage.html("");
-    const dataPackageList = dataPackageProductMap.get(idProduct);
-    if (dataPackageList) {
+    const dataProduct = dataProductMap.get(idProduct);
+    if (dataProduct) {
+        const dataPackageList = JSON.parse(dataProduct.attributes);
         for (let i = 0; i < dataPackageList.length; i++) {
             contentPackage.append($("#template-view-package").html());
-            contentPackage.find(`.id-package:eq(${i})`).val(dataPackageList[i].id);
-            contentPackage.find(`.name-package:eq(${i})`).val(dataPackageList[i].name);
-            contentPackage.find(`.price-package:eq(${i})`).val(formatNumber(dataPackageList[i].price));
+            contentPackage.find(`.name-package:eq(${i})`).val(dataPackageList[i].packageName);
+            contentPackage.find(`.price-package:eq(${i})`).val(formatNumber(dataPackageList[i].packagePrice));
         }
     }
-
     viewEmptyPackageDiv();
 }
+
 function viewEmptyPackageDiv() {
     const divEmptyPackage = $(".empty-package-product");
     if ($("#content-package").children().length > 0) {

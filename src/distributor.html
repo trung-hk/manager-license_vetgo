@@ -4,7 +4,7 @@
     @@include('partials/css-common.html')
     @@include('partials/datatable/css-datatable.html')
     @@include('partials/toast/css-toast.html')
-    <title>Danh sách đại lý</title>
+    <title>Danh sách nhà phân phối</title>
 </head>
 <body>
 <div class="loader"></div>
@@ -21,27 +21,25 @@
                             <div class="card">
                                 <div class="card-header">
                                     <div class="col-3">
-                                        <h4>Danh sách Đại lý</h4>
+                                        <h4>Danh sách nhà phân phối</h4>
                                     </div>
                                     <div class="col-9">
-                                        <button type="button"  data-toggle="modal" data-target="#register-modal" class="btn btn-success pull-right note-btn" disabled onclick="openModal(this);"><i class="fas fa-plus"></i> Thêm mới đại lý</button>
+                                        <button type="button"  data-toggle="modal" data-target="#register-modal" class="btn btn-success pull-right note-btn" disabled onclick="openModal(this);"><i class="fas fa-plus"></i> Đăng ký nhà phân phối</button>
                                     </div>
-
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         @@include('partials/loading-data.html')
-                                        <table class="table table-hover table-striped" id="agent-list-table">
+                                        <table class="table table-hover table-striped" id="distributor-list-table">
                                             <thead>
                                             <tr>
                                                 <th class="text-center">No.</th>
-                                                <th>Mã đại lý</th>
-                                                <th>Tên đại lý</th>
+                                                <th>Đại lý</th>
+                                                <th>Tên nhà phân phối</th>
                                                 <th>Số điện thoại</th>
                                                 <th>Địa chỉ mail</th>
                                                 <th>Địa chỉ</th>
                                                 <th>Ngày cập nhật</th>
-                                                <th>Trạng thái</th>
                                                 <th>Thao tác</th>
                                             </tr>
                                             </thead>
@@ -60,35 +58,35 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2 class="modal-title text-center" id="formModal">Thêm đại lý</h2>
+                            <h2 class="modal-title text-center" id="formModal"></h2>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <form action="#">
-                                <input type="hidden" id="id-agent">
+                                <input type="hidden" id="id-distributor">
                                 <input type="hidden" id="index-row">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-12 align-center title-modal">
-                                            <h4>Thông tin đại lý</h4>
+                                            <h4>Thông tin đăng ký</h4>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="row">
-                                        <label class="col-md-2 col-form-label-sm font-bold" >Mã đại lý</label>
+                                        <label class="col-md-2 col-form-label-sm font-bold" >Đại lý</label>
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control" placeholder="VetGo"  name="code-agent" id="code-agent">
+                                            <select class="form-control form-control-sm select-scroll" id="id-agent"></select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="row">
-                                        <label class="col-md-2 col-form-label-sm font-bold" >Tên Đại lý</label>
+                                        <label class="col-md-2 col-form-label-sm font-bold" >Tên</label>
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control" placeholder="Vet Go"  name="name-agent" id="name-agent">
+                                            <input type="text" class="form-control" placeholder="Vet Go"  name="name-distributor" id="name-distributor">
                                         </div>
                                     </div>
                                 </div>
@@ -99,7 +97,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text font-bold">+84</span>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="(090) 123-4567"  data-type="phone" name="phone-agent" id="phone-agent">
+                                            <input type="text" class="form-control" placeholder="(090) 123-4567"  data-type="phone" name="phone-distributor" id="phone-distributor">
                                         </div>
                                     </div>
                                 </div>
@@ -107,7 +105,7 @@
                                     <div class="row">
                                         <label class="col-md-2 col-form-label-sm font-bold" >Địa chỉ Email</label>
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control" placeholder="vetgo@mail.com" name="mail-agent" id="mail-agent">
+                                            <input type="text" class="form-control" placeholder="vetgo@mail.com" name="mail-distributor" id="mail-distributor">
                                         </div>
                                     </div>
                                 </div>
@@ -115,24 +113,13 @@
                                     <div class="row">
                                         <label class="col-md-2 col-form-label-sm font-bold" >Địa chỉ</label>
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control" placeholder="Đường số 1 phường x quận x " name="address-agent" id="address-agent">
+                                            <input type="text" class="form-control" placeholder="Đường số 1 phường x quận x " name="address-distributor" id="address-distributor">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <label class="col-md-2 col-form-label-sm font-bold">Trạng thái</label>
-                                        <div class="col-md-10">
-                                            <select name="status" class="form-control form-control-sm select-scroll" id="status-agent">
-                                                <option value="0">Đang hoạt động</option>
-                                                <option value="1">Ngưng hoạt động</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button id="btn-add-new-agent" type="button" class="btn btn-success pull-right save-agent" ><i class="fas fa-save"></i> Thêm mới</button>
-                                <button id="btn-delete-agent" type="button" class="btn btn-danger pull-right"><i class="fas fa-trash"></i> Xóa</button>
-                                <button id="btn-update-agent"  type="button" class="add-category btn btn-success pull-right save-agent m-r-15"><i class="fas fa-save"></i> Cập nhật</button>
+                                <button id="btn-add-new-modal" type="button" class="btn btn-success pull-right save-data" ><i class="fas fa-save"></i> Thêm mới</button>
+                                <button id="btn-delete-modal" type="button" class="btn btn-danger pull-right"><i class="fas fa-trash"></i> Xóa</button>
+                                <button id="btn-update-modal"  type="button" class="add-category btn btn-success pull-right save-data m-r-15"><i class="fas fa-save"></i> Cập nhật</button>
                             </form>
                         </div>
                     </div>
@@ -148,8 +135,8 @@
 @@include('partials/datatable/script-datatable.html')
 @@include('partials/toast/script-toast.html')
 <!-- Page Specific JS File -->
-<script src="assets/js/page/agent-menu.js"></script>
-<script src="assets/js/page/agent-list.js"></script>
+<script src="assets/js/page/agent-distributor-menu.js"></script>
+<script src="assets/js/page/distributor.js"></script>
 </body>
 <!-- index.html  21 Nov 2019 03:47:04 GMT -->
 </html>

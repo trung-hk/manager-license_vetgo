@@ -23,7 +23,7 @@ $(document).ready(async function () {
             $(nRow).find('td:eq(8) button').attr('data-index', iDisplayIndex);
         }
     });
-    await loadDataAgent();
+    await init();
     $('.save-agent').on("click", async function () {
         const idAgent = $("#id-agent").val().trim();
         const codeAgent = $("#code-agent").val().trim();
@@ -104,16 +104,19 @@ $(document).ready(async function () {
     });
 });
 
-async function loadDataAgent() {
+async function init() {
     const dataAgentList = (await vetgoSheet.getAll(TBL_AGENT)).filter(data => data.deleted === "false");
     dataAgentMap = new Map(dataAgentList.map(agent => [agent.id, agent]));
     const table = $('#agent-list-table').DataTable();
     for (let i = 0; i < dataAgentList.length; i++) {
         addRowTable(dataAgentList[i], table);
     }
-    $("#loadingData").hide();
+    loadDataSuccess();
 }
-
+function loadDataSuccess() {
+    $("#loadingData").hide();
+    $('button[data-target="#register-modal"]').removeAttr('disabled');
+}
 function addRowTable(data, table) {
     let labelStatus;
     switch (data.status) {
