@@ -29,5 +29,6 @@ gulp.task('serve', function () {
 
     gulp.watch(['dist/*.html']).on('change', reload); // Reload khi file .html trong thư mục dist thay đổi
     gulp.watch(['dist/assets/**']).on('change', reload);
+    gulp.watch(['dist/ts/**']).on('change', reload);
 });
 gulp.task('start', gulp.parallel('fileinclude', 'watch', 'serve'));

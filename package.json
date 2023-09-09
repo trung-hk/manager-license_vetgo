@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Vet go",
   "scripts": {
-    "default" : "gulp serve ",
-    "watch" : "gulp watch ",
+    "build:ts": "rimraf ts/dist && webpack --config ts/webpack.config.prod.js",
+    "default": "gulp serve ",
+    "watch": "gulp watch ",
     "start": "gulp start",
     "build": "gulp fileinclude",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,10 +22,19 @@
   },
   "homepage": "https://github.com/tinhthanh/tinhthanh.github.io#readme",
   "dependencies": {
+    "awesome-typescript-loader": "^5.2.1",
+    "copy-webpack-plugin": "^11.0.0",
     "gulp": "^4.0.2",
-    "gulp-file-include": "^2.3.0"
+    "gulp-file-include": "^2.3.0",
+    "keycloak-js": "^22.0.1",
+    "rimraf": "^5.0.1",
+    "ts-loader": "^9.4.4",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2",
+    "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
+    "@types/node": "^20.6.0",
     "browser-sync": "^2.29.3"
   }
 }
