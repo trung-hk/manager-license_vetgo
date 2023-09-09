@@ -1,7 +1,25 @@
 import Keycloak from 'keycloak-js';
+import axios, { AxiosRequestConfig } from 'axios';
+// set up common
+import {localStorageV, StoreKey} from "./local-storage";
+window['localStorageV'] = localStorageV;
+// set up common
+
+// for production
+const fullURL = window.location.href
+const domainRegex = new RegExp('.phanmemvet.vn(.*)', 'g');
+const  storedCorporate = fullURL.replace(domainRegex, '')
+    .replace(/localhost(.*)/g, '')
+    .replace(/^http(.*):\/\//g, '')
+    .replace(/\./g, '');
+console.log( "brand id: " +  storedCorporate);
+let realm  = 'vetgo';
+if (storedCorporate) {
+    realm = storedCorporate;
+}
 const keycloak = new Keycloak({
     url: 'https://keycloak.phanmemvet.vn',
-    realm: 'vetgo',
+    realm: realm,
     clientId: 'frontend'
 });
 setTimeout(async () => {
@@ -11,27 +29,40 @@ setTimeout(async () => {
       if(authenticated) {
           console.log(keycloak);
           console.log(keycloak.token);
+          localStorageV.setItem(StoreKey.keyLockToken,keycloak.token);
       }
-
-        //     .then(function(authenticated) {
-        //     if (authenticated) {
-        //         console.log("User is authenticated");
-        //     } else {
-        //         console.log("User is not authenticated");
-        //     }
-        // }).catch(function() {
-        //     console.log("Keycloak initialization failed");
-        // });
-
-        // const authenticated = await keycloak.init({ onLoad: 'check-sso'});
-        // console.log(`User is ${authenticated ? 'authenticated' : 'not authenticated'}`);
-        // if(!authenticated) {
-        //
-        // }
-
     } catch (error) {
         console.error('Failed to initialize adapter:', error);
     }
 })
+
+// intercept
+const instance = axios.create();
+// Tạo một interceptor để thêm tiêu đề vào yêu cầu HTTP
+instance.interceptors.request.use((config) => {
+       const token = localStorageV.getItem(StoreKey.keyLockToken);
+        console.log(token);
+        // Thêm các tiêu đề vào yêu cầu HTTP ở đây
+        config.headers['Authorization'] = `Bearer ${token}`;
+        config.headers['Corporate-Code'] = realm;
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+window['axios'] = instance ;
+// Sử dụng instance để gọi API
+// https://axios-http.com/docs/intro
+setTimeout(() => {
+    instance.get('https://example.com/api/some-endpoint')
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}, 1000)
 
 
