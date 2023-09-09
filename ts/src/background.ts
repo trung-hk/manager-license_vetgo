@@ -1,5 +1,5 @@
 import Keycloak from 'keycloak-js';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 // set up common
 import {localStorageV, StoreKey} from "./local-storage";
 // set up common
@@ -53,17 +53,15 @@ instance.interceptors.request.use((config) => {
 // export function
 window['axios'] = instance ;
 window['localStorageV'] = localStorageV;
-// Sử dụng instance để gọi API
+// Sử dụng axios instance để gọi API
 // https://axios-http.com/docs/intro
 // example
-// setTimeout(() => {
-//     window['axios'].get('https://example.com/api/some-endpoint')
+//     window.axios.get('https://example.com/api/some-endpoint')
 //         .then((response) => {
 //             console.log(response.data);
 //         })
 //         .catch((error) => {
 //             console.error(error);
 //         });
-// }, 10000)
 
 
