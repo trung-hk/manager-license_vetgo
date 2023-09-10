@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Vet go",
   "scripts": {
-    "build:ts": "rimraf ts/dist && webpack --config ts/webpack.config.prod.js",
+    "build:ts": "rimraf dist/ts && webpack --config ts/webpack.config.prod.js",
+    "build-reload:ts": "gulp build-ts",
     "default": "gulp serve ",
     "watch": "gulp watch ",
     "start": "gulp start",

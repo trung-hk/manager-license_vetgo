@@ -12,30 +12,24 @@ const  storedCorporate = fullURL.replace(domainRegex, '')
     .replace(/^http(.*):\/\//g, '')
     .replace(/\./g, '');
 console.log( "brand id: " +  storedCorporate);
-let realm  = 'vetgo';
+let realm  = 'datmt-test-realm';
 if (storedCorporate) {
     realm = storedCorporate;
 }
 if (window.location.href.startsWith('https://phanmemvet.vn')) {
-    realm  = 'vetgo';
+    realm  = 'datmt-test-realm';
 }
 const keycloak = new Keycloak({
     url: 'https://keycloak.phanmemvet.vn',
     realm: realm,
-    clientId: 'frontend'
+    clientId: 'spring-boot-client'
 });
 setTimeout(async () => {
     try {
         console.log("User is authenticated");
-        if (!localStorageV.getItem(StoreKey.keyLockToken)) {
-            const authenticated =  await keycloak.init({ onLoad: 'login-required' });
-            if(authenticated) {
-                console.log(keycloak);
-                console.log(keycloak.token);
-                window['keycloak'] = keycloak;
-                localStorageV.setItem(StoreKey.keyLockToken,keycloak.token);
-            }
-        }
+        await keycloak.init({ onLoad: 'login-required' });
+        localStorageV.setItem(StoreKey.keyLockToken, keycloak.token);
+        window['keycloak'] = keycloak;
 
     } catch (error) {
         console.error('Failed to initialize adapter:', error);
@@ -47,7 +41,7 @@ const instance = axios.create();
 // Tạo một interceptor để thêm tiêu đề vào yêu cầu HTTP
 instance.interceptors.request.use((config) => {
        const token = localStorageV.getItem(StoreKey.keyLockToken);
-        console.log(token);
+        // console.log(token);
         // Thêm các tiêu đề vào yêu cầu HTTP ở đây
         config.headers['Authorization'] = `Bearer ${token}`;
         config.headers['Corporate-Code'] = realm;
