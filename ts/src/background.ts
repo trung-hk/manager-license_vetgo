@@ -24,12 +24,16 @@ const keycloak = new Keycloak({
 setTimeout(async () => {
     try {
         console.log("User is authenticated");
-      const authenticated =  await keycloak.init({ onLoad: 'login-required' });
-      if(authenticated) {
-          console.log(keycloak);
-          console.log(keycloak.token);
-          localStorageV.setItem(StoreKey.keyLockToken,keycloak.token);
-      }
+        if (!localStorageV.getItem(StoreKey.keyLockToken)) {
+            const authenticated =  await keycloak.init({ onLoad: 'login-required' });
+            if(authenticated) {
+                console.log(keycloak);
+                console.log(keycloak.token);
+                window['keycloak'] = keycloak;
+                localStorageV.setItem(StoreKey.keyLockToken,keycloak.token);
+            }
+        }
+
     } catch (error) {
         console.error('Failed to initialize adapter:', error);
     }
@@ -47,6 +51,7 @@ instance.interceptors.request.use((config) => {
         return config;
     },
     (error) => {
+        localStorageV.removeItem(StoreKey.keyLockToken);
         return Promise.reject(error);
     }
 );

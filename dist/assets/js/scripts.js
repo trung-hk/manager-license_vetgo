@@ -1,9 +1,59 @@
 "use strict";
-
+// Chuyển mật khẩu nhập vào thành dạng ArrayBuffer
+// const textEncoder = new TextEncoder();
+// const passwordBuffer = textEncoder.encode("@Abc1235");
+//
+// // Tạo một salt (sẽ lưu trữ trong cơ sở dữ liệu cùng với mật khẩu đã băm)
+// const saltBuffer = crypto.getRandomValues(new Uint8Array(16));
+//
+// // Tạo một key từ mật khẩu và salt sử dụng PBKDF2
+// crypto.subtle.importKey(
+//     'raw',
+//     passwordBuffer,
+//     { name: 'PBKDF2' },
+//     false,
+//     ['deriveBits', 'deriveKey']
+// )
+//     .then((passwordKey) => {
+//       return crypto.subtle.deriveKey(
+//           {
+//             name: 'PBKDF2',
+//             salt: saltBuffer,
+//             iterations: 100000,
+//             hash: 'SHA-256',
+//           },
+//           passwordKey,
+//           { name: 'AES-GCM', length: 256 },
+//           true,
+//           ['encrypt', 'decrypt']
+//       );
+//     })
+//     .then((derivedKey) => {
+//       console.log('Mật khẩu đã băm:', derivedKey);
+//
+//       // Ở đây, bạn có thể so sánh derivedKey với key lấy từ cơ sở dữ liệu để kiểm tra mật khẩu
+//
+//       // Xóa các tham số nhạy cảm như salt và key
+//       // crypto.subtle.zeroize(passwordBuffer);
+//       // crypto.subtle.zeroize(saltBuffer);
+//       // crypto.subtle.zeroize(derivedKey);
+//     })
+//     .catch((error) => {
+//       console.error('Lỗi khi băm mật khẩu:', error);
+//     });
+// const user = localStorage.getItem('ACCESS_TOKEN');
+// if (!user) {
+//   if (location.pathname !== '/auth-login.html') location.href = `/auth-login.html`;
+// } else {
+//   if (location.pathname === '/auth-login.html') location.href = location.origin;
+// }
 $(window).on("load", function () {
   $(".loader").fadeOut("slow");
 });
-
+$("#logout").click(function () {
+  localStorage.clear();
+  location.reload();
+})
 feather.replace();
 // Global
 $(function () {
