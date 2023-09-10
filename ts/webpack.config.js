@@ -17,7 +17,7 @@ module.exports = {
     ],
   },
   output: {
-    path: join(__dirname, '../dist/ts'),
+    path: join(__dirname, '../dist/assets/ts'),
     filename: '[name].js'
   },
   plugins: [
@@ -26,7 +26,7 @@ module.exports = {
       patterns: [
         {
           from: join(__dirname, 'assets'),
-          to: join(__dirname, '../dist/ts/assets')
+          to: join(__dirname, '../dist/assets/ts/assets')
         }
       ]
     })],
