@@ -16,6 +16,9 @@ let realm  = 'vetgo';
 if (storedCorporate) {
     realm = storedCorporate;
 }
+if (window.location.href.startsWith('https://phanmemvet.vn')) {
+    realm  = 'vetgo';
+}
 const keycloak = new Keycloak({
     url: 'https://keycloak.phanmemvet.vn',
     realm: realm,
