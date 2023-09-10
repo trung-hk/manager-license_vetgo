@@ -26,6 +26,7 @@ $(document).ready(async function () {
     await init();
     $('.save-agent').on("click", async function () {
         const idAgent = $("#id-agent").val().trim();
+        const idUser = $("#id-user").val().trim();
         const codeAgent = $("#code-agent").val().trim();
         const nameAgent = $("#name-agent").val().trim();
         const phone = $("#phone-agent").val().trim();
@@ -51,14 +52,29 @@ $(document).ready(async function () {
                 isError = true;
             }
         }
-        if (!isValidEmail(email)) {
-            alertIziToastError('Địa chỉ email', 'Không được hợp lệ');
+        if (email === '') {
+            alertIziToastError('Địa chỉ email', 'Không được để trống');
             isError = true;
+        } else {
+            if (!isValidEmail(email)) {
+                alertIziToastError('Địa chỉ email', 'Không được hợp lệ');
+                isError = true;
+            }
         }
         if (isError) return;
         const isAddNew = idAgent == null || false || idAgent === "";
+        const isAddNewUser = idUser == null || false || idUser === "";
         $(this).addClass('disabled btn-progress');
         try {
+            let dataUser;
+            if (!isAddNewUser) dataUser = await vetgoSheet.getById(idAgent, TBL_USER);
+            if (dataUser == null) dataUser = {id: null};
+            dataUser.name = nameAgent;
+            dataUser.phone = replaceInputToNumber(phone);
+            dataUser.email = email;
+            dataUser.address = address;
+            dataUser.avatar_url = null;
+            dataUser.status = 0;
             let data;
             if (!isAddNew) data = await vetgoSheet.getById(idAgent, TBL_AGENT);
             if (data == null) data = {id: null};

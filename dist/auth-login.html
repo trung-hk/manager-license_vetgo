@@ -6,16 +6,18 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-  <title>Otika - Admin Dashboard Template</title>
-  <!-- General CSS Files -->
-  <link rel="stylesheet" href="assets/css/app.min.css">
+  <meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+<!-- General CSS Files -->
+<link rel="stylesheet" href="../assets/css/app.min.css">
+<!-- Template CSS -->
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<!-- Custom style CSS -->
+<link rel="stylesheet" href="../assets/css/custom.css">
+<link rel='shortcut icon' type='image/x-icon' href='../assets/img/vetgo.png' />
   <link rel="stylesheet" href="assets/bundles/bootstrap-social/bootstrap-social.css">
-  <!-- Template CSS -->
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-  <!-- Custom style CSS -->
-  <link rel="stylesheet" href="assets/css/custom.css">
-  <link rel='shortcut icon' type='image/x-icon' href='assets/img/favicon.ico' />
+  <title>Đăng nhập</title>
 </head>
 
 <body>
@@ -30,10 +32,10 @@
                 <h4>Login</h4>
               </div>
               <div class="card-body">
-                <form method="POST" action="#" class="needs-validation" novalidate="">
+                <form id="form-login"  action="#" class="needs-validation" novalidate="">
                   <div class="form-group">
-                    <label for="email">Email</label>
-                    <input id="email" type="email" class="form-control" name="email" tabindex="1" required autofocus>
+                    <label for="username">Email</label>
+                    <input id="username" class="form-control"  tabindex="1" required autofocus>
                     <div class="invalid-feedback">
                       Please fill in your email
                     </div>
@@ -90,15 +92,15 @@
     </section>
   </div>
   <!-- General JS Scripts -->
-  <script src="assets/js/app.min.js"></script>
-  <!-- JS Libraies -->
-  <!-- Page Specific JS File -->
-  <!-- Template JS File -->
-  <script src="assets/js/scripts.js"></script>
-  <!-- Custom JS File -->
-  <script src="assets/js/custom.js"></script>
+<script src="../assets/js/app.min.js"></script>
+<!-- Template JS File -->
+<script src="../assets/js/scripts.js"></script>
+<!-- App Script JS File -->
+<script src="../assets/js/appScript.js"></script>
+
+<script src="../ts/background.js"></script>
+
+  <script src="assets/js/page/auth.js"></script>
 </body>
-
-
 <!-- auth-login.html  21 Nov 2019 03:49:32 GMT -->
 </html>
