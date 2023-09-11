@@ -27,15 +27,11 @@ const keycloak = new Keycloak({
 setTimeout(async () => {
     try {
         console.log("User is authenticated123");
-        // if (!localStorageV.getItem(StoreKey.keyLockToken)) {
-        //     console.log(await keycloak.init({ onLoad: 'login-required' }));
-        //     localStorageV.setItem(StoreKey.keyLockToken, keycloak.token);
-        //
-        // }
-        console.log(await keycloak.init({ onLoad: 'login-required' }));
-        localStorageV.setItem(StoreKey.keyLockToken, keycloak.token);
-
-    } catch (error) {
+        if (!localStorageV.getItem(StoreKey.keyLockToken)) {
+            await keycloak.init({ onLoad: 'login-required' });
+            localStorageV.setItem(StoreKey.keyLockToken, keycloak.token);
+            }
+        } catch (error) {
         console.error('Failed to initialize adapter:', error);
     }
 })
@@ -47,20 +43,24 @@ instance.interceptors.request.use(async (config) => {
     try {
         console.log("call request");
         const token = localStorageV.getItem(StoreKey.keyLockToken);
-        // if (!token) {
-        //     let authenticated = await keycloak.init({ onLoad: 'login-required' });
-        //     console.log("authen " + authenticated)
-        //     if (authenticated) {
-        //         localStorageV.setItem(StoreKey.keyLockToken, keycloak.token);
-        //     }
-        // }
-        // Thêm các tiêu đề vào yêu cầu HTTP ở đây
-        config.headers['Authorization'] = `Bearer ${token}`;
-        config.headers['Corporate-Code'] = realm;
-    } catch (error) {
+        if (!token) {
+            let authenticated = await keycloak.init({ onLoad: 'login-required' });
+            console.log("authen " + authenticated)
+            if (authenticated) {
+                localStorageV.setItem(StoreKey.keyLockToken, keycloak.token);
+            }
+            config.headers['Authorization'] = `Bearer ${token}`;
+            config.headers['Corporate-Code'] = realm;
+            return config;
+        } else {
+            config.headers['Authorization'] = `Bearer ${token}`;
+            config.headers['Corporate-Code'] = realm;
+            return config;
+        }
+             } catch (error) {
         console.error('Failed to initialize adapter:', error);
-    }
         return config;
+        }
     },
     (error) => {
         localStorageV.removeItem(StoreKey.keyLockToken);
@@ -68,6 +68,10 @@ instance.interceptors.request.use(async (config) => {
     }
 );
 // export function
+window['logout'] = async () => {
+    await keycloak.init({ onLoad: 'check-sso' });
+    await keycloak.logout();
+}
 window['keycloak'] = keycloak;
 window['axios'] = instance ;
 window['localStorageV'] = localStorageV;
