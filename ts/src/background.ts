@@ -26,10 +26,14 @@ const keycloak = new Keycloak({
 });
 setTimeout(async () => {
     try {
-        console.log("User is authenticated");
-        await keycloak.init({ onLoad: 'login-required' });
+        console.log("User is authenticated123");
+        // if (!localStorageV.getItem(StoreKey.keyLockToken)) {
+        //     console.log(await keycloak.init({ onLoad: 'login-required' }));
+        //     localStorageV.setItem(StoreKey.keyLockToken, keycloak.token);
+        //
+        // }
+        console.log(await keycloak.init({ onLoad: 'login-required' }));
         localStorageV.setItem(StoreKey.keyLockToken, keycloak.token);
-        window['keycloak'] = keycloak;
 
     } catch (error) {
         console.error('Failed to initialize adapter:', error);
@@ -39,12 +43,23 @@ setTimeout(async () => {
 // intercept
 const instance = axios.create();
 // Tạo một interceptor để thêm tiêu đề vào yêu cầu HTTP
-instance.interceptors.request.use((config) => {
-       const token = localStorageV.getItem(StoreKey.keyLockToken);
-        // console.log(token);
+instance.interceptors.request.use(async (config) => {
+    try {
+        console.log("call request");
+        const token = localStorageV.getItem(StoreKey.keyLockToken);
+        // if (!token) {
+        //     let authenticated = await keycloak.init({ onLoad: 'login-required' });
+        //     console.log("authen " + authenticated)
+        //     if (authenticated) {
+        //         localStorageV.setItem(StoreKey.keyLockToken, keycloak.token);
+        //     }
+        // }
         // Thêm các tiêu đề vào yêu cầu HTTP ở đây
         config.headers['Authorization'] = `Bearer ${token}`;
         config.headers['Corporate-Code'] = realm;
+    } catch (error) {
+        console.error('Failed to initialize adapter:', error);
+    }
         return config;
     },
     (error) => {
@@ -53,6 +68,7 @@ instance.interceptors.request.use((config) => {
     }
 );
 // export function
+window['keycloak'] = keycloak;
 window['axios'] = instance ;
 window['localStorageV'] = localStorageV;
 // Sử dụng axios instance để gọi API

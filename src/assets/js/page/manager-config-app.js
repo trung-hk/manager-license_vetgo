@@ -80,6 +80,7 @@ $( document ).ready(async function() {
     });
 });
 async function loadDataConfigApp() {
+    console.log("load data ne")
     const dataList = (await vetgoDB.getAll(API_CONFIG_APP));
     dataMap = new Map(dataList.map(configApp => [configApp.id, configApp]));
     const config_app_table = $('#config-app-table').DataTable();
