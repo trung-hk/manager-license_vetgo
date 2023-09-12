@@ -1,0 +1,96 @@
+<section class="section">
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="col-3">
+                            <h4>Danh sách config app</h4>
+                        </div>
+                        <div class="col-9">
+                            <button type="button"  data-toggle="modal" data-target="#add-config-app-modal" class="btn btn-success pull-right note-btn" onclick="openModal(this);"><i class="fas fa-plus"></i> Thêm mới Config</button>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            @@include('partials/loading-data.html')
+                            <table class="table table-hover" id="config-app-table">
+                                <thead>
+                                <tr>
+                                    <th>Thông tin Firebase</th>
+                                    <th>Thông tin Sheet Id</th>
+                                    <th>Khách hàng</th>
+                                    <th>Ngày cập nhật</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="add-config-app-modal" tabindex="-1" role="dialog" aria-labelledby="formModal"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center" id="formModal">Thêm Config App</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#">
+                    <input type="hidden" id="id-config-app">
+                    <input type="hidden" id="index-row">
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-md-3 col-form-label-sm">Config Firebase</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Config fireBase" name="config-firebase" id="config-firebase">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-md-3 col-form-label-sm">Config Sheet Id</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" placeholder="Sheet Id" name="config-sheet-id" id="config-sheet-id">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-md-3 col-form-label-sm">Khách hàng</label>
+                            <div class="col-md-9">
+                                <select name="customer" class="form-control form-control-sm select-scroll" id="customer">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-md-3 col-form-label-sm">Trạng thái</label>
+                            <div class="col-md-9">
+                                <select name="status" class="form-control form-control-sm select-scroll" id="status">
+                                    <option value="0">Chưa sử dụng</option>
+                                    <option value="1">Đang sử dụng</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btn-add-new-config" type="button" class="add-category btn btn-success waves-effect pull-right save-config-app" ><i class="fas fa-save"></i> Thêm mới</button>
+                    <button id="btn-delete-config" type="button" class="add-category btn btn-danger waves-effect pull-right"><i class="fas fa-trash"></i> Xóa</button>
+                    <button id="btn-update-config"  type="button" class="add-category btn btn-success waves-effect pull-right save-config-app m-r-15"><i class="fas fa-save"></i> Cập nhật</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,6 +9,7 @@ import { PortalLayoutComponent } from './portal-layout/portal-layout.component';
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import { HttpClientModule } from '@angular/common/http';
 import { AgentComponent } from './pages/agent/agent.component';
+import { ConfigAppComponent } from './pages/config-app/config-app.component';
 
 // for production
 const fullURL = window.location.href
@@ -44,7 +45,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     AppComponent,
     DashboardComponent,
     PortalLayoutComponent,
-    AgentComponent
+    AgentComponent,
+    ConfigAppComponent
   ],
   imports: [
     BrowserModule,

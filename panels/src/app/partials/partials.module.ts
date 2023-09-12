@@ -4,6 +4,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { SidebarLeftComponent } from './sidebar-left/sidebar-left.component';
 import { SidebarSettingRightComponent } from './sidebar-setting-right/sidebar-setting-right.component';
+import {RouterLink} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -12,9 +13,10 @@ import { SidebarSettingRightComponent } from './sidebar-setting-right/sidebar-se
     SidebarLeftComponent,
     SidebarSettingRightComponent
   ],
-  imports: [
-    CommonModule
-  ],
+    imports: [
+        CommonModule,
+        RouterLink
+    ],
   exports: [
       FooterComponent,
       HeaderComponent,

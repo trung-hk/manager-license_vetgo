@@ -4,6 +4,7 @@ import { AuthGuard } from './authentication/auth.guard';
 import { AgentComponent } from './pages/agent/agent.component';
 import {DashboardComponent} from "./pages/dashboard/dashboard.component";
 import {PortalLayoutComponent} from "./portal-layout/portal-layout.component";
+import {ConfigAppComponent} from "./pages/config-app/config-app.component";
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
 }
@@ -19,6 +20,10 @@ const routes: Routes = [
       {
         path: 'agent',
         component: AgentComponent
+      },
+      {
+        path: 'manager-config-app',
+        component: ConfigAppComponent
       }
     ],
     canActivate: [isAuthenticated],
