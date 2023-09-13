@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {KeycloakService} from 'keycloak-angular';
+import {KeycloakEventType, KeycloakService} from 'keycloak-angular';
 import {from, Observable} from 'rxjs';
 
 export interface AuthConfig {
@@ -15,19 +15,30 @@ export class AuthService {
   keycloak = inject(KeycloakService);
 
   constructor() {
+    this.keycloak.keycloakEvents$.subscribe(
+      (event) => {
+        if (event.type == KeycloakEventType.OnTokenExpired) {
+          console.log('token -> expired');
+           this.keycloak.updateToken(1800).then();
+          console.log('refresh token');
+        }
+      }
+    );
     this.keycloak.isLoggedIn().then((loggedIn) => {
       if (loggedIn) {
-        this.keycloak.getKeycloakInstance().loadUserProfile();
+        this.keycloak.getKeycloakInstance().loadUserProfile().then( it => {
+          console.log(it);
+        });
       }
     });
   }
 
   public logout(): void {
-    this.keycloak.logout("http://localhost:4200/").then();
+    this.keycloak.logout(window.location.origin).then();
   }
 
   login() {
-    this.keycloak.login({redirectUri: "http://localhost:4200/secured"}).then();
+    this.keycloak.login({redirectUri: window.location.origin + "/dashboard"}).then();
   }
 
 

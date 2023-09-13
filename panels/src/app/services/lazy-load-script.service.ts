@@ -19,6 +19,7 @@ export class LazyLoadScriptService {
 //     }
 //   }
 // }
+
 public addListScript(scripts: string[]): Promise<void> {
     return new Promise( async rs => {
        for (let i = 0; i < scripts.length; i++) {
@@ -27,6 +28,32 @@ public addListScript(scripts: string[]): Promise<void> {
       rs();
     });
   }
+public addListCss(scripts: string[]): Promise<void> {
+        return new Promise( async rs => {
+            for (let i = 0; i < scripts.length; i++) {
+                await this.addCss(scripts[i]);
+            }
+            rs();
+        });
+ }
+ private addCss(url: string): Promise<void> {
+        return new Promise( rs => {
+            const exits =  document.querySelector(`link[href="${url}"]`);
+            if (exits) {
+                console.log('url css exits ' + url);
+                rs();
+            } else {
+                const script = this.document.createElement('link');
+                script.rel = 'stylesheet';
+                script.href = url;
+                script.onload = () => {
+                    console.log('loaded css ' + url);
+                    rs();
+                };
+                this.document.body.appendChild(script);
+            }
+        });
+    }
  private addScript(url: string): Promise<void> {
    return new Promise( rs => {
     const exits =  document.querySelector(`script[src="${url}"]`);

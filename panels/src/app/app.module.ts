@@ -10,7 +10,7 @@ import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import { HttpClientModule } from '@angular/common/http';
 import { AgentComponent } from './pages/agent/agent.component';
 import { ConfigAppComponent } from './pages/config-app/config-app.component';
-
+import { NgxPermissionsModule } from 'ngx-permissions';
 // for production
 const fullURL = window.location.href
 const domainRegex = new RegExp('.phanmemvet.vn(.*)', 'g');
@@ -31,11 +31,13 @@ function initializeKeycloak(keycloak: KeycloakService) {
     keycloak.init({
       config: {
         url: 'https://keycloak.phanmemvet.vn',
-        realm: realm,
-        clientId:  'spring-boot-client'
+        realm: 'vetgo2',
+        clientId: 'vetgo'
       },
       initOptions: {
-        onLoad: 'check-sso'
+        onLoad: 'check-sso',
+        silentCheckSsoRedirectUri:
+            window.location.origin + '/assets/silent-check-sso.html'
       }
     });
 }
@@ -53,7 +55,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     AppRoutingModule,
     PartialsModule,
     KeycloakAngularModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxPermissionsModule.forRoot()
   ],
   providers: [
     {

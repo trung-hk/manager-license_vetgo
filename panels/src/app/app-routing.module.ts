@@ -11,10 +11,15 @@ const isAuthenticated: CanActivateFn = (route, state) => {
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full',
+  },
+  {
+    path: '',
     component: PortalLayoutComponent,
     children: [
       {
-        path: '',
+        path: 'dashboard',
         component:  DashboardComponent
       },
       {
