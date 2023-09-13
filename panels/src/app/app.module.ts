@@ -7,10 +7,11 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import {PartialsModule} from "./partials/partials.module";
 import { PortalLayoutComponent } from './portal-layout/portal-layout.component';
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { AgentComponent } from './pages/agent/agent.component';
 import { ConfigAppComponent } from './pages/config-app/config-app.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import {LoaderInterceptor} from "./interceptors/loader.interceptor";
 // for production
 const fullURL = window.location.href
 const domainRegex = new RegExp('.phanmemvet.vn(.*)', 'g');
@@ -19,20 +20,20 @@ const  storedCorporate = fullURL.replace(domainRegex, '')
   .replace(/^http(.*):\/\//g, '')
   .replace(/\./g, '');
 console.log( "brand id: " +  storedCorporate);
-let realm  = 'datmt-test-realm';
+let realm  = 'phanmemvet';
 if (storedCorporate) {
   realm = storedCorporate;
 }
 if (window.location.href.startsWith('https://phanmemvet.vn')) {
-  realm  = 'datmt-test-realm';
+  realm  = 'phanmemvet';
 }
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
       config: {
         url: 'https://keycloak.phanmemvet.vn',
-        realm: 'vetgo2',
-        clientId: 'vetgo'
+        realm: realm,
+        clientId: 'vetgo-fe'
       },
       initOptions: {
         onLoad: 'check-sso',
@@ -65,7 +66,10 @@ function initializeKeycloak(keycloak: KeycloakService) {
       useFactory: initializeKeycloak,
       multi: true,
       deps: [KeycloakService]
-    }
+    },
+    [
+      { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
+    ]
   ],
   bootstrap: [AppComponent]
 })
