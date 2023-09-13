@@ -1,128 +1,134 @@
 "use strict";
+
 var dataAgentMap;
-$(document).ready(async function () {
-    $('.agent-list').addClass('active');
-    $('.agent-list a').addClass('toggled');
-    $("#agent-list-table").dataTable({
-        order: [[6, 'desc']],
-        columnDefs: [
-            {sortable: false, targets: [0, 8]},
-            {width: "40px", targets: [0]},
-            {width: "100px", targets: [1]},
-            {width: "200px", targets: [2]},
-            {width: "120px", targets: [3]},
-            {width: "200px", targets: [4]},
-            {width: "400px", targets: [5]},
-            {width: "150px", targets: [6]},
-            {width: "100px", targets: [7]},
-            {width: "60px", targets: [8]}
-        ],
-        fnRowCallback: function (nRow, aData, iDisplayIndex) {
-            $(nRow).find('td:eq(0)').html(iDisplayIndex + 1);
-            $(nRow).find('td:eq(8)').addClass('text-center');
-            $(nRow).find('td:eq(8) button').attr('data-index', iDisplayIndex);
-        }
-    });
-    await init();
-    $('.save-agent').on("click", async function () {
-        const idAgent = $("#id-agent").val().trim();
-        const idUser = $("#id-user").val().trim();
-        const codeAgent = $("#code-agent").val().trim();
-        const nameAgent = $("#name-agent").val().trim();
-        const phone = $("#phone-agent").val().trim();
-        const email = $("#mail-agent").val().trim();
-        const address = $("#address-agent").val().trim();
-        const status = $("#status-agent").val().trim();
-        const indexRow = parseInt($("#index-row").val());
-        let isError = false;
-        if (codeAgent === '') {
-            alertIziToastError('Mã đại lý', 'Không được để trống');
-            isError = true;
-        }
-        if (nameAgent === '') {
-            alertIziToastError('Tên đại lý', 'Không được để trống');
-            isError = true;
-        }
-        if (phone === '') {
-            alertIziToastError('Số điện thoại', 'Không được để trống');
-            isError = true;
-        } else {
-            if (!isValidPhoneNumber(phone)) {
-                alertIziToastError('Số điện thoại', 'Không được hợp lệ');
-                isError = true;
-            }
-        }
-        if (email === '') {
-            alertIziToastError('Địa chỉ email', 'Không được để trống');
-            isError = true;
-        } else {
-            if (!isValidEmail(email)) {
-                alertIziToastError('Địa chỉ email', 'Không được hợp lệ');
-                isError = true;
-            }
-        }
-        if (isError) return;
-        const isAddNew = idAgent == null || false || idAgent === "";
-        const isAddNewUser = idUser == null || false || idUser === "";
-        $(this).addClass('disabled btn-progress');
-        try {
-            let dataUser;
-            if (!isAddNewUser) dataUser = await vetgoSheet.getById(idAgent, TBL_USER);
-            if (dataUser == null) dataUser = {id: null};
-            dataUser.name = nameAgent;
-            dataUser.phone = replaceInputToNumber(phone);
-            dataUser.email = email;
-            dataUser.address = address;
-            dataUser.avatar_url = null;
-            dataUser.status = 0;
-            let data;
-            if (!isAddNew) data = await vetgoSheet.getById(idAgent, TBL_AGENT);
-            if (data == null) data = {id: null};
-            data.code = codeAgent;
-            data.name = nameAgent;
-            data.phone = replaceInputToNumber(phone);
-            data.email = email;
-            data.address = address;
-            data.status = status;
-            data.lastUpdated = new Date().toISOString();
-            const result = await vetgoSheet.add(data, TBL_AGENT);
-            $("#register-modal").modal("hide");
-            const agentListTable = $('#agent-list-table').DataTable();
-            if (!isAddNew) {
-                console.log(agentListTable.row(`:eq(${indexRow})`).data());
-                agentListTable.row(`:eq(${indexRow})`).remove().draw(false);
-            }
-            addRowTable(result, agentListTable);
-            dataAgentMap.set(result.id, result);
-            alertIziToastSuccess("Đại lý", "lưu thành công");
-        } catch (error) {
-            console.error(error);
-            alertIziToastError("Đại lý", "lưu thất bại, kiểm tra lại kết nối");
-        }
-        $(this).removeClass('disabled btn-progress');
-    });
-    $('#btn-delete-agent').on("click", async function () {
-        const idDelete = $("#id-agent").val();
-        const indexRow = parseInt($("#index-row").val());
-        $(this).addClass('disabled btn-progress');
-        try {
-            await vetgoSheet.deleteById(idDelete, TBL_AGENT);
-            dataAgentMap.delete(idDelete);
-            $("#register-modal").modal("hide");
-            const agentListTable = $('#agent-list-table').DataTable();
-            agentListTable.row(`:eq(${indexRow})`).remove().draw(false);
-            alertIziToastSuccess("Đại lý", "xóa thành công");
-        } catch (error) {
-            console.error(error);
-            alertIziToastSuccess("Đại lý", "xóa thất bại, kiểm tra lại kết nối");
-        }
-        $(this).removeClass('disabled btn-progress');
-    });
-});
+
+window.communication.listenChange('AgentComponent', (event) => {
+    if (event.type === 'INITIAL_DATA')
+        init();
+})
+
+// $(document).ready(async function () {
+//     $('.agent-list').addClass('active');
+//     $('.agent-list a').addClass('toggled');
+//     $("#agent-list-table").dataTable({
+//         order: [[6, 'desc']],
+//         columnDefs: [
+//             {sortable: false, targets: [0, 8]},
+//             {width: "40px", targets: [0]},
+//             {width: "100px", targets: [1]},
+//             {width: "200px", targets: [2]},
+//             {width: "120px", targets: [3]},
+//             {width: "200px", targets: [4]},
+//             {width: "400px", targets: [5]},
+//             {width: "150px", targets: [6]},
+//             {width: "100px", targets: [7]},
+//             {width: "60px", targets: [8]}
+//         ],
+//         fnRowCallback: function (nRow, aData, iDisplayIndex) {
+//             $(nRow).find('td:eq(0)').html(iDisplayIndex + 1);
+//             $(nRow).find('td:eq(8)').addClass('text-center');
+//             $(nRow).find('td:eq(8) button').attr('data-index', iDisplayIndex);
+//         }
+//     });
+//     await init();
+//     $('.save-agent').on("click", async function () {
+//         const idAgent = $("#id-agent").val().trim();
+//         const idUser = $("#id-user").val().trim();
+//         const codeAgent = $("#code-agent").val().trim();
+//         const nameAgent = $("#name-agent").val().trim();
+//         const phone = $("#phone-agent").val().trim();
+//         const email = $("#mail-agent").val().trim();
+//         const address = $("#address-agent").val().trim();
+//         const status = $("#status-agent").val().trim();
+//         const indexRow = parseInt($("#index-row").val());
+//         let isError = false;
+//         if (codeAgent === '') {
+//             alertIziToastError('Mã đại lý', 'Không được để trống');
+//             isError = true;
+//         }
+//         if (nameAgent === '') {
+//             alertIziToastError('Tên đại lý', 'Không được để trống');
+//             isError = true;
+//         }
+//         if (phone === '') {
+//             alertIziToastError('Số điện thoại', 'Không được để trống');
+//             isError = true;
+//         } else {
+//             if (!isValidPhoneNumber(phone)) {
+//                 alertIziToastError('Số điện thoại', 'Không được hợp lệ');
+//                 isError = true;
+//             }
+//         }
+//         if (email === '') {
+//             alertIziToastError('Địa chỉ email', 'Không được để trống');
+//             isError = true;
+//         } else {
+//             if (!isValidEmail(email)) {
+//                 alertIziToastError('Địa chỉ email', 'Không được hợp lệ');
+//                 isError = true;
+//             }
+//         }
+//         if (isError) return;
+//         const isAddNew = idAgent == null || false || idAgent === "";
+//         const isAddNewUser = idUser == null || false || idUser === "";
+//         $(this).addClass('disabled btn-progress');
+//         try {
+//             let dataUser;
+//             if (!isAddNewUser) dataUser = await vetgoSheet.getById(idAgent, TBL_USER);
+//             if (dataUser == null) dataUser = {id: null};
+//             dataUser.name = nameAgent;
+//             dataUser.phone = replaceInputToNumber(phone);
+//             dataUser.email = email;
+//             dataUser.address = address;
+//             dataUser.avatar_url = null;
+//             dataUser.status = 0;
+//             let data;
+//             if (!isAddNew) data = await vetgoSheet.getById(idAgent, TBL_AGENT);
+//             if (data == null) data = {id: null};
+//             data.code = codeAgent;
+//             data.name = nameAgent;
+//             data.phone = replaceInputToNumber(phone);
+//             data.email = email;
+//             data.address = address;
+//             data.status = status;
+//             data.lastUpdated = new Date().toISOString();
+//             const result = await vetgoSheet.add(data, TBL_AGENT);
+//             $("#register-modal").modal("hide");
+//             const agentListTable = $('#agent-list-table').DataTable();
+//             if (!isAddNew) {
+//                 console.log(agentListTable.row(`:eq(${indexRow})`).data());
+//                 agentListTable.row(`:eq(${indexRow})`).remove().draw(false);
+//             }
+//             addRowTable(result, agentListTable);
+//             dataAgentMap.set(result.id, result);
+//             alertIziToastSuccess("Đại lý", "lưu thành công");
+//         } catch (error) {
+//             console.error(error);
+//             alertIziToastError("Đại lý", "lưu thất bại, kiểm tra lại kết nối");
+//         }
+//         $(this).removeClass('disabled btn-progress');
+//     });
+//     $('#btn-delete-agent').on("click", async function () {
+//         const idDelete = $("#id-agent").val();
+//         const indexRow = parseInt($("#index-row").val());
+//         $(this).addClass('disabled btn-progress');
+//         try {
+//             await vetgoSheet.deleteById(idDelete, TBL_AGENT);
+//             dataAgentMap.delete(idDelete);
+//             $("#register-modal").modal("hide");
+//             const agentListTable = $('#agent-list-table').DataTable();
+//             agentListTable.row(`:eq(${indexRow})`).remove().draw(false);
+//             alertIziToastSuccess("Đại lý", "xóa thành công");
+//         } catch (error) {
+//             console.error(error);
+//             alertIziToastSuccess("Đại lý", "xóa thất bại, kiểm tra lại kết nối");
+//         }
+//         $(this).removeClass('disabled btn-progress');
+//     });
+// });
 
 async function init() {
-    const dataAgentList = (await vetgoSheet.getAll(TBL_AGENT)).filter(data => data.deleted === "false");
-    dataAgentMap = new Map(dataAgentList.map(agent => [agent.id, agent]));
+    const dataAgentList = (await vetgoSheet.getAll('AGENTS')).filter(data => data.deleted === "false");
     const table = $('#agent-list-table').DataTable();
     for (let i = 0; i < dataAgentList.length; i++) {
         addRowTable(dataAgentList[i], table);
