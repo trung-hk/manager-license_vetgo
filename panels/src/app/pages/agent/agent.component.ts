@@ -1,26 +1,38 @@
-import {AfterViewInit, Component} from '@angular/core';
-import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
-import {CommunicationService} from "../../services/communication.service";
+import { AfterViewInit, Component, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { LazyLoadScriptService } from "../../services/lazy-load-script.service";
+import { CommunicationService } from "../../services/communication.service";
+import { BackEndCrud } from 'src/app/app-sheet/back-end.crud';
+import { Agent } from 'src/app/models/agent';
 
 @Component({
   selector: 'app-agent',
   templateUrl: './agent.component.html'
 })
-export class AgentComponent implements AfterViewInit{
+export class AgentComponent implements AfterViewInit {
+  http = inject(HttpClient);
+  apiSheet = new BackEndCrud<Agent>(this.http, 'AKfycbzC9sSxdtHmTpbzOBMNcOwBV8D36PUOEehuM4XlKe2_B9eNhmrJOf8LRWIv-nYN2LG4');
+  // data: Agent[] = [];
+  // currentPage = 1;
+  // pageSize = 10;
+  // sort = 'id';
+
   constructor(private loadScript: LazyLoadScriptService, private communicationService: CommunicationService) {
-    this.communicationService.listenChange('LOAD-PAGE').subscribe( data =>  {
+    this.communicationService.listenChange('LOAD-PAGE').subscribe(data => {
       console.log(data);
-      }
-    )
+    })
+
+
   }
   ngAfterViewInit(): void {
     // vd javascript
     // window.communication.listenChange('LOAD-DATA-JS' , (data) => {
     //   console.log(data);
     // })
-    setTimeout( (  ) => {
-      this.communicationService.sendEventToJs('LOAD-DATA-JS' , {userName: "userName"});
-    }, 10000)
+    // setTimeout(() => {
+    //   this.communicationService.sendEventToJs('LOAD-DATA-JS', { userName: "userName" });
+    // }, 10000)
+
     this.loadScript.addListScript([
       'assets/js/app.min.js',
       'assets/js/scripts.js',
@@ -29,12 +41,12 @@ export class AgentComponent implements AfterViewInit{
       'assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js',
       'assets/bundles/jquery-ui/jquery-ui.min.js',
       'assets/js/page/datatables.js',
-      'assets/bundles/izitoast/js/iziToast.min.js' ,
+      'assets/bundles/izitoast/js/iziToast.min.js',
       'assets/js/page/toastr.js',
       'assets/js/page/agent-menu.js',
       'assets/js/page/agent-list.js'
-    ]).then();
-
+    ])
+    .then(() => this.communicationService.sendEventToJs('AgentComponent', {type: 'INITIAL_DATA', data: {} }));
   }
 
 }
