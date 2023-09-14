@@ -25,14 +25,6 @@ export class AgentComponent implements AfterViewInit {
 
   }
   ngAfterViewInit(): void {
-    // vd javascript
-    // window.communication.listenChange('LOAD-DATA-JS' , (data) => {
-    //   console.log(data);
-    // })
-    // setTimeout(() => {
-    //   this.communicationService.sendEventToJs('LOAD-DATA-JS', { userName: "userName" });
-    // }, 10000)
-
     this.loadScript.addListScript([
       'assets/js/app.min.js',
       'assets/js/scripts.js',
@@ -46,7 +38,10 @@ export class AgentComponent implements AfterViewInit {
       'assets/js/page/agent-menu.js',
       'assets/js/page/agent-list.js'
     ])
-    .then(() => this.communicationService.sendEventToJs('AgentComponent', {type: 'INITIAL_DATA', data: {} }));
+    .then(() => this.communicationService.sendEventToJs('AgentComponent', {type: 'INITIAL_DATA' }));
   }
 
+  createAgent() {
+    this.communicationService.sendEventToJs('AgentComponent', {type: 'SAVE_DATA' });
+  }
 }
