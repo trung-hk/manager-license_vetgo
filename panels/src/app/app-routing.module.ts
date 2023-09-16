@@ -54,6 +54,10 @@ const routes: Routes = [
     ],
     canActivate: [isAuthenticated],
   },
+  {
+    path: 'demo',
+    loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule)
+  }
 ];
 
 @NgModule({

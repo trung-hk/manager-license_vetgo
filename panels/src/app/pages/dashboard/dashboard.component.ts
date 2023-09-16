@@ -7,7 +7,8 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements AfterViewInit , OnDestroy{
- list = [
+    isVisible = false;
+    list = [
    'assets/js/app.min.js',
    'assets/js/scripts.js',
    'assets/js/appScript.js',
@@ -28,4 +29,18 @@ export class DashboardComponent implements AfterViewInit , OnDestroy{
       this.communicationService.sendEventToJs('LOAD-DATA' , {userName: "userName"});
     }, 30*1000);
   }
+
+    showModal(): void {
+        this.isVisible = true;
+    }
+
+    handleOk(): void {
+        console.log('Button ok clicked!');
+        this.isVisible = false;
+    }
+
+    handleCancel(): void {
+        console.log('Button cancel clicked!');
+        this.isVisible = false;
+    }
 }

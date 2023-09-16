@@ -16,6 +16,15 @@ import { ProductComponent } from './pages/product/product.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProductServiceComponent } from './pages/product-service/product-service.component';
 import { PartnerComponent } from './pages/partner/partner.component';
+import {CommonModule, registerLocaleData} from "@angular/common";
+import { NZ_I18N } from 'ng-zorro-antd/i18n';
+import { vi_VN } from 'ng-zorro-antd/i18n';
+import vi from '@angular/common/locales/vi';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {NgZorroAntdModule} from "./ng-zorro-antd.module";
+registerLocaleData(vi);
+
 // for production
 const fullURL = window.location.href
 const domainRegex = new RegExp('.phanmemvet.vn(.*)', 'g');
@@ -66,7 +75,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
     PartialsModule,
     KeycloakAngularModule,
     HttpClientModule,
-    NgxPermissionsModule.forRoot()
+    NgxPermissionsModule.forRoot(),
+    CommonModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    NgZorroAntdModule
   ],
   providers: [
     {
@@ -76,8 +89,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
       deps: [KeycloakService]
     },
     [
-      { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
-    ]
+      { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
+      { provide: NZ_I18N, useValue: vi_VN }
+  ]
   ],
   bootstrap: [AppComponent]
 })
