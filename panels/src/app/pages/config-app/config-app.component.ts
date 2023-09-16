@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject, inject, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, inject, OnDestroy, Renderer2} from '@angular/core';
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {CommunicationService} from "../../services/communication.service";
 import {ApiCommonService} from "../../services/api-common.service";
@@ -7,7 +7,6 @@ import {HttpClient} from '@angular/common/http';
 import {BackEndCrud} from "../../app-sheet/back-end.crud";
 import {Constant} from 'src/app/utils/constant';
 import {ScriptCommonService} from "../../services/script-common.service";
-import {filter} from "rxjs";
 
 @Component({
     selector: 'app-config-app',
