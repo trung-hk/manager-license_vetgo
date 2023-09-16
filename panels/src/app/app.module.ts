@@ -12,6 +12,10 @@ import { AgentComponent } from './pages/agent/agent.component';
 import { ConfigAppComponent } from './pages/config-app/config-app.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import {LoaderInterceptor} from "./interceptors/loader.interceptor";
+import { ProductComponent } from './pages/product/product.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { ProductServiceComponent } from './pages/product-service/product-service.component';
+import { PartnerComponent } from './pages/partner/partner.component';
 // for production
 const fullURL = window.location.href
 const domainRegex = new RegExp('.phanmemvet.vn(.*)', 'g');
@@ -50,7 +54,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
     DashboardComponent,
     PortalLayoutComponent,
     AgentComponent,
-    ConfigAppComponent
+    ConfigAppComponent,
+    ProductComponent,
+    ProfileComponent,
+    ProductServiceComponent,
+    PartnerComponent,
   ],
   imports: [
     BrowserModule,
