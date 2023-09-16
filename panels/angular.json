@@ -38,7 +38,9 @@
               "src/theme.less",
               "src/styles.scss"
             ],
-            "scripts": ["src/assets/Y3NyZlRva2Vu.js"]
+            "scripts": [
+              "src/assets/Y3NyZlRva2Vu.js"
+            ]
           },
           "configurations": {
             "production": {

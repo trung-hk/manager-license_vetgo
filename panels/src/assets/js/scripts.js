@@ -1,4 +1,14 @@
 "use strict";
+window.communication.listenChange("ScriptComponent", (dataRequest) => {
+  switch (dataRequest.event) {
+    case 'alert-success':
+      alertIziToastSuccess(dataRequest.data.title, dataRequest.data.message);
+      break;
+    case 'alert-error':
+      alertIziToastError(dataRequest.data.title, dataRequest.data.message);
+      break;
+  }
+});
 $(window).on("load", function () {
   $(".loader").fadeOut("slow");
 });

@@ -8,13 +8,12 @@
                             <h4>Danh sách config app</h4>
                         </div>
                         <div class="col-9">
-                            <button type="button"  data-toggle="modal" data-target="#add-config-app-modal" class="btn btn-success pull-right note-btn" onclick="openModal(this);"><i class="fas fa-plus"></i> Thêm mới Config</button>
+                            <button type="button" onclick="openModal(this);"  data-toggle="modal" data-target="#add-config-app-modal" class="btn btn-success pull-right note-btn" ><i class="fas fa-plus"></i> Thêm mới Config</button>
                         </div>
 
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            @@include('partials/loading-data.html')
                             <table class="table table-hover" id="config-app-table">
                                 <thead>
                                 <tr>
@@ -26,7 +25,30 @@
                                     <th>Thao tác</th>
                                 </tr>
                                 </thead>
+                                <tbody class="loadingData">
+<!--                                <tr>-->
+<!--                                    <td colspan="6">-->
+<!--                                        <div class="text-center">-->
+<!--                                            <span >Đang cập nhật dữ liệu...</span>-->
+<!--                                            <div class="spinner-border" role="status">-->
+<!--                                                <span class="sr-only">Loading...</span>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+                                </tbody>
                                 <tbody>
+<!--                                <tr *ngFor="let dt of data">-->
+<!--                                    <td >{{dt?.firebase}}</td>-->
+<!--                                    <td >{{dt?.sheetId}}</td>-->
+<!--                                    <td >{{dt?.customerId}}</td>-->
+<!--                                    <td >{{dt?.lastUpdated | date: 'yyyy/MM/dd HH:mm:ss'}}</td>-->
+<!--                                    <td  *ngIf="dt.status === 0; then content else other_content"></td>-->
+<!--                                    <ng-template #content><div class="badge badge-danger badge-shadow">Chưa sử dụng</div></ng-template>-->
+<!--                                    <ng-template #other_content><div class="badge badge-success badge-shadow">Đang sử dụng</div></ng-template>-->
+<!--                                    <td ><button type="button" [attr.data-id]= "dt.id" data-toggle="modal" data-target="#add-config-app-modal" class="btn btn-success note-btn" onclick="openModal(this);"><i class="fas fa-edit"></i></button></td>-->
+<!--                                </tr>-->
+
                                 </tbody>
                             </table>
                         </div>
@@ -37,7 +59,7 @@
     </div>
 </section>
 <div class="modal fade" id="add-config-app-modal" tabindex="-1" role="dialog" aria-labelledby="formModal"
-     aria-hidden="true">
+     aria-hidden="true" >
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -86,9 +108,9 @@
                             </div>
                         </div>
                     </div>
-                    <button id="btn-add-new-config" type="button" class="add-category btn btn-success waves-effect pull-right save-config-app" ><i class="fas fa-save"></i> Thêm mới</button>
-                    <button id="btn-delete-config" type="button" class="add-category btn btn-danger waves-effect pull-right"><i class="fas fa-trash"></i> Xóa</button>
-                    <button id="btn-update-config"  type="button" class="add-category btn btn-success waves-effect pull-right save-config-app m-r-15"><i class="fas fa-save"></i> Cập nhật</button>
+                    <button (click)="saveData('btn-add-new')"  id="btn-add-new" type="button" class="add-category btn btn-success waves-effect pull-right save-data" ><i class="fas fa-save"></i> Thêm mới</button>
+                    <button (click)="deleteData()" id="btn-delete" type="button" class="add-category btn btn-danger waves-effect pull-right"><i class="fas fa-trash"></i> Xóa</button>
+                    <button (click)="saveData('btn-update')" id="btn-update"  type="button" class="add-category btn btn-success waves-effect pull-right save-data m-r-15"><i class="fas fa-save"></i> Cập nhật</button>
                 </form>
             </div>
         </div>
