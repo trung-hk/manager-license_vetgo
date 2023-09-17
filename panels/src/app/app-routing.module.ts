@@ -28,7 +28,7 @@ const routes: Routes = [
         component:  DashboardComponent
       },
       {
-        path: 'agent',
+        path: 'agents',
         component: AgentComponent
       },
       {

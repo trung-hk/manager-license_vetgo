@@ -26,7 +26,7 @@ export class ApiCommonService {
         return this.httpClient.put<T>(`${this.url}/${api}/${id}`, data);
     }
 
-    delete<T>(id: string, api: string): Observable<T> {
+    delete<T>(id: string | number, api: string): Observable<T> {
         return this.httpClient.delete<T>(`${this.url}/${api}/${id}`);
     }
 }

@@ -20,9 +20,12 @@ import {CommonModule, registerLocaleData} from "@angular/common";
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { vi_VN } from 'ng-zorro-antd/i18n';
 import vi from '@angular/common/locales/vi';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NgZorroAntdModule} from "./ng-zorro-antd.module";
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzFormModule } from 'ng-zorro-antd/form';
 registerLocaleData(vi);
 
 // for production
@@ -80,7 +83,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
     CommonModule,
     FormsModule,
     BrowserAnimationsModule,
-    NgZorroAntdModule
+    NgZorroAntdModule,
+    NzAvatarModule,
+    NzModalModule,
+    NzFormModule,
+    ReactiveFormsModule,
   ],
   providers: [
     {
