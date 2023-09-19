@@ -8,111 +8,135 @@
                             <h4>Danh sách config app</h4>
                         </div>
                         <div class="col-9">
-                            <button type="button" onclick="openModal(this);"  data-toggle="modal" data-target="#add-config-app-modal" class="btn btn-success pull-right note-btn" ><i class="fas fa-plus"></i> Thêm mới Config</button>
+                            <button type="button" (click)="showModal()"class="btn btn-success pull-right note-btn">
+                                <i class="fas fa-plus"></i> Thêm mới Config</button>
                         </div>
 
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover" id="config-app-table">
-                                <thead>
-                                <tr>
-                                    <th>Thông tin Firebase</th>
-                                    <th>Thông tin Sheet Id</th>
-                                    <th>Khách hàng</th>
-                                    <th>Ngày cập nhật</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thao tác</th>
-                                </tr>
-                                </thead>
-                                <tbody class="loadingData">
-<!--                                <tr>-->
-<!--                                    <td colspan="6">-->
-<!--                                        <div class="text-center">-->
-<!--                                            <span >Đang cập nhật dữ liệu...</span>-->
-<!--                                            <div class="spinner-border" role="status">-->
-<!--                                                <span class="sr-only">Loading...</span>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
-                                </tbody>
-                                <tbody>
-<!--                                <tr *ngFor="let dt of data">-->
-<!--                                    <td >{{dt?.firebase}}</td>-->
-<!--                                    <td >{{dt?.sheetId}}</td>-->
-<!--                                    <td >{{dt?.customerId}}</td>-->
-<!--                                    <td >{{dt?.lastUpdated | date: 'yyyy/MM/dd HH:mm:ss'}}</td>-->
-<!--                                    <td  *ngIf="dt.status === 0; then content else other_content"></td>-->
-<!--                                    <ng-template #content><div class="badge badge-danger badge-shadow">Chưa sử dụng</div></ng-template>-->
-<!--                                    <ng-template #other_content><div class="badge badge-success badge-shadow">Đang sử dụng</div></ng-template>-->
-<!--                                    <td ><button type="button" [attr.data-id]= "dt.id" data-toggle="modal" data-target="#add-config-app-modal" class="btn btn-success note-btn" onclick="openModal(this);"><i class="fas fa-edit"></i></button></td>-->
-<!--                                </tr>-->
-
-                                </tbody>
-                            </table>
-                        </div>
+                        <nz-table
+                                nzShowSizeChanger
+                                [nzData]="dataList"
+                                [nzFrontPagination]="false"
+                                [nzLoading]="loading"
+                                [nzTotal]="total"
+                                [nzPageSize]="pageSize"
+                                [nzPageIndex]="pageIndex"
+                                (nzQueryParams)="onQueryParamsChange($event)"
+                                (nzPageIndexChange)="onPageIndexChange($event)"
+                        >
+                            <thead>
+                            <tr>
+                                <th nzWidth="30%" nzColumnKey="firebase" [nzSortFn]="true">Thông tin Firebase</th>
+                                <th nzWidth="25%" nzColumnKey="sheet_id" [nzSortFn]="true">Thông tin Sheet Id</th>
+                                <th nzWidth="10%" nzColumnKey="customer_id" [nzSortFn]="true">Khách hàng</th>
+                                <th nzWidth="15%" nzColumnKey="last_modified_date" [nzSortFn]="true">Ngày cập nhật</th>
+                                <th nzWidth="10%" nzColumnKey="status" [nzSortFn]="true">Trạng thái</th>
+                                <th nzWidth="10%" nzColumnKey="action" [nzSortFn]="true">Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let dt of dataList">
+                                <td>{{dt.firebase}}</td>
+                                <td>{{dt.sheetId}}</td>
+                                <td class="align-center">  <nz-avatar nzIcon="user" nzSrc="{{dt.customerId}}"></nz-avatar></td>
+                                <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+                                <td class="align-center">
+                                    <div class="badge badge-shadow"
+                                         [ngClass]="dt.status === '0' ? 'badge-danger' : 'badge-success'">
+                                        {{ dt.status === '0' ? 'Chưa sử dụng' : 'Đang sử dụng' }}
+                                    </div>
+                                </td>
+                                <td class="align-center">
+                                    <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)"><i
+                                            class="fas fa-edit"></i></button>
+                                    &nbsp;
+                                    <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)"><i
+                                            class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </nz-table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<div class="modal fade" id="add-config-app-modal" tabindex="-1" role="dialog" aria-labelledby="formModal"
-     aria-hidden="true" >
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-center" id="formModal">Thêm Config App</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<!-- Create/Update Form -->
+<nz-modal [(nzVisible)]="isVisible"
+          [nzTitle]="idShowModal ? modalTitleUpdate : modalTitleAdd"
+          [nzContent]="modalContent"
+          [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
+          (nzOnCancel)="handleCancel()" nzWidth="600px">
+    <ng-template #modalTitleAdd>Thêm mới Config </ng-template>
+    <ng-template #modalTitleUpdate>Cập nhật Config</ng-template>
+
+    <ng-template #modalContent>
+        <form nz-form [nzLayout]="'vertical'" [formGroup]="validateForm">
+            <input type="hidden" formControlName="id" >
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-3 col-form-label-sm">Config Firebase</label>
+                    <div class="col-md-9">
+                        <input  type="text" class="form-control" placeholder="Config fireBase"
+                               formControlName="firebase">
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <form action="#">
-                    <input type="hidden" id="id-config-app">
-                    <input type="hidden" id="index-row">
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-3 col-form-label-sm">Config Firebase</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" placeholder="Config fireBase" name="config-firebase" id="config-firebase">
-                            </div>
-                        </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-3 col-form-label-sm">Config Sheet Id</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" placeholder="Sheet Id"
+                               formControlName="sheetId">
                     </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-3 col-form-label-sm">Config Sheet Id</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" placeholder="Sheet Id" name="config-sheet-id" id="config-sheet-id">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-3 col-form-label-sm">Khách hàng</label>
-                            <div class="col-md-9">
-                                <select name="customer" class="form-control form-control-sm select-scroll" id="customer">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-3 col-form-label-sm">Trạng thái</label>
-                            <div class="col-md-9">
-                                <select name="status" class="form-control form-control-sm select-scroll" id="status">
-                                    <option value="0">Chưa sử dụng</option>
-                                    <option value="1">Đang sử dụng</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <button (click)="saveData('btn-add-new')"  id="btn-add-new" type="button" class="add-category btn btn-success waves-effect pull-right save-data" ><i class="fas fa-save"></i> Thêm mới</button>
-                    <button (click)="deleteData()" id="btn-delete" type="button" class="add-category btn btn-danger waves-effect pull-right"><i class="fas fa-trash"></i> Xóa</button>
-                    <button (click)="saveData('btn-update')" id="btn-update"  type="button" class="add-category btn btn-success waves-effect pull-right save-data m-r-15"><i class="fas fa-save"></i> Cập nhật</button>
-                </form>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-3 col-form-label-sm">Khách hàng</label>
+                    <div class="col-md-9">
+                        <select class="form-control form-control-sm select-scroll"
+                                formControlName="customer">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-3 col-form-label-sm">Trạng thái</label>
+                    <div class="col-md-9">
+                        <select class="form-control form-control-sm select-scroll" formControlName="status" >
+                            <option value="0">Chưa sử dụng</option>
+                            <option value="1">Đang sử dụng</option>
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalFooterAdd>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+        <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
+                [nzLoading]="isConfirmLoading"><i class="fas fa-save"></i> Thêm mới</button>
+    </ng-template>
+    <ng-template #modalFooterUpdate>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+        <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
+                [nzLoading]="isConfirmLoading"><i class="fas fa-save"></i> Câp nhật</button>
+    </ng-template>
+</nz-modal>
+
+<!-- Delete Confirmation -->
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Delete Confirmation" nzOkText="Ok" nzOkDanger="true" nzCancelText="Cancel" (nzOnOk)="handleConfirmToDelete()"
+          (nzOnCancel)="handleCancelDeletePopup()">
+    <ng-container *nzModalContent>
+        Are you sure you want to delete?
+    </ng-container>
+</nz-modal>
+<ng-template let-notification ="data" #notification>
+    <nz-tag [nzColor]="notification.color"> Data {{ notification.message }}</nz-tag>
+</ng-template>

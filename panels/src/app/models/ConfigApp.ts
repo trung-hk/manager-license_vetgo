@@ -1,6 +1,6 @@
 
 export class ConfigApp{
-    id?: string | null;
+    id?: string | null ;
     firebase?: string | null;
     sheetId?: string | null;
     customerId?: string | null;

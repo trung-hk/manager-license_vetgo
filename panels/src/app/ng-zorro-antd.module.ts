@@ -16,6 +16,11 @@ import {NzDividerModule} from "ng-zorro-antd/divider";
 import {NzModalModule} from "ng-zorro-antd/modal";
 import {NzGridModule} from "ng-zorro-antd/grid";
 import {NzButtonModule} from "ng-zorro-antd/button";
+import {NzSelectModule} from "ng-zorro-antd/select";
+import {NzAvatarModule} from "ng-zorro-antd/avatar";
+import {NzFormModule} from "ng-zorro-antd/form";
+import {NzNotificationModule} from "ng-zorro-antd/notification";
+import {NzTagModule} from "ng-zorro-antd/tag";
 
 @NgModule({
     exports: [
@@ -25,6 +30,11 @@ import {NzButtonModule} from "ng-zorro-antd/button";
         NzModalModule,
         NzGridModule,
         NzButtonModule,
+        NzSelectModule,
+        NzAvatarModule,
+        NzFormModule,
+        NzNotificationModule,
+        NzTagModule,
     ],
     providers: [
         { provide: NZ_ICONS, useValue: icons }

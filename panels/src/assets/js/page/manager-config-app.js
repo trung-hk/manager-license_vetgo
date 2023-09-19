@@ -12,22 +12,6 @@ window.communication.listenChange("ConfigAppComponent", (data) => {
             break;
     }
 });
-
-$("#config-app-table").dataTable({
-    order: [[3, 'desc']],
-    columnDefs: [
-        {sortable: false, targets: [0, 1, 2, 5]},
-        {width: "480px", targets: [0, 1]},
-        {width: "70px", targets: [2]},
-        {width: "105px", targets: [3]},
-        {width: "70px", targets: [4]},
-        {width: "50px", targets: [5]},
-    ],
-    fnRowCallback: function (nRow, aData, iDisplayIndex) {
-        $(nRow).find('td:eq(5) button').attr('data-index', iDisplayIndex);
-    }
-});
-
 $(document).ready(async function () {
     await loadDataCustomer();
     // await loadDataConfigApp();

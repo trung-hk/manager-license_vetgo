@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {ChangeDetectorRef, Component, inject} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 
@@ -49,6 +49,12 @@ export class DemPaginationComponent {
     const sortField = (currentSort && currentSort.key) || null;
     const sortOrder = (currentSort && currentSort.value) || null;
     this.loadDataFromServer(pageIndex, pageSize, sortField, sortOrder, filter);
+  }
+  onPageIndexChange(pageIndex: number | null): void {
+    console.log(pageIndex);
+  }
+  onQueryParamsPageSizeChange(params: number): void {
+    console.log("PageSizeChange " + params);
   }
 
 
