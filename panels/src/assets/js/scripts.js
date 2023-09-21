@@ -1,13 +1,10 @@
 "use strict";
 window.communication.listenChange("ScriptComponent", (dataRequest) => {
-  console.log("lissten: " + dataRequest.event)
   switch (dataRequest.event) {
     case 'alert-success':
-      console.log("lissten: " + JSON.stringify(dataRequest))
       alertIziToastSuccess(dataRequest.data.title, dataRequest.data.message);
       break;
     case 'alert-error':
-      console.log("lissten: " + JSON.stringify(dataRequest))
       alertIziToastError(dataRequest.data.title, dataRequest.data.message);
       break;
   }
@@ -874,8 +871,6 @@ function replaceInputToNumber(value) {
   return value.replace(/\D/g, "");
 }
 function alertIziToastSuccess(title, message) {
-  console.log(title);
-  console.log(message);
   if (title) {
     iziToast.success({
       title: title,
