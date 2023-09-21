@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, inject, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {CommunicationService} from "../../services/communication.service";
 import {ApiCommonService} from "../../services/api-common.service";
@@ -9,18 +9,14 @@ import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
-import {NzNotificationService} from "ng-zorro-antd/notification";
 
 @Component({
     selector: 'app-config-app',
     templateUrl: './config-app.component.html',
 })
 export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
-    @ViewChild('notification') notificationTemplate?: TemplateRef<any>;
     http = inject(HttpClient);
-    listScript = [
-        'assets/js/page/manager-config-app.js'
-    ];
+    listScript = [];
     dataList: ConfigApp[] = [];
     total: number = 1;
     loading: boolean = true;
@@ -40,8 +36,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                 private communicationService: CommunicationService,
                 private renderer: Renderer2,
                 private scriptFC: ScriptCommonService,
-                private fb: UntypedFormBuilder,
-                private notificationService: NzNotificationService) {
+                private fb: UntypedFormBuilder) {
     }
     ngOnInit() {
         this.init();
@@ -110,7 +105,6 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isVisible = true;
 
         if (configApp) {
-            console.log("plaplapla " + JSON.stringify(configApp));
             this.validateForm.setValue({
                 id: configApp.id,
                 firebase: configApp.firebase,
@@ -140,19 +134,19 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.api.update<ConfigApp>(data.id, data, Constant.API_CONFIG_APP).subscribe(() => {
                         this.isVisible = false;
                         this.loadDataFromServer(this.pageIndex, this.pageSize);
-                        this.scriptFC.alertShowMessageSuccess(this.notificationTemplate!, 'Lưu thành công');
+                        this.scriptFC.alertShowMessageSuccess('Lưu thành công');
                     }, (error) => {
                         console.log(error);
-                        this.scriptFC.alertShowMessageError(this.notificationTemplate!, 'Lưu thất bại');
+                        this.scriptFC.alertShowMessageError('Lưu thất bại');
                     })
                 } else {
                     this.api.insert<ConfigApp>(data, Constant.API_CONFIG_APP).subscribe(() => {
                         this.isVisible = false;
                         this.loadDataFromServer(this.pageIndex, this.pageSize);
-                        this.scriptFC.alertShowMessageSuccess(this.notificationTemplate!, 'Lưu thành công');
+                        this.scriptFC.alertShowMessageSuccess('Lưu thành công');
                     }, (error) => {
                         console.log(error);
-                        this.scriptFC.alertShowMessageError(this.notificationTemplate!, 'Lưu thất bại');
+                        this.scriptFC.alertShowMessageError('Lưu thất bại');
                     })
                 }
             } else {
@@ -165,7 +159,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         } catch (error) {
             console.log(error)
-            this.scriptFC.alertShowMessageError(this.notificationTemplate!, 'Lưu thất bại');
+            this.scriptFC.alertShowMessageError('Lưu thất bại');
         }
         this.isConfirmLoading = false;
 
@@ -190,10 +184,10 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
             this.api.delete(this.idDelete, Constant.API_CONFIG_APP).subscribe(() => {
                 this.loadDataFromServer(this.pageIndex, this.pageSize);
                 this.handleCancelDeletePopup();
-                this.scriptFC.alertShowMessageSuccess(this.notificationTemplate!, 'Xóa thành công');
+                this.scriptFC.alertShowMessageSuccess('Xóa thành công');
             }, (error) => {
                 console.log(error);
-                this.scriptFC.alertShowMessageError(this.notificationTemplate!, 'Xóa thất bại');
+                this.scriptFC.alertShowMessageError('Xóa thất bại');
             })
         }
 

@@ -1,16 +1,18 @@
-import {Injectable, TemplateRef} from '@angular/core';
-import {NzNotificationService} from "ng-zorro-antd/notification";
+import {Injectable} from '@angular/core';
+import {CommunicationService} from "./communication.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScriptCommonService {
-  constructor(private notificationService: NzNotificationService) { }
+  constructor(private communicationService: CommunicationService) { }
 
-  alertShowMessageSuccess(notificationTemplate: TemplateRef<any>, message: string): void {
-    this.notificationService.template(notificationTemplate!, { nzData: {message: message, color: "green"} });
+  alertShowMessageSuccess(message: string, title?: string): void {
+    this.communicationService.sendEventToJs("ScriptComponent", {event: "alert-success", data:{title: title, message: message}});
+    // this.notificationService.template(notificationTemplate!, { nzData: {message: message, color: "green"} });
   }
-  alertShowMessageError(notificationTemplate: TemplateRef<any>, message: string): void {
-    this.notificationService.template(notificationTemplate!, { nzData: {message: message, color: "red"} });
+  alertShowMessageError(message?: string, title?: string): void {
+    this.communicationService.sendEventToJs("ScriptComponent", {event: "alert-success", data:{title: title, message: message}})
+    // this.notificationService.template(notificationTemplate!, { nzData: {message: message, color: "red"} });
   }
 }

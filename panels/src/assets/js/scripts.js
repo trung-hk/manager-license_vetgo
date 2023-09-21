@@ -1,10 +1,13 @@
 "use strict";
 window.communication.listenChange("ScriptComponent", (dataRequest) => {
+  console.log("lissten: " + dataRequest.event)
   switch (dataRequest.event) {
     case 'alert-success':
+      console.log("lissten: " + JSON.stringify(dataRequest))
       alertIziToastSuccess(dataRequest.data.title, dataRequest.data.message);
       break;
     case 'alert-error':
+      console.log("lissten: " + JSON.stringify(dataRequest))
       alertIziToastError(dataRequest.data.title, dataRequest.data.message);
       break;
   }
@@ -871,18 +874,34 @@ function replaceInputToNumber(value) {
   return value.replace(/\D/g, "");
 }
 function alertIziToastSuccess(title, message) {
-  iziToast.success({
-    title: title,
-    message: message,
-    position: 'topRight'
-  });
+  console.log(title);
+  console.log(message);
+  if (title) {
+    iziToast.success({
+      title: title,
+      message: message,
+      position: 'topRight'
+    });
+  } else {
+    iziToast.success({
+      message: message,
+      position: 'topRight'})
+  }
+
+
 }
 function alertIziToastError(title, message) {
-  iziToast.error({
-    title: title,
-    message: message,
-    position: 'topRight'
-  });
+  if (title) {
+    iziToast.error({
+      title: title,
+      message: message,
+      position: 'topRight'
+    });
+  } else {
+    iziToast.error({
+      message: message,
+      position: 'topRight'})
+  }
 }
 function isValidEmail(email) {
   // Biểu thức chính quy kiểm tra định dạng email
