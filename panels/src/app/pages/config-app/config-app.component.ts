@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, inject, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {CommunicationService} from "../../services/communication.service";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ConfigApp} from "../../models/ConfigApp";
-import {HttpClient} from '@angular/common/http';
 import {Constant} from 'src/app/utils/constant';
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
@@ -15,7 +14,6 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
     templateUrl: './config-app.component.html',
 })
 export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
-    http = inject(HttpClient);
     listScript = [];
     dataList: ConfigApp[] = [];
     total: number = 1;

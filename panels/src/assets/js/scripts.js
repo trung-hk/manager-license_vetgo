@@ -883,7 +883,6 @@ function alertIziToastSuccess(title, message) {
       position: 'topRight'})
   }
 
-
 }
 function alertIziToastError(title, message) {
   if (title) {

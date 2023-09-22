@@ -16,6 +16,56 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
+                            <nz-table
+                                    nzShowSizeChanger
+                                    [nzData]="dataList"
+                                    [nzFrontPagination]="false"
+                                    [nzLoading]="loading"
+                                    [nzTotal]="total"
+                                    [nzPageSize]="pageSize"
+                                    [nzPageIndex]="pageIndex"
+                                    (nzQueryParams)="onQueryParamsChange($event)"
+                                    (nzPageIndexChange)="onPageIndexChange($event)"
+                            >
+                                <thead>
+                                <tr>
+                                    <th nzWidth="10%" nzColumnKey="name" [nzSortFn]="true">Sản phẩm</th>
+                                    <th nzWidth="30%" nzColumnKey="description" [nzSortFn]="true">Thông tin sản phẩm</th>
+                                    <th nzWidth="25%">Thông tin Gói</th>
+                                    <th nzWidth="15%" nzColumnKey="last_modified_date" [nzSortFn]="true">Ngày cập nhật</th>
+                                    <th nzWidth="10%">Trạng thái</th>
+                                    <th nzWidth="10%">Thao tác</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+<!--                                <tr *ngFor="let dt of dataList">-->
+<!--                                    <td>{{dt.firebase}}</td>-->
+<!--                                    <td>{{dt.sheetId}}</td>-->
+<!--                                    <td class="align-center">-->
+<!--                                        <img alt="image" src="assets/img/users/user-3.png" class="rounded-circle" width="35"-->
+<!--                                             data-toggle="tooltip" title="{{dt.customerId}}">-->
+<!--                                    </td>-->
+<!--                                    <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>-->
+<!--                                    <td class="align-center">-->
+<!--                                        <div class="badge badge-shadow"-->
+<!--                                             [ngClass]="dt.status === '0' ? 'badge-danger' : 'badge-success'">-->
+<!--                                            {{ dt.status === '0' ? 'Chưa sử dụng' : 'Đang sử dụng' }}-->
+<!--                                        </div>-->
+<!--                                    </td>-->
+<!--                                    <td class="align-center">-->
+<!--                                        <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)">-->
+<!--                                            <i class="fas fa-edit"></i>-->
+<!--                                        </button>-->
+<!--                                        &nbsp;-->
+<!--                                        <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)">-->
+<!--                                            <i class="fas fa-trash"></i>-->
+<!--                                        </button>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+                                </tbody>
+                            </nz-table>
+                        </div>
+                        <div class="table-responsive">
                             <table class="table table-hover table-striped" id="product-list-table">
                                 <thead>
                                     <tr>
