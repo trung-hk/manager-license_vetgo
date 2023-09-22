@@ -38,30 +38,28 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-<!--                                <tr *ngFor="let dt of dataList">-->
-<!--                                    <td>{{dt.firebase}}</td>-->
-<!--                                    <td>{{dt.sheetId}}</td>-->
-<!--                                    <td class="align-center">-->
-<!--                                        <img alt="image" src="assets/img/users/user-3.png" class="rounded-circle" width="35"-->
-<!--                                             data-toggle="tooltip" title="{{dt.customerId}}">-->
-<!--                                    </td>-->
-<!--                                    <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>-->
-<!--                                    <td class="align-center">-->
-<!--                                        <div class="badge badge-shadow"-->
-<!--                                             [ngClass]="dt.status === '0' ? 'badge-danger' : 'badge-success'">-->
-<!--                                            {{ dt.status === '0' ? 'Chưa sử dụng' : 'Đang sử dụng' }}-->
-<!--                                        </div>-->
-<!--                                    </td>-->
-<!--                                    <td class="align-center">-->
-<!--                                        <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)">-->
-<!--                                            <i class="fas fa-edit"></i>-->
-<!--                                        </button>-->
-<!--                                        &nbsp;-->
-<!--                                        <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)">-->
-<!--                                            <i class="fas fa-trash"></i>-->
-<!--                                        </button>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
+                                <tr *ngFor="let dt of dataList">
+                                    <td>{{dt.name}}</td>
+                                    <td>{{dt.description}}</td>
+                                    <td class="align-center">
+                                    </td>
+                                    <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+                                    <td class="align-center">
+                                        <div class="badge badge-shadow"
+                                             [ngClass]="dt.status === '0' ? 'badge-danger' : 'badge-success'">
+                                            {{ dt.status === '0' ? 'Chưa sử dụng' : 'Đang sử dụng' }}
+                                        </div>
+                                    </td>
+                                    <td class="align-center">
+                                        <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        &nbsp;
+                                        <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </nz-table>
                         </div>
