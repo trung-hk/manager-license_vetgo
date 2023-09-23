@@ -1,44 +1,31 @@
-import {AfterViewInit, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, inject, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {CommunicationService} from "../../services/communication.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html'
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent implements AfterViewInit , OnDestroy{
-    isVisible = false;
+export class DashboardComponent implements AfterViewInit, OnDestroy {
     listScript = [
         'assets/bundles/apexcharts/apexcharts.min.js',
         'assets/js/page/index.js'
     ];
-  http = inject(HttpClient)
-  constructor(private loadScript: LazyLoadScriptService, private communicationService: CommunicationService) {}
+
+    constructor(private loadScript: LazyLoadScriptService, private renderer: Renderer2) {
+    }
+
     ngOnDestroy(): void {
-    // remove script
-  }
-  ngAfterViewInit(): void {
-      this.http.get('https://dev-api.phanmemvet.vn/api/categories').subscribe( list => {
-          console.log(list);
-      })
-
-      this.loadScript.addListScript(this.listScript).then();
-    setTimeout(() => {
-      this.communicationService.sendEventToJs('LOAD-DATA' , {userName: "userName"});
-    }, 30*1000);
-  }
-
-    showModal(): void {
-        this.isVisible = true;
+        this.renderer.removeClass(document.querySelector('.index'), "active");
     }
 
-    handleOk(): void {
-        console.log('Button ok clicked!');
-        this.isVisible = false;
-    }
+    ngAfterViewInit(): void {
+        this.renderer.addClass(document.querySelector('.index'), "active");
+        this.loadScript.addListScript(this.listScript).then();
 
-    handleCancel(): void {
-        console.log('Button cancel clicked!');
-        this.isVisible = false;
+        // setTimeout(() => {
+        //     this.communicationService.sendEventToJs('LOAD-DATA', {userName: "userName"});
+        // }, 30 * 1000);
     }
 }

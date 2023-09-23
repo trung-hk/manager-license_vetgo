@@ -8,6 +8,7 @@ import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
+import {STATUS_CONFIG} from "../../Constants/VGConstant";
 
 @Component({
     selector: 'app-config-app',
@@ -29,6 +30,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
     validateForm!: UntypedFormGroup;
     idDelete: number | string | null | undefined = -1;
     idShowModal: number | string | null | undefined = null;
+    customerShowModal: {id: string | null | undefined, name: string | null | undefined} | null = null;
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
                 private communicationService: CommunicationService,
@@ -107,44 +109,56 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                 id: configApp.id,
                 firebase: configApp.firebase,
                 sheetId: configApp.sheetId,
-                customer: configApp.customerId,
+                customer: configApp.customerId ? configApp.customerId : "",
                 status: configApp.status
             });
+            if (configApp.customerId && configApp.customerId !== "") {
+                this.customerShowModal = {
+                    id: configApp.customerId,
+                    name: configApp.userName
+                }
+            } else {
+                this.customerShowModal = null;
+            }
         } else {
             this.validateForm.setValue({
                 id: null,
                 firebase: null,
                 sheetId: null,
-                customer: null,
-                status: 0
+                customer: "",
+                status: "0"
             });
+            this.customerShowModal = null;
         }
         this.idShowModal = this.validateForm.get("id")?.value;
     }
 
-    handleOk(): void {
+   async handleOk(): Promise<void> {
         try {
-            this.isConfirmLoading = true;
             if (this.validateForm.valid) {
+                this.isConfirmLoading = true;
                 const data: ConfigApp = this.validateForm.value
-                console.log(data);
                 if (data.id) {
-                    this.api.update<ConfigApp>(data.id, data, Constant.API_CONFIG_APP).subscribe(() => {
+                    await this.api.update<ConfigApp>(data.id, data, Constant.API_CONFIG_APP).subscribe(() => {
                         this.isVisible = false;
                         this.loadDataFromServer(this.pageIndex, this.pageSize);
                         this.scriptFC.alertShowMessageSuccess('Lưu thành công');
+                        this.isConfirmLoading = false;
                     }, (error) => {
                         console.log(error);
                         this.scriptFC.alertShowMessageError('Lưu thất bại');
+                        this.isConfirmLoading = false;
                     })
                 } else {
-                    this.api.insert<ConfigApp>(data, Constant.API_CONFIG_APP).subscribe(() => {
+                    await this.api.insert<ConfigApp>(data, Constant.API_CONFIG_APP).subscribe(() => {
                         this.isVisible = false;
                         this.loadDataFromServer(this.pageIndex, this.pageSize);
                         this.scriptFC.alertShowMessageSuccess('Lưu thành công');
+                        this.isConfirmLoading = false;
                     }, (error) => {
                         console.log(error);
                         this.scriptFC.alertShowMessageError('Lưu thất bại');
+                        this.isConfirmLoading = false;
                     })
                 }
             } else {
@@ -159,7 +173,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log(error)
             this.scriptFC.alertShowMessageError('Lưu thất bại');
         }
-        this.isConfirmLoading = false;
+
 
     }
 
@@ -190,4 +204,9 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
     }
+    getConfigByCustomer(customerId: string): ConfigApp | null | undefined {
+        return this.dataList.filter(data => data.customerId && data.customerId === customerId).shift();
+    }
+
+    protected readonly STATUS_CONFIG = STATUS_CONFIG;
 }

@@ -16,7 +16,8 @@ export class LazyLoadScriptService {
         'assets/bundles/jquery-ui/jquery-ui.min.js',
         'assets/js/page/datatables.js',
         'assets/bundles/izitoast/js/iziToast.min.js',
-        'assets/js/page/toastr.js'
+        'assets/js/page/toastr.js',
+        'assets/js/page/advance-table.js'
     ];
 
 // public removeListScript(scripts: string[]): void {

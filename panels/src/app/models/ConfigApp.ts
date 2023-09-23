@@ -5,6 +5,8 @@ export class ConfigApp{
     sheetId?: string | null;
     customerId?: string | null;
     status?: string | null;
+    userName?: string | null;
+    avatar?: string | null;
     createdBy?: string | null;
     createdDate?: string | null;
     lastModifiedBy?: string | null;

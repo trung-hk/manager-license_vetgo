@@ -21,6 +21,9 @@ import {NzAvatarModule} from "ng-zorro-antd/avatar";
 import {NzFormModule} from "ng-zorro-antd/form";
 import {NzNotificationModule} from "ng-zorro-antd/notification";
 import {NzTagModule} from "ng-zorro-antd/tag";
+import {NzCardModule} from "ng-zorro-antd/card";
+import {NzInputModule} from "ng-zorro-antd/input";
+import {NzTooltipDirective, NzToolTipModule} from "ng-zorro-antd/tooltip";
 
 @NgModule({
     exports: [
@@ -35,6 +38,9 @@ import {NzTagModule} from "ng-zorro-antd/tag";
         NzFormModule,
         NzNotificationModule,
         NzTagModule,
+        NzCardModule,
+        NzInputModule,
+        NzToolTipModule,
     ],
     providers: [
         { provide: NZ_ICONS, useValue: icons }
