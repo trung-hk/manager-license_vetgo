@@ -3,12 +3,12 @@ import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {CommunicationService} from "../../services/communication.service";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ConfigApp} from "../../models/ConfigApp";
-import {Constant} from 'src/app/utils/constant';
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
-import {STATUS_CONFIG} from "../../Constants/VGConstant";
+import {STATUS_CONFIG} from "../../Constants/vg-constant";
+import {URL} from "../../Constants/api-urls";
 
 @Component({
     selector: 'app-config-app',
@@ -68,7 +68,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     loadDataFromServer(pageIndex: number, pageSize?: number, sort?: string): void {
         this.loading = true;
-        this.api.getAll<ResponseDataGetAll<ConfigApp>>(Constant.API_CONFIG_APP, pageIndex - 1, pageSize, sort).subscribe((data => {
+        this.api.getAll<ResponseDataGetAll<ConfigApp>>(URL.API_CONFIG_APP, pageIndex - 1, pageSize, sort).subscribe((data => {
            console.log(data)
             this.loading = false;
             this.total = data.totalElements;
@@ -94,8 +94,6 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         sortOrder = sortOrder && sortOrder === 'ascend' ? "asc" : 'desc';
         this.sort = `${sortField},${sortOrder}`;
         this.loadDataFromServer(this.pageIndex, this.pageSize, `${sortField},${sortOrder}`);
-        // this.pageIndex = pageIndex
-
     }
     onPageIndexChange(pageIndex: number): void {
         console.log(pageIndex);
@@ -139,7 +137,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.isConfirmLoading = true;
                 const data: ConfigApp = this.validateForm.value
                 if (data.id) {
-                    await this.api.update<ConfigApp>(data.id, data, Constant.API_CONFIG_APP).subscribe(() => {
+                    await this.api.update<ConfigApp>(data.id, data, URL.API_CONFIG_APP).subscribe(() => {
                         this.isVisible = false;
                         this.loadDataFromServer(this.pageIndex, this.pageSize);
                         this.scriptFC.alertShowMessageSuccess('Lưu thành công');
@@ -150,7 +148,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.isConfirmLoading = false;
                     })
                 } else {
-                    await this.api.insert<ConfigApp>(data, Constant.API_CONFIG_APP).subscribe(() => {
+                    await this.api.insert<ConfigApp>(data, URL.API_CONFIG_APP).subscribe(() => {
                         this.isVisible = false;
                         this.loadDataFromServer(this.pageIndex, this.pageSize);
                         this.scriptFC.alertShowMessageSuccess('Lưu thành công');
@@ -193,7 +191,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     handleConfirmToDelete() {
         if (this.idDelete) {
-            this.api.delete(this.idDelete, Constant.API_CONFIG_APP).subscribe(() => {
+            this.api.delete(this.idDelete, URL.API_CONFIG_APP).subscribe(() => {
                 this.loadDataFromServer(this.pageIndex, this.pageSize);
                 this.handleCancelDeletePopup();
                 this.scriptFC.alertShowMessageSuccess('Xóa thành công');
@@ -204,9 +202,5 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
     }
-    getConfigByCustomer(customerId: string): ConfigApp | null | undefined {
-        return this.dataList.filter(data => data.customerId && data.customerId === customerId).shift();
-    }
-
     protected readonly STATUS_CONFIG = STATUS_CONFIG;
 }

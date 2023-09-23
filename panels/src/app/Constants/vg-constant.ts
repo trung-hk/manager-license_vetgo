@@ -6,3 +6,10 @@ export enum STATUS_CONFIG {
     ACTIVATED_VALUE = "2",
     ACTIVATED_LABEL = "Activated",
 }
+export enum USER_TYPE {
+    ADMIN = "ADMIN",
+    AGENT = "AGENT",
+    DISTRIBUTOR = "DISTRIBUTOR",
+    PARTNER = "PARTNER",
+    CUSTOMER = "CUSTOMER"
+}

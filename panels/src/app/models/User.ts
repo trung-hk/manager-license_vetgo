@@ -1,8 +1,15 @@
 export class User {
     id?: string | null;
-    firebase?: string | null;
-    sheetId?: string | null;
-    customerId?: string | null;
+    name?: string | null;
+    email?: string | null;
+    code?: string | null;
+    phone?: string | null;
+    address?: string | null;
+    avatar?: string | null;
+    type?: string | null;
+    keycloakId?: string | null;
+    parentId?: string | null;
+    realm?: string | null;
     status?: string | null;
     createdBy?: string | null;
     createdDate?: string | null;

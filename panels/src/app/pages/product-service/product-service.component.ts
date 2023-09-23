@@ -7,9 +7,9 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
-import {Constant} from "../../utils/constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {Item} from "../../models/Item";
+import {URL} from "../../Constants/api-urls";
 
 @Component({
   selector: 'app-product-service',
@@ -67,7 +67,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
   }
   loadDataFromServer(pageIndex: number, pageSize?: number, sort?: string): void {
     this.loading = true;
-    this.api.getAll<ResponseDataGetAll<Item>>(Constant.API_ITEM, pageIndex - 1, pageSize, sort).subscribe((data => {
+    this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, pageIndex - 1, pageSize, sort).subscribe((data => {
       console.log(data)
       this.loading = false;
       this.total = data.totalElements;
@@ -130,7 +130,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         const data: ConfigApp = this.validateForm.value
         console.log(data);
         if (data.id) {
-          this.api.update<ConfigApp>(data.id, data, Constant.API_CONFIG_APP).subscribe(() => {
+          this.api.update<ConfigApp>(data.id, data, URL.API_CONFIG_APP).subscribe(() => {
             this.isVisible = false;
             this.loadDataFromServer(this.pageIndex, this.pageSize);
             this.scriptFC.alertShowMessageSuccess('Lưu thành công');
@@ -139,7 +139,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
             this.scriptFC.alertShowMessageError('Lưu thất bại');
           })
         } else {
-          this.api.insert<ConfigApp>(data, Constant.API_CONFIG_APP).subscribe(() => {
+          this.api.insert<ConfigApp>(data, URL.API_CONFIG_APP).subscribe(() => {
             this.isVisible = false;
             this.loadDataFromServer(this.pageIndex, this.pageSize);
             this.scriptFC.alertShowMessageSuccess('Lưu thành công');
@@ -180,7 +180,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
 
   handleConfirmToDelete() {
     if (this.idDelete) {
-      this.api.delete(this.idDelete, Constant.API_CONFIG_APP).subscribe(() => {
+      this.api.delete(this.idDelete, URL.API_CONFIG_APP).subscribe(() => {
         this.loadDataFromServer(this.pageIndex, this.pageSize);
         this.handleCancelDeletePopup();
         this.scriptFC.alertShowMessageSuccess('Xóa thành công');

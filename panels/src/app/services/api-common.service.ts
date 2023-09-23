@@ -18,6 +18,9 @@ export class ApiCommonService {
         .append("keyword", keyword ? keyword : "")
         return this.httpClient.get<T>(`${this.url}/${api}`, {params});
     }
+    getAllUsersByType<T>(api: string, type: string, page?: number, size?: number, sort?: string, keyword?: string): Observable<T> {
+        return this.getAll(`${api}/${type}`, page, size, sort, keyword);
+    }
 
     getById<T>(id: number | string | null, api: string): Observable<T> {
         return this.httpClient.get<T>(`${this.url}/${api}/${id}`);
