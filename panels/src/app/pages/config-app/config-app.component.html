@@ -3,25 +3,27 @@
         <div class="row">
             <div class="col-12">
                 <nz-card nzTitle="Danh sách config app" [nzExtra]="titleRight" [nzBordered]="false">
-                    <nz-table [nzScroll]="{x:'1200px'}"
-                              nzShowSizeChanger
-                              [nzData]="dataList"
-                              [nzFrontPagination]="false"
-                              [nzLoading]="loading"
-                              [nzTotal]="total"
-                              [nzPageSize]="pageSize"
-                              [nzPageIndex]="pageIndex"
-                              (nzQueryParams)="onQueryParamsChange($event)"
-                              (nzPageIndexChange)="onPageIndexChange($event)"
+                    <nz-table
+                            nzShowSizeChanger
+                            [nzData]="dataList"
+                            [nzFrontPagination]="false"
+                            [nzLoading]="loading"
+                            [nzTotal]="total"
+                            [nzPageSize]="pageSize"
+                            [nzPageIndex]="pageIndex"
+                            (nzQueryParams)="onQueryParamsChange($event)"
+                            (nzPageIndexChange)="onPageIndexChange($event)"
                     >
                         <thead>
                         <tr>
-                            <th nzWidth="450px" nzColumnKey="firebase" [nzSortFn]="true">Thông tin Firebase</th>
-                            <th nzWidth="350px" nzColumnKey="sheet_id" [nzSortFn]="true">Thông tin Sheet Id</th>
-                            <th nzWidth="120px" nzColumnKey="customer_id">Khách hàng</th>
-                            <th nzWidth="170px" nzColumnKey="last_modified_date" [nzSortFn]="true">Ngày cập nhật</th>
-                            <th nzWidth="120px" nzColumnKey="status">Trạng thái</th>
-                            <th nzWidth="130px" nzColumnKey="action">Thao tác</th>
+                            <th nzColumnKey="firebase" [nzSortFn]="true">Thông tin Firebase</th>
+                            <th nzColumnKey="sheet_id" [nzSortFn]="true">Thông tin Sheet Id</th>
+                            <th class="align-center" nzWidth="8em" nzColumnKey="customer_id">Khách hàng</th>
+                            <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
+                                Ngày cập nhật
+                            </th>
+                            <th class="align-center" nzColumnKey="status">Trạng thái</th>
+                            <th class="align-center" nzWidth="10em" nzColumnKey="action">Thao tác</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -30,34 +32,41 @@
                             <td>{{dt.sheetId}}</td>
                             <ng-container *ngIf="dt.customerId !== null; else emptyUser">
                                 <td class="align-center">
-                                    <nz-avatar nzSrc="{{dt.avatar}}" nz-tooltip nzTooltipTitle="{{dt.userName}}"></nz-avatar>
+                                    <nz-avatar nzSrc="{{dt.avatar}}" nz-tooltip
+                                               nzTooltipTitle="{{dt.userName}}"></nz-avatar>
                                 </td>
                             </ng-container>
                             <ng-template #emptyUser>
                                 <td class="align-center">
-                                    <nz-avatar style="background-color: #87d068" nz-tooltip nzTooltipTitle="User" nzIcon="user"></nz-avatar>
+                                    <nz-avatar style="background-color: #87d068" nz-tooltip nzTooltipTitle="User"
+                                               nzIcon="user"></nz-avatar>
                                 </td>
                             </ng-template>
                             <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
                             <td class="align-center">
                                 <ng-container [ngSwitch]="dt.status">
-                                    <div *ngSwitchCase="STATUS_CONFIG.NOT_ACTIVATED_VALUE" class="badge badge-shadow badge-danger">
+                                    <div *ngSwitchCase="STATUS_CONFIG.NOT_ACTIVATED_VALUE"
+                                         class="badge badge-shadow badge-danger">
                                         {{STATUS_CONFIG.NOT_ACTIVATED_LABEL}}
                                     </div>
-                                    <div *ngSwitchCase="STATUS_CONFIG.PENDING_ACTIVE_VALUE" class="badge badge-shadow badge-primary">
+                                    <div *ngSwitchCase="STATUS_CONFIG.PENDING_ACTIVE_VALUE"
+                                         class="badge badge-shadow badge-primary">
                                         {{STATUS_CONFIG.PENDING_ACTIVE_LABEL}}
                                     </div>
-                                    <div *ngSwitchCase="STATUS_CONFIG.ACTIVATED_VALUE" class="badge badge-shadow badge-success">
+                                    <div *ngSwitchCase="STATUS_CONFIG.ACTIVATED_VALUE"
+                                         class="badge badge-shadow badge-success">
                                         {{STATUS_CONFIG.ACTIVATED_LABEL}}
                                     </div>
                                 </ng-container>
                             </td>
                             <td class="align-center">
-                                <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)" title="Chỉnh sửa">
+                                <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)"
+                                        title="Chỉnh sửa">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 &nbsp;
-                                <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)" title="Xóa">
+                                <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)"
+                                        title="Xóa">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -86,23 +95,25 @@
         <form nz-form [formGroup]="validateForm">
             <input type="hidden" formControlName="id">
             <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5" >Firebase Config</nz-form-label>
-                <nz-form-control [nzSm]="18"  >
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Firebase Config</nz-form-label>
+                <nz-form-control [nzSm]="18">
                     <textarea rows="6" formControlName="firebase" nz-input placeholder="FireBase Config"></textarea>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Sheet Id</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <input formControlName="sheetId" nz-input nzSize="large" placeholder="Sheet Id" />
+                    <input formControlName="sheetId" nz-input nzSize="large" placeholder="Sheet Id"/>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                 <nz-form-label nzLabelAlign="right" [nzSm]="5">Khách hàng</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <nz-select ngModel = "{{customerShowModal ? customerShowModal.id : ''}}" formControlName="customer" nzSize="large">
+                    <nz-select ngModel="{{customerShowModal ? customerShowModal.id : ''}}" formControlName="customer"
+                               nzSize="large">
                         <nz-option nzValue="" nzLabel="---"></nz-option>
-                        <nz-option *ngIf="customerShowModal" nzValue="{{customerShowModal.id}}" nzLabel="{{customerShowModal.name}}"></nz-option>
+                        <nz-option *ngIf="customerShowModal" nzValue="{{customerShowModal.id}}"
+                                   nzLabel="{{customerShowModal.name}}"></nz-option>
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>
@@ -110,9 +121,12 @@
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
                 <nz-form-control [nzSm]="18">
                     <nz-select formControlName="status" nzSize="large">
-                        <nz-option nzValue="{{STATUS_CONFIG.NOT_ACTIVATED_VALUE}}" nzLabel="{{STATUS_CONFIG.NOT_ACTIVATED_LABEL}}"></nz-option>
-                        <nz-option nzValue="{{STATUS_CONFIG.PENDING_ACTIVE_VALUE}}" nzLabel="{{STATUS_CONFIG.PENDING_ACTIVE_LABEL}}"></nz-option>
-                        <nz-option nzValue="{{STATUS_CONFIG.ACTIVATED_VALUE}}" nzLabel="{{STATUS_CONFIG.ACTIVATED_LABEL}}"></nz-option>
+                        <nz-option nzValue="{{STATUS_CONFIG.NOT_ACTIVATED_VALUE}}"
+                                   nzLabel="{{STATUS_CONFIG.NOT_ACTIVATED_LABEL}}"></nz-option>
+                        <nz-option nzValue="{{STATUS_CONFIG.PENDING_ACTIVE_VALUE}}"
+                                   nzLabel="{{STATUS_CONFIG.PENDING_ACTIVE_LABEL}}"></nz-option>
+                        <nz-option nzValue="{{STATUS_CONFIG.ACTIVATED_VALUE}}"
+                                   nzLabel="{{STATUS_CONFIG.ACTIVATED_LABEL}}"></nz-option>
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>
@@ -141,5 +155,3 @@
         Are you sure you want to delete?
     </ng-container>
 </nz-modal>
-
-]
