@@ -12,7 +12,6 @@
                             [nzPageSize]="pageSize"
                             [nzPageIndex]="pageIndex"
                             (nzQueryParams)="onQueryParamsChange($event)"
-                            (nzPageIndexChange)="onPageIndexChange($event)"
                     >
                         <thead>
                         <tr>
@@ -22,7 +21,9 @@
                             <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                                 Ngày cập nhật
                             </th>
-                            <th class="align-center" nzColumnKey="status">Trạng thái</th>
+                            <th class="align-center" [nzFilters]="filterStatus" [nzFilterFn]="true"
+                                nzColumnKey="status">Trạng thái
+                            </th>
                             <th class="align-center" nzWidth="10em" nzColumnKey="action">Thao tác</th>
                         </tr>
                         </thead>

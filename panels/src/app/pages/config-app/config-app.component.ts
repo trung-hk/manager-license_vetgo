@@ -15,13 +15,14 @@ import {URL} from "../../Constants/api-urls";
     templateUrl: './config-app.component.html',
 })
 export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
+    protected readonly STATUS_CONFIG = STATUS_CONFIG;
     listScript = [];
     dataList: ConfigApp[] = [];
     total: number = 1;
     loading: boolean = true;
     pageSize: number = 10;
     pageIndex: number = 1;
-    sort: string = "last_modified_date,desc";
+    sort: string | null = "last_modified_date,desc";
     changeFirst: boolean = true;
     isVisible: boolean = false;
     isVisibleDelete = false;
@@ -30,7 +31,15 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
     validateForm!: UntypedFormGroup;
     idDelete: number | string | null | undefined = -1;
     idShowModal: number | string | null | undefined = null;
-    customerShowModal: {id: string | null | undefined, name: string | null | undefined} | null = null;
+    customerShowModal: { id: string | null | undefined, name: string | null | undefined } | null = null;
+    keyWork: string | null = null;
+    filter: Array<{ key: string; value: string[] }> | null = null;
+    filterStatus = [
+        {text: STATUS_CONFIG.NOT_ACTIVATED_LABEL, value: STATUS_CONFIG.NOT_ACTIVATED_VALUE},
+        {text: STATUS_CONFIG.PENDING_ACTIVE_LABEL, value: STATUS_CONFIG.PENDING_ACTIVE_VALUE},
+        {text: STATUS_CONFIG.ACTIVATED_LABEL, value: STATUS_CONFIG.ACTIVATED_VALUE},
+    ];
+
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
                 private communicationService: CommunicationService,
@@ -38,6 +47,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                 private scriptFC: ScriptCommonService,
                 private fb: UntypedFormBuilder) {
     }
+
     ngOnInit() {
         this.init();
         this.validateForm = this.fb.group({
@@ -63,45 +73,42 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     init(): void {
-        this.loadDataFromServer(this.pageIndex, this.pageSize, this.sort);
+        this.loadDataFromServer();
     }
 
-    loadDataFromServer(pageIndex: number, pageSize?: number, sort?: string): void {
+    loadDataFromServer(): void {
         this.loading = true;
-        this.api.getAll<ResponseDataGetAll<ConfigApp>>(URL.API_CONFIG_APP, pageIndex - 1, pageSize, sort).subscribe((data => {
-           console.log(data)
+        this.api.getAll<ResponseDataGetAll<ConfigApp>>(URL.API_CONFIG_APP, this.pageIndex - 1, this.pageSize, this.sort, this.keyWork, this.filter).subscribe((data => {
+            console.log(data)
             this.loading = false;
             this.total = data.totalElements;
             this.dataList = data.content;
         }))
     }
+
     onQueryParamsChange(params: NzTableQueryParams): void {
         if (this.changeFirst) {
             this.changeFirst = false;
             return;
         }
         console.log(params)
-        const { pageSize, pageIndex, sort, filter } = params;
+        const {pageSize, pageIndex, sort, filter} = params;
         const currentSort = sort.find(item => item.value !== null);
         const sortField = (currentSort && currentSort.key) || null;
         this.pageIndex = pageIndex;
         this.pageSize = pageSize;
         if (!sortField) {
-            this.loadDataFromServer(this.pageIndex, this.pageSize);
-            return;
+            this.sort = "last_modified_date,desc";
+        } else {
+            let sortOrder = (currentSort && currentSort.value) || null;
+            sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
+            this.sort = `${sortField},${sortOrder}`;
         }
-        let sortOrder = (currentSort && currentSort.value) || null;
-        sortOrder = sortOrder && sortOrder === 'ascend' ? "asc" : 'desc';
-        this.sort = `${sortField},${sortOrder}`;
-        this.loadDataFromServer(this.pageIndex, this.pageSize, `${sortField},${sortOrder}`);
+        this.loadDataFromServer();
     }
-    onPageIndexChange(pageIndex: number): void {
-        console.log(pageIndex);
-        this.pageIndex = pageIndex;
-    }
+
     showModal(configApp?: ConfigApp): void {
         this.isVisible = true;
-
         if (configApp) {
             this.validateForm.setValue({
                 id: configApp.id,
@@ -131,15 +138,15 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.idShowModal = this.validateForm.get("id")?.value;
     }
 
-   async handleOk(): Promise<void> {
+    handleOk(): void {
         try {
             if (this.validateForm.valid) {
                 this.isConfirmLoading = true;
                 const data: ConfigApp = this.validateForm.value
                 if (data.id) {
-                    await this.api.update<ConfigApp>(data.id, data, URL.API_CONFIG_APP).subscribe(() => {
+                    this.api.update<ConfigApp>(data.id, data, URL.API_CONFIG_APP).subscribe(() => {
                         this.isVisible = false;
-                        this.loadDataFromServer(this.pageIndex, this.pageSize);
+                        this.loadDataFromServer();
                         this.scriptFC.alertShowMessageSuccess('Lưu thành công');
                         this.isConfirmLoading = false;
                     }, (error) => {
@@ -148,9 +155,9 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.isConfirmLoading = false;
                     })
                 } else {
-                    await this.api.insert<ConfigApp>(data, URL.API_CONFIG_APP).subscribe(() => {
+                    this.api.insert<ConfigApp>(data, URL.API_CONFIG_APP).subscribe(() => {
                         this.isVisible = false;
-                        this.loadDataFromServer(this.pageIndex, this.pageSize);
+                        this.loadDataFromServer();
                         this.scriptFC.alertShowMessageSuccess('Lưu thành công');
                         this.isConfirmLoading = false;
                     }, (error) => {
@@ -163,7 +170,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                 Object.values(this.validateForm.controls).forEach(control => {
                     if (control.invalid) {
                         control.markAsDirty();
-                        control.updateValueAndValidity({ onlySelf: true });
+                        control.updateValueAndValidity({onlySelf: true});
                     }
                 });
             }
@@ -192,7 +199,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
     handleConfirmToDelete() {
         if (this.idDelete) {
             this.api.delete(this.idDelete, URL.API_CONFIG_APP).subscribe(() => {
-                this.loadDataFromServer(this.pageIndex, this.pageSize);
+                this.loadDataFromServer();
                 this.handleCancelDeletePopup();
                 this.scriptFC.alertShowMessageSuccess('Xóa thành công');
             }, (error) => {
@@ -202,5 +209,4 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
     }
-    protected readonly STATUS_CONFIG = STATUS_CONFIG;
 }

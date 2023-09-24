@@ -10,12 +10,16 @@ export class ApiCommonService {
     constructor(private httpClient: HttpClient) {
     }
 
-    getAll<T>(api: string, page?: number, size?: number, sort?: string, keyword?: string): Observable<T> {
+    getAll<T>(api: string, page?: number, size?: number, sort?: string | null, keyword?: string | null, filter?: Array<{ key: string; value: string[] }> | null): Observable<T> {
         let params = new HttpParams()
         .append("page", page ? page : 0)
         .append("size", size ? size : 10)
         .append("sort", sort ? sort : '')
-        .append("keyword", keyword ? keyword : "")
+        if (keyword) params = params.append("keyword", keyword);
+        if (filter) {
+            filter.filter(f => f.value.length > 0)
+                .forEach(f => params = params.append("filter", f.value.join(",")));
+        }
         return this.httpClient.get<T>(`${this.url}/${api}`, {params});
     }
     getAllUsersByType<T>(api: string, type: string, page?: number, size?: number, sort?: string, keyword?: string): Observable<T> {
