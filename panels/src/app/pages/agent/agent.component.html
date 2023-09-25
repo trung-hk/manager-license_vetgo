@@ -2,71 +2,158 @@
   <div class="section-body">
     <div class="row">
       <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <div class="col-3">
-              <h4>Danh sách Đại lý</h4>
+        <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzExtra]="titleRight" [nzBordered]="false">
+          <nz-table
+                  nzShowSizeChanger
+                  [nzData]="dataList"
+                  [nzFrontPagination]="false"
+                  [nzLoading]="loading"
+                  [nzTotal]="total"
+                  [nzPageSize]="pageSize"
+                  [nzPageIndex]="pageIndex"
+                  (nzQueryParams)="onQueryParamsChange($event)"
+          >
+            <thead>
+            <tr>
+              <th nzColumnKey="name" [nzSortFn]="true">Tên đại lý</th>
+              <th nzColumnKey="code" >Tên miền web</th>
+              <th nzColumnKey="email" [nzSortFn]="true">E-mail</th>
+              <th nzColumnKey="phone" [nzSortFn]="true">Số điện thoại</th>
+              <th nzColumnKey="address">Địa chỉ</th>
+              <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">Ngày cập nhật</th>
+              <th nzColumnKey="status" [nzSortFn]="true" [nzFilters]="filterStatus" [nzFilterFn]="true">Trạng thái</th>
+              <th class="align-center" nzWidth="10em">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dt of dataList">
+              <td nzColumnKey="name">{{dt.name}}</td>
+              <td><a href="`https://{{dt.realm}}.phanmemvet.vn`"></a></td>
+              <td>{{dt.email}}</td>
+              <td>{{scriptFC.formatPhone(dt.phone)}}</td>
+              <td>{{dt.address}}</td>
+              <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+              <td class="align-center">
+                <ng-container [ngSwitch]="dt.status">
+                  <div *ngSwitchCase="STATUS_AGENT.NOT_ACTIVATED_VALUE"
+                       class="badge badge-shadow badge-danger">
+                    {{STATUS_AGENT.NOT_ACTIVATED_LABEL}}
+                  </div>
+                  <div *ngSwitchCase="STATUS_AGENT.ACTIVATED_VALUE"
+                       class="badge badge-shadow badge-success">
+                    {{STATUS_AGENT.ACTIVATED_LABEL}}
+                  </div>
+                </ng-container>
+              </td>
+              <td class="align-center">
+                <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)"
+                        title="Chỉnh sửa">
+                  <i class="fas fa-edit"></i>
+                </button>
+                &nbsp;
+                <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)"
+                        title="Xóa">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </nz-card>
+        <ng-template #titleLeft>
+          Danh sách config  <nz-tag [nzColor]="'#108ee9'">{{total}}</nz-tag>
+        </ng-template>
+        <ng-template #titleRight>
+          <div nz-row [nzGutter]="8">
+            <div nz-col [nzSm]="14">
+              <nz-input-group [nzSuffix]="suffixIconSearch">
+                <input nzSize="large" type="search" nz-input placeholder="input search text" (keyup.enter)="search($event)" />
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search"></span>
+              </ng-template>
             </div>
-            <div class="col-9">
-              <button type="button" class="btn btn-success pull-right note-btn" (click)="showModal()">
-                <i class="fas fa-plus"></i>&nbsp;<span>Thêm mới đại lý</span>
+            <div nz-col [nzSpan]="10">
+              <button type="button" (click)="showModal()" class="btn btn-success pull-right note-btn">
+                <i class="fas fa-plus"></i> Thêm mới
               </button>
             </div>
-
           </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <nz-table [nzScroll]="{x:'1200px'}"
-                        nzShowSizeChanger
-                        [nzData]="dataList"
-                        [nzFrontPagination]="false"
-                        [nzLoading]="loading"
-                        [nzTotal]="total"
-                        [nzPageSize]="pageSize"
-                        [nzPageIndex]="pageIndex"
-                        (nzQueryParams)="onQueryParamsChange($event)"
-                        (nzPageIndexChange)="onPageIndexChange($event)"
-              >
-                <thead>
-                  <tr>
-                    <th nzColumnKey="code" [nzSortFn]="true">Mã đại lý</th>
-                    <th nzColumnKey="name" [nzSortFn]="true">Tên đại lý</th>
-                    <th nzColumnKey="code" >Tên miền web</th>
-                    <th nzColumnKey="email" [nzSortFn]="true">E-mail</th>
-                    <th nzColumnKey="phone" [nzSortFn]="true">Số điện thoại</th>
-                    <th nzColumnKey="address">Địa chỉ</th>
-                    <th nzColumnKey="status" [nzSortFn]="true">Trạng thái</th>
-                    <th nzWidth="170px" nzColumnKey="last_modified_date" [nzSortFn]="true">Ngày cập nhật</th>
-                    <th>Thao tác</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let data of dataList">
-<!--                    <td>{{ data.code }}</td>-->
-<!--                    <td>{{ data.name }}</td>-->
-<!--                    <td><nz-avatar [nzSrc]="data.avatar" [nzText]="transferShortName(data.name)"></nz-avatar></td>-->
-<!--                    <td>{{ data.email }}</td>-->
-<!--                    <td>{{ data.phone }}</td>-->
-<!--                    <td>{{ data.address }}</td>-->
-<!--                    <td>{{ data.status }}</td>-->
-                    <td>
-                      <button type="button" class="btn btn-warning note-btn" (click)="showModal(data)"><i
-                          class="fas fa-edit"></i></button>
-                      &nbsp;
-                      <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(data.id)"><i
-                          class="fas fa-trash"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-              </nz-table>
-            </div>
-          </div>
-        </div>
+        </ng-template>
       </div>
     </div>
   </div>
 </section>
+<!-- Create/Update Form -->
+<nz-modal [(nzVisible)]="isVisible"
+          [nzTitle]="modalTitle"
+          [nzContent]="modalContent"
+          [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
+          (nzOnCancel)="handleCancel()" nzWidth="800px">
+  <ng-template #modalTitle> {{idShowModal ? 'Cập nhật Config' : 'Thêm mới Config'}}</ng-template>
 
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="validateForm">
+      <input type="hidden" formControlName="id">
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Firebase Config</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <textarea rows="6" formControlName="firebase" nz-input placeholder="FireBase Config"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Sheet Id</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <input formControlName="sheetId" nz-input nzSize="large" placeholder="Sheet Id"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzLabelAlign="right" [nzSm]="5">Khách hàng</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <nz-select ngModel="{{customerShowModal ? customerShowModal.id : ''}}" formControlName="customer"
+                     nzSize="large">
+            <nz-option nzValue="" nzLabel="---"></nz-option>
+            <nz-option *ngIf="customerShowModal" nzValue="{{customerShowModal.id}}"
+                       nzLabel="{{customerShowModal.name}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <nz-select formControlName="status" nzSize="large">
+            <nz-option nzValue="{{STATUS_AGENT.NOT_ACTIVATED_VALUE}}"
+                       nzLabel="{{STATUS_AGENT.NOT_ACTIVATED_LABEL}}"></nz-option>
+            <nz-option nzValue="{{STATUS_AGENT.ACTIVATED_VALUE}}"
+                       nzLabel="{{STATUS_AGENT.ACTIVATED_LABEL}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooterAdd>
+    <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+    <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
+            [nzLoading]="isConfirmLoading">Thêm mới
+    </button>
+  </ng-template>
+  <ng-template #modalFooterUpdate>
+    <button nz-button nzType="default" nzValue="large" (click)="handleCancel()">Cancel</button>
+    <button nz-button nzType="primary" nzValue="large" [disabled]="validateForm.invalid" (click)="handleOk()"
+            [nzLoading]="isConfirmLoading">Câp nhật
+    </button>
+  </ng-template>
+</nz-modal>
+
+<!-- Delete Confirmation -->
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Delete Confirmation" nzOkText="Ok" nzOkDanger="true"
+          nzCancelText="Cancel" (nzOnOk)="handleConfirmToDelete()"
+          (nzOnCancel)="handleCancelDeletePopup()">
+  <ng-container *nzModalContent>
+    Are you sure you want to delete?
+  </ng-container>
+</nz-modal>
 <!-- Create/Update Form -->
 <nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
   (nzOnCancel)="handleCancel()" nzWidth="600px">

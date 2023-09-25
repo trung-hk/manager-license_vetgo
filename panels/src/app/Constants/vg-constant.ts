@@ -13,3 +13,10 @@ export enum USER_TYPE {
     PARTNER = "PARTNER",
     CUSTOMER = "CUSTOMER"
 }
+
+export enum STATUS_AGENT {
+    NOT_ACTIVATED_VALUE = "0",
+    NOT_ACTIVATED_LABEL = "Not Activated",
+    ACTIVATED_VALUE = "1",
+    ACTIVATED_LABEL = "Activated",
+}

@@ -22,7 +22,7 @@ export class ApiCommonService {
         }
         return this.httpClient.get<T>(`${this.url}/${api}`, {params});
     }
-    getAllUsersByType<T>(api: string, type: string, page?: number, size?: number, sort?: string, filter?: Array<{ key: string; value: string[] }> | null, keyword?: string): Observable<T> {
+    getAllUsersByType<T>(api: string, type: string, page?: number, size?: number, sort?: string | null, filter?: Array<{ key: string; value: string[] }> | null, keyword?: string | null): Observable<T> {
         return this.getAll(`${api}/${type}`, page, size, sort, filter, keyword);
     }
 
