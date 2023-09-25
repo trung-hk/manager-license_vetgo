@@ -2,7 +2,7 @@
     <div class="section-body">
         <div class="row">
             <div class="col-12">
-                <nz-card nzTitle="Danh sách config app" [nzExtra]="titleRight" [nzBordered]="false">
+                <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzExtra]="titleRight" [nzBordered]="false">
                     <nz-table
                             nzShowSizeChanger
                             [nzData]="dataList"
@@ -75,10 +75,25 @@
                         </tbody>
                     </nz-table>
                 </nz-card>
+                <ng-template #titleLeft>
+                    Danh sách config  <nz-tag [nzColor]="'#108ee9'">{{total}}</nz-tag>
+                </ng-template>
                 <ng-template #titleRight>
-                    <button type="button" (click)="showModal()" class="btn btn-success pull-right note-btn">
-                        <i class="fas fa-plus"></i> Thêm mới Config
-                    </button>
+                    <div nz-row [nzGutter]="8">
+                        <div nz-col [nzSm]="14">
+                            <nz-input-group [nzSuffix]="suffixIconSearch">
+                                <input nzSize="large" type="search" nz-input placeholder="input search text" (keyup.enter)="search($event)" />
+                            </nz-input-group>
+                            <ng-template #suffixIconSearch>
+                                <span nz-icon nzType="search"></span>
+                            </ng-template>
+                        </div>
+                        <div nz-col [nzSpan]="10">
+                            <button type="button" (click)="showModal()" class="btn btn-success pull-right note-btn">
+                                <i class="fas fa-plus"></i> Thêm mới
+                            </button>
+                        </div>
+                    </div>
                 </ng-template>
             </div>
         </div>

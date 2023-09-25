@@ -10,7 +10,7 @@ export class ApiCommonService {
     constructor(private httpClient: HttpClient) {
     }
 
-    getAll<T>(api: string, page?: number, size?: number, sort?: string | null, keyword?: string | null, filter?: Array<{ key: string; value: string[] }> | null): Observable<T> {
+    getAll<T>(api: string, page?: number, size?: number, sort?: string | null, filter?: Array<{ key: string; value: string[] }> | null, keyword?: string | null): Observable<T> {
         let params = new HttpParams()
         .append("page", page ? page : 0)
         .append("size", size ? size : 10)
@@ -22,8 +22,8 @@ export class ApiCommonService {
         }
         return this.httpClient.get<T>(`${this.url}/${api}`, {params});
     }
-    getAllUsersByType<T>(api: string, type: string, page?: number, size?: number, sort?: string, keyword?: string): Observable<T> {
-        return this.getAll(`${api}/${type}`, page, size, sort, keyword);
+    getAllUsersByType<T>(api: string, type: string, page?: number, size?: number, sort?: string, filter?: Array<{ key: string; value: string[] }> | null, keyword?: string): Observable<T> {
+        return this.getAll(`${api}/${type}`, page, size, sort, filter, keyword);
     }
 
     getById<T>(id: number | string | null, api: string): Observable<T> {

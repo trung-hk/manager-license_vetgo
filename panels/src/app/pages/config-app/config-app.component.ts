@@ -76,14 +76,14 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadDataFromServer();
     }
 
-    loadDataFromServer(): void {
+    loadDataFromServer(keyWork?: string): void {
         this.loading = true;
-        this.api.getAll<ResponseDataGetAll<ConfigApp>>(URL.API_CONFIG_APP, this.pageIndex - 1, this.pageSize, this.sort, this.keyWork, this.filter).subscribe((data => {
+        this.api.getAll<ResponseDataGetAll<ConfigApp>>(URL.API_CONFIG_APP, this.pageIndex - 1, this.pageSize, this.sort, this.filter, keyWork).subscribe((data) => {
             console.log(data)
             this.loading = false;
             this.total = data.totalElements;
             this.dataList = data.content;
-        }))
+        });
     }
 
     onQueryParamsChange(params: NzTableQueryParams): void {
@@ -97,6 +97,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         const sortField = (currentSort && currentSort.key) || null;
         this.pageIndex = pageIndex;
         this.pageSize = pageSize;
+        this.filter = filter;
         if (!sortField) {
             this.sort = "last_modified_date,desc";
         } else {
@@ -153,7 +154,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                         console.log(error);
                         this.scriptFC.alertShowMessageError('Lưu thất bại');
                         this.isConfirmLoading = false;
-                    })
+                    });
                 } else {
                     this.api.insert<ConfigApp>(data, URL.API_CONFIG_APP).subscribe(() => {
                         this.isVisible = false;
@@ -205,8 +206,12 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
             }, (error) => {
                 console.log(error);
                 this.scriptFC.alertShowMessageError('Xóa thất bại');
-            })
+            });
         }
-
+    }
+    search(event: any): void {
+        console.log(event);
+        this.loadDataFromServer(event.target.value);
+        event.target.value = "";
     }
 }
