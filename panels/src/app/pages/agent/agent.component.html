@@ -28,7 +28,7 @@
             <tbody>
             <tr *ngFor="let dt of dataList">
               <td nzColumnKey="name">{{dt.name}}</td>
-              <td><a href="`https://{{dt.realm}}.phanmemvet.vn`"></a></td>
+              <td><a href="https://{{dt.realm}}.phanmemvet.vn">https://{{dt.realm}}.phanmemvet.vn</a></td>
               <td>{{dt.email}}</td>
               <td>{{scriptFC.formatPhone(dt.phone)}}</td>
               <td>{{dt.address}}</td>
@@ -61,7 +61,7 @@
           </nz-table>
         </nz-card>
         <ng-template #titleLeft>
-          Danh sách config  <nz-tag [nzColor]="'#108ee9'">{{total}}</nz-tag>
+          Danh sách đại lý  <nz-tag [nzColor]="'#108ee9'">{{total}}</nz-tag>
         </ng-template>
         <ng-template #titleRight>
           <div nz-row [nzGutter]="8">
@@ -90,42 +90,59 @@
           [nzContent]="modalContent"
           [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
           (nzOnCancel)="handleCancel()" nzWidth="800px">
-  <ng-template #modalTitle> {{idShowModal ? 'Cập nhật Config' : 'Thêm mới Config'}}</ng-template>
+  <ng-template #modalTitle> {{idShowModal ? 'Cập nhật đại lý' : 'Thêm mới đại lý'}}</ng-template>
 
   <ng-template #modalContent>
     <form nz-form [formGroup]="validateForm">
       <input type="hidden" formControlName="id">
       <nz-form-item>
-        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Firebase Config</nz-form-label>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã đại lý</nz-form-label>
         <nz-form-control [nzSm]="18">
-          <textarea rows="6" formControlName="firebase" nz-input placeholder="FireBase Config"></textarea>
+          <input formControlName="code" nz-input nzSize="large" placeholder="VETGO"/>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Sheet Id</nz-form-label>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên đại lý</nz-form-label>
         <nz-form-control [nzSm]="18">
-          <input formControlName="sheetId" nz-input nzSize="large" placeholder="Sheet Id"/>
+          <input formControlName="name" nz-input nzSize="large" placeholder="Vet go"/>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-label nzLabelAlign="right" [nzSm]="5">Khách hàng</nz-form-label>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên miền web</nz-form-label>
         <nz-form-control [nzSm]="18">
-          <nz-select ngModel="{{customerShowModal ? customerShowModal.id : ''}}" formControlName="customer"
-                     nzSize="large">
-            <nz-option nzValue="" nzLabel="---"></nz-option>
-            <nz-option *ngIf="customerShowModal" nzValue="{{customerShowModal.id}}"
-                       nzLabel="{{customerShowModal.name}}"></nz-option>
-          </nz-select>
+          <nz-input-group nzAddOnBefore="https://" nzAddOnAfter=".phanmemvet.vn">
+            <input [disabled]="isEdit" formControlName="realm" nz-input placeholder="vetgo" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <nz-input-group nzAddOnBefore="+84">
+            <input formControlName="phone" nz-input placeholder="(090) 123-4567" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">E-mail</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <input type="email" formControlName="email" nz-input placeholder="vetgo@gmail.com" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzLabelAlign="right" [nzSm]="5">Địa chỉ</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <textarea rows="4" formControlName="address" nz-input placeholder="Đường x, phường x, quận x..."></textarea>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
         <nz-form-control [nzSm]="18">
           <nz-select formControlName="status" nzSize="large">
-            <nz-option nzValue="{{STATUS_AGENT.NOT_ACTIVATED_VALUE}}"
-                       nzLabel="{{STATUS_AGENT.NOT_ACTIVATED_LABEL}}"></nz-option>
             <nz-option nzValue="{{STATUS_AGENT.ACTIVATED_VALUE}}"
                        nzLabel="{{STATUS_AGENT.ACTIVATED_LABEL}}"></nz-option>
+            <nz-option nzValue="{{STATUS_AGENT.NOT_ACTIVATED_VALUE}}"
+                       nzLabel="{{STATUS_AGENT.NOT_ACTIVATED_LABEL}}"></nz-option>
           </nz-select>
         </nz-form-control>
       </nz-form-item>
@@ -150,100 +167,6 @@
 <nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Delete Confirmation" nzOkText="Ok" nzOkDanger="true"
           nzCancelText="Cancel" (nzOnOk)="handleConfirmToDelete()"
           (nzOnCancel)="handleCancelDeletePopup()">
-  <ng-container *nzModalContent>
-    Are you sure you want to delete?
-  </ng-container>
-</nz-modal>
-<!-- Create/Update Form -->
-<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
-  (nzOnCancel)="handleCancel()" nzWidth="600px">
-  <ng-template #modalTitle>Thêm đại lý</ng-template>
-
-  <ng-template #modalContent>
-    <form nz-form [nzLayout]="'vertical'" [formGroup]="validateForm">
-      <div class="form-group">
-        <div class="row d-none">
-          <label class="col-md-2 col-form-label-sm font-bold">id</label>
-          <div class="col-md-10">
-            <input type="text" class="form-control" formControlName="id" placeholder="ID">
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <label class="col-md-2 col-form-label-sm font-bold">Realm</label>
-          <div class="col-md-10">
-            <input type="text" class="form-control" formControlName="realm" placeholder="Realm">
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <label class="col-md-2 col-form-label-sm font-bold">Mã đại lý</label>
-          <div class="col-md-10">
-            <input type="text" class="form-control" formControlName="code" placeholder="VetGo">
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <label class="col-md-2 col-form-label-sm font-bold">Tên Đại lý</label>
-          <div class="col-md-10">
-            <input type="text" class="form-control" formControlName="name" placeholder="Vet Go">
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <label class="col-md-2 col-form-label-sm font-bold">Số điện thoại</label>
-          <div class="input-group col-md-10">
-            <div class="input-group-prepend">
-              <span class="input-group-text font-bold">+84</span>
-            </div>
-            <input type="tel" class="form-control" placeholder="(090) 123-4567" formControlName="phone">
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <label class="col-md-2 col-form-label-sm font-bold">Địa chỉ Email</label>
-          <div class="col-md-10">
-            <input type="email" class="form-control" placeholder="vetgo@mail.com" formControlName="email">
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <label class="col-md-2 col-form-label-sm font-bold">Địa chỉ</label>
-          <div class="col-md-10">
-            <input type="text" class="form-control" placeholder="Đường số 1 phường x quận x" formControlName="address">
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <label class="col-md-2 col-form-label-sm font-bold">Trạng thái</label>
-          <div class="col-md-10">
-            <select name="status" class="form-control form-control-sm select-scroll" formControlName="status">
-              <option value="ACTIVE">Đang hoạt động</option>
-              <option value="INACTIVE">Ngưng hoạt động</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </form>
-  </ng-template>
-
-  <ng-template #modalFooter>
-    <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
-    <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
-      [nzLoading]="isConfirmLoading"><i class="fas fa-save"></i> Thêm mới</button>
-  </ng-template>
-</nz-modal>
-
-<!-- Delete Confirmation -->
-<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Delete Confirmation" nzOkText="Ok" nzOkDanger="true" nzCancelText="Cancel" (nzOnOk)="handleConfirmToDelete()"
-  (nzOnCancel)="handleCancelDeletePopup()">
   <ng-container *nzModalContent>
     Are you sure you want to delete?
   </ng-container>

@@ -12,7 +12,7 @@ export class ScriptCommonService {
     // this.notificationService.template(notificationTemplate!, { nzData: {message: message, color: "green"} });
   }
   alertShowMessageError(message?: string, title?: string): void {
-    this.communicationService.sendEventToJs("ScriptComponent", {event: "alert-success", data:{title: title, message: message}})
+    this.communicationService.sendEventToJs("ScriptComponent", {event: "alert-error", data:{title: title, message: message}})
     // this.notificationService.template(notificationTemplate!, { nzData: {message: message, color: "red"} });
   }
   formatPhone(value: string | null | undefined) {

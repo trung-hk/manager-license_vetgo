@@ -32,14 +32,13 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
   validateForm!: UntypedFormGroup;
   idDelete: number | string | null | undefined = -1;
   idShowModal: number | string | null | undefined = null;
-  customerShowModal: { id: string | null | undefined, name: string | null | undefined } | null = null;
   keyWork: string | null = null;
   filter: Array<{ key: string; value: string[] }> | null = null;
   filterStatus = [
-    // {text: STATUS_CONFIG.NOT_ACTIVATED_LABEL, value: STATUS_CONFIG.NOT_ACTIVATED_VALUE},
-    // {text: STATUS_CONFIG.PENDING_ACTIVE_LABEL, value: STATUS_CONFIG.PENDING_ACTIVE_VALUE},
-    // {text: STATUS_CONFIG.ACTIVATED_LABEL, value: STATUS_CONFIG.ACTIVATED_VALUE},
+    {text: STATUS_AGENT.NOT_ACTIVATED_LABEL, value: STATUS_AGENT.NOT_ACTIVATED_VALUE},
+    {text: STATUS_AGENT.ACTIVATED_LABEL, value: STATUS_AGENT.ACTIVATED_VALUE}
   ];
+  isEdit: boolean = false;
 
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
@@ -53,11 +52,11 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.init();
     this.validateForm = this.fb.group({
       id: [null],
-      realm: [null, [Validators.required]],
-      code: [null, [Validators.required]],
-      name: [null, [Validators.required]],
-      email: [null, [Validators.required, Validators.email, Validators.required]],
-      phone: [null, [Validators.required, Validators.pattern(/^\+?[0-9]{9,13}$/)]],
+      realm: [null, [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\-]+$/)]],
+      code: [null, [Validators.required, Validators.maxLength(50)]],
+      name: [null, [Validators.required, Validators.maxLength(255)]],
+      email: [null, [Validators.required, Validators.maxLength(255), Validators.email, Validators.required]],
+      phone: [null, [Validators.required, Validators.pattern(/^\+?[0-9]{9,13}$/), Validators.maxLength(15)]],
       status: [null, [Validators.required]],
       address: [null],
     });
@@ -112,33 +111,33 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadDataFromServer();
   }
 
-  showModal(configApp?: ConfigApp): void {
+  showModal(agent?: User): void {
     this.isVisible = true;
-    if (configApp) {
+    this.validateForm.clearValidators();
+    if (agent) {
+      this.isEdit = true;
       this.validateForm.setValue({
-        id: configApp.id,
-        firebase: configApp.firebase,
-        sheetId: configApp.sheetId,
-        customer: configApp.customerId ? configApp.customerId : "",
-        status: configApp.status
+        id: agent.id,
+        realm: agent.realm,
+        code: agent.code,
+        name: agent.name,
+        email: agent.email,
+        phone: agent.phone,
+        status: agent.status,
+        address: agent.address,
       });
-      if (configApp.customerId && configApp.customerId !== "") {
-        this.customerShowModal = {
-          id: configApp.customerId,
-          name: configApp.userName
-        }
-      } else {
-        this.customerShowModal = null;
-      }
     } else {
+      this.isEdit = false;
       this.validateForm.setValue({
         id: null,
-        firebase: null,
-        sheetId: null,
-        customer: "",
-        status: "0"
+        realm: null,
+        code: null,
+        name: null,
+        email: null,
+        phone: null,
+        status: "1",
+        address: null,
       });
-      this.customerShowModal = null;
     }
     this.idShowModal = this.validateForm.get("id")?.value;
   }
@@ -147,9 +146,10 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     try {
       if (this.validateForm.valid) {
         this.isConfirmLoading = true;
-        const data: ConfigApp = this.validateForm.value
+        const data: User = this.validateForm.value
+        data.type = USER_TYPE.AGENT;
         if (data.id) {
-          this.api.update<ConfigApp>(data.id, data, URL.API_CONFIG_APP).subscribe(() => {
+          this.api.update<User>(data.id, data, URL.API_USER).subscribe(() => {
             this.isVisible = false;
             this.loadDataFromServer();
             this.scriptFC.alertShowMessageSuccess('Lưu thành công');
@@ -160,7 +160,8 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isConfirmLoading = false;
           });
         } else {
-          this.api.insert<ConfigApp>(data, URL.API_CONFIG_APP).subscribe(() => {
+          debugger;
+          this.api.insert<User>(data, URL.API_USER).subscribe(() => {
             this.isVisible = false;
             this.loadDataFromServer();
             this.scriptFC.alertShowMessageSuccess('Lưu thành công');
@@ -203,7 +204,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   handleConfirmToDelete() {
     if (this.idDelete) {
-      this.api.delete(this.idDelete, URL.API_CONFIG_APP).subscribe(() => {
+      this.api.delete(this.idDelete, URL.API_USER).subscribe(() => {
         this.loadDataFromServer();
         this.handleCancelDeletePopup();
         this.scriptFC.alertShowMessageSuccess('Xóa thành công');
