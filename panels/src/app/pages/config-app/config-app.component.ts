@@ -32,12 +32,11 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
     idDelete: number | string | null | undefined = -1;
     idShowModal: number | string | null | undefined = null;
     customerShowModal: { id: string | null | undefined, name: string | null | undefined } | null = null;
-    keyWork: string | null = null;
     filter: Array<{ key: string; value: string[] }> | null = null;
     filterStatus = [
-        {text: STATUS_CONFIG.NOT_ACTIVATED_LABEL, value: STATUS_CONFIG.NOT_ACTIVATED_VALUE},
-        {text: STATUS_CONFIG.PENDING_ACTIVE_LABEL, value: STATUS_CONFIG.PENDING_ACTIVE_VALUE},
-        {text: STATUS_CONFIG.ACTIVATED_LABEL, value: STATUS_CONFIG.ACTIVATED_VALUE},
+        {text: STATUS_CONFIG.NOT_ACTIVE, value: STATUS_CONFIG.NOT_ACTIVE},
+        {text: STATUS_CONFIG.PENDING_ACTIVE, value: STATUS_CONFIG.PENDING_ACTIVE},
+        {text: STATUS_CONFIG.ACTIVATED, value: STATUS_CONFIG.ACTIVATED},
     ];
 
     constructor(private loadScript: LazyLoadScriptService,
@@ -52,10 +51,12 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.init();
         this.validateForm = this.fb.group({
             id: [null],
+            sheetName: [null, [Validators.required]],
             firebase: [null, [Validators.required]],
+            codeAppVetgo: [null],
             sheetId: [null, [Validators.required]],
             customer: [null],
-            status: [null, [Validators.required]]
+            status: [STATUS_CONFIG.NOT_ACTIVE, [Validators.required]]
         });
     }
 
@@ -113,7 +114,9 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         if (configApp) {
             this.validateForm.setValue({
                 id: configApp.id,
+                sheetName: configApp.sheetName,
                 firebase: configApp.firebase,
+                codeAppVetgo: configApp.codeAppVetgo,
                 sheetId: configApp.sheetId,
                 customer: configApp.customerId ? configApp.customerId : "",
                 status: configApp.status
@@ -127,13 +130,10 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.customerShowModal = null;
             }
         } else {
-            this.validateForm.setValue({
-                id: null,
-                firebase: null,
-                sheetId: null,
-                customer: "",
-                status: "0"
-            });
+            this.validateForm.reset();
+            this.validateForm.patchValue({
+                status: STATUS_CONFIG.NOT_ACTIVE
+            })
             this.customerShowModal = null;
         }
         this.idShowModal = this.validateForm.get("id")?.value;

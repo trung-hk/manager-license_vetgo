@@ -32,13 +32,11 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
   validateForm!: UntypedFormGroup;
   idDelete: number | string | null | undefined = -1;
   idShowModal: number | string | null | undefined = null;
-  keyWork: string | null = null;
   filter: Array<{ key: string; value: string[] }> | null = null;
   filterStatus = [
-    {text: STATUS_AGENT.NOT_ACTIVATED_LABEL, value: STATUS_AGENT.NOT_ACTIVATED_VALUE},
-    {text: STATUS_AGENT.ACTIVATED_LABEL, value: STATUS_AGENT.ACTIVATED_VALUE}
+    {text: STATUS_AGENT.NOT_ACTIVE, value: STATUS_AGENT.NOT_ACTIVE},
+    {text: STATUS_AGENT.ACTIVATED, value: STATUS_AGENT.ACTIVATED}
   ];
-  isEdit: boolean = false;
 
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
@@ -52,11 +50,11 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.init();
     this.validateForm = this.fb.group({
       id: [null],
-      realm: [null, [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\-]+$/)]],
+      realm: [{value: null, disabled: false}, [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\-]+$/)]],
       code: [null, [Validators.required, Validators.maxLength(50)]],
       name: [null, [Validators.required, Validators.maxLength(255)]],
       email: [null, [Validators.required, Validators.maxLength(255), Validators.email, Validators.required]],
-      phone: [null, [Validators.required, Validators.pattern(/^\+?[0-9]{9,13}$/), Validators.maxLength(15)]],
+      phone: [null, [Validators.required]],
       status: [null, [Validators.required]],
       address: [null],
     });
@@ -115,29 +113,23 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isVisible = true;
     this.validateForm.clearValidators();
     if (agent) {
-      this.isEdit = true;
       this.validateForm.setValue({
         id: agent.id,
         realm: agent.realm,
         code: agent.code,
         name: agent.name,
         email: agent.email,
-        phone: agent.phone,
+        phone: this.scriptFC.formatPhone(agent.phone),
         status: agent.status,
         address: agent.address,
       });
+      this.validateForm.get("realm")?.disable();
     } else {
-      this.isEdit = false;
-      this.validateForm.setValue({
-        id: null,
-        realm: null,
-        code: null,
-        name: null,
-        email: null,
-        phone: null,
-        status: "1",
-        address: null,
-      });
+      this.validateForm.get("realm")?.enable();
+      this.validateForm.reset();
+      this.validateForm.patchValue({
+        status: STATUS_AGENT.NOT_ACTIVE
+      })
     }
     this.idShowModal = this.validateForm.get("id")?.value;
   }
@@ -148,6 +140,8 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isConfirmLoading = true;
         const data: User = this.validateForm.value
         data.type = USER_TYPE.AGENT;
+        let phoneUnFormat = this.scriptFC.convertInputFormatToNumber(data.phone);
+        data.phone = phoneUnFormat?.slice(0, 10);
         if (data.id) {
           this.api.update<User>(data.id, data, URL.API_USER).subscribe(() => {
             this.isVisible = false;
@@ -160,7 +154,6 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isConfirmLoading = false;
           });
         } else {
-          debugger;
           this.api.insert<User>(data, URL.API_USER).subscribe(() => {
             this.isVisible = false;
             this.loadDataFromServer();
@@ -215,8 +208,11 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   search(event: any): void {
-    console.log(event);
     this.loadDataFromServer(event.target.value);
     event.target.value = "";
+  }
+  formatPhone(event: any): void {
+    const data = this.scriptFC.formatPhone(event.target.value);
+    event.target.value = data;
   }
 }
