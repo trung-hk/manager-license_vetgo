@@ -7,8 +7,8 @@ import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
-import {STATUS_CONFIG} from "../../Constants/vg-constant";
 import {URL} from "../../Constants/api-urls";
+import {STATUS_CONFIG} from "../../Constants/vg-constant";
 
 @Component({
     selector: 'app-config-app',
@@ -33,10 +33,10 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
     idShowModal: number | string | null | undefined = null;
     customerShowModal: { id: string | null | undefined, name: string | null | undefined } | null = null;
     filter: Array<{ key: string; value: string[] }> | null = null;
-    filterStatus = [
-        {text: STATUS_CONFIG.NOT_ACTIVE, value: STATUS_CONFIG.NOT_ACTIVE},
-        {text: STATUS_CONFIG.PENDING_ACTIVE, value: STATUS_CONFIG.PENDING_ACTIVE},
-        {text: STATUS_CONFIG.ACTIVATED, value: STATUS_CONFIG.ACTIVATED},
+    statusList: {text: string, value: string}[] = [
+        {text: STATUS_CONFIG.NOT_ACTIVE_LABEL, value: STATUS_CONFIG.NOT_ACTIVE_VALUE},
+        {text: STATUS_CONFIG.PENDING_ACTIVE_LABEL, value: STATUS_CONFIG.PENDING_ACTIVE_VALUE},
+        {text: STATUS_CONFIG.ACTIVATED_LABEL, value: STATUS_CONFIG.ACTIVATED_VALUE},
     ];
 
     constructor(private loadScript: LazyLoadScriptService,
@@ -56,16 +56,17 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
             codeAppVetgo: [null],
             sheetId: [null, [Validators.required]],
             customer: [null],
-            status: [STATUS_CONFIG.NOT_ACTIVE, [Validators.required]]
+            status: [STATUS_CONFIG.NOT_ACTIVE_VALUE, [Validators.required]]
         });
     }
 
     ngAfterViewInit(): void {
-        this.renderer.addClass(document.querySelector('.config'), "active");
-        this.renderer.addClass(document.querySelector('.config a'), "toggled");
-        this.renderer.addClass(document.querySelector('.manager-config-app'), "active");
-        this.renderer.addClass(document.querySelector('.manager-config-app a'), "toggled");
-        this.loadScript.addListScript(this.listScript).then();
+        this.loadScript.addListScript(this.listScript).then(() => {
+            this.renderer.addClass(document.querySelector('.config'), "active");
+            this.renderer.addClass(document.querySelector('.config a'), "toggled");
+            this.renderer.addClass(document.querySelector('.manager-config-app'), "active");
+            this.renderer.addClass(document.querySelector('.manager-config-app a'), "toggled");
+        });
     }
 
     ngOnDestroy(): void {
@@ -132,7 +133,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             this.validateForm.reset();
             this.validateForm.patchValue({
-                status: STATUS_CONFIG.NOT_ACTIVE
+                status: STATUS_CONFIG.NOT_ACTIVE_VALUE
             })
             this.customerShowModal = null;
         }

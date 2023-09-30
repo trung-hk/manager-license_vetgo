@@ -9,6 +9,8 @@ import { ProductComponent } from './pages/product/product.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProductServiceComponent } from './pages/product-service/product-service.component';
 import { PartnerComponent } from './pages/partner/partner.component';
+import {NgxPermissionsGuard} from "ngx-permissions";
+import {ROLES} from "./Constants/vg-constant";
 
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
@@ -33,7 +35,14 @@ const routes: Routes = [
       },
       {
         path: 'manager-config-app',
-        component: ConfigAppComponent
+        component: ConfigAppComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.ADMIN],
+            redirectTo: '/error/403'
+          }
+        }
       },
       {
         path: 'product',
@@ -57,7 +66,15 @@ const routes: Routes = [
   {
     path: 'demo',
     loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule)
-  }
+  },
+  {
+    path: 'error',
+    loadChildren: () => import('./error/error.module').then(m => m.ErrorModule)
+  },
+  {
+    path: '**',
+    redirectTo: '/error/404'
+  },
 ];
 
 @NgModule({

@@ -5,6 +5,7 @@ import { HeaderComponent } from './header/header.component';
 import { SidebarLeftComponent } from './sidebar-left/sidebar-left.component';
 import { SidebarSettingRightComponent } from './sidebar-setting-right/sidebar-setting-right.component';
 import {RouterLink} from "@angular/router";
+import {NgxPermissionsModule} from "ngx-permissions";
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import {RouterLink} from "@angular/router";
   ],
     imports: [
         CommonModule,
-        RouterLink
+        RouterLink,
+        NgxPermissionsModule
     ],
   exports: [
       FooterComponent,

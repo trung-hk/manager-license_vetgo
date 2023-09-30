@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot,} from '@angular/router';
 import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
+import {NgxPermissionsService} from "ngx-permissions";
 
 
 @Injectable({
@@ -9,7 +10,8 @@ import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
 export class AuthGuard extends KeycloakAuthGuard {
   constructor(
     protected override readonly router: Router,
-    private readonly keycloak: KeycloakService) {
+    private readonly keycloak: KeycloakService,
+    private permissionsService: NgxPermissionsService) {
     super(router, keycloak);
   }
 
@@ -26,7 +28,9 @@ export class AuthGuard extends KeycloakAuthGuard {
     }
 
     const requiredRoles = route.data['rollen'];
-
+    const rolesList = this.keycloak.getKeycloakInstance().realmAccess?.roles || [];
+    console.log(rolesList)
+    this.permissionsService.loadPermissions(rolesList);
     // Allow the user to proceed if no additional roles are required to access the route.
     if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) {
       return true;

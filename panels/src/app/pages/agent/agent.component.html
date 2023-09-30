@@ -24,7 +24,7 @@
                             <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                                 Ngày cập nhật
                             </th>
-                            <th nzColumnKey="status" [nzSortFn]="true" [nzFilters]="filterStatus" [nzFilterFn]="true">
+                            <th nzColumnKey="status" [nzSortFn]="true" [nzFilters]="statusList" [nzFilterFn]="true">
                                 Trạng thái
                             </th>
                             <th class="align-center" nzWidth="10em">Thao tác</th>
@@ -41,13 +41,13 @@
                             <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
                             <td class="align-center">
                                 <ng-container [ngSwitch]="dt.status">
-                                    <div *ngSwitchCase="STATUS_AGENT.NOT_ACTIVE"
+                                    <div *ngSwitchCase="STATUS_AGENT.NOT_ACTIVE_VALUE"
                                          class="badge badge-shadow badge-danger">
-                                        {{STATUS_AGENT.NOT_ACTIVE}}
+                                        {{STATUS_AGENT.NOT_ACTIVE_LABEL}}
                                     </div>
-                                    <div *ngSwitchCase="STATUS_AGENT.ACTIVATED"
+                                    <div *ngSwitchCase="STATUS_AGENT.ACTIVATED_VALUE"
                                          class="badge badge-shadow badge-success">
-                                        {{STATUS_AGENT.ACTIVATED}}
+                                        {{STATUS_AGENT.ACTIVATED_LABEL}}
                                     </div>
                                 </ng-container>
                             </td>
@@ -68,7 +68,7 @@
                 </nz-card>
                 <ng-template #titleLeft>
                     Danh sách đại lý
-                    <nz-tag [nzColor]="'#108ee9'">{{total}}</nz-tag>
+                    <nz-tag [nzColor]="'#33CCFF'"><nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic></nz-tag>
                 </ng-template>
                 <ng-template #titleRight>
                     <div nz-row [nzGutter]="8">
@@ -149,10 +149,7 @@
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
                 <nz-form-control [nzSm]="18">
                     <nz-select formControlName="status" nzSize="large">
-                        <nz-option nzValue="{{STATUS_AGENT.NOT_ACTIVE}}"
-                                   nzLabel="{{STATUS_AGENT.NOT_ACTIVE}}"></nz-option>
-                        <nz-option nzValue="{{STATUS_AGENT.ACTIVATED}}"
-                                   nzLabel="{{STATUS_AGENT.ACTIVATED}}"></nz-option>
+                        <nz-option *ngFor="let status of statusList" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>
