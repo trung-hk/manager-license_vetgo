@@ -127,7 +127,7 @@
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
                 <nz-form-control [nzSm]="18">
                     <nz-input-group nzAddOnBefore="+84">
-                        <input formControlName="phone" nz-input placeholder="(090) 123-4567"
+                        <input [maxLength]="15" formControlName="phone" nz-input placeholder="(090) 123-4567"
                                (keyup)="formatPhone($event)"/>
                     </nz-input-group>
                 </nz-form-control>

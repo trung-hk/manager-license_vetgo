@@ -11,6 +11,7 @@ import {URL} from "../../Constants/api-urls";
 import {STATUS_AGENT, USER_TYPE} from "../../Constants/vg-constant";
 import {User} from "../../models/User";
 import {USER_FORM} from "../../Constants/Form";
+import {ResponseError} from "../../models/ResponseError";
 
 @Component({
     selector: 'app-agent',
@@ -121,7 +122,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             this.validateForm.get("realm")?.enable();
             this.validateForm.reset();
             this.validateForm.patchValue({
-                status: this.STATUS_AGENT.IN_ACTIVE_VALUE
+                status: this.STATUS_AGENT.ACTIVATED_VALUE
             })
         }
         this.idShowModal = this.validateForm.get("id")?.value;
@@ -136,26 +137,35 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
                 let phoneUnFormat = this.scriptFC.convertInputFormatToNumber(data.phone);
                 data.phone = phoneUnFormat?.slice(0, 10);
                 if (data.id) {
-                    this.api.update<User>(data.id, data, URL.API_USER).subscribe(() => {
-                        this.isVisible = false;
-                        this.loadDataFromServer();
-                        this.scriptFC.alertShowMessageSuccess('Lưu thành công');
-                        this.isConfirmLoading = false;
-                    }, (error) => {
-                        console.log(error);
-                        this.scriptFC.alertShowMessageError('Lưu thất bại');
-                        this.isConfirmLoading = false;
-                    });
-                } else {
-                    this.api.insert<User>(data, URL.API_USER)
-                        .subscribe(() => {
+                    this.api.update(data.id, data, URL.API_USER).subscribe((data) => {
+                        if (data.status == 400){
+                            data = data as ResponseError;
+                            this.scriptFC.alertShowMessageError(`Lưu thất bại ${data.message}`);
+                        } else {
                             this.isVisible = false;
                             this.loadDataFromServer();
                             this.scriptFC.alertShowMessageSuccess('Lưu thành công');
+                        }
+                    }, (error) => {
+                        console.log(error);
+                        this.scriptFC.alertShowMessageError('Lưu thất bại, kiểm tra lại đường truyền');
+                        this.isConfirmLoading = false;
+                    });
+                } else {
+                    this.api.insert(data, URL.API_USER)
+                        .subscribe((data) => {
+                            if (data.status == 400){
+                                data = data as ResponseError;
+                                this.scriptFC.alertShowMessageError(`Lưu thất bại ${data.message}`);
+                            } else {
+                                this.isVisible = false;
+                                this.loadDataFromServer();
+                                this.scriptFC.alertShowMessageSuccess('Lưu thành công');
+                            }
                             this.isConfirmLoading = false;
                         }, error => {
                             console.log(error);
-                            this.scriptFC.alertShowMessageError('Lưu thất bại');
+                            this.scriptFC.alertShowMessageError('Lưu thất bại, kiểm tra lại đường truyền');
                             this.isConfirmLoading = false;
                         })
                 }
@@ -169,7 +179,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         } catch (error) {
             console.log(error)
-            this.scriptFC.alertShowMessageError('Lưu thất bại');
+            this.scriptFC.alertShowMessageError('Lưu thất bại, kiểm tra lại đường truyền');
         }
     }
 

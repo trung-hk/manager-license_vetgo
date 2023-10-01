@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {ResponseError} from "../models/ResponseError";
 @Injectable({
     providedIn: 'root'
 })
@@ -30,15 +31,15 @@ export class ApiCommonService {
         return this.httpClient.get<T>(`${this.url}/${api}/${id}`);
     }
 
-    insert<T>(data: T, api: string): Observable<T> {
-        return this.httpClient.post<T>(`${this.url}/${api}`, data);
+    insert<T>(data: T, api: string): Observable<T | ResponseError> {
+        return this.httpClient.post<T | ResponseError>(`${this.url}/${api}`, data);
     }
 
-    update<T>(id: number | string | null | undefined, data: T, api: string): Observable<T> {
-        return this.httpClient.put<T>(`${this.url}/${api}/${id}`, data);
+    update<T>(id: number | string | null | undefined, data: T, api: string): Observable<T | ResponseError> {
+        return this.httpClient.put<T | ResponseError>(`${this.url}/${api}/${id}`, data);
     }
 
-    delete<T>(id: number | string, api: string): Observable<T> {
-        return this.httpClient.delete<T>(`${this.url}/${api}/${id}`);
+    delete<T>(id: number | string, api: string): Observable<T | ResponseError> {
+        return this.httpClient.delete<T | ResponseError>(`${this.url}/${api}/${id}`);
     }
 }
