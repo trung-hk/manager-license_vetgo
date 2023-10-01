@@ -1,4 +1,4 @@
-import {Component, OnInit, inject, AfterViewInit, OnDestroy, Renderer2} from '@angular/core';
+import {Component, OnInit, AfterViewInit, OnDestroy, Renderer2} from '@angular/core';
 import {NzTableQueryParams} from 'ng-zorro-antd/table';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {ApiCommonService} from 'src/app/services/api-common.service';
@@ -10,6 +10,7 @@ import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {STATUS_AGENT, USER_TYPE} from "../../Constants/vg-constant";
 import {User} from "../../models/User";
+import {USER_FORM} from "../../Constants/Form";
 
 @Component({
     selector: 'app-agent',
@@ -34,8 +35,8 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     idShowModal: number | string | null | undefined = null;
     filter: Array<{ key: string; value: string[] }> | null = null;
     statusList: {text: string, value: string}[] = [
-        {text: STATUS_AGENT.NOT_ACTIVE_LABEL, value: STATUS_AGENT.NOT_ACTIVE_VALUE},
-        {text: STATUS_AGENT.ACTIVATED_LABEL, value: STATUS_AGENT.ACTIVATED_VALUE}
+        {text: this.STATUS_AGENT.IN_ACTIVE_LABEL, value: this.STATUS_AGENT.IN_ACTIVE_VALUE},
+        {text: this.STATUS_AGENT.ACTIVATED_LABEL, value: this.STATUS_AGENT.ACTIVATED_VALUE}
     ];
 
     constructor(private loadScript: LazyLoadScriptService,
@@ -48,19 +49,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit() {
         this.init();
-        this.validateForm = this.fb.group({
-            id: [null],
-            realm: [{
-                value: null,
-                disabled: false
-            }, [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\-]+$/)]],
-            code: [null, [Validators.required, Validators.maxLength(50)]],
-            name: [null, [Validators.required, Validators.maxLength(255)]],
-            email: [null, [Validators.required, Validators.maxLength(255), Validators.email, Validators.required]],
-            phone: [null, [Validators.required]],
-            status: [null, [Validators.required]],
-            address: [null],
-        });
+        this.validateForm = this.fb.group(USER_FORM);
     }
 
     ngAfterViewInit(): void {
@@ -132,7 +121,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             this.validateForm.get("realm")?.enable();
             this.validateForm.reset();
             this.validateForm.patchValue({
-                status: STATUS_AGENT.NOT_ACTIVE_VALUE
+                status: this.STATUS_AGENT.IN_ACTIVE_VALUE
             })
         }
         this.idShowModal = this.validateForm.get("id")?.value;

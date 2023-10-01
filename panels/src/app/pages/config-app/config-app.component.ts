@@ -9,6 +9,7 @@ import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {URL} from "../../Constants/api-urls";
 import {STATUS_CONFIG} from "../../Constants/vg-constant";
+import {CONFIG_APP_FORM} from "../../Constants/Form";
 
 @Component({
     selector: 'app-config-app',
@@ -34,9 +35,9 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
     customerShowModal: { id: string | null | undefined, name: string | null | undefined } | null = null;
     filter: Array<{ key: string; value: string[] }> | null = null;
     statusList: {text: string, value: string}[] = [
-        {text: STATUS_CONFIG.NOT_ACTIVE_LABEL, value: STATUS_CONFIG.NOT_ACTIVE_VALUE},
-        {text: STATUS_CONFIG.PENDING_ACTIVE_LABEL, value: STATUS_CONFIG.PENDING_ACTIVE_VALUE},
-        {text: STATUS_CONFIG.ACTIVATED_LABEL, value: STATUS_CONFIG.ACTIVATED_VALUE},
+        {text: this.STATUS_CONFIG.IN_ACTIVE_LABEL, value: this.STATUS_CONFIG.IN_ACTIVE_VALUE},
+        {text: this.STATUS_CONFIG.PENDING_ACTIVE_LABEL, value: this.STATUS_CONFIG.PENDING_ACTIVE_VALUE},
+        {text: this.STATUS_CONFIG.ACTIVATED_LABEL, value: this.STATUS_CONFIG.ACTIVATED_VALUE},
     ];
 
     constructor(private loadScript: LazyLoadScriptService,
@@ -49,15 +50,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit() {
         this.init();
-        this.validateForm = this.fb.group({
-            id: [null],
-            sheetName: [null, [Validators.required]],
-            firebase: [null, [Validators.required]],
-            codeAppVetgo: [null],
-            sheetId: [null, [Validators.required]],
-            customer: [null],
-            status: [STATUS_CONFIG.NOT_ACTIVE_VALUE, [Validators.required]]
-        });
+        this.validateForm = this.fb.group(CONFIG_APP_FORM);
     }
 
     ngAfterViewInit(): void {
@@ -133,7 +126,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             this.validateForm.reset();
             this.validateForm.patchValue({
-                status: STATUS_CONFIG.NOT_ACTIVE_VALUE
+                status: this.STATUS_CONFIG.IN_ACTIVE_VALUE
             })
             this.customerShowModal = null;
         }

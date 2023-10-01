@@ -1,9 +1,9 @@
 export enum STATUS_CONFIG {
-    NOT_ACTIVE_LABEL = "Not Active",
-    NOT_ACTIVE_VALUE = "NOT_ACTIVE",
-    PENDING_ACTIVE_LABEL = "Pending Active",
+    IN_ACTIVE_LABEL = "Chưa kích hoạt",
+    IN_ACTIVE_VALUE = "IN_ACTIVE",
+    PENDING_ACTIVE_LABEL = "Chờ kích hoạt",
     PENDING_ACTIVE_VALUE = "PENDING_ACTIVE",
-    ACTIVATED_LABEL = "Activated",
+    ACTIVATED_LABEL = "Đã kích hoạt",
     ACTIVATED_VALUE = "ACTIVATED",
 }
 export enum USER_TYPE {
@@ -15,9 +15,9 @@ export enum USER_TYPE {
 }
 
 export enum STATUS_AGENT {
-    NOT_ACTIVE_LABEL = "Not Active",
-    NOT_ACTIVE_VALUE = "NOT_ACTIVE",
-    ACTIVATED_LABEL = "Activated",
+    IN_ACTIVE_LABEL = "Chưa kích hoạt",
+    IN_ACTIVE_VALUE = "IN_ACTIVE",
+    ACTIVATED_LABEL = "Đã kích hoạt",
     ACTIVATED_VALUE = "ACTIVATED",
 }
 export enum ROLES {
@@ -26,4 +26,16 @@ export enum ROLES {
     DISTRIBUTOR = "DISTRIBUTOR",
     PARTNER = "PARTNER",
     CUSTOMER = "CUSTOMER"
+}
+
+export enum STATUS_PRODUCT_SERVICE {
+    UN_DEPLOYED_LABEL = "Chưa triển khai",
+    UN_DEPLOYED_VALUE = "UN_DEPLOYED",
+    DEPLOYED_LABEL = "Đã triển khai",
+    DEPLOYED_VALUE = "DEPLOYED"
+}
+
+export enum TYPE_PRODUCT {
+    SERVICE_PRODUCT = "SERVICE_PRODUCT",
+    SALES_PRODUCT = "SALES_PRODUCT"
 }

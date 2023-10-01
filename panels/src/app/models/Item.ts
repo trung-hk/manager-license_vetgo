@@ -1,3 +1,4 @@
+import {PackageProduct} from "./PackageProduct";
 
 export class Item{
     id?: string | null ;
@@ -11,12 +12,12 @@ export class Item{
     sellingPrice?: string | null;
     type?: string | null;
     status?: string | null;
-    realm?: string | null;
     createBy?: string | null;
     createDate?: string | null;
     lastModifiedBy?: string | null;
     lastModifiedDate?: string | null;
     seqNo?: string | null;
     deleted?: boolean | null;
+    storeId?: string | null;
 }
 

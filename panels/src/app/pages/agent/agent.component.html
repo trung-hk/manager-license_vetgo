@@ -41,9 +41,9 @@
                             <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
                             <td class="align-center">
                                 <ng-container [ngSwitch]="dt.status">
-                                    <div *ngSwitchCase="STATUS_AGENT.NOT_ACTIVE_VALUE"
+                                    <div *ngSwitchCase="STATUS_AGENT.IN_ACTIVE_VALUE"
                                          class="badge badge-shadow badge-danger">
-                                        {{STATUS_AGENT.NOT_ACTIVE_LABEL}}
+                                        {{STATUS_AGENT.IN_ACTIVE_LABEL}}
                                     </div>
                                     <div *ngSwitchCase="STATUS_AGENT.ACTIVATED_VALUE"
                                          class="badge badge-shadow badge-success">
@@ -163,8 +163,8 @@
         </button>
     </ng-template>
     <ng-template #modalFooterUpdate>
-        <button nz-button nzType="default" nzValue="large" (click)="handleCancel()">Cancel</button>
-        <button nz-button nzType="primary" nzValue="large" [disabled]="validateForm.invalid" (click)="handleOk()"
+        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+        <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
                 [nzLoading]="isConfirmLoading">Câp nhật
         </button>
     </ng-template>
@@ -175,6 +175,6 @@
           nzCancelText="Cancel" (nzOnOk)="handleConfirmToDelete()"
           (nzOnCancel)="handleCancelDeletePopup()">
     <ng-container *nzModalContent>
-        Are you sure you want to delete?
+        Xóa data đã chọn ?
     </ng-container>
 </nz-modal>

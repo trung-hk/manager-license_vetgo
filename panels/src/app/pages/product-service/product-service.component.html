@@ -2,177 +2,215 @@
     <div class="section-body">
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="col-3">
-                            <h4>Danh sách sản phẩm</h4>
+                <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzExtra]="titleRight" [nzBordered]="false">
+                    <nz-table
+                            nzShowSizeChanger
+                            [nzData]="dataList"
+                            [nzFrontPagination]="false"
+                            [nzLoading]="loading"
+                            [nzTotal]="total"
+                            [nzPageSize]="pageSize"
+                            [nzPageIndex]="pageIndex"
+                            (nzQueryParams)="onQueryParamsChange($event)"
+                    >
+                        <thead>
+                        <tr>
+                            <th nzColumnKey="code" [nzSortFn]="true">Mã sản phẩm</th>
+                            <th nzColumnKey="name" [nzSortFn]="true">Sản phẩm</th>
+                            <th nzColumnKey="description">Thông tin sản phẩm</th>
+                            <th nzWidth="16em">Thông tin Gói</th>
+                            <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
+                                Ngày cập nhật
+                            </th>
+                            <th nzColumnKey="status" nzWidth="12em" [nzSortFn]="true" [nzFilters]="statusList"
+                                [nzFilterFn]="true">
+                                Trạng thái
+                            </th>
+                            <th class="align-center" nzWidth="10em">Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let dt of dataList">
+                            <td>{{dt.code}}</td>
+                            <td>{{dt.name}}</td>
+                            <td>{{dt.description}}</td>
+                            <td>
+                                <nz-list nzSize="small">
+                                    <nz-list-item *ngFor="let item of scriptFC.getPackageService(dt.attributes)">
+                                        <nz-skeleton *ngIf="!item" [nzAvatar]="true"
+                                                     [nzParagraph]="{ rows: 1 }"></nz-skeleton>
+                                        <nz-list-item-meta
+                                                *ngIf="item"
+                                                nzAvatar="/assets/img/service-packages.png"
+                                                [nzDescription]="item.name ? item.name : ''"
+                                        >
+                                            <nz-list-item-meta-title>
+                                                <nz-statistic
+                                                        [nzValueStyle]="{'font-size': 'unset'}"
+                                                        [nzValue]="(item.price | number)!"
+                                                        [nzSuffix]="'VNĐ'">
+                                                </nz-statistic>
+                                            </nz-list-item-meta-title>
+                                        </nz-list-item-meta>
+                                    </nz-list-item>
+                                </nz-list>
+                            </td>
+                            <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+                            <td class="align-center">
+                                <ng-container [ngSwitch]="dt.status">
+                                    <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.UN_DEPLOYED_VALUE"
+                                         class="badge badge-shadow badge-danger">
+                                        {{STATUS_PRODUCT_SERVICE.UN_DEPLOYED_VALUE}}
+                                    </div>
+                                    <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE"
+                                         class="badge badge-shadow badge-success">
+                                        {{STATUS_PRODUCT_SERVICE.DEPLOYED_LABEL}}
+                                    </div>
+                                </ng-container>
+                            </td>
+                            <td class="align-center">
+                                <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)"
+                                        title="Chỉnh sửa">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                &nbsp;
+                                <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)"
+                                        title="Xóa">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </nz-table>
+                </nz-card>
+                <ng-template #titleLeft>
+                    Danh sách Sản phẩm
+                    <nz-tag [nzColor]="'#33CCFF'">
+                        <nz-statistic [nzValueStyle]="{'font-size': 'unset'}"
+                                      [nzValue]="(total | number)!"></nz-statistic>
+                    </nz-tag>
+                </ng-template>
+                <ng-template #titleRight>
+                    <div nz-row [nzGutter]="8">
+                        <div nz-col [nzSm]="14">
+                            <nz-input-group [nzSuffix]="suffixIconSearch">
+                                <input nzSize="large" type="search" nz-input placeholder="input search text"
+                                       (keyup.enter)="search($event)"/>
+                            </nz-input-group>
+                            <ng-template #suffixIconSearch>
+                                <span nz-icon nzType="search"></span>
+                            </ng-template>
                         </div>
-                        <div class="col-9">
-                            <button type="button" data-toggle="modal" data-target="#save-product-service-modal"
-                                class="btn btn-success pull-right note-btn" disabled onclick="openModal(this);"><i
-                                    class="fas fa-plus"></i> Thêm mới sản phẩm</button>
+                        <div nz-col [nzSpan]="10">
+                            <button type="button" (click)="showModal()" class="btn btn-success pull-right note-btn">
+                                <i class="fas fa-plus"></i> Thêm mới
+                            </button>
                         </div>
-
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <nz-table
-                                    nzShowSizeChanger
-                                    [nzData]="dataList"
-                                    [nzFrontPagination]="false"
-                                    [nzLoading]="loading"
-                                    [nzTotal]="total"
-                                    [nzPageSize]="pageSize"
-                                    [nzPageIndex]="pageIndex"
-                                    (nzQueryParams)="onQueryParamsChange($event)"
-                                    (nzPageIndexChange)="onPageIndexChange($event)"
-                            >
-                                <thead>
-                                <tr>
-                                    <th nzWidth="10%" nzColumnKey="name" [nzSortFn]="true">Sản phẩm</th>
-                                    <th nzWidth="30%" nzColumnKey="description" [nzSortFn]="true">Thông tin sản phẩm</th>
-                                    <th nzWidth="25%">Thông tin Gói</th>
-                                    <th nzWidth="15%" nzColumnKey="last_modified_date" [nzSortFn]="true">Ngày cập nhật</th>
-                                    <th nzWidth="10%">Trạng thái</th>
-                                    <th nzWidth="10%">Thao tác</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr *ngFor="let dt of dataList">
-                                    <td>{{dt.name}}</td>
-                                    <td>{{dt.description}}</td>
-                                    <td class="align-center">
-                                    </td>
-                                    <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
-                                    <td class="align-center">
-                                        <div class="badge badge-shadow"
-                                             [ngClass]="dt.status === '0' ? 'badge-danger' : 'badge-success'">
-                                            {{ dt.status === '0' ? 'Chưa sử dụng' : 'Đang sử dụng' }}
-                                        </div>
-                                    </td>
-                                    <td class="align-center">
-                                        <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        &nbsp;
-                                        <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </nz-table>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped" id="product-list-table">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center pt-3">
-                                            <div class="custom-checkbox custom-checkbox-table custom-control">
-                                                <input type="checkbox" data-checkboxes="product-group"
-                                                    data-checkbox-role="dad" class="custom-control-input"
-                                                    id="checkbox-all">
-                                                <label for="checkbox-all" class="custom-control-label">&nbsp;</label>
-                                            </div>
-                                        </th>
-                                        <th>Sản phẩm</th>
-                                        <th>Thông tin sản phẩm</th>
-                                        <th>Thông tin Gói</th>
-                                        <th>Ngày cập nhật</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                </ng-template>
             </div>
         </div>
     </div>
 </section>
-<div class="modal fade" id="save-product-service-modal" tabindex="-1" role="dialog" aria-labelledby="formModal"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title text-center" id="formModal">Thêm sản phẩm</h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="#">
-                    <input type="hidden" id="id-product">
-                    <input type="hidden" id="index-row">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-12 align-center title-modal">
-                                <h4>Thông tin sản phẩm</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-2 col-form-label-sm font-bold">Tên sản phẩm</label>
-                            <div class="col-md-10">
-                                <input type="text" class="form-control" placeholder="Hãy nhập tên sản phẩm"
-                                    name="name-product" id="name-product">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-2 col-form-label-sm font-bold">Mô tả</label>
-                            <div class="col-md-10">
-                                <textarea style="height: 100% !important;" rows="5" class="form-control h-25"
-                                    placeholder="Thông tin sản phẩm" name="description-product"
-                                    id="description-product"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-2 col-form-label-sm font-bold">Trạng thái</label>
-                            <div class="col-md-10">
-                                <select name="status" class="form-control form-control-sm select-scroll"
-                                    id="status-product">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-12 align-center title-modal">
-                                <h4>Thông tin gói sản phẩm</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group empty-package-product">
-                        <div class="row">
-                            <label class="col-md-12 align-center ">Không có thông tin gói sản phẩm</label>
-                        </div>
-                    </div>
-                    <div class="form-group" id="content-package"></div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <button id="btn-add-new-package" type="button" class="btn btn-success"><i
-                                        class="fas fa-save"></i> Thêm gói mới</button>
-                            </div>
-                        </div>
-                    </div>
-                    <button id="btn-add-new-product" type="button" class="btn btn-success pull-right save-product"><i
-                            class="fas fa-save"></i> Thêm mới</button>
-                    <button id="btn-delete-product" type="button" class="btn btn-danger pull-right"><i
-                            class="fas fa-trash"></i> Xóa</button>
-                    <button id="btn-update-product" type="button"
-                        class="add-category btn btn-success pull-right save-product m-r-15"><i class="fas fa-save"></i>
-                        Cập nhật</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Create/Update Form -->
+<nz-modal [(nzVisible)]="isVisible"
+          [nzTitle]="modalTitle"
+          [nzContent]="modalContent"
+          [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
+          (nzOnCancel)="handleCancel()" nzWidth="800px">
+    <ng-template #modalTitle> {{idShowModal ? 'Cập nhật sản phẩm' : 'Thêm mới sản phẩm'}}</ng-template>
+
+    <ng-template #modalContent>
+        <form nz-form [formGroup]="validateProductForm">
+            <input type="hidden" formControlName="id">
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã sản phẩm</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <input formControlName="code" nz-input nzSize="large" placeholder="VETGO"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên sản phẩm</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <input formControlName="name" nz-input nzSize="large" placeholder="Vet go"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzLabelAlign="right" [nzSm]="5">Mô tả sản phẩm</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <textarea rows="4" formControlName="description" nz-input
+                              placeholder="vet go..."></textarea>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <nz-select formControlName="status" nzSize="large">
+                        <nz-option *ngFor="let status of statusList" nzValue="{{status.value}}"
+                                   nzLabel="{{status.text}}"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <form nz-form [formGroup]="validatePackageProductForm">
+                <div [formArrayName]="attributeArrayForm">
+                    <nz-form-item *ngFor="let item of formPackage.controls; let i = index" [formGroupName]="i">
+                        <nz-form-label nzNoColon="{{i !== 0}}" nzLabelAlign="right" [nzSm]="5">
+                            <ng-container *ngIf="i === 0">
+                                Thông tin gói
+                            </ng-container>
+                        </nz-form-label>
+                        <nz-form-control [nzSm]="18">
+                            <input type="hidden" formControlName="id">
+                            <nz-input-group style="width: 50%" nzAddOnBefore="Tên">
+                                <input formControlName="name" nz-input nzSize="large"
+                                       placeholder="1 năm"/>
+                            </nz-input-group>
+                            <nz-input-number-group style="width: 45%" nzAddOnBefore="Giá" nzAddOnAfter="VNĐ">
+                                <nz-input-number
+                                       formControlName="price"
+                                       nzSize="large"
+                                       [nzPlaceHolder]="'1,000,000'"
+                                       [nzFormatter]="scriptFC.formatterMoney"
+                                       [nzParser]="scriptFC.parserMoney">
+                                </nz-input-number>
+                            </nz-input-number-group>
+                            <span style="width: 5%" nz-icon nzType="minus-circle-o" class="dynamic-delete-button"
+                                  (click)="removeField(i, $event)"></span>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-control [nzSm]="5"></nz-form-control>
+                        <nz-form-control [nzSm]="18" class="align-center">
+                            <button nz-button nzBlock nzType="dashed" class="add-button" (click)="addPackage()">
+                                <span nz-icon nzType="plus" style="vertical-align:text-top;"></span>
+                                Thêm gói
+                            </button>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </form>
+
+        </form>
+    </ng-template>
+    <ng-template #modalFooterAdd>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+        <button nz-button nzType="primary" [disabled]="validateProductForm.invalid" (click)="handleOk()"
+                [nzLoading]="isConfirmLoading">Thêm mới
+        </button>
+    </ng-template>
+    <ng-template #modalFooterUpdate>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+        <button nz-button nzType="primary" [disabled]="validateProductForm.invalid" (click)="handleOk()"
+                [nzLoading]="isConfirmLoading">Câp nhật
+        </button>
+    </ng-template>
+</nz-modal>
+
+<!-- Delete Confirmation -->
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Delete Confirmation" nzOkText="Ok" nzOkDanger="true"
+          nzCancelText="Cancel" (nzOnOk)="handleConfirmToDelete()"
+          (nzOnCancel)="handleCancelDeletePopup()">
+    <ng-container *nzModalContent>
+        Xóa data đã chọn ?
+    </ng-container>
+</nz-modal>
