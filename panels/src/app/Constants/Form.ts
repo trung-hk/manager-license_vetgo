@@ -5,7 +5,7 @@ export const CONFIG_APP_FORM= {
     sheetName: [null, [Validators.required, Validators.maxLength(500)]],
     firebase: [null, [Validators.required, Validators.maxLength(4000)]],
     codeAppVetgo: [null],
-    sheetId: [null, [Validators.required], Validators.maxLength(500)],
+    sheetId: [null, [Validators.required, Validators.maxLength(500)]],
     customer: [null],
     status: [null, [Validators.required]]
 }

@@ -15,9 +15,9 @@ export enum USER_TYPE {
 }
 
 export enum STATUS_AGENT {
-    IN_ACTIVE_LABEL = "Chưa kích hoạt",
+    IN_ACTIVE_LABEL = "Ngừng hoạt động",
     IN_ACTIVE_VALUE = "IN_ACTIVE",
-    ACTIVATED_LABEL = "Đã kích hoạt",
+    ACTIVATED_LABEL = "Đang hoạt động",
     ACTIVATED_VALUE = "ACTIVATED",
 }
 export enum ROLES {
