@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {ResponseError} from "../models/ResponseError";
+
 @Injectable({
     providedIn: 'root'
 })
@@ -11,19 +12,26 @@ export class ApiCommonService {
     constructor(private httpClient: HttpClient) {
     }
 
-    getAll<T>(api: string, page?: number, size?: number, sort?: string | null, filter?: Array<{ key: string; value: string[] }> | null, keyword?: string | null): Observable<T> {
-        let params = new HttpParams()
-        .append("page", page ? page : 0)
-        .append("size", size ? size : 10)
-        .append("sort", sort ? sort : '')
+    getAll<T>(api: string, page?: number | null, size?: number | null, sort?: string | null, filter?: Array<{
+        key: string;
+        value: string[]
+    }> | null, keyword?: string | null): Observable<T> {
+        let params = new HttpParams();
+        if (page) params = params.append("page", page);
+        if (size) params = params.append("size", size);
+        if (sort) params = params.append("sort", sort);
         if (keyword) params = params.append("keyword", keyword);
         if (filter) {
             filter.filter(f => f.value.length > 0)
-                .forEach(f => params = params.append("filter", f.value.join(",")));
+                .forEach(f => params = params.append("filter", `${f.key},${f.value.join(",")}`));
         }
         return this.httpClient.get<T>(`${this.url}/${api}`, {params});
     }
-    getAllUsersByType<T>(api: string, type: string, page?: number, size?: number, sort?: string | null, filter?: Array<{ key: string; value: string[] }> | null, keyword?: string | null): Observable<T> {
+
+    getAllUsersByType<T>(api: string, type: string, page?: number, size?: number, sort?: string | null, filter?: Array<{
+        key: string;
+        value: string[]
+    }> | null, keyword?: string | null): Observable<T> {
         return this.getAll(`${api}/${type}`, page, size, sort, filter, keyword);
     }
 

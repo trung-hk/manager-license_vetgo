@@ -28,6 +28,9 @@ import {NzStatisticModule} from "ng-zorro-antd/statistic";
 import {NzListModule} from "ng-zorro-antd/list";
 import {NzSkeletonModule} from "ng-zorro-antd/skeleton";
 import {NzInputNumberModule} from "ng-zorro-antd/input-number";
+import {NzMenuModule} from "ng-zorro-antd/menu";
+import {NzTypographyModule} from "ng-zorro-antd/typography";
+import {NzSpinModule} from "ng-zorro-antd/spin";
 
 @NgModule({
     exports: [
@@ -49,6 +52,9 @@ import {NzInputNumberModule} from "ng-zorro-antd/input-number";
         NzListModule,
         NzSkeletonModule,
         NzInputNumberModule,
+        NzMenuModule,
+        NzTypographyModule,
+        NzSpinModule,
     ],
     providers: [
         { provide: NZ_ICONS, useValue: icons }

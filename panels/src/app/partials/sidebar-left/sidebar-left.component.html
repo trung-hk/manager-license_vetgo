@@ -34,9 +34,9 @@
           <li class="agent-user"><a class="nav-link" href="#">User</a></li>
         </ul>
       </li>
-      <li class="menu-header">Đại lý</li>
+      <li class="menu-header" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">Đại lý</li>
       <li class="dropdown agent-product">
-        <a class="nav-link" href="agent-product.html"><i data-feather="monitor"></i><span>Sản phẩm đăng ký</span></a>
+        <a class="nav-link" routerLink="agent-product"><i data-feather="monitor"></i><span>Sản phẩm đăng ký</span></a>
       </li>
       <li class="dropdown agent-distributor">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Nhà phân phối</span></a>
