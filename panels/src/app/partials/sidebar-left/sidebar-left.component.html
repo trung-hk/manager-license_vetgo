@@ -18,12 +18,12 @@
           <li class=""><a class="nav-link" href="#">License zalo</a></li>
         </ul>
       </li>
-      <li class="dropdown product">
+      <li class="dropdown product" *ngxPermissionsOnly="[ROLES.ADMIN]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
           data-feather="briefcase"></i><span>Sản phẩm</span></a>
         <ul class="dropdown-menu">
           <!--<li class="product-list"><a class="nav-link" href="product.html">Sản phẩm bán hàng</a></li>-->
-          <li *ngxPermissionsOnly="[ROLES.ADMIN]" class="product-service"><a class="nav-link" routerLink="product-service">Sản phẩm dịch vụ</a></li>
+          <li  class="product-service"><a class="nav-link" routerLink="product-service">Sản phẩm dịch vụ</a></li>
         </ul>
       </li>
       <li class="dropdown agent" *ngxPermissionsOnly="[ROLES.ADMIN]">

@@ -6,7 +6,7 @@ import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
-import {ROLES, STATUS_AGENT_PRODUCT} from "../../Constants/vg-constant";
+import {ROLES, STATUS_AGENT_PRODUCT, STATUS_PRODUCT_SERVICE} from "../../Constants/vg-constant";
 import {AgentProduct} from "../../models/AgentProduct";
 
 @Component({
@@ -31,6 +31,7 @@ import {AgentProduct} from "../../models/AgentProduct";
 })
 export class AgentProductComponent {
     protected readonly STATUS_AGENT_PRODUCT = STATUS_AGENT_PRODUCT;
+    protected readonly STATUS_PRODUCT_SERVICE = STATUS_PRODUCT_SERVICE;
     protected readonly ROLES = ROLES;
     listScript = [];
     dataProductList: Item[] = [];

@@ -52,6 +52,10 @@
                                         </nz-list>
                                     </ng-template>
                                     <ng-template #action>
+                                        <ng-container *ngIf="dt.status === STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE then active else unActive">
+                                        </ng-container>
+                                    </ng-template>
+                                    <ng-template #active>
                                         <ng-container *ngxPermissionsOnly="[ROLES.AGENT]">
                                             <ng-container [ngSwitch]="dataProductRegisterList.get(dt.id!)?.status">&nbsp;
                                                 <button *ngSwitchCase="STATUS_AGENT_PRODUCT.REGISTERED_VALUE" type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dataProductRegisterList.get(dt.id!)?.id)">
@@ -62,7 +66,9 @@
                                                 </button>
                                             </ng-container>
                                         </ng-container>
-
+                                    </ng-template>
+                                    <ng-template #unActive>
+                                        <h6 style="color: orangered">Sản phẩm đang trong quá trình phát triển</h6>
                                     </ng-template>
                                 </div>
                             </div>
