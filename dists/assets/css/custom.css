@@ -80,3 +80,37 @@ table thead{
 .status-package-view {
     width: 100%;
 }
+.custom-scrollbar {
+    max-height: 205px;
+    overflow-y: hidden;
+}
+.custom-scrollbar:hover {
+    overflow-y: auto;
+    -moz-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    background-color: #949292;
+}
+@keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        overflow:hidden;
+    }
+}
+@-webkit-keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        visibility:hidden;
+    }
+}

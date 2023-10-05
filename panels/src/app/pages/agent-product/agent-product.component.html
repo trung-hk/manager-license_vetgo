@@ -14,17 +14,18 @@
                                                     [nzDescription]="infoProduct"
                                             ></nz-card-meta>
                                             <nz-card-meta
-                                                    nzTitle="Gói sản phẩm"
+                                                    [nzTitle]="amountPackage"
                                                     [nzDescription]="infoPackageProduct"
                                             ></nz-card-meta>
                                         </nz-card>
                                     </nz-list-item>
+                                    <ng-template #amountPackage>
+                                        Gói sản phẩm <nz-tag [nzColor]="'processing'">{{scriptFC.getPackageService(dt.attributes).length}}</nz-tag>
+                                    </ng-template>
                                     <ng-template #infoProduct>
                                         <div style="color: black !important;">
-                                            <label>Tên:</label><span> {{dt.name}}</span>
+                                            <label>Tên:</label><span nz-tooltip [nzTooltipTitle]="tooltipTitle"> {{dt.name}}</span>
                                             <br>
-                                            <label>Mô tả:</label>
-                                            <div class="text-break" [innerHtml]="scriptFC.displayContentTextArea(dt.description!)"></div>
                                             <label>Trạng thái:</label>
                                             <ng-container [ngSwitch]="dataProductRegisterList.get(dt.id!)?.status">&nbsp;
                                                 <nz-tag *ngSwitchCase="STATUS_AGENT_PRODUCT.REGISTERED_VALUE" nzColor="success">{{STATUS_AGENT_PRODUCT.REGISTERED_LABEL}}</nz-tag>
@@ -32,8 +33,11 @@
                                             </ng-container>
                                         </div>
                                     </ng-template>
+                                    <ng-template #tooltipTitle>
+                                        <div class="text-break custom-scrollbar" [innerHtml]="scriptFC.displayContentTextArea(dt.description!)"></div>
+                                    </ng-template>
                                     <ng-template #infoPackageProduct>
-                                        <nz-list nzSize="small">
+                                        <nz-list nzSize="small" class="custom-scrollbar">
                                             <nz-list-item *ngFor="let item of scriptFC.getPackageService(dt.attributes)">
                                                 <nz-list-item-meta
                                                         *ngIf="item"
@@ -68,7 +72,7 @@
                                         </ng-container>
                                     </ng-template>
                                     <ng-template #unActive>
-                                        <h6 style="color: orangered">Sản phẩm đang trong quá trình phát triển</h6>
+                                        <h6 style="color: orangered">Sản phẩm đang phát triển</h6>
                                     </ng-template>
                                 </div>
                             </div>
@@ -76,8 +80,7 @@
                     </nz-card>
                     <ng-template #titleLeft>
                         Danh sách Sản phẩm
-                        <nz-tag [nzColor]="'#04ab0c'"> Đã đăng ký {{totalRegisterProduct}}
-                        </nz-tag>
+                        <nz-tag [nzColor]="'#04ab0c'"> Đã đăng ký {{totalRegisterProduct}}</nz-tag>
                         <nz-tag [nzColor]="'#F1091DFF'"> Chưa đăng ký {{totalProduct - totalRegisterProduct}}
                         </nz-tag>
                     </ng-template>

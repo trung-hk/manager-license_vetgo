@@ -75,7 +75,7 @@ export class AgentProductComponent {
                 .subscribe((data) => {
                     console.log(data)
                     this.totalProduct = data.totalElements;
-                    this.dataProductList = data.content;
+                    this.dataProductList = data.content.sort(function(a, b){return ((JSON.parse(a.attributes!).packages).length - (JSON.parse(b.attributes!).packages).length)});
                     isSuccessLoadDataProduct = true;
                     if (!(isSuccessLoadDataProduct && isSuccessLoadDataProductRegister)) {
                         this.loading = false;
