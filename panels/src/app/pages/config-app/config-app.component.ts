@@ -10,6 +10,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {URL} from "../../Constants/api-urls";
 import {STATUS_CONFIG} from "../../Constants/vg-constant";
 import {CONFIG_APP_FORM} from "../../Constants/Form";
+import * as Message from "../../Constants/message-constant";
 
 @Component({
     selector: 'app-config-app',
@@ -142,22 +143,22 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.api.update<ConfigApp>(data.id, data, URL.API_CONFIG_APP).subscribe(() => {
                         this.isVisible = false;
                         this.loadDataFromServer();
-                        this.scriptFC.alertShowMessageSuccess('Lưu thành công');
+                        this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
                         this.isConfirmLoading = false;
                     }, (error) => {
                         console.log(error);
-                        this.scriptFC.alertShowMessageError('Lưu thất bại');
+                        this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
                         this.isConfirmLoading = false;
                     });
                 } else {
                     this.api.insert<ConfigApp>(data, URL.API_CONFIG_APP).subscribe(() => {
                         this.isVisible = false;
                         this.loadDataFromServer();
-                        this.scriptFC.alertShowMessageSuccess('Lưu thành công');
+                        this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
                         this.isConfirmLoading = false;
                     }, (error) => {
                         console.log(error);
-                        this.scriptFC.alertShowMessageError('Lưu thất bại');
+                        this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
                         this.isConfirmLoading = false;
                     })
                 }
@@ -171,7 +172,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         } catch (error) {
             console.log(error)
-            this.scriptFC.alertShowMessageError('Lưu thất bại');
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
         }
 
 
@@ -196,10 +197,10 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
             this.api.delete(this.idDelete, URL.API_CONFIG_APP).subscribe(() => {
                 this.loadDataFromServer();
                 this.handleCancelDeletePopup();
-                this.scriptFC.alertShowMessageSuccess('Xóa thành công');
+                this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
             }, (error) => {
                 console.log(error);
-                this.scriptFC.alertShowMessageError('Xóa thất bại');
+                this.scriptFC.alertShowMessageError(Message.MESSAGE_DELETE_FAILED);
             });
         }
     }

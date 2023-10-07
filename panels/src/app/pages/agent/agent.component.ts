@@ -1,8 +1,7 @@
 import {Component, OnInit, AfterViewInit, OnDestroy, Renderer2} from '@angular/core';
 import {NzTableQueryParams} from 'ng-zorro-antd/table';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {ApiCommonService} from 'src/app/services/api-common.service';
-import {ConfigApp} from "../../models/ConfigApp";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
@@ -10,8 +9,9 @@ import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {STATUS_AGENT, USER_TYPE} from "../../Constants/vg-constant";
 import {User} from "../../models/User";
-import {USER_FORM} from "../../Constants/Form";
+import {USER_FORM_FOR_AGENT} from "../../Constants/Form";
 import {ResponseError} from "../../models/ResponseError";
+import * as Message from "../../Constants/message-constant";
 
 @Component({
     selector: 'app-agent',
@@ -50,7 +50,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit() {
         this.init();
-        this.validateForm = this.fb.group(USER_FORM);
+        this.validateForm = this.fb.group(USER_FORM_FOR_AGENT);
     }
 
     ngAfterViewInit(): void {
@@ -73,7 +73,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
 
     loadDataFromServer(keyWork?: string): void {
         this.loading = true;
-        this.api.getAllUsersByType<ResponseDataGetAll<ConfigApp>>(URL.API_USER_BY_TYPE, USER_TYPE.AGENT, this.pageIndex - 1, this.pageSize, this.sort, this.filter, keyWork).subscribe((data) => {
+        this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.AGENT, this.pageIndex - 1, this.pageSize, this.sort, this.filter, keyWork).subscribe((data) => {
             console.log(data)
             this.loading = false;
             this.total = data.totalElements;
@@ -134,38 +134,39 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.isConfirmLoading = true;
                 const data: User = this.validateForm.value
                 data.type = USER_TYPE.AGENT;
-                let phoneUnFormat = this.scriptFC.convertInputFormatToNumber(data.phone);
+                const phoneUnFormat = this.scriptFC.convertInputFormatToNumber(data.phone);
                 data.phone = phoneUnFormat?.slice(0, 10);
                 if (data.id) {
                     this.api.update(data.id, data, URL.API_USER).subscribe((data) => {
                         if (data.status == 400){
                             data = data as ResponseError;
-                            this.scriptFC.alertShowMessageError(`Lưu thất bại ${data.message}`);
+                            this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
                         } else {
                             this.isVisible = false;
                             this.loadDataFromServer();
-                            this.scriptFC.alertShowMessageSuccess('Lưu thành công');
+                            this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
                         }
+                        this.isConfirmLoading = false;
                     }, (error) => {
                         console.log(error);
-                        this.scriptFC.alertShowMessageError('Lưu thất bại, kiểm tra lại đường truyền');
+                        this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
                         this.isConfirmLoading = false;
                     });
                 } else {
                     this.api.insert(data, URL.API_USER)
                         .subscribe((data) => {
-                            if (data.status == 400){
+                            if (data.status == 400 || data.status == 409){
                                 data = data as ResponseError;
-                                this.scriptFC.alertShowMessageError(`Lưu thất bại ${data.message}`);
+                                this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
                             } else {
                                 this.isVisible = false;
                                 this.loadDataFromServer();
-                                this.scriptFC.alertShowMessageSuccess('Lưu thành công');
+                                this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
                             }
                             this.isConfirmLoading = false;
                         }, error => {
                             console.log(error);
-                            this.scriptFC.alertShowMessageError('Lưu thất bại, kiểm tra lại đường truyền');
+                            this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
                             this.isConfirmLoading = false;
                         })
                 }
@@ -179,7 +180,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         } catch (error) {
             console.log(error)
-            this.scriptFC.alertShowMessageError('Lưu thất bại, kiểm tra lại đường truyền');
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
         }
     }
 
@@ -202,10 +203,10 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             this.api.delete(this.idDelete, URL.API_USER).subscribe(() => {
                 this.loadDataFromServer();
                 this.handleCancelDeletePopup();
-                this.scriptFC.alertShowMessageSuccess('Xóa thành công');
+                this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
             }, (error) => {
                 console.log(error);
-                this.scriptFC.alertShowMessageError('Xóa thất bại');
+                this.scriptFC.alertShowMessageError(Message.MESSAGE_DELETE_FAILED);
             });
         }
     }

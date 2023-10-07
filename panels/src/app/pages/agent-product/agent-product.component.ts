@@ -8,6 +8,7 @@ import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {ROLES, STATUS_AGENT_PRODUCT, STATUS_PRODUCT_SERVICE} from "../../Constants/vg-constant";
 import {AgentProduct} from "../../models/AgentProduct";
+import * as Message from "../../Constants/message-constant";
 
 @Component({
     selector: 'app-agent-product',
@@ -99,16 +100,16 @@ export class AgentProductComponent {
     handleOk(idProduct: string | null, e: any): void {
         this.loading = true;
         if (!idProduct) {
-            this.scriptFC.alertShowMessageError('Đăng ký thất bại');
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_REGISTER_FAILED);
             return;
         } else {
             const data: AgentProduct = {itemId: idProduct, status: STATUS_AGENT_PRODUCT.REGISTERED_VALUE}
             this.api.insert(data, URL.API_AGENT_PRODUCT)
                 .subscribe(() => {
-                    this.loadDataFromServer().then(() => this.scriptFC.alertShowMessageSuccess('Đăng ký thành công'));
+                    this.loadDataFromServer().then(() => this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_REGISTER_SUCCESS));
                 }, error => {
                     console.log(error);
-                    this.scriptFC.alertShowMessageError('Đăng ký thất bại');
+                    this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
                     this.loading = false;
                 })
         }
@@ -126,12 +127,12 @@ export class AgentProductComponent {
             this.api.delete(this.idDelete, URL.API_AGENT_PRODUCT).subscribe(() => {
                 this.handleCancelDeletePopup();
                 this.loadDataFromServer().then(() => {
-                    this.scriptFC.alertShowMessageSuccess('Xóa thành công');
+                    this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
                 });
             }, (error) => {
                 this.loading = false;
                 console.log(error);
-                this.scriptFC.alertShowMessageError('Xóa thất bại');
+                this.scriptFC.alertShowMessageError(Message.MESSAGE_DELETE_FAILED);
             });
         }
     }

@@ -35,13 +35,13 @@
         </ul>
       </li>
       <li class="menu-header" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">Đại lý</li>
-      <li class="dropdown agent-product">
+      <li class="dropdown agent-product" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">
         <a class="nav-link" routerLink="agent-product"><i data-feather="monitor"></i><span>Sản phẩm đăng ký</span></a>
       </li>
-      <li class="dropdown agent-distributor">
+      <li class="dropdown agent-distributor" *ngxPermissionsOnly="[ROLES.AGENT]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Nhà phân phối</span></a>
         <ul class="dropdown-menu">
-          <li class="distributor-list"><a class="nav-link" href="distributor.html">Danh sách</a></li>
+          <li class="distributor-list"><a class="nav-link" routerLink="distributors">Danh sách</a></li>
           <li><a class="nav-link" href="#">User</a></li>
         </ul>
       </li>

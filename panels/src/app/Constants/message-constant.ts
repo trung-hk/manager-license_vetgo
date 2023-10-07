@@ -1,11 +1,10 @@
-export enum STATUS_CONFIG {
-    IN_ACTIVE_LABEL = "Chưa kích hoạt",
-    IN_ACTIVE_VALUE = "IN_ACTIVE",
-    PENDING_ACTIVE_LABEL = "Chờ kích hoạt",
-    PENDING_ACTIVE_VALUE = "PENDING_ACTIVE",
-    ACTIVATED_LABEL = "Đã kích hoạt",
-    ACTIVATED_VALUE = "ACTIVATED",
-}
+export const MESSAGE_SAVE_SUCCESS = "Lưu thành công";
+export const MESSAGE_SAVE_FAILED = "Lưu thất bại";
+export const MESSAGE_CONNECT_FAILED = "Lưu thất bại, kiểm tra lại đường truyền";
+export const MESSAGE_DELETE_SUCCESS = "Xóa thành công";
+export const MESSAGE_DELETE_FAILED = "Xóa thất bại";
+export const MESSAGE_REGISTER_SUCCESS = "Đăng ký thành công";
+export const MESSAGE_REGISTER_FAILED = "Đăng ký thất bại";
 export enum USER_TYPE {
     ADMIN = "ADMIN",
     AGENT = "AGENT",

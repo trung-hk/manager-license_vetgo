@@ -9,6 +9,7 @@ import {DemPaginationComponent} from './dem-pagination/dem-pagination.component'
 import { AgentProductComponent } from './agent-product/agent-product.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {NgxPermissionsModule} from "ngx-permissions";
+import { DistributorComponent } from './distributor/distributor.component';
 
 const routes: Routes =
     [
@@ -23,7 +24,7 @@ const routes: Routes =
     ]
 
 @NgModule({
-    declarations: [AntDemoComponent, DemPaginationComponent, AgentProductComponent],
+    declarations: [AntDemoComponent, DemPaginationComponent, AgentProductComponent, DistributorComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),

@@ -50,5 +50,5 @@ export class ScriptCommonService {
   }
   formatterMoney = (value: number) => value && `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   parserMoney = (value: string): string => value.replace(',', '');
-  displayContentTextArea = (value: string): string => value.replaceAll("\n", `<br>`);
+  displayContentTextArea = (value: string): string => value ? value.replaceAll("\n", `<br>`) : "";
 }

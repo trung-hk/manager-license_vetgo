@@ -1,17 +1,18 @@
-import {inject, NgModule } from '@angular/core';
-import {CanActivateFn, RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './authentication/auth.guard';
-import { AgentComponent } from './pages/agent/agent.component';
+import {inject, NgModule} from '@angular/core';
+import {CanActivateFn, RouterModule, Routes} from '@angular/router';
+import {AuthGuard} from './authentication/auth.guard';
+import {AgentComponent} from './pages/agent/agent.component';
 import {DashboardComponent} from "./pages/dashboard/dashboard.component";
 import {PortalLayoutComponent} from "./portal-layout/portal-layout.component";
 import {ConfigAppComponent} from "./pages/config-app/config-app.component";
-import { ProductComponent } from './pages/product/product.component';
-import { ProfileComponent } from './pages/profile/profile.component';
-import { ProductServiceComponent } from './pages/product-service/product-service.component';
-import { PartnerComponent } from './pages/partner/partner.component';
+import {ProductComponent} from './pages/product/product.component';
+import {ProfileComponent} from './pages/profile/profile.component';
+import {ProductServiceComponent} from './pages/product-service/product-service.component';
+import {PartnerComponent} from './pages/partner/partner.component';
 import {NgxPermissionsGuard} from "ngx-permissions";
 import {ROLES} from "./Constants/vg-constant";
 import {AgentProductComponent} from "./pages/agent-product/agent-product.component";
+import {DistributorComponent} from "./pages/distributor/distributor.component";
 
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
@@ -78,6 +79,17 @@ const routes: Routes = [
         data: {
           permissions: {
             only: [ROLES.ADMIN],
+            redirectTo: '/error/403'
+          }
+        }
+      },
+      {
+        path: 'distributors',
+        component: DistributorComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.AGENT],
             redirectTo: '/error/403'
           }
         }

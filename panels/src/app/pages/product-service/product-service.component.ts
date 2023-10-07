@@ -11,6 +11,7 @@ import {URL} from "../../Constants/api-urls";
 import {STATUS_PRODUCT_SERVICE, TYPE_PRODUCT} from "../../Constants/vg-constant";
 import {PACKAGE_PRODUCT_SERVICE_FORM, PRODUCT_SERVICE_FORM} from "../../Constants/Form";
 import {PackageProduct} from "../../models/PackageProduct";
+import * as Message from "../../Constants/message-constant";
 
 @Component({
     selector: 'app-product-service',
@@ -169,11 +170,11 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                     this.api.update<Item>(data.id, data, URL.API_ITEM).subscribe(() => {
                         this.isVisible = false;
                         this.loadDataFromServer();
-                        this.scriptFC.alertShowMessageSuccess('Lưu thành công');
+                        this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
                         this.isConfirmLoading = false;
                     }, (error) => {
                         console.log(error);
-                        this.scriptFC.alertShowMessageError('Lưu thất bại');
+                        this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
                         this.isConfirmLoading = false;
                     });
                 } else {
@@ -181,11 +182,11 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                         .subscribe(() => {
                             this.isVisible = false;
                             this.loadDataFromServer();
-                            this.scriptFC.alertShowMessageSuccess('Lưu thành công');
+                            this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
                             this.isConfirmLoading = false;
                         }, error => {
                             console.log(error);
-                            this.scriptFC.alertShowMessageError('Lưu thất bại');
+                            this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
                             this.isConfirmLoading = false;
                         })
                 }
@@ -199,7 +200,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
             }
         } catch (error) {
             console.log(error)
-            this.scriptFC.alertShowMessageError('Lưu thất bại');
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
         }
     }
 
@@ -222,10 +223,10 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
             this.api.delete(this.idDelete, URL.API_ITEM).subscribe(() => {
                 this.loadDataFromServer();
                 this.handleCancelDeletePopup();
-                this.scriptFC.alertShowMessageSuccess('Xóa thành công');
+                this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
             }, (error) => {
                 console.log(error);
-                this.scriptFC.alertShowMessageError('Xóa thất bại');
+                this.scriptFC.alertShowMessageError(Message.MESSAGE_DELETE_FAILED);
             });
         }
     }
