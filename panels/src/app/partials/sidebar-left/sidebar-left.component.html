@@ -45,11 +45,11 @@
           <li><a class="nav-link" href="#">User</a></li>
         </ul>
       </li>
-      <li class="menu-header">Nhà phân phối</li>
-      <li class="dropdown distributor">
+      <li class="menu-header" *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">Nhà phân phối</li>
+      <li class="dropdown distributor" *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Cộng tác viên</span></a>
         <ul class="dropdown-menu distributor-partner">
-          <li class="partner-list"><a class="nav-link" href="partner.html">Danh sách</a></li>
+          <li class="partner-list"><a class="nav-link" routerLink="partners">Danh sách</a></li>
           <li><a class="nav-link" href="#">User</a></li>
         </ul>
       </li>

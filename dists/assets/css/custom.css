@@ -81,7 +81,7 @@ table thead{
     width: 100%;
 }
 .custom-scrollbar {
-    max-height: 205px;
+    max-height: 210px;
     overflow-y: hidden;
 }
 .custom-scrollbar:hover {
@@ -114,3 +114,7 @@ table thead{
         visibility:hidden;
     }
 }
+.card-item-background-color {
+    background-color: snow !important;
+}
+.ant-table-content{ overflow: auto; }

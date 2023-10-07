@@ -26,6 +26,12 @@ export enum STATUS_DISTRIBUTOR {
     ACTIVATED_LABEL = "Đang hoạt động",
     ACTIVATED_VALUE = "ACTIVATED",
 }
+export enum STATUS_PARTNER {
+    IN_ACTIVE_LABEL = "Ngừng hoạt động",
+    IN_ACTIVE_VALUE = "IN_ACTIVE",
+    ACTIVATED_LABEL = "Đang hoạt động",
+    ACTIVATED_VALUE = "ACTIVATED",
+}
 export enum ROLES {
     ADMIN = "ADMIN",
     AGENT = "AGENT",

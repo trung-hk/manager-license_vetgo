@@ -2,118 +2,169 @@
     <div class="section-body">
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="col-3">
-                            <h4>Danh sách cộng tác viên</h4>
+                <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzExtra]="titleRight" [nzBordered]="false">
+                    <nz-table
+                            nzShowSizeChanger
+                            [nzData]="dataList"
+                            [nzFrontPagination]="false"
+                            [nzLoading]="loading"
+                            [nzTotal]="total"
+                            [nzPageSize]="pageSize"
+                            [nzPageIndex]="pageIndex"
+                            (nzQueryParams)="onQueryParamsChange($event)"
+                    >
+                        <thead>
+                        <tr>
+                            <th nzColumnKey="code" [nzSortFn]="true">Mã CTV</th>
+                            <th nzColumnKey="name" [nzSortFn]="true">Tên CTV</th>
+                            <th>E-mail</th>
+                            <th nzColumnKey="phone" [nzSortFn]="true">Số điện thoại</th>
+                            <th>Địa chỉ</th>
+                            <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
+                                Ngày cập nhật
+                            </th>
+                            <th nzColumnKey="status" [nzSortFn]="true" [nzFilters]="statusList" [nzFilterFn]="true">
+                                Trạng thái
+                            </th>
+                            <th class="align-center" nzWidth="10em">Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let dt of dataList">
+                            <td>{{dt.code}}</td>
+                            <td>{{dt.name}}</td>
+                            <td>{{dt.email}}</td>
+                            <td>{{scriptFC.formatPhone(dt.phone)}}</td>
+                            <td><div class="text-break custom-scrollbar" [innerHtml]="scriptFC.displayContentTextArea(dt.address!)"></div></td>
+                            <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+                            <td class="align-center">
+                                <ng-container [ngSwitch]="dt.status">
+                                    <div *ngSwitchCase="STATUS_DATA.IN_ACTIVE_VALUE"
+                                         class="badge badge-shadow badge-danger">
+                                        {{STATUS_DATA.IN_ACTIVE_LABEL}}
+                                    </div>
+                                    <div *ngSwitchCase="STATUS_DATA.ACTIVATED_VALUE"
+                                         class="badge badge-shadow badge-success">
+                                        {{STATUS_DATA.ACTIVATED_LABEL}}
+                                    </div>
+                                </ng-container>
+                            </td>
+                            <td class="align-center">
+                                <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)"
+                                        title="Chỉnh sửa">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                &nbsp;
+                                <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)"
+                                        title="Xóa">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </nz-table>
+                </nz-card>
+                <ng-template #titleLeft>
+                    Danh sách công tác viên
+                    <nz-tag [nzColor]="'#33CCFF'"><nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic></nz-tag>
+                </ng-template>
+                <ng-template #titleRight>
+                    <div nz-row [nzGutter]="8">
+                        <div nz-col [nzSm]="14">
+                            <nz-input-group [nzSuffix]="suffixIconSearch">
+                                <input nzSize="large" type="search" nz-input placeholder="input search text"
+                                       (keyup.enter)="search($event)"/>
+                            </nz-input-group>
+                            <ng-template #suffixIconSearch>
+                                <span nz-icon nzType="search"></span>
+                            </ng-template>
                         </div>
-                        <div class="col-9">
-                            <button type="button" data-toggle="modal" data-target="#register-modal"
-                                class="btn btn-success pull-right note-btn" disabled onclick="openModal(this);"><i
-                                    class="fas fa-plus"></i> Đăng ký công tác viên</button>
+                        <div nz-col [nzSpan]="10">
+                            <button type="button" (click)="showModal()" class="btn btn-success pull-right note-btn">
+                                <i class="fas fa-plus"></i> Thêm mới
+                            </button>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped" id="partner-list-table">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">No.</th>
-                                        <th>Nhà phân phối</th>
-                                        <th>Tên cộng tác viên</th>
-                                        <th>Số điện thoại</th>
-                                        <th>Địa chỉ mail</th>
-                                        <th>Địa chỉ</th>
-                                        <th>Ngày cập nhật</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                </ng-template>
             </div>
         </div>
     </div>
 </section>
-<div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="formModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title text-center" id="formModal"></h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="#">
-                    <input type="hidden" id="id-partner">
-                    <input type="hidden" id="index-row">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-12 align-center title-modal">
-                                <h4>Thông tin đăng ký</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-2 col-form-label-sm font-bold">Nhà phân phối</label>
-                            <div class="col-md-10">
-                                <select class="form-control form-control-sm select-scroll" id="id-distributor"></select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-2 col-form-label-sm font-bold">Tên</label>
-                            <div class="col-md-10">
-                                <input type="text" class="form-control" placeholder="Vet Go" name="name-partner"
-                                    id="name-partner">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-2 col-form-label-sm font-bold">Số điện thoại</label>
-                            <div class="input-group col-md-10">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text font-bold">+84</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="(090) 123-4567" data-type="phone"
-                                    name="phone-partner" id="phone-partner">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-2 col-form-label-sm font-bold">Địa chỉ Email</label>
-                            <div class="col-md-10">
-                                <input type="text" class="form-control" placeholder="vetgo@mail.com" name="mail-agent"
-                                    id="mail-partner">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-md-2 col-form-label-sm font-bold">Địa chỉ</label>
-                            <div class="col-md-10">
-                                <input type="text" class="form-control" placeholder="Đường số 1 phường x quận x "
-                                    name="address-agent" id="address-partner">
-                            </div>
-                        </div>
-                    </div>
-                    <button id="btn-add-new-modal" type="button" class="btn btn-success pull-right save-data"><i
-                            class="fas fa-save"></i> Thêm mới</button>
-                    <button id="btn-delete-modal" type="button" class="btn btn-danger pull-right"><i
-                            class="fas fa-trash"></i> Xóa</button>
-                    <button id="btn-update-modal" type="button"
-                        class="add-category btn btn-success pull-right save-data m-r-15"><i class="fas fa-save"></i> Cập
-                        nhật</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Create/Update Form -->
+<nz-modal [(nzVisible)]="isVisible"
+          [nzTitle]="modalTitle"
+          [nzContent]="modalContent"
+          [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
+          (nzOnCancel)="handleCancel()" nzWidth="800px">
+    <ng-template #modalTitle> {{idShowModal ? 'Cập nhật cộng tác viên' : 'Thêm mới cộng tác viên'}}</ng-template>
+
+    <ng-template #modalContent>
+        <form nz-form [formGroup]="validateForm">
+            <input type="hidden" formControlName="id">
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã CTV</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <input formControlName="code" nz-input nzSize="large" placeholder="VETGO"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên CTV</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <input formControlName="name" nz-input nzSize="large" placeholder="Vet go"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <nz-input-group nzAddOnBefore="+84">
+                        <input [maxLength]="15" formControlName="phone" nz-input placeholder="(090) 123-4567"
+                               (keyup)="formatPhone($event)"/>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">E-mail</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <input type="email" formControlName="email" nz-input placeholder="vetgo@gmail.com"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzLabelAlign="right" [nzSm]="5">Địa chỉ</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <textarea rows="4" formControlName="address" nz-input
+                              placeholder="Đường x, phường x, quận x..."></textarea>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <nz-select formControlName="status" nzSize="large">
+                        <nz-option *ngFor="let status of statusList" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </ng-template>
+
+    <ng-template #modalFooterAdd>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+        <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
+                [nzLoading]="isConfirmLoading">Thêm mới
+        </button>
+    </ng-template>
+    <ng-template #modalFooterUpdate>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+        <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
+                [nzLoading]="isConfirmLoading">Câp nhật
+        </button>
+    </ng-template>
+</nz-modal>
+
+<!-- Delete Confirmation -->
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Delete Confirmation" nzOkText="Ok" nzOkDanger="true"
+          nzCancelText="Cancel" (nzOnOk)="handleConfirmToDelete()"
+          (nzOnCancel)="handleCancelDeletePopup()">
+    <ng-container *nzModalContent>
+        Xóa data đã chọn ?
+    </ng-container>
+</nz-modal>

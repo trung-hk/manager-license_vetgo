@@ -118,8 +118,10 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
                 address: agent.address,
             });
             this.validateForm.get("realm")?.disable();
+            this.validateForm.get("code")?.disable();
         } else {
             this.validateForm.get("realm")?.enable();
+            this.validateForm.get("code")?.enable();
             this.validateForm.reset();
             this.validateForm.patchValue({
                 status: this.STATUS_AGENT.ACTIVATED_VALUE
@@ -132,6 +134,8 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
         try {
             if (this.validateForm.valid) {
                 this.isConfirmLoading = true;
+                this.validateForm.get("code")?.enable();
+                this.validateForm.get("realm")?.enable();
                 const data: User = this.validateForm.value
                 data.type = USER_TYPE.AGENT;
                 const phoneUnFormat = this.scriptFC.convertInputFormatToNumber(data.phone);

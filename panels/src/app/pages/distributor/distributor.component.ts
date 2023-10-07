@@ -116,7 +116,9 @@ export class DistributorComponent {
         status: distributor.status,
         address: distributor.address,
       });
+      this.validateForm.get("code")?.disable();
     } else {
+      this.validateForm.get("code")?.enable();
       this.validateForm.reset();
       this.validateForm.patchValue({
         status: this.STATUS_DATA.ACTIVATED_VALUE
@@ -129,6 +131,7 @@ export class DistributorComponent {
     try {
       if (this.validateForm.valid) {
         this.isConfirmLoading = true;
+        this.validateForm.get("code")?.enable();
         const data: User = this.validateForm.value
         data.type = USER_TYPE.DISTRIBUTOR;
         const phoneUnFormat = this.scriptFC.convertInputFormatToNumber(data.phone);

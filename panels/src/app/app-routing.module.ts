@@ -95,8 +95,15 @@ const routes: Routes = [
         }
       },
       {
-        path: 'partner',
-        component: PartnerComponent
+        path: 'partners',
+        component: PartnerComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.DISTRIBUTOR],
+            redirectTo: '/error/403'
+          }
+        }
       }
     ],
     canActivate: [isAuthenticated],
