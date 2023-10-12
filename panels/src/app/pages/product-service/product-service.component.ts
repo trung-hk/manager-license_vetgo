@@ -8,7 +8,7 @@ import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {Item} from "../../models/Item";
 import {URL} from "../../Constants/api-urls";
-import {STATUS_PRODUCT_SERVICE, TYPE_PRODUCT} from "../../Constants/vg-constant";
+import {STATUS_PRODUCT_SERVICE, TYPE_EXPIRED_PACKAGE, TYPE_PRODUCT, TYPE_PACKAGE} from "../../Constants/vg-constant";
 import {PACKAGE_PRODUCT_SERVICE_FORM, PRODUCT_SERVICE_FORM} from "../../Constants/Form";
 import {PackageProduct} from "../../models/PackageProduct";
 import * as Message from "../../Constants/message-constant";
@@ -35,6 +35,7 @@ import * as Message from "../../Constants/message-constant";
 })
 export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly STATUS_PRODUCT_SERVICE = STATUS_PRODUCT_SERVICE;
+    protected readonly TYPE_PACKAGE = TYPE_PACKAGE;
     listScript = [];
     dataList: Item[] = [];
     total: number = 1;
@@ -57,6 +58,8 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         {text: this.STATUS_PRODUCT_SERVICE.UN_DEPLOYED_LABEL, value: this.STATUS_PRODUCT_SERVICE.UN_DEPLOYED_VALUE},
         {text: this.STATUS_PRODUCT_SERVICE.DEPLOYED_LABEL, value: this.STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE}
     ];
+    formPackage!: FormArray;
+    packageProductMap: Map<string, PackageProduct[]> = new Map<string, PackageProduct[]>();
 
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
@@ -72,6 +75,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         this.validatePackageProductForm = this.fb.group({
             packages: this.fb.array([])
         });
+        this.formPackage = this.validatePackageProductForm.get(this.attributeArrayForm) as FormArray;
     }
 
     ngAfterViewInit(): void {
@@ -99,6 +103,9 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
             this.loading = false;
             this.total = data.totalElements;
             this.dataList = data.content;
+            this.packageProductMap = new Map<string, PackageProduct[]>(
+                this.dataList.map(data => [data.id!, this.scriptFC.getPackageService(data.attributes)])
+            )
         });
     }
 
@@ -135,11 +142,28 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                 description: product.description,
                 status: product.status,
             });
-            this.scriptFC.getPackageService(product.attributes).forEach(packageItem => {
+            this.packageProductMap.get(product.id!)?.forEach(packageItem => {
+                packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.DAY;
+                if (packageItem.day) {
+                    packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.DAY;
+                    packageItem.expired = packageItem.day;
+                }
+                if (packageItem.month) {
+                    packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.MONTH;
+                    packageItem.expired = packageItem.month;
+                }
+                if (packageItem.year) {
+                    packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.YEAR;
+                    packageItem.expired = packageItem.year;
+                }
+                if (!packageItem.typePackage) packageItem.typePackage = TYPE_PACKAGE.PAYMENT_VALUE;
                 this.formPackage.push(this.fb.group({
                     id: [packageItem.id],
                     name: [packageItem.name],
-                    price: [packageItem.price]
+                    price: [packageItem.price],
+                    typeExpired: [packageItem.typeExpired],
+                    expired: [packageItem.expired],
+                    typePackage: [packageItem.typePackage]
                 }));
             });
         } else {
@@ -162,6 +186,21 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                     packages.packages = (packages.packages as PackageProduct[])
                         .map(p => {
                             p.id = !p.id ? this.scriptFC.generateUUID() : p.id;
+                            switch (p.typeExpired) {
+                                case TYPE_EXPIRED_PACKAGE.DAY:
+                                    p.day = p.expired;
+                                    break;
+                                case TYPE_EXPIRED_PACKAGE.MONTH:
+                                    p.month = p.expired;
+                                    break;
+                                case TYPE_EXPIRED_PACKAGE.YEAR:
+                                    p.year = p.expired;
+                                    break;
+                                default:
+                                    p.day = p.expired;
+                            }
+                            delete p.expired;
+                            delete p.typeExpired;
                             return p;
                         })
                 }
@@ -240,9 +279,10 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         event.target.value = this.scriptFC.formatPhone(event.target.value);
     }
 
-    get formPackage() {
-        return (this.validatePackageProductForm.get(this.attributeArrayForm) as FormArray);
-    }
+    // get formPackage() {
+    //     // console.log("lolo")
+    //     return (this.validatePackageProductForm.get(this.attributeArrayForm) as FormArray);
+    // }
 
     addPackage() {
         this.formPackage.push(this.fb.group(PACKAGE_PRODUCT_SERVICE_FORM));
@@ -254,4 +294,5 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     protected readonly JSON = JSON;
+    protected readonly TYPE_EXPIRED_PACKAGE = TYPE_EXPIRED_PACKAGE;
 }

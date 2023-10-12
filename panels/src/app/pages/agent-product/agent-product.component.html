@@ -3,7 +3,8 @@
         <div class="section-body">
             <div class="row">
                 <div class="col-12">
-                    <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzExtra]="titleRight" [nzBordered]="false" >
+                    <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false" >
+                        <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
                         <nz-list nzGrid>
                             <div nz-row [nzGutter]="16">
                                 <div nz-col [nzSpan]="6" *ngFor="let dt of dataProductList">
@@ -84,9 +85,9 @@
                         <nz-tag [nzColor]="'#F1091DFF'"> Chưa đăng ký {{totalProduct - totalRegisterProduct}}
                         </nz-tag>
                     </ng-template>
-                    <ng-template #titleRight>
-                        <div nz-row [nzGutter]="8">
-                            <div nz-col [nzSm]="24">
+                    <ng-template #titleAction>
+                        <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
+                            <div nz-col nzSpan="6" nzOffset="18">
                                 <nz-input-group [nzSuffix]="suffixIconSearch">
                                     <input nzSize="large" type="search" nz-input placeholder="input search text"
                                            (keyup.enter)="search($event)"/>

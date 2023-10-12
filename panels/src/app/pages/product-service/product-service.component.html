@@ -33,10 +33,13 @@
                         <tr *ngFor="let dt of dataList">
                             <td>{{dt.code}}</td>
                             <td>{{dt.name}}</td>
-                            <td><div class="custom-scrollbar" contenteditable="true" [innerHtml]="scriptFC.displayContentTextArea(dt.description!)" ></div></td>
+                            <td>
+                                <div class="custom-scrollbar" contenteditable="true"
+                                     [innerHtml]="dt.description! | lineBreak"></div>
+                            </td>
                             <td>
                                 <nz-list nzSize="small" class="custom-scrollbar">
-                                    <nz-list-item *ngFor="let item of scriptFC.getPackageService(dt.attributes)">
+                                    <nz-list-item *ngFor="let item of packageProductMap.get(dt.id!)">
                                         <nz-skeleton *ngIf="!item" [nzAvatar]="true"
                                                      [nzParagraph]="{ rows: 1 }"></nz-skeleton>
                                         <nz-list-item-meta
@@ -161,22 +164,45 @@
                         </nz-form-label>
                         <nz-form-control [nzSm]="18">
                             <input type="hidden" formControlName="id">
-                            <nz-input-group style="width: 50%" nzAddOnBefore="Tên">
-                                <input formControlName="name" nz-input nzSize="large"
-                                       placeholder="1 năm"/>
-                            </nz-input-group>
-                            <nz-input-number-group style="width: 45%" nzAddOnBefore="Giá" nzAddOnAfter="VNĐ">
-                                <nz-input-number
-                                       formControlName="price"
-                                       nzSize="large"
-                                       [nzPlaceHolder]="'1,000,000'"
-                                       [nzFormatter]="scriptFC.formatterMoney"
-                                       [nzParser]="scriptFC.parserMoney">
-                                </nz-input-number>
-                            </nz-input-number-group>
-                            <span style="width: 5%" nz-icon nzType="minus-circle-o" class="dynamic-delete-button"
-                                  (click)="removeField(i, $event)"></span>
+                            <div nz-row [nzGutter]="16">
+                                <div nz-col nzSpan="10">
+                                    <nz-input-group nzAddOnBefore="Tên">
+                                        <input formControlName="name" nz-input nzSize="large"
+                                               placeholder="1 năm"/>
+                                    </nz-input-group>
+                                    <nz-input-number-group nzAddOnBefore="Giá " nzAddOnAfter="VNĐ">
+                                        <nz-input-number
+                                                formControlName="price"
+                                                nzSize="large"
+                                                [nzPlaceHolder]="'1,000,000'"
+                                                [nzFormatter]="scriptFC.formatterMoney"
+                                                [nzParser]="scriptFC.parserMoney">
+                                        </nz-input-number>
+                                    </nz-input-number-group>
+                                </div>
+                                <div nz-col nzSpan="12">
+                                    <nz-input-group nzAddOnBefore="Loại gói">
+                                        <nz-select formControlName="typePackage">
+                                            <nz-option [nzLabel]="TYPE_PACKAGE.FREE_LABEL" [nzValue]="TYPE_PACKAGE.FREE_VALUE"></nz-option>
+                                            <nz-option [nzLabel]="TYPE_PACKAGE.PAYMENT_LABEL" [nzValue]="TYPE_PACKAGE.PAYMENT_VALUE"></nz-option>
+                                        </nz-select>
+                                    </nz-input-group>
+                                    <nz-input-group nzAddOnBefore="Thời hạn" [nzAddOnAfter]="chooseTypeExpired">
+                                        <input formControlName="expired" nz-input nzSize="large"/>
+                                    </nz-input-group>
+                                </div>
+                                <div nz-col nzSpan="2" style="top:1em;">
+                                    <span nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeField(i, $event)"></span>
+                                </div>
+                            </div>
                         </nz-form-control>
+                        <ng-template #chooseTypeExpired>
+                            <nz-select formControlName="typeExpired">
+                                <nz-option nzLabel="Ngày" [nzValue]="TYPE_EXPIRED_PACKAGE.DAY"></nz-option>
+                                <nz-option nzLabel="Tháng" [nzValue]="TYPE_EXPIRED_PACKAGE.MONTH"></nz-option>
+                                <nz-option nzLabel="Năm" [nzValue]="TYPE_EXPIRED_PACKAGE.YEAR"></nz-option>
+                            </nz-select>
+                        </ng-template>
                     </nz-form-item>
                     <nz-form-item>
                         <nz-form-control [nzSm]="5"></nz-form-control>
@@ -189,7 +215,6 @@
                     </nz-form-item>
                 </div>
             </form>
-
         </form>
     </ng-template>
     <ng-template #modalFooterAdd>

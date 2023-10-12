@@ -48,7 +48,7 @@ export class ScriptCommonService {
   getPackageService(value: string | null | undefined): PackageProduct[] {
     return JSON.parse(value!).packages;
   }
-  formatterMoney = (value: number) => value && `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  formatterMoney = (value: number) =>  value && `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   parserMoney = (value: string): string => value.replace(',', '');
   displayContentTextArea = (value: string): string => value ? value.replaceAll("\n", `<br>`) : "";
 }

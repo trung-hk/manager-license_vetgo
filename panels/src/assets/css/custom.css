@@ -86,6 +86,10 @@ table thead{
 }
 .custom-scrollbar:hover {
     overflow-y: auto;
+}
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    background-color: #949292;
     -moz-animation: cssAnimation 0s ease-in 5s forwards;
     /* Firefox */
     -webkit-animation: cssAnimation 0s ease-in 5s forwards;
@@ -95,10 +99,6 @@ table thead{
     animation: cssAnimation 0s ease-in 5s forwards;
     -webkit-animation-fill-mode: forwards;
     animation-fill-mode: forwards;
-}
-.custom-scrollbar::-webkit-scrollbar {
-    width: 4px;
-    background-color: #949292;
 }
 @keyframes cssAnimation {
     to {
@@ -117,4 +117,3 @@ table thead{
 .card-item-background-color {
     background-color: snow !important;
 }
-.ant-table-content{ overflow: auto; }

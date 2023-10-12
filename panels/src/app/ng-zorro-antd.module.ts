@@ -31,6 +31,7 @@ import {NzInputNumberModule} from "ng-zorro-antd/input-number";
 import {NzMenuModule} from "ng-zorro-antd/menu";
 import {NzTypographyModule} from "ng-zorro-antd/typography";
 import {NzSpinModule} from "ng-zorro-antd/spin";
+import {NzTabsModule} from "ng-zorro-antd/tabs";
 
 @NgModule({
     exports: [
@@ -55,6 +56,7 @@ import {NzSpinModule} from "ng-zorro-antd/spin";
         NzMenuModule,
         NzTypographyModule,
         NzSpinModule,
+        NzTabsModule,
     ],
     providers: [
         { provide: NZ_ICONS, useValue: icons }

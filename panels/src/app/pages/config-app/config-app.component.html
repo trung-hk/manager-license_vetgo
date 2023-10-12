@@ -2,7 +2,8 @@
     <div class="section-body">
         <div class="row">
             <div class="col-12">
-                <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzExtra]="titleRight" [nzBordered]="false">
+                <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
+                    <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
                     <nz-table
                             nzShowSizeChanger
                             [nzData]="dataList"
@@ -83,20 +84,21 @@
                 <ng-template #titleLeft>
                     Danh sách config  <nz-tag [nzColor]="'#33CCFF'"><nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic></nz-tag>
                 </ng-template>
-                <ng-template #titleRight>
-                    <div nz-row [nzGutter]="8">
-                        <div nz-col [nzSm]="14">
+                <ng-template #titleAction>
+                    <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
+                        <div nz-col nzSpan="8">
+                            <button type="button" (click)="showModal()" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Thêm mới
+                            </button>
+                        </div>
+                        <div nz-col nzSpan="6" nzOffset="10">
                             <nz-input-group [nzSuffix]="suffixIconSearch">
-                                <input nzSize="large" type="search" nz-input placeholder="input search text" (keyup.enter)="search($event)" />
+                                <input nzSize="large" type="search" nz-input placeholder="input search text"
+                                       (keyup.enter)="search($event)"/>
                             </nz-input-group>
                             <ng-template #suffixIconSearch>
                                 <span nz-icon nzType="search"></span>
                             </ng-template>
-                        </div>
-                        <div nz-col [nzSpan]="10">
-                            <button type="button" (click)="showModal()" class="btn btn-success pull-right note-btn">
-                                <i class="fas fa-plus"></i> Thêm mới
-                            </button>
                         </div>
                     </div>
                 </ng-template>

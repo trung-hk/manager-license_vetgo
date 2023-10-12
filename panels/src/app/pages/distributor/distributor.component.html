@@ -2,7 +2,8 @@
     <div class="section-body">
         <div class="row">
             <div class="col-12">
-                <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzExtra]="titleRight" [nzBordered]="false">
+                <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
+                    <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
                     <nz-table
                             nzShowSizeChanger
                             [nzData]="dataList"
@@ -18,12 +19,12 @@
                             <th nzColumnKey="code" [nzSortFn]="true">Mã NPP</th>
                             <th nzColumnKey="name" [nzSortFn]="true">Tên NPP</th>
                             <th>E-mail</th>
-                            <th nzColumnKey="phone" [nzSortFn]="true">Số điện thoại</th>
-                            <th>Địa chỉ</th>
+                            <th nzWidth="10em" nzColumnKey="phone" [nzSortFn]="true">Số điện thoại</th>
+                            <th nzWidth="16em">Địa chỉ</th>
                             <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                                 Ngày cập nhật
                             </th>
-                            <th nzColumnKey="status" [nzSortFn]="true" [nzFilters]="statusList" [nzFilterFn]="true">
+                            <th nzWidth="12em" nzColumnKey="status" [nzSortFn]="true" [nzFilters]="statusList" [nzFilterFn]="true">
                                 Trạng thái
                             </th>
                             <th class="align-center" nzWidth="10em">Thao tác</th>
@@ -68,9 +69,14 @@
                     Danh sách nhà phân phối
                     <nz-tag [nzColor]="'#33CCFF'"><nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic></nz-tag>
                 </ng-template>
-                <ng-template #titleRight>
-                    <div nz-row [nzGutter]="8">
-                        <div nz-col [nzSm]="14">
+                <ng-template #titleAction>
+                    <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
+                        <div nz-col nzSpan="8">
+                            <button type="button" (click)="showModal()" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Thêm mới
+                            </button>
+                        </div>
+                        <div nz-col nzSpan="6" nzOffset="10">
                             <nz-input-group [nzSuffix]="suffixIconSearch">
                                 <input nzSize="large" type="search" nz-input placeholder="input search text"
                                        (keyup.enter)="search($event)"/>
@@ -78,11 +84,6 @@
                             <ng-template #suffixIconSearch>
                                 <span nz-icon nzType="search"></span>
                             </ng-template>
-                        </div>
-                        <div nz-col [nzSpan]="10">
-                            <button type="button" (click)="showModal()" class="btn btn-success pull-right note-btn">
-                                <i class="fas fa-plus"></i> Thêm mới
-                            </button>
                         </div>
                     </div>
                 </ng-template>

@@ -10,6 +10,9 @@ import { AgentProductComponent } from './agent-product/agent-product.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {NgxPermissionsModule} from "ngx-permissions";
 import { DistributorComponent } from './distributor/distributor.component';
+import { OrderServiceComponent } from './order-service/order-service.component';
+import { FormOrderServiceModalComponent } from './form-order-service-modal/form-order-service-modal.component';
+import {ShareModule} from "../pipe/share/share.module";
 
 const routes: Routes =
     [
@@ -24,7 +27,7 @@ const routes: Routes =
     ]
 
 @NgModule({
-    declarations: [AntDemoComponent, DemPaginationComponent, AgentProductComponent, DistributorComponent],
+    declarations: [AntDemoComponent, DemPaginationComponent, AgentProductComponent, DistributorComponent, OrderServiceComponent, FormOrderServiceModalComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),
@@ -32,7 +35,8 @@ const routes: Routes =
         ScrollingModule,
         NgZorroAntdModule,
         ReactiveFormsModule,
-        NgxPermissionsModule
+        NgxPermissionsModule,
+        ShareModule
     ]
 })
 export class PagesModule {

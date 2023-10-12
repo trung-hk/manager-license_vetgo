@@ -23,6 +23,7 @@ import vi from '@angular/common/locales/vi';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NgZorroAntdModule} from "./ng-zorro-antd.module";
+import {ShareModule} from "./pipe/share/share.module";
 registerLocaleData(vi);
 
 // for production
@@ -70,19 +71,20 @@ function initializeKeycloak(keycloak: KeycloakService) {
     ProductServiceComponent,
     PartnerComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    PartialsModule,
-    KeycloakAngularModule,
-    HttpClientModule,
-    NgxPermissionsModule.forRoot(),
-    CommonModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    NgZorroAntdModule,
-    ReactiveFormsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        PartialsModule,
+        KeycloakAngularModule,
+        HttpClientModule,
+        NgxPermissionsModule.forRoot(),
+        CommonModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        NgZorroAntdModule,
+        ReactiveFormsModule,
+        ShareModule
+    ],
   providers: [
     {
       provide: APP_INITIALIZER,

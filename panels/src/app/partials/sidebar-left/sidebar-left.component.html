@@ -53,9 +53,9 @@
           <li><a class="nav-link" href="#">User</a></li>
         </ul>
       </li>
-      <li class="menu-header">Cộng tác viên</li>
-      <li class="dropdown partner">
-        <a class="customer-order" href="customer-order.html" class="nav-link"><i data-feather="mail"></i><span>Đơn hàng</span></a>
+      <li class="menu-header" *ngxPermissionsOnly="[ROLES.PARTNER]">Cộng tác viên</li>
+      <li class="dropdown partner" *ngxPermissionsOnly="[ROLES.PARTNER]">
+        <a routerLink="order-service" class="nav-link"><i data-feather="mail"></i><span>Danh sách SP</span></a>
       </li>
       <li class="menu-header">UI Elements</li>
       <li class="dropdown">

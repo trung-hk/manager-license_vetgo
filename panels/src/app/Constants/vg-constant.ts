@@ -32,6 +32,12 @@ export enum STATUS_PARTNER {
     ACTIVATED_LABEL = "Đang hoạt động",
     ACTIVATED_VALUE = "ACTIVATED",
 }
+export enum STATUS_CUSTOMER {
+    IN_ACTIVE_LABEL = "Ngừng hoạt động",
+    IN_ACTIVE_VALUE = "IN_ACTIVE",
+    ACTIVATED_LABEL = "Đang hoạt động",
+    ACTIVATED_VALUE = "ACTIVATED",
+}
 export enum ROLES {
     ADMIN = "ADMIN",
     AGENT = "AGENT",
@@ -57,4 +63,29 @@ export enum STATUS_AGENT_PRODUCT {
     UN_REGISTERED_VALUE = "UN_REGISTERED",
     REGISTERED_LABEL = "Đã đăng ký",
     REGISTERED_VALUE = "REGISTERED",
+}
+export enum STATUS_PAYMENT {
+    UN_PAID_LABEL = "Chưa thanh toán",
+    UN_PAID_VALUE = "UN_PAID",
+    PAID_LABEL = "Đã thanh toán",
+    PAID_VALUE = "PAID",
+}
+export enum STATUS_ORDER {
+    IN_PROCESS_LABEL = "Đang tiến hành",
+    IN_PROCESS_VALUE = "IN_PROCESS",
+    FINISHED_LABEL = "Đã hoàn thành",
+    FINISHED_VALUE = "FINISHED",
+    CANCEL_ORDER_LABEL = "Đã hủy đơn",
+    CANCEL_ORDER_VALUE = "CANCEL_ORDER",
+}
+export enum TYPE_EXPIRED_PACKAGE {
+    DAY = "day",
+    MONTH = "month",
+    YEAR = "year"
+}
+export enum TYPE_PACKAGE {
+    FREE_LABEL = "Không trả phí",
+    FREE_VALUE = "FREE",
+    PAYMENT_LABEL = "Trả phí",
+    PAYMENT_VALUE = "PAYMENT",
 }

@@ -1,0 +1,75 @@
+<nz-tabset>
+    <nz-tab nzTitle="Thông tin khách hàng">
+        <form nz-form [formGroup]="validateCustomerForm">
+            <input type="hidden" formControlName="id">
+            <input type="hidden" formControlName="status">
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã KH</nz-form-label>
+                <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập mã khách hàng">
+                    <input formControlName="code" nz-input placeholder="VETGO" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên KH</nz-form-label>
+                <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập tên khách hàng">
+                    <input formControlName="name" nz-input placeholder="Vet go"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
+                <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập số điện thoại">
+                    <nz-input-group nzAddOnBefore="+84">
+                        <input [maxLength]="15" formControlName="phone" nz-input placeholder="(090) 123-4567"
+                               (keyup)="formatPhone($event)"/>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">E-mail</nz-form-label>
+                <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập địa chỉ e-mail">
+                    <input type="email" formControlName="email" nz-input placeholder="vetgo@gmail.com"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzLabelAlign="right" [nzSm]="5">Địa chỉ</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <textarea rows="4" formControlName="address" nz-input
+                              placeholder="Đường x, phường x, quận x..."></textarea>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-tab>
+    <nz-tab nzTitle="Thông tin đơn hàng">
+        <form nz-form [formGroup]="validateOrderForm">
+            <input type="hidden" formControlName="id">
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn sản phẩm</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <nz-select formControlName="itemId" nzSize="large" (ngModelChange)="handleChangeProduct($event)">
+                        <nz-option *ngFor="let product of products" nzValue="{{product.id}}"
+                                   nzLabel="{{product.code}}"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn gói</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <nz-select formControlName="packageId" nzSize="large" (ngModelChange)="handleChangePackage($event)">
+                        <nz-option *ngFor="let pk of this.nzModalData.packageProductMap.get(productSelect?.id!)"
+                                   nzValue="{{pk.id}}" nzLabel="{{pk.name}}"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <hr>
+            <div nz-row>
+                <div nz-col nzSpan="12">
+                    <h5>Tổng tiền</h5>
+                </div>
+                <div nz-col nzSpan="11" class="text-right">
+                    <input type="hidden" formControlName="totalAmount">
+                    <h5>{{totalPrice| moneyFormat}} VNĐ</h5>
+                </div>
+            </div>
+        </form>
+    </nz-tab>
+</nz-tabset>
