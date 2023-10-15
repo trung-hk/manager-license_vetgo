@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {ResponseError} from "../models/ResponseError";
+import {URL} from "../Constants/api-urls";
+import {User} from "../models/User";
 
 @Injectable({
     providedIn: 'root'
@@ -38,7 +40,9 @@ export class ApiCommonService {
     getById<T>(id: number | string | null, api: string): Observable<T> {
         return this.httpClient.get<T>(`${this.url}/${api}/${id}`);
     }
-
+    getCustomerByPhone(phone: number | string | null): Observable<User | ResponseError> {
+        return this.httpClient.get<User | ResponseError>(`${this.url}/${URL.API_CUSTOMER_BY_PHONE}/${phone}`);
+    }
     insert<T>(data: T, api: string): Observable<T | ResponseError> {
         return this.httpClient.post<T | ResponseError>(`${this.url}/${api}`, data);
     }

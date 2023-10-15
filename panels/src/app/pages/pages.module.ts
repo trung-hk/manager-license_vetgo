@@ -7,12 +7,13 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {NgZorroAntdModule} from "../ng-zorro-antd.module";
 import {DemPaginationComponent} from './dem-pagination/dem-pagination.component';
 import { AgentProductComponent } from './agent-product/agent-product.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgxPermissionsModule} from "ngx-permissions";
 import { DistributorComponent } from './distributor/distributor.component';
 import { OrderServiceComponent } from './order-service/order-service.component';
 import { FormOrderServiceModalComponent } from './form-order-service-modal/form-order-service-modal.component';
 import {ShareModule} from "../pipe/share/share.module";
+import { OrdersComponent } from './orders/orders.component';
 
 const routes: Routes =
     [
@@ -27,7 +28,7 @@ const routes: Routes =
     ]
 
 @NgModule({
-    declarations: [AntDemoComponent, DemPaginationComponent, AgentProductComponent, DistributorComponent, OrderServiceComponent, FormOrderServiceModalComponent],
+    declarations: [AntDemoComponent, DemPaginationComponent, AgentProductComponent, DistributorComponent, OrderServiceComponent, FormOrderServiceModalComponent, OrdersComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),
@@ -36,7 +37,8 @@ const routes: Routes =
         NgZorroAntdModule,
         ReactiveFormsModule,
         NgxPermissionsModule,
-        ShareModule
+        ShareModule,
+        FormsModule
     ]
 })
 export class PagesModule {

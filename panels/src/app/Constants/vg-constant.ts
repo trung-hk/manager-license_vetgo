@@ -66,9 +66,14 @@ export enum STATUS_AGENT_PRODUCT {
 }
 export enum STATUS_PAYMENT {
     UN_PAID_LABEL = "Chưa thanh toán",
-    UN_PAID_VALUE = "UN_PAID",
+    UN_PAID_VALUE = "UNPAID",
+    PAID_FOR_DISTRIBUTOR_LABEL = "Đã thanh toán",
+    PAID_FOR_DISTRIBUTOR_VALUE = "PAID_FOR_DISTRIBUTOR",
+    PAID_FOR_AGENT_LABEL = "Đã thanh toán",
+    PAID_FOR_AGENT_VALUE = "PAID_FOR_AGENT",
     PAID_LABEL = "Đã thanh toán",
     PAID_VALUE = "PAID",
+
 }
 export enum STATUS_ORDER {
     IN_PROCESS_LABEL = "Đang tiến hành",

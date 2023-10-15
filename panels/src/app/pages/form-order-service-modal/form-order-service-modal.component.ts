@@ -1,179 +1,270 @@
 import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
 import {IModalData} from "../../models/ModalData";
-import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {ORDER_SERVICE_FORM, USER_FORM} from "../../Constants/Form";
 import {User} from "../../models/User";
 import {Item} from "../../models/Item";
 import {ScriptCommonService} from "../../services/script-common.service";
-import {STATUS_CUSTOMER, STATUS_ORDER, STATUS_PAYMENT, USER_TYPE} from "../../Constants/vg-constant";
+import {STATUS_CUSTOMER, STATUS_ORDER, USER_TYPE} from "../../Constants/vg-constant";
 import * as Message from "../../Constants/message-constant";
-import {AgentProduct} from "../../models/AgentProduct";
 import {URL} from "../../Constants/api-urls";
-import {MESSAGE_REGISTER_ORDER_PRODUCT_SERVICE_FAILED} from "../../Constants/message-constant";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ResponseError} from "../../models/ResponseError";
 import {OrderService} from "../../models/OrderService";
+import {
+    MESSAGE_ERROR_UPDATE_ORDER,
+    MESSAGE_REGISTER_CUSTOMER_PRODUCT_SERVICE_FAILED
+} from "../../Constants/message-constant";
+import {da} from "date-fns/locale";
 
 @Component({
-  selector: 'app-form-order-service-modal',
-  templateUrl: './form-order-service-modal.component.html',
+    selector: 'app-form-order-service-modal',
+    templateUrl: './form-order-service-modal.component.html',
 })
-export class FormOrderServiceModalComponent implements OnInit, OnDestroy{
-  @Input() title?: string;
-  @Input() subtitle?: string;
-  validateCustomerForm!: UntypedFormGroup;
-  validateOrderForm!: UntypedFormGroup;
-  constructor(private fb: UntypedFormBuilder,
-              public scriptFC: ScriptCommonService,
-              private api: ApiCommonService,) {
-  }
+export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
+    @Input() title?: string;
+    @Input() subtitle?: string;
+    validateCustomerForm!: UntypedFormGroup;
+    validateOrderForm!: UntypedFormGroup;
+    isUpdateOrder: boolean = false;
 
-  readonly #modal = inject(NzModalRef);
-  readonly nzModalData: IModalData = inject(NZ_MODAL_DATA);
-  customer!: User | null;
-  products!: Item[];
-  productSelect!: Item | null | undefined;
-  order!: string | null;
-  totalPrice: string = "0";
-
-  destroyModal(): void {
-    this.#modal.destroy({ data: 'this the result data' });
-  }
-
-  ngOnDestroy(): void {
-    console.log("olala")
-  }
-
-  ngOnInit(): void {
-    this.validateCustomerForm = this.fb.group(USER_FORM);
-    this.validateOrderForm = this.fb.group(ORDER_SERVICE_FORM);
-    this.customer = this.nzModalData.userInfo;
-    this.products = this.nzModalData.productInfo;
-    this.order = this.nzModalData.order;
-    this.productSelect = this.products.find(p => p.id === this.nzModalData.idSelect);
-    if (!this.productSelect) this.productSelect = this.products[0]
-    if (this.customer) {
-      this.validateCustomerForm.setValue({
-        id: this.customer.id,
-        code: this.customer.code,
-        name: this.customer.name,
-        email: this.customer.email,
-        phone: this.customer.phone,
-        address: this.customer.address,
-        status: this.customer.status,
-      })
-    } else {
-      this.validateCustomerForm.patchValue({
-        status: STATUS_CUSTOMER.ACTIVATED_VALUE
-      })
+    constructor(private fb: UntypedFormBuilder,
+                public scriptFC: ScriptCommonService,
+                private api: ApiCommonService,) {
     }
-    if (this.order) {
-    } else {
-      this.validateOrderForm.patchValue({
-        itemId: this.productSelect.id?.toString()
-      })
+
+    readonly #modal = inject(NzModalRef);
+    readonly nzModalData: IModalData = inject(NZ_MODAL_DATA);
+    customerId!: string | null;
+    products!: Item[];
+    productSelect!: Item | null | undefined;
+    order!: OrderService | null | undefined;
+    totalPrice: string = "0";
+
+    destroyModal(): void {
+        this.#modal.destroy({data: 'this the result data'});
     }
-  }
-  formatPhone(event: any): void {
-    event.target.value = this.scriptFC.formatPhone(event.target.value);
-  }
-  handleChangeProduct(e: any): void {
-    this.productSelect = this.products.find(p => p.id == e);
-    this.validateOrderForm.patchValue({
-      packageId: ""
-    })
-  }
-  handleChangePackage(id: any): void {
-    this.totalPrice = this.nzModalData.packageProductMap.get(this.productSelect?.id!)?.find(p => p.id === id)?.price!;
-    this.validateOrderForm.patchValue({
-      totalAmount: this.totalPrice
-    })
-  }
-  handleSubmit(): void {
-    // this.loading = true;
-    if (this.validateCustomerForm.valid && this.validateOrderForm.valid) {
-      let dataCustomer: User = this.validateCustomerForm.value;
-      dataCustomer.type = USER_TYPE.CUSTOMER;
-      dataCustomer.phone = this.scriptFC.convertInputFormatToNumber(dataCustomer.phone);
-      if (dataCustomer.id) {
-        this.api.update<User>(dataCustomer.id, dataCustomer, URL.API_USER).subscribe((data) => {
-          if (data.status == 400 || data.status == 409){
-            data = data as ResponseError;
-            this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
-          } else {
-            data = data as User;
-            const dataOrder: OrderService = this.validateOrderForm.value
-            if (dataOrder.id) {
 
-            } else {
-              // insert order
-              dataOrder.customerId = data.id;
-              dataOrder.status = STATUS_ORDER.IN_PROCESS_VALUE;
-              dataOrder.attributes = JSON.stringify(this.products.find(p => p.id === dataOrder.itemId))
-              this.api.insert<OrderService>(dataOrder, URL.API_ORDER_SERVICE).subscribe(() => {
-                if (data.status == 400 || data.status == 409){
-                  data = data as ResponseError;
-                  this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
-                } else {
-                  this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
-                  // this.destroyModal();
-                }
-              })
-            }
-            this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
-          }
+    ngOnDestroy(): void {
+        console.log("olala")
+    }
 
-        }, error => {
-
-        })
-      } else {
-        // insert customer
-        this.api.insert<User>(dataCustomer, URL.API_USER).subscribe((data) => {
-          if (data.status == 400 || data.status == 409){
-            data = data as ResponseError;
-            this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
-          } else {
-            data = data as User;
-            const dataOrder: OrderService = this.validateOrderForm.value;
-            console.log("pa no", dataOrder)
-            if (dataOrder.id) {
-              // update order
-            } else {
-              // insert order
-              dataOrder.customerId = data.id;
-              dataOrder.status = STATUS_ORDER.IN_PROCESS_VALUE;
-              dataOrder.attributes = JSON.stringify(this.products.find(p => p.id === dataOrder.itemId))
-              this.api.insert<OrderService>(dataOrder, URL.API_ORDER_SERVICE).subscribe(() => {
-                if (data.status == 400 || data.status == 409){
-                  data = data as ResponseError;
-                  this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
-                } else {
-                  this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
-                  // this.destroyModal();
-                }
-              })
-            }
-
-          }
-        })
-
-      }
-    } else {
-      this.scriptFC.alertShowMessageError(Message.MESSAGE_REGISTER_ORDER_PRODUCT_SERVICE_FAILED);
-      Object.values(this.validateCustomerForm.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({onlySelf: true});
+    ngOnInit(): void {
+        this.validateCustomerForm = this.fb.group(USER_FORM);
+        this.validateOrderForm = this.fb.group(ORDER_SERVICE_FORM);
+        this.customerId = this.nzModalData.userId;
+        this.products = this.nzModalData.productInfo;
+        this.order = this.nzModalData.order;
+        this.productSelect = this.products.find(p => p.id === this.nzModalData.idProductSelect);
+        if (!this.productSelect) this.productSelect = this.products[0]
+        if (this.customerId) {
+            this.api.getById<User>(this.customerId, URL.API_USER).subscribe((data) => {
+                this.setValueFormCustomer(data);
+            })
+        } else {
+            this.validateCustomerForm.patchValue({
+                status: STATUS_CUSTOMER.ACTIVATED_VALUE
+            })
         }
-      });
-      Object.values(this.validateOrderForm.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({onlySelf: true});
+        if (this.order) {
+            this.isUpdateOrder = true;
+            this.setValueFormOrderService(this.order);
+        } else {
+            this.validateOrderForm.patchValue({
+                itemId: this.productSelect.id?.toString()
+            })
         }
-      });
     }
 
-  }
+    setValueFormCustomer(customer: User, isNotChangePhone?: boolean): void {
+        if (isNotChangePhone) {
+            this.validateCustomerForm.patchValue({
+                id: customer.id,
+                code: customer.code,
+                name: customer.name,
+                email: customer.email,
+                address: customer.address,
+                status: customer.status,
+            })
+        } else {
+            this.validateCustomerForm.setValue({
+                id: customer.id,
+                code: customer.code,
+                name: customer.name,
+                email: customer.email,
+                phone: this.scriptFC.formatPhone(customer.phone),
+                address: customer.address,
+                status: customer.status,
+            })
+        }
+
+    }
+
+    setValueFormOrderService(order: OrderService): void {
+        this.validateOrderForm.setValue({
+            id: order.id,
+            code: order.code,
+            customerId: this.customerId,
+            itemId: order.itemId?.toString(),
+            packageId: order.packageId
+        })
+        if (this.isUpdateOrder) this.validateOrderForm.get("itemId")?.disable();
+        this.totalPrice = order.totalAmount!;
+    }
+
+    formatPhone(event: any): void {
+        event.target.value = this.scriptFC.formatPhone(event.target.value);
+    }
+
+    handleChangeProduct(e: any): void {
+        this.productSelect = this.products.find(p => p.id == e);
+        this.validateOrderForm.patchValue({
+            packageId: ""
+        })
+    }
+
+    handleChangePackage(id: any): void {
+        this.totalPrice = this.nzModalData.packageProductMap.get(this.productSelect?.id!)?.find(p => p.id === id)?.price!;
+    }
+
+    async handleSubmit(): Promise<void> {
+        // validate form customer
+        if (!this.isUpdateOrder && this.validateCustomerForm.invalid) {
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_REGISTER_CUSTOMER_PRODUCT_SERVICE_FAILED);
+            Object.values(this.validateCustomerForm.controls).forEach(control => {
+                if (control.invalid) {
+                    control.markAsDirty();
+                    control.updateValueAndValidity({onlySelf: true});
+                }
+            });
+            return;
+        }
+        // validate form order
+        this.validateOrderForm.get("itemId")?.enable();
+        if (this.validateOrderForm.invalid) {
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_REGISTER_ORDER_PRODUCT_SERVICE_FAILED);
+            Object.values(this.validateOrderForm.controls).forEach(control => {
+                if (control.invalid) {
+                    control.markAsDirty();
+                    control.updateValueAndValidity({onlySelf: true});
+                }
+            });
+            return;
+        }
+        let dataOrder: OrderService = this.validateOrderForm.value;
+        // trường hợp update Order thì ko xử lý update thông tin customer
+        if (!this.isUpdateOrder) {
+            // xử lý insertOrUpdate customer
+            let dataCustomer: User = this.validateCustomerForm.value;
+            dataCustomer.type = USER_TYPE.CUSTOMER;
+            dataCustomer.phone = this.scriptFC.convertInputFormatToNumber(dataCustomer.phone);
+            dataCustomer = await this.insertOrUpdateCustomer(dataCustomer);
+            if (!dataCustomer.id) return;
+            dataOrder.customerId = dataCustomer.id;
+        }
+        // Trường hợp update Order thì không cho thay đổi sản phẩm
+        if (this.isUpdateOrder && this.order?.itemId != dataOrder.itemId) {
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_ERROR_UPDATE_ORDER);
+            return;
+        }
+        // xử lý insertOrUpdate order
+        //await this.validatePackageFree();
+        await this.insertOrUpdateOrder(dataOrder);
+    }
+
+    /**/
+    insertOrUpdateCustomer(dataCustomer: User): Promise<User> {
+        return new Promise(rs => {
+            if (dataCustomer.id) {
+                // update customer
+                this.api.update<User>(dataCustomer.id, dataCustomer, URL.API_USER).subscribe((data) => {
+                    if (data.status == 400 || data.status == 409) {
+                        data = data as ResponseError;
+                        this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
+                        this.setValueFormCustomer(dataCustomer);
+                        rs(new User());
+                    } else {
+                        data = data as User;
+                        rs(data);
+                    }
+                }, error => {
+                    console.log(error);
+                    this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
+                    this.setValueFormCustomer(dataCustomer);
+                    rs(new User());
+                })
+            } else {
+                // insert customer
+                this.api.insert<User>(dataCustomer, URL.API_USER).subscribe((data) => {
+                    if (data.status == 400 || data.status == 409) {
+                        data = data as ResponseError;
+                        this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
+                        this.setValueFormCustomer(dataCustomer);
+                        rs(new User());
+                    } else {
+                        data = data as User;
+                        rs(data);
+                    }
+                }, error => {
+                    console.log(error);
+                    this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
+                    this.setValueFormCustomer(dataCustomer);
+                    rs(new User());
+                });
+            }
+        })
+    }
+
+    insertOrUpdateOrder(dataOrder: OrderService): Promise<OrderService> {
+        return new Promise(rs => {
+            dataOrder.status = STATUS_ORDER.IN_PROCESS_VALUE;
+            console.log(dataOrder);
+            if (dataOrder.id) {
+                // update order
+                this.api.update<OrderService>(dataOrder.id, dataOrder, URL.API_ORDER_SERVICE).subscribe((data) => {
+                    if (data.status == 400 || data.status == 409) {
+                        data = data as ResponseError;
+                        this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
+                        rs(dataOrder);
+                    } else {
+                        data = data as OrderService;
+                        this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
+                        this.destroyModal();
+                        rs(data);
+                    }
+                })
+            } else {
+                // insert order
+                this.api.insert<OrderService>(dataOrder, URL.API_ORDER_SERVICE).subscribe((data) => {
+                    if (data.status == 400 || data.status == 409) {
+                        data = data as ResponseError;
+                        this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
+                        rs(dataOrder);
+                    } else {
+                        data = data as OrderService;
+                        this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
+                        this.destroyModal();
+                        rs(data);
+                    }
+                }, error => {
+                    console.log(error);
+                    this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
+                    rs(dataOrder);
+                })
+            }
+        })
+    }
+
+    onSearch(value: any): void {
+        console.log(value)
+        const phone = this.scriptFC.convertInputFormatToNumber(value);
+        if (phone?.length !== 10) return;
+        this.api.getCustomerByPhone(phone).subscribe((data) => {
+            console.log(data)
+            if (data.status === 404) return;
+            this.setValueFormCustomer(data as User, true);
+        })
+
+    }
 }

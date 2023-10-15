@@ -3,6 +3,8 @@ export class OrderService {
     code?: string | null;
     partnerId?: string | null;
     customerId?: string | null;
+    customerName?: string | null;
+    customerPhone?: string | null;
     packageId?: string | null;
     attributes?: string | null;
     totalAmount?: string | null;

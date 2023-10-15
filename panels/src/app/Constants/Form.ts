@@ -49,7 +49,7 @@ export const PACKAGE_PRODUCT_SERVICE_FORM= {
 export const ORDER_SERVICE_FORM= {
     id: [null],
     code: [null],
-    itemId: [null, [Validators.required]],
-    packageId: [null, [Validators.required]],
-    totalAmount: [null],
+    customerId: [null],
+    itemId: [{value: [null], disabled: false}, [Validators.required]],
+    packageId: [null, [Validators.required]]
 }

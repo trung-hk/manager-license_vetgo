@@ -1,12 +1,20 @@
-import {Injectable} from '@angular/core';
+import {Injectable, ViewContainerRef} from '@angular/core';
 import {CommunicationService} from "./communication.service";
 import {PackageProduct} from "../models/PackageProduct";
+import {FormOrderServiceModalComponent} from "../pages/form-order-service-modal/form-order-service-modal.component";
+import {IModalData} from "../models/ModalData";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {Item} from "../models/Item";
+import {User} from "../models/User";
+import {OrderService} from "../models/OrderService";
+import {ModalFormOrderServiceCallback} from "../models/ModalFormOrderServiceCallback";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScriptCommonService {
-  constructor(private communicationService: CommunicationService) { }
+  constructor(private communicationService: CommunicationService,
+              private modal: NzModalService) { }
 
   alertShowMessageSuccess(message: string, title?: string): void {
     this.communicationService.sendEventToJs("ScriptComponent", {event: "alert-success", data:{title: title, message: message}});
@@ -51,4 +59,56 @@ export class ScriptCommonService {
   formatterMoney = (value: number) =>  value && `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   parserMoney = (value: string): string => value.replace(',', '');
   displayContentTextArea = (value: string): string => value ? value.replaceAll("\n", `<br>`) : "";
+  createComponentModalFormOrderService(idProductSelect: string,
+                                       dataProductList: Item[],
+                                       dataPackageProductMap: Map<string, PackageProduct[]>,
+                                       userId: string | null,
+                                       order: OrderService | null | undefined,
+                                       viewContainerRef: ViewContainerRef,
+                                       callBack?: ModalFormOrderServiceCallback): void {
+    const modal = this.modal.create<FormOrderServiceModalComponent, IModalData>({
+      nzTitle: order ? 'Cập nhật đơn hàng' : 'Đặt đơn hàng',
+      nzContent: FormOrderServiceModalComponent,
+      nzWidth:"800px",
+      nzViewContainerRef: viewContainerRef,
+      nzData: {
+        userId: userId,
+        productInfo: dataProductList,
+        idProductSelect: idProductSelect,
+        order: order,
+        packageProductMap: dataPackageProductMap
+      },
+      nzFooter: [
+        {
+          label: order ? 'Cập nhật đơn hàng' : 'Thêm đơn hàng',
+          type: 'primary',
+          onClick: componentInstance => {
+            return new Promise( (resolve) => {
+              componentInstance!.handleSubmit().then(() => {
+                callBack?.reloadData();
+
+                resolve(null);
+              });
+            })
+          }
+        },
+        {
+          label: 'Hủy',
+          onClick: () => this.modal.ngOnDestroy()
+        },
+      ]
+    });
+    // const instance = modal.getContentComponent();
+    // modal.afterOpen.subscribe(() => test = instance.validateCustomerForm.invalid);
+    // Return a result when closed
+    // modal.afterClose.subscribe(() => {
+    //   modal.
+    //   modal.componentInstance.beforeModalClose.subscribe(() => {
+    //     if (this.preventModalClose) {
+    //       // Ngăn chặn modal đóng
+    //       modal.componentInstance.cancelModalClose();
+    //     }
+    //   });
+    // })
+  }
 }

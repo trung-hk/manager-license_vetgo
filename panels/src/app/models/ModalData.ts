@@ -1,12 +1,13 @@
 import {User} from "./User";
 import {Item} from "./Item";
 import {PackageProduct} from "./PackageProduct";
+import {OrderService} from "./OrderService";
 
 export interface IModalData {
-    userInfo: User | null;
+    userId: string | null;
     productInfo: Item[];
-    idSelect: string | null;
-    order: string | null;
+    idProductSelect: string | null;
+    order: OrderService | null | undefined;
     packageProductMap: Map<string, PackageProduct[]>
     // productSelect: Item | null;
 }

@@ -14,6 +14,7 @@ import {ROLES} from "./Constants/vg-constant";
 import {AgentProductComponent} from "./pages/agent-product/agent-product.component";
 import {DistributorComponent} from "./pages/distributor/distributor.component";
 import {OrderServiceComponent} from "./pages/order-service/order-service.component";
+import {OrdersComponent} from "./pages/orders/orders.component";
 
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
@@ -113,6 +114,17 @@ const routes: Routes = [
         data: {
           permissions: {
             only: [ROLES.PARTNER],
+            redirectTo: '/error/403'
+          }
+        }
+      },
+      {
+        path: 'orders',
+        component: OrdersComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.PARTNER, ROLES.DISTRIBUTOR],
             redirectTo: '/error/403'
           }
         }

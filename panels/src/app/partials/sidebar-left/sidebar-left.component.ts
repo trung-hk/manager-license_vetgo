@@ -7,4 +7,5 @@ import {ROLES} from "../../Constants/vg-constant";
 })
 export class SidebarLeftComponent {
   protected readonly ROLES = ROLES;
+  protected readonly Object = Object;
 }

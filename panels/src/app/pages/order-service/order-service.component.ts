@@ -58,7 +58,7 @@ export class OrderServiceComponent {
               private communicationService: CommunicationService,
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,
-              private modal: NzModalService, public viewContainerRef: ViewContainerRef) {
+              private viewContainerRef: ViewContainerRef) {
   }
 
   ngOnInit() {
@@ -179,44 +179,6 @@ export class OrderServiceComponent {
     // this.idShowModal = this.validateForm.get("id")?.value;
   }
   createComponentModal(idSelect: string): void {
-    let test = true;
-    const modal = this.modal.create<FormOrderServiceModalComponent, IModalData>({
-      nzTitle: 'Đặt đơn hàng',
-      nzContent: FormOrderServiceModalComponent,
-      nzWidth:"800px",
-      nzViewContainerRef: this.viewContainerRef,
-      nzData: {
-        userInfo: null,
-        productInfo: this.dataProductList,
-        idSelect: idSelect,
-        order: null,
-        packageProductMap: this.dataPackageProductMap
-      },
-      nzFooter: [
-        {
-          label: 'Thêm đơn hàng',
-          type: 'primary',
-          onClick: componentInstance => {
-            componentInstance!.handleSubmit();
-          }
-        },
-        {
-          label: 'Hủy',
-          onClick: () => this.modal.ngOnDestroy()
-        },
-      ]
-    });
-    // const instance = modal.getContentComponent();
-    // modal.afterOpen.subscribe(() => test = instance.validateCustomerForm.invalid);
-    // Return a result when closed
-    // modal.afterClose.subscribe(() => {
-    //   modal.
-    //   modal.componentInstance.beforeModalClose.subscribe(() => {
-    //     if (this.preventModalClose) {
-    //       // Ngăn chặn modal đóng
-    //       modal.componentInstance.cancelModalClose();
-    //     }
-    //   });
-    // })
+    this.scriptFC.createComponentModalFormOrderService(idSelect, this.dataProductList, this.dataPackageProductMap, null, null, this.viewContainerRef)
   }
 }
