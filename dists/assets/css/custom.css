@@ -117,3 +117,6 @@ table thead{
 .card-item-background-color {
     background-color: snow !important;
 }
+.payment-icon{
+    cursor: pointer;
+}
