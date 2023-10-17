@@ -12,19 +12,12 @@ import {URL} from "../../Constants/api-urls";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ResponseError} from "../../models/ResponseError";
 import {OrderService} from "../../models/OrderService";
-import {
-    MESSAGE_ERROR_UPDATE_ORDER,
-    MESSAGE_REGISTER_CUSTOMER_PRODUCT_SERVICE_FAILED
-} from "../../Constants/message-constant";
-import {da} from "date-fns/locale";
 
 @Component({
     selector: 'app-form-order-service-modal',
     templateUrl: './form-order-service-modal.component.html',
 })
 export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
-    @Input() title?: string;
-    @Input() subtitle?: string;
     validateCustomerForm!: UntypedFormGroup;
     validateOrderForm!: UntypedFormGroup;
     isUpdateOrder: boolean = false;
@@ -169,7 +162,6 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             return;
         }
         // xử lý insertOrUpdate order
-        //await this.validatePackageFree();
         await this.insertOrUpdateOrder(dataOrder);
     }
 

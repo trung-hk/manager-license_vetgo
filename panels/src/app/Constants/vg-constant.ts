@@ -94,3 +94,13 @@ export enum TYPE_PACKAGE {
     PAYMENT_LABEL = "Trả phí",
     PAYMENT_VALUE = "PAYMENT",
 }
+export enum MODE_DISPLAY {
+    PC = "PC",
+    MOBILE = "MOBILE"
+}
+export enum CONFIG {
+    NOT_USING_LABEL = "Không sử dụng",
+    NOT_USING_VALUE = "NOT_USING",
+    USING_LABEL = "Sử dụng",
+    USING_VALUE = "USING",
+}

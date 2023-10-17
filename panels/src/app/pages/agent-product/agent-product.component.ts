@@ -1,4 +1,4 @@
-import {Component, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {Item} from "../../models/Item";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
@@ -30,7 +30,7 @@ import * as Message from "../../Constants/message-constant";
         `
     ]
 })
-export class AgentProductComponent {
+export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
     protected readonly STATUS_AGENT_PRODUCT = STATUS_AGENT_PRODUCT;
     protected readonly STATUS_PRODUCT_SERVICE = STATUS_PRODUCT_SERVICE;
     protected readonly ROLES = ROLES;

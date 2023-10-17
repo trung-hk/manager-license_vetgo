@@ -154,6 +154,15 @@
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Sử dụng config</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <nz-select formControlName="usingConfig" nzSize="large">
+                        <nz-option *ngFor="let status of statusConfigList" nzValue="{{status.value}}"
+                                   nzLabel="{{status.text}}"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
             <form nz-form [formGroup]="validatePackageProductForm">
                 <div [formArrayName]="attributeArrayForm">
                     <nz-form-item *ngFor="let item of formPackage.controls; let i = index" [formGroupName]="i">

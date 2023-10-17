@@ -8,10 +8,17 @@ import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {Item} from "../../models/Item";
 import {URL} from "../../Constants/api-urls";
-import {STATUS_PRODUCT_SERVICE, TYPE_EXPIRED_PACKAGE, TYPE_PRODUCT, TYPE_PACKAGE} from "../../Constants/vg-constant";
+import {
+    STATUS_PRODUCT_SERVICE,
+    TYPE_EXPIRED_PACKAGE,
+    TYPE_PRODUCT,
+    TYPE_PACKAGE,
+    CONFIG, STATUS_CONFIG
+} from "../../Constants/vg-constant";
 import {PACKAGE_PRODUCT_SERVICE_FORM, PRODUCT_SERVICE_FORM} from "../../Constants/Form";
 import {PackageProduct} from "../../models/PackageProduct";
 import * as Message from "../../Constants/message-constant";
+import {AttributeObjectProductService} from "../../models/AttributeObjectProductService";
 
 @Component({
     selector: 'app-product-service',
@@ -36,6 +43,9 @@ import * as Message from "../../Constants/message-constant";
 export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly STATUS_PRODUCT_SERVICE = STATUS_PRODUCT_SERVICE;
     protected readonly TYPE_PACKAGE = TYPE_PACKAGE;
+    protected readonly CONFIG_USING = CONFIG;
+    protected readonly JSON = JSON;
+    protected readonly TYPE_EXPIRED_PACKAGE = TYPE_EXPIRED_PACKAGE;
     listScript = [];
     dataList: Item[] = [];
     total: number = 1;
@@ -57,6 +67,10 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     statusList: { text: string, value: string }[] = [
         {text: this.STATUS_PRODUCT_SERVICE.UN_DEPLOYED_LABEL, value: this.STATUS_PRODUCT_SERVICE.UN_DEPLOYED_VALUE},
         {text: this.STATUS_PRODUCT_SERVICE.DEPLOYED_LABEL, value: this.STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE}
+    ];
+    statusConfigList: { text: string, value: string }[] = [
+        {text: this.CONFIG_USING.NOT_USING_LABEL, value: this.CONFIG_USING.NOT_USING_VALUE},
+        {text: this.CONFIG_USING.USING_LABEL, value: this.CONFIG_USING.USING_VALUE}
     ];
     formPackage!: FormArray;
     packageProductMap: Map<string, PackageProduct[]> = new Map<string, PackageProduct[]>();
@@ -135,12 +149,14 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         this.isVisible = true;
         this.formPackage.clear()
         if (product) {
+            const usingConfig = this.scriptFC.getAttributeProductService(product.attributes).usingConfig;
             this.validateProductForm.setValue({
                 id: product.id,
                 code: product.code,
                 name: product.name,
                 description: product.description,
                 status: product.status,
+                usingConfig: usingConfig ? usingConfig : this.CONFIG_USING.NOT_USING_VALUE
             });
             this.packageProductMap.get(product.id!)?.forEach(packageItem => {
                 packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.DAY;
@@ -169,7 +185,8 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         } else {
             this.validateProductForm.reset();
             this.validateProductForm.patchValue({
-                status: this.STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE
+                status: this.STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE,
+                usingConfig: this.CONFIG_USING.NOT_USING_VALUE
             });
         }
         this.idShowModal = this.validateProductForm.get("id")?.value;
@@ -204,7 +221,8 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                             return p;
                         })
                 }
-                data.attributes = JSON.stringify(packages);
+                const attributeProduct: AttributeObjectProductService = {usingConfig: data.usingConfig, packages: packages.packages}
+                data.attributes = JSON.stringify(attributeProduct);
                 if (data.id) {
                     this.api.update<Item>(data.id, data, URL.API_ITEM).subscribe(() => {
                         this.isVisible = false;
@@ -292,7 +310,4 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         e.preventDefault();
         this.formPackage.removeAt(index)
     }
-
-    protected readonly JSON = JSON;
-    protected readonly TYPE_EXPIRED_PACKAGE = TYPE_EXPIRED_PACKAGE;
 }

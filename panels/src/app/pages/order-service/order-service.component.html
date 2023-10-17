@@ -4,7 +4,6 @@
             <div class="row">
                 <div class="col-12">
                     <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false" >
-<!--                        <ng-container [ngTemplateOutlet]="titleAction"></ng-container>-->
                         <nz-list nzGrid>
                             <div nz-row [nzGutter]="16">
                                 <div nz-col [nzXXl]="6" [nzXl]="6" [nzLg]="8" [nzMd]="8" [nzSm]="12" [nzXs]="24" *ngFor="let dt of dataProductList">
@@ -33,18 +32,16 @@
                                     </ng-template>
                                     <ng-template #infoPackageProduct>
                                         <nz-list nzSize="small" class="custom-scrollbar">
-                                            <nz-list-item *ngFor="let item of dataPackageProductMap.get(dt.id!)">
-                                                <nz-list-item-meta
-                                                        *ngIf="item"
-                                                        nzAvatar="/assets/img/service-packages.png"
-                                                        [nzDescription]="item.name ? item.name : ''"
-                                                >
+                                            <nz-list-item>
+                                                <nz-list-item-meta nzAvatar="/assets/img/service-packages.png">
                                                     <nz-list-item-meta-title>
-                                                        <nz-statistic
-                                                                [nzValueStyle]="{'font-size': 'unset'}"
-                                                                [nzValue]="(item.price | number)!"
-                                                                [nzSuffix]="'VNĐ'">
-                                                        </nz-statistic>
+                                                        <ng-container  *ngFor="let item of dataPackageProductMap.get(dt.id!)">
+                                                            <nz-statistic
+                                                                    [nzValueStyle]="{'font-size': 'unset'}"
+                                                                    [nzValue]="item.name + ' - ' + (item.price | number)!"
+                                                                    [nzSuffix]="'VNĐ'">
+                                                            </nz-statistic>
+                                                        </ng-container>
                                                     </nz-list-item-meta-title>
                                                 </nz-list-item-meta>
                                             </nz-list-item>
@@ -61,11 +58,6 @@
                                             </button>
                                         </ng-container>
                                     </ng-template>
-                                    <ng-template #actionSubmit>
-                                        <button nz-button nzType="primary" [disabled]="validateForm.invalid"
-                                                [nzLoading]="isConfirmLoading">Câp nhật
-                                        </button>
-                                    </ng-template>
                                     <ng-template #unActive>
                                         <h6 style="color: orangered">Sản phẩm đang phát triển</h6>
                                     </ng-template>
@@ -76,108 +68,8 @@
                     <ng-template #titleLeft>
                         Danh sách Sản phẩm
                     </ng-template>
-<!--                    <ng-template #titleAction>-->
-<!--                        <div nz-row [ngStyle]="{'margin-bottom': '10px'}">-->
-<!--                            <div nz-col [nzXXl]="6" [nzXl]="6" [nzLg]="8" [nzMd]="8" [nzSm]="12" [nzXs]="24">-->
-<!--                                <nz-input-group [nzSuffix]="suffixIconSearch">-->
-<!--                                    <input nzSize="large" type="search" nz-input placeholder="input search text"-->
-<!--                                           (keyup.enter)="search($event)"/>-->
-<!--                                </nz-input-group>-->
-<!--                                <ng-template #suffixIconSearch>-->
-<!--                                    <span nz-icon nzType="search"></span>-->
-<!--                                </ng-template>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </ng-template>-->
                 </div>
             </div>
         </div>
     </section>
 </nz-spin>
-<nz-modal [(nzVisible)]="isVisible"
-          [nzTitle]="modalTitle"
-          [nzContent]="modalContent"
-          [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
-          (nzOnCancel)="handleCancel()" nzWidth="800px">
-    <ng-template #modalTitle> {{idShowModal ? 'Cập nhật đại lý' : 'Thêm mới đại lý'}}</ng-template>
-
-    <ng-template #modalContent>
-<!--        <nz-tabset>-->
-<!--            <nz-tab nzTitle="Thông tin khách hàng">-->
-<!--                <form nz-form [formGroup]="validateCustomerForm">-->
-<!--                    <input type="hidden" formControlName="id">-->
-<!--                    <input type="hidden" formControlName="status">-->
-<!--                    <nz-form-item>-->
-<!--                        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã KH</nz-form-label>-->
-<!--                        <nz-form-control [nzSm]="18">-->
-<!--                            <input formControlName="code" nz-input nzSize="large" placeholder="VETGO"/>-->
-<!--                        </nz-form-control>-->
-<!--                    </nz-form-item>-->
-<!--                    <nz-form-item>-->
-<!--                        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên KH</nz-form-label>-->
-<!--                        <nz-form-control [nzSm]="18">-->
-<!--                            <input formControlName="name" nz-input nzSize="large" placeholder="Vet go"/>-->
-<!--                        </nz-form-control>-->
-<!--                    </nz-form-item>-->
-<!--                    <nz-form-item>-->
-<!--                        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>-->
-<!--                        <nz-form-control [nzSm]="18">-->
-<!--                            <nz-input-group nzAddOnBefore="+84">-->
-<!--                                <input [maxLength]="15" formControlName="phone" nz-input placeholder="(090) 123-4567"-->
-<!--                                       (keyup)="formatPhone($event)"/>-->
-<!--                            </nz-input-group>-->
-<!--                        </nz-form-control>-->
-<!--                    </nz-form-item>-->
-<!--                    <nz-form-item>-->
-<!--                        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">E-mail</nz-form-label>-->
-<!--                        <nz-form-control [nzSm]="18">-->
-<!--                            <input type="email" formControlName="email" nz-input placeholder="vetgo@gmail.com"/>-->
-<!--                        </nz-form-control>-->
-<!--                    </nz-form-item>-->
-<!--                    <nz-form-item>-->
-<!--                        <nz-form-label nzLabelAlign="right" [nzSm]="5">Địa chỉ</nz-form-label>-->
-<!--                        <nz-form-control [nzSm]="18">-->
-<!--                    <textarea rows="4" formControlName="address" nz-input-->
-<!--                              placeholder="Đường x, phường x, quận x..."></textarea>-->
-<!--                        </nz-form-control>-->
-<!--                    </nz-form-item>-->
-<!--                </form>-->
-<!--            </nz-tab>-->
-<!--            <nz-tab nzTitle="Thông tin đơn hàng">-->
-<!--                <form nz-form [formGroup]="validateOrderForm">-->
-<!--                    <input type="hidden" formControlName="id">-->
-<!--                    <nz-form-item>-->
-<!--                        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn sản phẩm</nz-form-label>-->
-<!--                        <nz-form-control [nzSm]="18">-->
-<!--                            <nz-select formControlName="productId" nzSize="large" >-->
-<!--                                <nz-option *ngFor="let product of dataProductList" nzValue="{{product.id}}" nzLabel="{{product.code}}"></nz-option>-->
-<!--                            </nz-select>-->
-<!--                        </nz-form-control>-->
-<!--                    </nz-form-item>-->
-<!--                    <nz-form-item>-->
-<!--                        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn gói</nz-form-label>-->
-<!--                        <nz-form-control [nzSm]="18">-->
-<!--                            <nz-select formControlName="status" nzSize="large">-->
-<!--                                <nz-option *ngFor="let pk of scriptFC.getPackageService(productSelect?.attributes)" nzValue="{{pk.id}}" nzLabel="{{pk.name}} {{pk.price}}"></nz-option>-->
-<!--                            </nz-select>-->
-<!--                        </nz-form-control>-->
-<!--                    </nz-form-item>-->
-
-<!--                </form>-->
-<!--            </nz-tab>-->
-<!--        </nz-tabset>-->
-    </ng-template>
-
-    <ng-template #modalFooterAdd>
-        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
-<!--        <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk('a', $event)"-->
-<!--                [nzLoading]="isConfirmLoading">Thêm mới-->
-<!--        </button>-->
-    </ng-template>
-    <ng-template #modalFooterUpdate>
-        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
-        <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk('b', $event)"
-                [nzLoading]="isConfirmLoading">Câp nhật
-        </button>
-    </ng-template>
-</nz-modal>

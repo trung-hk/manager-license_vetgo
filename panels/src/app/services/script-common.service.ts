@@ -8,6 +8,7 @@ import {Item} from "../models/Item";
 import {User} from "../models/User";
 import {OrderService} from "../models/OrderService";
 import {ModalFormOrderServiceCallback} from "../models/ModalFormOrderServiceCallback";
+import {AttributeObjectProductService} from "../models/AttributeObjectProductService";
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +55,12 @@ export class ScriptCommonService {
     });
   }
   getPackageService(value: string | null | undefined): PackageProduct[] {
-    return JSON.parse(value!).packages;
+    // console.log((this.getAttributeProductService(value!).packages)?.length)
+    return this.getAttributeProductService(value!).packages!;
+  }
+  getAttributeProductService(value: string | null | undefined): AttributeObjectProductService {
+    console.log(JSON.parse(value!))
+    return JSON.parse(value!);
   }
   formatterMoney = (value: number) =>  value && `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   parserMoney = (value: string): string => value.replace(',', '');

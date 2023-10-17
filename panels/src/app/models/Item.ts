@@ -1,5 +1,3 @@
-import {PackageProduct} from "./PackageProduct";
-
 export class Item{
     id?: string | null ;
     name?: string | null;
@@ -19,5 +17,6 @@ export class Item{
     seqNo?: string | null;
     deleted?: boolean | null;
     storeId?: string | null;
+    usingConfig?: string | null;
 }
 

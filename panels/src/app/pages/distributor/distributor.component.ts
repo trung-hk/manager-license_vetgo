@@ -1,4 +1,4 @@
-import {Component, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {User} from "../../models/User";
 import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
@@ -17,7 +17,7 @@ import * as Message from "../../Constants/message-constant";
   selector: 'app-distributor',
   templateUrl: './distributor.component.html',
 })
-export class DistributorComponent {
+export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly STATUS_DATA = STATUS_DISTRIBUTOR;
   listScript = [];
   dataList: User[] = [];

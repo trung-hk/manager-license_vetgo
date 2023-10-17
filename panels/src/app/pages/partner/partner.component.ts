@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import { CommunicationService } from 'src/app/services/communication.service';
 import { LazyLoadScriptService } from 'src/app/services/lazy-load-script.service';
 import {STATUS_PARTNER, USER_TYPE} from "../../Constants/vg-constant";
@@ -17,7 +17,7 @@ import * as Message from "../../Constants/message-constant";
   selector: 'app-partner',
   templateUrl: './partner.component.html',
 })
-export class PartnerComponent implements AfterViewInit {
+export class PartnerComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly STATUS_DATA = STATUS_PARTNER;
   listScript = [];
   dataList: User[] = [];
