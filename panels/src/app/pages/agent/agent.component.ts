@@ -116,6 +116,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
                 phone: this.scriptFC.formatPhone(agent.phone),
                 status: agent.status,
                 address: agent.address,
+                commission: agent.commission
             });
             this.validateForm.get("realm")?.disable();
             this.validateForm.get("code")?.disable();
@@ -124,7 +125,8 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             this.validateForm.get("code")?.enable();
             this.validateForm.reset();
             this.validateForm.patchValue({
-                status: this.STATUS_AGENT.ACTIVATED_VALUE
+                status: this.STATUS_AGENT.ACTIVATED_VALUE,
+                commission: "0"
             })
         }
         this.idShowModal = this.validateForm.get("id")?.value;

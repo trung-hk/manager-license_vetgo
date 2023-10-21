@@ -115,13 +115,15 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
         phone: this.scriptFC.formatPhone(distributor.phone),
         status: distributor.status,
         address: distributor.address,
+        commission: distributor.commission
       });
       this.validateForm.get("code")?.disable();
     } else {
       this.validateForm.get("code")?.enable();
       this.validateForm.reset();
       this.validateForm.patchValue({
-        status: this.STATUS_DATA.ACTIVATED_VALUE
+        status: this.STATUS_DATA.ACTIVATED_VALUE,
+        commission: "0"
       })
     }
     this.idShowModal = this.validateForm.get("id")?.value;

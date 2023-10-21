@@ -117,4 +117,6 @@ export class ScriptCommonService {
     //   });
     // })
   }
+  formatterPercent = (value: number): string => `${value} %`;
+  parserPercent = (value: string): string => value.replace(' %', '');
 }

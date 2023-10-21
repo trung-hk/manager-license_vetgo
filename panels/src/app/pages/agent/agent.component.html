@@ -16,29 +16,49 @@
                     >
                         <thead>
                         <tr>
-                            <th nzColumnKey="code" [nzSortFn]="true">Mã đại lý</th>
-                            <th nzColumnKey="name" [nzSortFn]="true">Tên đại lý</th>
-                            <th>Tên miền web</th>
-                            <th>E-mail</th>
-                            <th nzWidth="10em" nzColumnKey="phone" [nzSortFn]="true">Số điện thoại</th>
-                            <th nzWidth="16em">Địa chỉ</th>
-                            <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
+                            <th nzWidth="20em">Thông tin đại lý</th>
+                            <th nzWidth="20em">Thông tin liên lạc</th>
+                            <th nzWidth="20em">Tên miền web</th>
+                            <th nzWidth="8em" class="text-center">Hoa hồng</th>
+                            <th class="text-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                                 Ngày cập nhật
                             </th>
-                            <th nzColumnKey="status" nzWidth="12em" [nzSortFn]="true" [nzFilters]="statusList" [nzFilterFn]="true">
+                            <th class="text-center" nzColumnKey="status" nzWidth="12em" [nzSortFn]="true" [nzFilters]="statusList" [nzFilterFn]="true">
                                 Trạng thái
                             </th>
-                            <th class="align-center" nzWidth="10em">Thao tác</th>
+                            <th class="text-center" nzWidth="10em">Thao tác</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr *ngFor="let dt of dataList">
-                            <td>{{dt.code}}</td>
-                            <td>{{dt.name}}</td>
+                            <td>
+                                <div>
+                                    <label>Mã: <span>{{dt.code}}</span></label>
+
+                                </div>
+                                <div>
+                                    <label>Tên: <span>{{dt.name}}</span></label>
+
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <label>Số điện thoại: <span>{{dt.phone! | phoneFormat}}</span></label>
+
+                                </div>
+                                <div>
+                                    <label>E-mail: <span>{{dt.email}}</span></label>
+
+                                </div>
+                            </td>
                             <td><a href="https://{{dt.realm}}.phanmemvet.vn">https://{{dt.realm}}.phanmemvet.vn</a></td>
-                            <td>{{dt.email}}</td>
-                            <td>{{scriptFC.formatPhone(dt.phone)}}</td>
-                            <td><div class="text-break custom-scrollbar" [innerHtml]="scriptFC.displayContentTextArea(dt.address!)"></div></td>
+                            <td class="text-center">
+                                <nz-statistic
+                                        [nzValue]="(dt.commission | number: '1.0-2')!"
+                                        [nzSuffix]="'%'"
+                                        [nzValueStyle]="{ color: '#3F8600' }"
+                                ></nz-statistic>
+                            </td>
                             <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
                             <td class="align-center">
                                 <ng-container [ngSwitch]="dt.status">
@@ -152,6 +172,19 @@
                     <nz-select formControlName="status" nzSize="large">
                         <nz-option *ngFor="let status of statusList" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
                     </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzLabelAlign="right" [nzSm]="5">Hoa hồng</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <nz-input-number
+                            formControlName="commission"
+                            [nzMin]="1"
+                            [nzMax]="100"
+                            [nzStep]="1"
+                            [nzFormatter]="scriptFC.formatterPercent"
+                            [nzParser]="scriptFC.parserPercent"
+                    ></nz-input-number>
                 </nz-form-control>
             </nz-form-item>
         </form>

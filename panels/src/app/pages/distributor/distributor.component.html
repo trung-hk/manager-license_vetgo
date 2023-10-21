@@ -144,6 +144,19 @@
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzLabelAlign="right" [nzSm]="5">Hoa hồng</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <nz-input-number
+                            formControlName="commission"
+                            [nzMin]="1"
+                            [nzMax]="100"
+                            [nzStep]="1"
+                            [nzFormatter]="scriptFC.formatterPercent"
+                            [nzParser]="scriptFC.parserPercent"
+                    ></nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
         </form>
     </ng-template>
 

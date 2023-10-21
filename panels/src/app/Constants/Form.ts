@@ -20,6 +20,7 @@ export const USER_FORM_FOR_AGENT = {
     phone: [null, [Validators.required, Validators.maxLength(15)]],
     address: [null, [Validators.maxLength(500)]],
     status: [null, [Validators.required]],
+    commission: [null],
 }
 export const USER_FORM = {
     id: [null],
@@ -29,6 +30,7 @@ export const USER_FORM = {
     phone: [null, [Validators.required, Validators.maxLength(15)]],
     address: [null, [Validators.maxLength(500)]],
     status: [null, [Validators.required]],
+    commission: [null],
 }
 export const PRODUCT_SERVICE_FORM = {
     id: [null],

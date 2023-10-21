@@ -120,3 +120,6 @@ table thead{
 .payment-icon{
     cursor: pointer;
 }
+button:focus{
+    outline: unset !important;
+}
