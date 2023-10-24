@@ -23,7 +23,7 @@ import {NzNotificationModule} from "ng-zorro-antd/notification";
 import {NzTagModule} from "ng-zorro-antd/tag";
 import {NzCardModule} from "ng-zorro-antd/card";
 import {NzInputModule} from "ng-zorro-antd/input";
-import {NzTooltipDirective, NzToolTipModule} from "ng-zorro-antd/tooltip";
+import {NzToolTipModule} from "ng-zorro-antd/tooltip";
 import {NzStatisticModule} from "ng-zorro-antd/statistic";
 import {NzListModule} from "ng-zorro-antd/list";
 import {NzSkeletonModule} from "ng-zorro-antd/skeleton";
@@ -33,6 +33,8 @@ import {NzTypographyModule} from "ng-zorro-antd/typography";
 import {NzSpinModule} from "ng-zorro-antd/spin";
 import {NzTabsModule} from "ng-zorro-antd/tabs";
 import {NzImageModule} from "ng-zorro-antd/image";
+import {NzDescriptionsModule} from "ng-zorro-antd/descriptions";
+import {NzRadioModule} from "ng-zorro-antd/radio";
 
 @NgModule({
     exports: [
@@ -59,6 +61,8 @@ import {NzImageModule} from "ng-zorro-antd/image";
         NzSpinModule,
         NzTabsModule,
         NzImageModule,
+        NzDescriptionsModule,
+        NzRadioModule,
     ],
     providers: [
         { provide: NZ_ICONS, useValue: icons }

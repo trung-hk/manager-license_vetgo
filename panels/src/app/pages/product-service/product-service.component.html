@@ -129,13 +129,13 @@
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã sản phẩm</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <input formControlName="code" nz-input nzSize="large" placeholder="VETGO"/>
+                    <input formControlName="code" nz-input placeholder="VETGO"/>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên sản phẩm</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <input formControlName="name" nz-input nzSize="large" placeholder="Vet go"/>
+                    <input formControlName="name" nz-input placeholder="Vet go"/>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -148,7 +148,7 @@
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <nz-select formControlName="status" nzSize="large">
+                    <nz-select formControlName="status">
                         <nz-option *ngFor="let status of statusList" nzValue="{{status.value}}"
                                    nzLabel="{{status.text}}"></nz-option>
                     </nz-select>
@@ -157,7 +157,7 @@
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Sử dụng config</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <nz-select formControlName="usingConfig" nzSize="large">
+                    <nz-select formControlName="usingConfig">
                         <nz-option *ngFor="let status of statusConfigList" nzValue="{{status.value}}"
                                    nzLabel="{{status.text}}"></nz-option>
                     </nz-select>
@@ -176,13 +176,12 @@
                             <div nz-row [nzGutter]="16">
                                 <div nz-col nzSpan="10">
                                     <nz-input-group nzAddOnBefore="Tên">
-                                        <input formControlName="name" nz-input nzSize="large"
+                                        <input formControlName="name" nz-input
                                                placeholder="1 năm"/>
                                     </nz-input-group>
                                     <nz-input-number-group nzAddOnBefore="Giá " nzAddOnAfter="VNĐ">
                                         <nz-input-number
                                                 formControlName="price"
-                                                nzSize="large"
                                                 [nzPlaceHolder]="'1,000,000'"
                                                 [nzFormatter]="scriptFC.formatterMoney"
                                                 [nzParser]="scriptFC.parserMoney">
@@ -197,7 +196,7 @@
                                         </nz-select>
                                     </nz-input-group>
                                     <nz-input-group nzAddOnBefore="Thời hạn" [nzAddOnAfter]="chooseTypeExpired">
-                                        <input formControlName="expired" nz-input nzSize="large"/>
+                                        <input formControlName="expired" nz-input />
                                     </nz-input-group>
                                 </div>
                                 <div nz-col nzSpan="2" style="top:1em;">

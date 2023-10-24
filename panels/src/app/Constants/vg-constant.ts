@@ -104,3 +104,9 @@ export enum CONFIG {
     USING_LABEL = "Sử dụng",
     USING_VALUE = "USING",
 }
+export enum TYPE_COMMISSION {
+    DEFAULT_LABEL = "Theo sản phẩm",
+    DEFAULT_VALUE = "DEFAULT",
+    REVENUE_LABEL = "Theo doanh thu",
+    REVENUE_VALUE = "REVENUE",
+}

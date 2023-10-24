@@ -8,7 +8,7 @@ import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {MODE_DISPLAY, ROLES, STATUS_ORDER, STATUS_PAYMENT} from "../../Constants/vg-constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
-import * as Message from "../../Constants/message-constant";
+import {Message} from "../../Constants/message-constant";
 import {OrderService} from "../../models/OrderService";
 import {Item} from "../../models/Item";
 import {AgentProduct} from "../../models/AgentProduct";
@@ -209,15 +209,22 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
 
-    createComponentModal(order?: OrderService): void {
+    createComponentModal(order?: OrderService, isNewOrder?: boolean): void {
         const callback: ModalFormOrderServiceCallback = {
             reloadData: () => {
                 // Gọi phương thức từ class đã định nghĩa ở đây
                 this.loadDataFromServer().then();
             }
         };
+        if (isNewOrder) {
+            this.scriptFC.createComponentModalFormOrderService(null, this.productList, this.dataPackageProductMap, order?.customerId!, null, this.viewContainerRef, callback);
+        } else {
+            this.scriptFC.createComponentModalFormOrderService(order?.itemId!, this.productList, this.dataPackageProductMap, order?.customerId!, order, this.viewContainerRef, callback);
+        }
+    }
 
-        this.scriptFC.createComponentModalFormOrderService(order?.itemId!, this.productList, this.dataPackageProductMap, order?.customerId!, order, this.viewContainerRef, callback)
+    createComponentModalViewOrderService(order: OrderService): void {
+       // this.scriptFC.createComponentModalViewOrderService()
     }
 
     paymentMoMo(id: string | null | undefined): void {

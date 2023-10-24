@@ -1,5 +1,5 @@
-import {Validators} from "@angular/forms";
-import {TYPE_EXPIRED_PACKAGE, TYPE_PACKAGE} from "./vg-constant";
+import {AbstractControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
+import {TYPE_COMMISSION, TYPE_EXPIRED_PACKAGE, TYPE_PACKAGE} from "./vg-constant";
 
 export const CONFIG_APP_FORM = {
     id: [null],
@@ -20,7 +20,7 @@ export const USER_FORM_FOR_AGENT = {
     phone: [null, [Validators.required, Validators.maxLength(15)]],
     address: [null, [Validators.maxLength(500)]],
     status: [null, [Validators.required]],
-    commission: [null],
+    commissionId: [null],
 }
 export const USER_FORM = {
     id: [null],
@@ -30,7 +30,7 @@ export const USER_FORM = {
     phone: [null, [Validators.required, Validators.maxLength(15)]],
     address: [null, [Validators.maxLength(500)]],
     status: [null, [Validators.required]],
-    commission: [null],
+    commissionId: [null],
 }
 export const PRODUCT_SERVICE_FORM = {
     id: [null],
@@ -55,4 +55,14 @@ export const ORDER_SERVICE_FORM = {
     customerId: [null],
     itemId: [{value: [null], disabled: false}, [Validators.required]],
     packageId: [null, [Validators.required]]
+}
+export const COMMISSION_FORM = {
+    id: [null],
+    name: [null, [Validators.required, Validators.maxLength(255)]],
+    commissionType: [null, [Validators.required]],
+    rate: [null],
+}
+export const COMMISSION_ACCUMULATE_FORM = {
+    revenueFrom: [null],
+    rate: [null],
 }

@@ -1,7 +1,7 @@
-import {User} from "./User";
 import {Item} from "./Item";
 import {PackageProduct} from "./PackageProduct";
 import {OrderService} from "./OrderService";
+import {User} from "./User";
 
 export interface IModalData {
     userId: string | null;
@@ -9,5 +9,10 @@ export interface IModalData {
     idProductSelect: string | null;
     order: OrderService | null | undefined;
     packageProductMap: Map<string, PackageProduct[]>
-    // productSelect: Item | null;
+}
+
+export interface IModalViewData {
+    userInfo: User;
+    productName: string | null;
+    order: OrderService;
 }

@@ -6,7 +6,6 @@
       </a>
     </div>
     <ul class="sidebar-menu">
-      <li class="menu-header">Quản lý</li>
       <li class="dropdown index">
         <a routerLink="dashboard" class="nav-link"><i data-feather="monitor"></i><span>Tổng quan</span></a>
       </li>
@@ -37,9 +36,11 @@
           <li class="agent-user"><a class="nav-link" href="#">User</a></li>
         </ul>
       </li>
-      <li class="menu-header" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">Đại lý</li>
       <li class="dropdown agent-product" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">
         <a class="nav-link" routerLink="agent-product"><i data-feather="monitor"></i><span>Sản phẩm đăng ký</span></a>
+      </li>
+      <li class="dropdown commission-list" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">
+        <a class="nav-link" routerLink="commissions"><i data-feather="monitor"></i><span>Chiếc khấu</span></a>
       </li>
       <li class="dropdown agent-distributor" *ngxPermissionsOnly="[ROLES.AGENT]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Nhà phân phối</span></a>
@@ -48,7 +49,6 @@
           <li><a class="nav-link" href="#">User</a></li>
         </ul>
       </li>
-      <li class="menu-header" *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">Nhà phân phối</li>
       <li class="dropdown distributor" *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Cộng tác viên</span></a>
         <ul class="dropdown-menu distributor-partner">
@@ -56,7 +56,6 @@
           <li><a class="nav-link" href="#">User</a></li>
         </ul>
       </li>
-      <li class="menu-header" *ngxPermissionsOnly="[ROLES.PARTNER]">Cộng tác viên</li>
       <li class="dropdown partner" *ngxPermissionsOnly="[ROLES.PARTNER]">
         <a routerLink="order-service" class="nav-link"><i data-feather="mail"></i><span>Danh sách SP</span></a>
       </li>

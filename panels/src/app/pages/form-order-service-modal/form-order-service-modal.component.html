@@ -45,7 +45,7 @@
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn sản phẩm</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <nz-select formControlName="itemId" nzSize="large" (ngModelChange)="handleChangeProduct($event)">
+                    <nz-select formControlName="itemId"  (ngModelChange)="handleChangeProduct($event)">
                         <nz-option *ngFor="let product of products" nzValue="{{product.id}}"
                                    nzLabel="{{product.code}}"></nz-option>
                     </nz-select>
@@ -54,7 +54,7 @@
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn gói</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <nz-select formControlName="packageId" nzSize="large" (ngModelChange)="handleChangePackage($event)">
+                    <nz-select formControlName="packageId" (ngModelChange)="handleChangePackage($event)">
                         <nz-option *ngFor="let pk of this.nzModalData.packageProductMap.get(productSelect?.id!)"
                                    nzValue="{{pk.id}}" nzLabel="{{pk.name}}"></nz-option>
                     </nz-select>

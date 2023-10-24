@@ -6,5 +6,6 @@ export class URL{
     static readonly API_USER_BY_TYPE: string = "users/type";
     static readonly API_CUSTOMER_BY_PHONE: string = "users/customer-phone";
     static readonly API_AGENT_PRODUCT: string = "agent-items";
-    static readonly API_ORDER_SERVICE: string = "vg-order-service"
+    static readonly API_ORDER_SERVICE: string = "vg-order-service";
+    static readonly API_COMMISSION: string = "commissions";
 }

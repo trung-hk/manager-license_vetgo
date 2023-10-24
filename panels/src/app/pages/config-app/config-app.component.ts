@@ -10,7 +10,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {URL} from "../../Constants/api-urls";
 import {STATUS_CONFIG} from "../../Constants/vg-constant";
 import {CONFIG_APP_FORM} from "../../Constants/Form";
-import * as Message from "../../Constants/message-constant";
+import {Message} from "../../Constants/message-constant";
 
 @Component({
     selector: 'app-config-app',

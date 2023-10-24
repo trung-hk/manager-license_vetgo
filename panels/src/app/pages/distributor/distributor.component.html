@@ -19,7 +19,7 @@
                             <th nzWidth="20em">Thông tin NPP</th>
                             <th nzWidth="20em">Thông tin liên lạc</th>
                             <th nzWidth="20em">Địa chỉ</th>
-                            <th nzWidth="8em" class="text-center">Hoa hồng</th>
+                            <th nzWidth="10em" class="text-center">Chiếc khấu</th>
                             <th class="text-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                                 Ngày cập nhật
                             </th>
@@ -54,12 +54,8 @@
                             <td>
                                 <div class="text-break custom-scrollbar" [innerHtml]="dt.address! | lineBreak"></div>
                             </td>
-                            <td class="text-center">
-                                <nz-statistic
-                                        [nzValue]="(dt.commission | number: '1.0-2')!"
-                                        [nzSuffix]="'%'"
-                                        [nzValueStyle]="{ color: '#3F8600' }"
-                                ></nz-statistic>
+                            <td>
+                                {{dataCommissionMap.get(dt.commissionId!)?.name}}
                             </td>
                             <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
                             <td class="align-center">
@@ -74,16 +70,15 @@
                                     </div>
                                 </ng-container>
                             </td>
-                            <td class="align-center">
-                                <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)"
-                                        title="Chỉnh sửa">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                &nbsp;
-                                <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)"
-                                        title="Xóa">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                            <td class="align-center action">
+                                <span nz-icon nzType="edit" nzTheme="outline"
+                                      (click)="showModal(dt)"
+                                      title="Chỉnh sửa">
+                                </span>
+                                <span nz-icon nzType="delete" nzTheme="outline"
+                                      (click)="showDeleteModal(dt.id)"
+                                      title="Xóa">
+                                </span>
                             </td>
                         </tr>
                         </tbody>
@@ -129,13 +124,13 @@
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã NPP</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <input formControlName="code" nz-input nzSize="large" placeholder="VETGO"/>
+                    <input formControlName="code" nz-input placeholder="VETGO"/>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên NPP</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <input formControlName="name" nz-input nzSize="large" placeholder="Vet go"/>
+                    <input formControlName="name" nz-input placeholder="Vet go"/>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -161,24 +156,19 @@
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
+                <nz-form-label nzLabelAlign="right" [nzSm]="5">Chiếc khấu</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <nz-select formControlName="status" nzSize="large">
-                        <nz-option *ngFor="let status of statusList" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
+                    <nz-select formControlName="commissionId">
+                        <nz-option *ngFor="let commission of dataCommission" nzValue="{{commission.id}}" nzLabel="{{commission.name}}"></nz-option>
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
-                <nz-form-label nzLabelAlign="right" [nzSm]="5">Hoa hồng</nz-form-label>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <nz-input-number
-                            formControlName="commission"
-                            [nzMin]="1"
-                            [nzMax]="100"
-                            [nzStep]="1"
-                            [nzFormatter]="scriptFC.formatterPercent"
-                            [nzParser]="scriptFC.parserPercent"
-                    ></nz-input-number>
+                    <nz-select formControlName="status">
+                        <nz-option *ngFor="let status of statusList" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
+                    </nz-select>
                 </nz-form-control>
             </nz-form-item>
         </form>

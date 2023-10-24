@@ -15,6 +15,7 @@ import {AgentProductComponent} from "./pages/agent-product/agent-product.compone
 import {DistributorComponent} from "./pages/distributor/distributor.component";
 import {OrderServiceComponent} from "./pages/order-service/order-service.component";
 import {OrdersComponent} from "./pages/orders/orders.component";
+import {CommissionsComponent} from "./pages/commissions/commissions.component";
 
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
@@ -128,7 +129,18 @@ const routes: Routes = [
             redirectTo: '/error/403'
           }
         }
-      }
+      },
+      {
+        path: 'commissions',
+        component: CommissionsComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.ADMIN, ROLES.AGENT],
+            redirectTo: '/error/403'
+          }
+        }
+      },
     ],
     canActivate: [isAuthenticated],
   },

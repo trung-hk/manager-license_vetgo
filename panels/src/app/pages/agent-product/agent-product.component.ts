@@ -8,27 +8,11 @@ import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {ROLES, STATUS_AGENT_PRODUCT, STATUS_PRODUCT_SERVICE} from "../../Constants/vg-constant";
 import {AgentProduct} from "../../models/AgentProduct";
-import * as Message from "../../Constants/message-constant";
+import {Message} from "../../Constants/message-constant";
 
 @Component({
     selector: 'app-agent-product',
     templateUrl: './agent-product.component.html',
-    styles: [
-        `
-          .dynamic-delete-button {
-            cursor: pointer;
-            position: relative;
-            top: 4px;
-            font-size: 24px;
-            color: #999;
-            transition: all 0.3s;
-          }
-
-          .dynamic-delete-button:hover {
-            color: #777;
-          }
-        `
-    ]
 })
 export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
     protected readonly STATUS_AGENT_PRODUCT = STATUS_AGENT_PRODUCT;

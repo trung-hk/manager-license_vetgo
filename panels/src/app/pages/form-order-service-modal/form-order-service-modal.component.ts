@@ -1,5 +1,5 @@
 import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
-import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
+import {ModalButtonOptions, NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
 import {IModalData} from "../../models/ModalData";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {ORDER_SERVICE_FORM, USER_FORM} from "../../Constants/Form";
@@ -7,12 +7,11 @@ import {User} from "../../models/User";
 import {Item} from "../../models/Item";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {STATUS_CUSTOMER, STATUS_ORDER, USER_TYPE} from "../../Constants/vg-constant";
-import * as Message from "../../Constants/message-constant";
+import {Message} from "../../Constants/message-constant";
 import {URL} from "../../Constants/api-urls";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ResponseError} from "../../models/ResponseError";
 import {OrderService} from "../../models/OrderService";
-
 @Component({
     selector: 'app-form-order-service-modal',
     templateUrl: './form-order-service-modal.component.html',
@@ -79,6 +78,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
                 email: customer.email,
                 address: customer.address,
                 status: customer.status,
+                commissionId: customer.commissionId
             })
         } else {
             this.validateCustomerForm.setValue({
@@ -89,6 +89,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
                 phone: this.scriptFC.formatPhone(customer.phone),
                 address: customer.address,
                 status: customer.status,
+                commissionId: customer.commissionId
             })
         }
 

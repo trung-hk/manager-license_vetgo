@@ -13,32 +13,16 @@ import {
     TYPE_EXPIRED_PACKAGE,
     TYPE_PRODUCT,
     TYPE_PACKAGE,
-    CONFIG, STATUS_CONFIG
+    CONFIG
 } from "../../Constants/vg-constant";
 import {PACKAGE_PRODUCT_SERVICE_FORM, PRODUCT_SERVICE_FORM} from "../../Constants/Form";
 import {PackageProduct} from "../../models/PackageProduct";
-import * as Message from "../../Constants/message-constant";
+import {Message} from "../../Constants/message-constant";
 import {AttributeObjectProductService} from "../../models/AttributeObjectProductService";
 
 @Component({
     selector: 'app-product-service',
     templateUrl: './product-service.component.html',
-    styles: [
-        `
-          .dynamic-delete-button {
-            cursor: pointer;
-            position: relative;
-            top: 4px;
-            font-size: 24px;
-            color: #999;
-            transition: all 0.3s;
-          }
-
-          .dynamic-delete-button:hover {
-            color: #777;
-          }
-        `
-    ]
 })
 export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly STATUS_PRODUCT_SERVICE = STATUS_PRODUCT_SERVICE;

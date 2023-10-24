@@ -19,17 +19,17 @@
                             <th nzWidth="15em" nzColumnKey="code" [nzSortFn]="true">Mã đơn hàng</th>
                             <th nzWidth="15em" nzColumnKey="name" [nzSortFn]="true">Khách hàng</th>
                             <th nzWidth="20em">Sản phẩm đã mua</th>
-                            <th nzWidth="10em" nzColumnKey="phone" [nzFilters]="paymentStatusList" [nzFilterFn]="true"
-                                [nzSortFn]="true">Thanh toán
+                            <th class="text-center" nzWidth="10em" nzColumnKey="phone" [nzFilters]="paymentStatusList" [nzFilterFn]="true">
+                                Thanh toán
                             </th>
-                            <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
+                            <th class="text-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                                 Ngày cập nhật
                             </th>
-                            <th nzColumnKey="status" nzWidth="12em" [nzSortFn]="true" [nzFilters]="statusList"
+                            <th class="text-center" nzColumnKey="status" nzWidth="12em"  [nzFilters]="statusList"
                                 [nzFilterFn]="true">
                                 Trạng thái
                             </th>
-                            <th class="align-center" nzWidth="10em">Thao tác</th>
+                            <th class="text-center" nzWidth="10em">Thao tác</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -94,21 +94,29 @@
                                     </div>
                                 </ng-container>
                             </td>
-                            <td class="align-center">
-                                <ng-container
-                                        *ngIf="dt.paymentStatus === STATUS_PAYMENT.UN_PAID_VALUE && dt.status === STATUS_ORDER.IN_PROCESS_VALUE">
-                                    <button type="button" class="btn btn-warning note-btn"
-                                            (click)="createComponentModal(dt)"
-                                            title="Chỉnh sửa">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    &nbsp;
-                                    <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt)"
-                                            title="Hủy đơn hàng">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                            <td class="align-center action">
+                                <span nz-icon nzType="eye"
+                                      nzTheme="outline"
+                                      (click)="createComponentModal(dt, true)"
+                                      title="Xem chi tiết"></span>
+                                <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
+                                    <span nz-icon nzType="plus"
+                                          nzTheme="outline"
+                                          (click)="createComponentModal(dt, true)"
+                                          title="Thêm đơn mới">
+                                    </span>
+                                    <ng-container
+                                            *ngIf="dt.paymentStatus === STATUS_PAYMENT.UN_PAID_VALUE && dt.status === STATUS_ORDER.IN_PROCESS_VALUE">
+                                        <span nz-icon nzType="edit" nzTheme="outline"
+                                                (click)="createComponentModal(dt)"
+                                                title="Chỉnh sửa">
+                                        </span>
+                                        <span nz-icon nzType="delete" nzTheme="outline"
+                                                (click)="showDeleteModal(dt)"
+                                                title="Hủy đơn hàng">
+                                        </span>
+                                    </ng-container>
                                 </ng-container>
-
                             </td>
                         </tr>
                         </tbody>
@@ -173,10 +181,10 @@
 </section>
 
 <!-- Delete Confirmation -->
-<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Delete Confirmation" nzOkText="Ok" nzOkDanger="true"
-          nzCancelText="Cancel" (nzOnOk)="handleConfirmToDelete()"
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận hủy đơn hàng" nzOkText="Đồng ý" nzOkDanger="true"
+          nzCancelText="Hủy bỏ" (nzOnOk)="handleConfirmToDelete()"
           (nzOnCancel)="handleCancelDeletePopup()">
     <ng-container *nzModalContent>
-        Xóa data đã chọn ?
+        Hủy đơn hàng này?
     </ng-container>
 </nz-modal>

@@ -11,7 +11,7 @@ import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {ResponseError} from "../../models/ResponseError";
-import * as Message from "../../Constants/message-constant";
+import {Message} from "../../Constants/message-constant";
 
 @Component({
   selector: 'app-partner',
@@ -115,6 +115,7 @@ export class PartnerComponent implements OnInit, AfterViewInit, OnDestroy {
         phone: this.scriptFC.formatPhone(partner.phone),
         status: partner.status,
         address: partner.address,
+        commissionId: partner.commissionId
       });
       this.validateForm.get("code")?.disable();
     } else {

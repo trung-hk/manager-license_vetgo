@@ -105,13 +105,13 @@
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã CTV</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <input formControlName="code" nz-input nzSize="large" placeholder="VETGO"/>
+                    <input formControlName="code" nz-input placeholder="VETGO"/>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên CTV</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <input formControlName="name" nz-input nzSize="large" placeholder="Vet go"/>
+                    <input formControlName="name" nz-input  placeholder="Vet go"/>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -139,7 +139,7 @@
             <nz-form-item>
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
                 <nz-form-control [nzSm]="18">
-                    <nz-select formControlName="status" nzSize="large">
+                    <nz-select formControlName="status">
                         <nz-option *ngFor="let status of statusList" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
                     </nz-select>
                 </nz-form-control>

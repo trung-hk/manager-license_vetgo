@@ -123,3 +123,17 @@ table thead{
 button:focus{
     outline: unset !important;
 }
+table td.action [nz-icon] {
+    margin-right: 10px;
+    font-size: 20px;
+    color: dodgerblue;
+    cursor: pointer;
+}
+.dynamic-delete-button {
+    cursor: pointer;
+    position: relative;
+    top: 4px;
+    font-size: 24px;
+    color: dodgerblue !important;
+    transition: all 0.3s;
+}

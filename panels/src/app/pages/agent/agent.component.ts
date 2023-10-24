@@ -11,7 +11,8 @@ import {STATUS_AGENT, USER_TYPE} from "../../Constants/vg-constant";
 import {User} from "../../models/User";
 import {USER_FORM_FOR_AGENT} from "../../Constants/Form";
 import {ResponseError} from "../../models/ResponseError";
-import * as Message from "../../Constants/message-constant";
+import {Message} from "../../Constants/message-constant";
+import {Commission} from "../../models/Commission";
 
 @Component({
     selector: 'app-agent',
@@ -21,6 +22,8 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly STATUS_AGENT = STATUS_AGENT;
     listScript = [];
     dataList: User[] = [];
+    dataCommission: Commission[] = [];
+    dataCommissionMap: Map<string, Commission> = new Map<string, Commission>();
     total: number = 1;
     loading: boolean = true;
     pageSize: number = 10;
@@ -73,11 +76,21 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
 
     loadDataFromServer(keyWork?: string): void {
         this.loading = true;
+        let loading_success_1 = false;
+        let loading_success_2 = false;
         this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.AGENT, this.pageIndex - 1, this.pageSize, this.sort, this.filter, keyWork).subscribe((data) => {
             console.log(data)
-            this.loading = false;
+            loading_success_1 = true;
             this.total = data.totalElements;
             this.dataList = data.content;
+            this.loading = !(loading_success_1 && loading_success_2);
+        });
+        this.api.getAll<ResponseDataGetAll<Commission>>(URL.API_COMMISSION, null, null, null, null, keyWork).subscribe((data) => {
+            console.log(data)
+            loading_success_2 = true;
+            this.dataCommission = data.content;
+            this.dataCommissionMap = new Map<string, Commission>(data.content.map(d => [d.id!, d]));
+            this.loading = !(loading_success_1 && loading_success_2);
         });
     }
 
@@ -116,7 +129,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
                 phone: this.scriptFC.formatPhone(agent.phone),
                 status: agent.status,
                 address: agent.address,
-                commission: agent.commission
+                commissionId: agent.commissionId ? agent.commissionId.toString() : null
             });
             this.validateForm.get("realm")?.disable();
             this.validateForm.get("code")?.disable();
@@ -125,8 +138,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             this.validateForm.get("code")?.enable();
             this.validateForm.reset();
             this.validateForm.patchValue({
-                status: this.STATUS_AGENT.ACTIVATED_VALUE,
-                commission: "0"
+                status: this.STATUS_AGENT.ACTIVATED_VALUE
             })
         }
         this.idShowModal = this.validateForm.get("id")?.value;
@@ -144,7 +156,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
                 data.phone = phoneUnFormat?.slice(0, 10);
                 if (data.id) {
                     this.api.update(data.id, data, URL.API_USER).subscribe((data) => {
-                        if (data.status == 400){
+                        if (data.status == 400 || data.status == 409){
                             data = data as ResponseError;
                             this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
                         } else {

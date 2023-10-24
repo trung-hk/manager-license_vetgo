@@ -13,22 +13,6 @@ import {PackageProduct} from "../../models/PackageProduct";
 @Component({
   selector: 'app-order-service',
   templateUrl: './order-service.component.html',
-  styles: [
-    `
-          .dynamic-delete-button {
-            cursor: pointer;
-            position: relative;
-            top: 4px;
-            font-size: 24px;
-            color: #999;
-            transition: all 0.3s;
-          }
-
-          .dynamic-delete-button:hover {
-            color: #777;
-          }
-        `
-  ]
 })
 export class OrderServiceComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly STATUS_AGENT_PRODUCT = STATUS_AGENT_PRODUCT;

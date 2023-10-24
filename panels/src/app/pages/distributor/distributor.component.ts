@@ -11,7 +11,8 @@ import {URL} from "../../Constants/api-urls";
 import {STATUS_DISTRIBUTOR, USER_TYPE} from "../../Constants/vg-constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {ResponseError} from "../../models/ResponseError";
-import * as Message from "../../Constants/message-constant";
+import {Message} from "../../Constants/message-constant";
+import {Commission} from "../../models/Commission";
 
 @Component({
   selector: 'app-distributor',
@@ -21,6 +22,8 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly STATUS_DATA = STATUS_DISTRIBUTOR;
   listScript = [];
   dataList: User[] = [];
+  dataCommission: Commission[] = [];
+  dataCommissionMap: Map<string, Commission> = new Map<string, Commission>();
   total: number = 1;
   loading: boolean = true;
   pageSize: number = 10;
@@ -73,11 +76,21 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
 
   loadDataFromServer(keyWork?: string): void {
     this.loading = true;
+    let loading_success_1 = false;
+    let loading_success_2 = false;
     this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.DISTRIBUTOR, this.pageIndex - 1, this.pageSize, this.sort, this.filter, keyWork).subscribe((data) => {
       console.log(data)
-      this.loading = false;
+      loading_success_1 = true;
       this.total = data.totalElements;
       this.dataList = data.content;
+      this.loading = !(loading_success_1 && loading_success_2);
+    });
+    this.api.getAll<ResponseDataGetAll<Commission>>(URL.API_COMMISSION, null, null, null, null, keyWork).subscribe((data) => {
+      console.log(data)
+      loading_success_2 = true;
+      this.dataCommission = data.content;
+      this.dataCommissionMap = new Map<string, Commission>(data.content.map(d => [d.id!, d]));
+      this.loading = !(loading_success_1 && loading_success_2);
     });
   }
 
@@ -115,15 +128,14 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
         phone: this.scriptFC.formatPhone(distributor.phone),
         status: distributor.status,
         address: distributor.address,
-        commission: distributor.commission
+        commissionId: distributor.commissionId ? distributor.commissionId.toString() : null
       });
       this.validateForm.get("code")?.disable();
     } else {
       this.validateForm.get("code")?.enable();
       this.validateForm.reset();
       this.validateForm.patchValue({
-        status: this.STATUS_DATA.ACTIVATED_VALUE,
-        commission: "0"
+        status: this.STATUS_DATA.ACTIVATED_VALUE
       })
     }
     this.idShowModal = this.validateForm.get("id")?.value;

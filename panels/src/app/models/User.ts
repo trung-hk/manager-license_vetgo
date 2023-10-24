@@ -17,6 +17,6 @@ export class User {
     lastModifiedDate?: string | null;
     seqNo?: string | null;
     deleted?: boolean | null;
-    commission?: string | null;
+    commissionId?: string | null;
 }
 
