@@ -40,6 +40,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     changeFirst: boolean = true;
     isVisible: boolean = false;
     isVisibleDelete = false;
+    isConfirmLoadingDelete: boolean = false;
     isConfirmLoading = false;
     isHorizontal = false;
     validateProductForm!: UntypedFormGroup;
@@ -261,13 +262,16 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
 
     handleConfirmToDelete() {
         if (this.idDelete) {
+            this.isConfirmLoadingDelete = true;
             this.api.delete(this.idDelete, URL.API_ITEM).subscribe(() => {
                 this.loadDataFromServer();
                 this.handleCancelDeletePopup();
                 this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
+                this.isConfirmLoadingDelete = false;
             }, (error) => {
                 console.log(error);
                 this.scriptFC.alertShowMessageError(Message.MESSAGE_DELETE_FAILED);
+                this.isConfirmLoadingDelete = false;
             });
         }
     }
@@ -280,11 +284,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     formatPhone(event: any): void {
         event.target.value = this.scriptFC.formatPhone(event.target.value);
     }
-
-    // get formPackage() {
-    //     // console.log("lolo")
-    //     return (this.validatePackageProductForm.get(this.attributeArrayForm) as FormArray);
-    // }
 
     addPackage() {
         this.formPackage.push(this.fb.group(PACKAGE_PRODUCT_SERVICE_FORM));

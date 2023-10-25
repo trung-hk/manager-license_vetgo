@@ -39,6 +39,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     changeFirst: boolean = true;
     isVisible: boolean = false;
     isVisibleDelete = false;
+    isConfirmLoadingDelete = false;
     orderDelete: OrderService | null | undefined = null;
     filter: Array<{ key: string; value: string[] }> | null = null;
     statusList: { text: string, value: string }[] = [
@@ -183,18 +184,22 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     handleConfirmToDelete() {
         if (this.orderDelete) {
+            this.isConfirmLoadingDelete = true;
             this.orderDelete.status = STATUS_ORDER.CANCEL_ORDER_VALUE;
             this.api.update(this.orderDelete.id, this.orderDelete, URL.API_ORDER_SERVICE).subscribe((data) => {
                 if (data.status === 400 || data.status === 409) {
                     this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_FAILED);
+                    this.isConfirmLoadingDelete = false;
                 } else {
                     this.loadDataFromServer().then();
                     this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
+                    this.isConfirmLoadingDelete = false;
                 }
                 this.handleCancelDeletePopup();
             }, (error) => {
                 console.log(error);
                 this.scriptFC.alertShowMessageError(Message.MESSAGE_DELETE_FAILED);
+                this.isConfirmLoadingDelete = false;
             });
         }
     }

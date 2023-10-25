@@ -28,6 +28,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
     changeFirst: boolean = true;
     isVisible: boolean = false;
     isVisibleDelete = false;
+    isConfirmLoadingDelete = false;
     isConfirmLoading = false;
     isHorizontal = false;
     validateForm!: UntypedFormGroup;
@@ -194,13 +195,16 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     handleConfirmToDelete() {
         if (this.idDelete) {
+            this.isConfirmLoadingDelete = true;
             this.api.delete(this.idDelete, URL.API_CONFIG_APP).subscribe(() => {
                 this.loadDataFromServer();
                 this.handleCancelDeletePopup();
                 this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
+                this.isConfirmLoadingDelete = false;
             }, (error) => {
                 console.log(error);
                 this.scriptFC.alertShowMessageError(Message.MESSAGE_DELETE_FAILED);
+                this.isConfirmLoadingDelete = false;
             });
         }
     }

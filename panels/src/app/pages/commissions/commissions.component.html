@@ -18,7 +18,7 @@
                         <tr>
                             <th nzColumnKey="name" [nzSortFn]="true">Tên</th>
                             <th>Loại</th>
-                            <th nzWidth="15em" nzColumnKey="description">Tỉ lệ chiếc khấu</th>
+                            <th nzWidth="15em" nzColumnKey="description">Tỉ lệ chiết khấu</th>
                             <th nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                                 Ngày cập nhật
                             </th>
@@ -63,7 +63,7 @@
                     </nz-table>
                 </nz-card>
                 <ng-template #titleLeft>
-                    Danh sách chiếc khấu
+                    Danh sách chiết khấu
                     <nz-tag [nzColor]="'#33CCFF'">
                         <nz-statistic [nzValueStyle]="{'font-size': 'unset'}"
                                       [nzValue]="(total | number)!"></nz-statistic>
@@ -91,7 +91,7 @@
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chiếc khấu</nz-form-label>
+                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chiết khấu</nz-form-label>
                     <nz-form-control [nzSm]="18">
                         <nz-radio-group nzName="commission-group" formControlName="commissionType" (ngModelChange)="onchangeCommissionType($event)">
                             <label *ngFor="let type of typeCommissionList" nz-radio [nzValue]="type.value">{{type.text}}</label>
@@ -99,7 +99,7 @@
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item *ngIf="validateCommissionForm.get('commissionType')?.value === TYPE_COMMISSION.DEFAULT_VALUE">
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tỉ lệ chiếc khấu</nz-form-label>
+                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tỉ lệ chiết khấu</nz-form-label>
                     <nz-form-control [nzSm]="18">
                         <nz-input-number-group nzAddOnAfter="%">
                             <nz-input-number formControlName="rate" [nzStep]="1" [nzMin]="1" [nzMax]="100"></nz-input-number>
@@ -111,7 +111,7 @@
                         <nz-form-item *ngFor="let item of formAccumulates.controls; let i = index" [formGroupName]="i">
                             <nz-form-label nzNoColon="{{i !== 0}}" nzLabelAlign="right" [nzSm]="5">
                                 <ng-container *ngIf="i === 0">
-                                    Tỉ lệ chiếc khấu
+                                    Tỉ lệ chiết khấu
                                 </ng-container>
                             </nz-form-label>
                             <nz-form-control [nzSm]="18">
@@ -127,7 +127,7 @@
                                         </nz-input-number-group>
                                     </div>
                                     <div nz-col nzSpan="9">
-                                        <nz-input-number-group nzAddOnBefore="Chiếc khấu" nzAddOnAfter="%">
+                                        <nz-input-number-group nzAddOnBefore="Chiết khấu" nzAddOnAfter="%">
                                             <nz-input-number formControlName="rate" [nzStep]="1" [nzMin]="1" [nzMax]="100"> </nz-input-number>
                                         </nz-input-number-group>
                                     </div>
@@ -142,7 +142,7 @@
                             <nz-form-control [nzSm]="18" class="align-center">
                                 <button nz-button nzBlock nzType="dashed" class="add-button" (click)="addCommission()">
                                     <span nz-icon nzType="plus" style="vertical-align:text-top;"></span>
-                                    Thêm chiếc khấu
+                                    Thêm chiết khấu
                                 </button>
                             </nz-form-control>
                         </nz-form-item>
@@ -166,8 +166,9 @@
 </nz-modal>
 
 <!-- Delete Confirmation -->
-<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận xóa chiếc khấu" nzOkText="Ok" nzOkDanger="true"
-          nzCancelText="Cancel" (nzOnOk)="handleConfirmToDelete()"
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận xóa chiết khấu" nzOkText="Ok" nzOkDanger="true"
+          nzCancelText="Hủy" (nzOnOk)="handleConfirmToDelete()"
+          [nzOkLoading] = "isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">
     <ng-container *nzModalContent>
         Xóa data đã chọn ?

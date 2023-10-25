@@ -33,6 +33,7 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
   changeFirst: boolean = true;
   isVisible: boolean = false;
   isVisibleDelete = false;
+  isConfirmLoadingDelete = false;
   isConfirmLoading = false;
   validateCommissionForm!: UntypedFormGroup;
   validateCommissionAccumulateForm!: UntypedFormGroup;
@@ -238,13 +239,21 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   handleConfirmToDelete() {
     if (this.idDelete) {
-      this.api.delete(this.idDelete, URL.API_COMMISSION).subscribe(() => {
-        this.loadDataFromServer();
-        this.handleCancelDeletePopup();
-        this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
+      this.isConfirmLoadingDelete = true;
+      this.api.delete<ResponseError>(this.idDelete, URL.API_COMMISSION).subscribe((data) => {
+        if (data.status === 400) {
+          this.scriptFC.alertShowMessageError(`${Message.MESSAGE_DELETE_FAILED}, ${data.message}`);
+          this.isConfirmLoadingDelete = false;
+        } else {
+          this.loadDataFromServer();
+          this.handleCancelDeletePopup();
+          this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
+          this.isConfirmLoadingDelete = false;
+        }
       }, (error) => {
         console.log(error);
         this.scriptFC.alertShowMessageError(Message.MESSAGE_DELETE_FAILED);
+        this.isConfirmLoadingDelete = false;
       });
     }
   }

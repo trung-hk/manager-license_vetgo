@@ -25,6 +25,7 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
     totalRegisterProduct: number = 0;
     loading: boolean = true;
     isVisibleDelete = false;
+    isConfirmLoadingDelete = false;
     idDelete: number | string | null | undefined = -1;
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
@@ -108,15 +109,18 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
     }
     handleConfirmToDelete() {
         if (this.idDelete) {
+            this.isConfirmLoadingDelete = true;
             this.api.delete(this.idDelete, URL.API_AGENT_PRODUCT).subscribe(() => {
                 this.handleCancelDeletePopup();
                 this.loadDataFromServer().then(() => {
                     this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
+                    this.isConfirmLoadingDelete = false;
                 });
             }, (error) => {
                 this.loading = false;
                 console.log(error);
                 this.scriptFC.alertShowMessageError(Message.MESSAGE_DELETE_FAILED);
+                this.isConfirmLoadingDelete = false;
             });
         }
     }

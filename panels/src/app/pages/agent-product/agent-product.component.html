@@ -105,7 +105,8 @@
 </nz-spin>
 <!-- Delete Confirmation -->
 <nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận hủy đăng ký sản phẩm" nzOkText="Ok" nzOkDanger="true"
-          nzCancelText="Cancel" (nzOnOk)="handleConfirmToDelete()"
+          nzCancelText="Hủy" (nzOnOk)="handleConfirmToDelete()"
+          [nzOkLoading] = "isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">
     <ng-container *nzModalContent>
         Hủy đăng ký sản phâm này ?

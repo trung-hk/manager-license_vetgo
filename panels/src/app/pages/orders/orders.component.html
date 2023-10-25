@@ -183,6 +183,7 @@
 <!-- Delete Confirmation -->
 <nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận hủy đơn hàng" nzOkText="Đồng ý" nzOkDanger="true"
           nzCancelText="Hủy bỏ" (nzOnOk)="handleConfirmToDelete()"
+          [nzOkLoading] = "isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">
     <ng-container *nzModalContent>
         Hủy đơn hàng này?

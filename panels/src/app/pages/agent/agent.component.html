@@ -19,7 +19,7 @@
                             <th nzWidth="20em">Thông tin đại lý</th>
                             <th nzWidth="20em">Thông tin liên lạc</th>
                             <th nzWidth="20em">Tên miền web</th>
-                            <th nzWidth="10em" class="text-center">Chiếc khấu</th>
+                            <th nzWidth="10em" class="text-center">Chiết khấu</th>
                             <th class="text-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                                 Ngày cập nhật
                             </th>
@@ -196,7 +196,8 @@
 
 <!-- Delete Confirmation -->
 <nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Delete Confirmation" nzOkText="Ok" nzOkDanger="true"
-          nzCancelText="Cancel" (nzOnOk)="handleConfirmToDelete()"
+          nzCancelText="Hủy" (nzOnOk)="handleConfirmToDelete()"
+          [nzOkLoading] = "isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">
     <ng-container *nzModalContent>
         Xóa data đã chọn ?
