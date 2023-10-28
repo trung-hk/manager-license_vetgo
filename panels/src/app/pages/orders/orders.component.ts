@@ -62,6 +62,14 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private viewContainerRef: ViewContainerRef,
                 private elRef: ElementRef) {
     }
+    expandSet = new Set<string>();
+    onExpandChange(id: string, checked: boolean): void {
+        if (checked) {
+            this.expandSet.add(id);
+        } else {
+            this.expandSet.delete(id);
+        }
+    }
 
     ngOnInit() {
         this.modeView = this.elRef.nativeElement.offsetWidth < 765 ? MODE_DISPLAY.MOBILE : MODE_DISPLAY.PC;
@@ -108,7 +116,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 .subscribe((data) => {
                     console.log(data)
                     const idProductRegisterList = data.content.map(ap => ap.itemId);
-                    this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, null, null, null, null, keyWork)
+                    this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, null, null, null, null, null)
                         .subscribe((data) => {
                             console.log(data)
                             this.productList = data.content.filter(ps => idProductRegisterList.includes(ps.id));

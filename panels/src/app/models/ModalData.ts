@@ -11,8 +11,6 @@ export interface IModalData {
     packageProductMap: Map<string, PackageProduct[]>
 }
 
-export interface IModalViewData {
-    userInfo: User;
-    productName: string | null;
-    order: OrderService;
+export interface IModalViewProductServiceData {
+    product: Item;
 }

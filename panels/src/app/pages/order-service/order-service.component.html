@@ -3,17 +3,16 @@
         <div class="section-body">
             <div class="row">
                 <div class="col-12">
-                    <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false" >
+                    <nz-card [ngStyle]="{'width': '100%' }"
+                             [nzBodyStyle]="{'padding': '12px', }"
+                             nzTitle="Danh sách Sản phẩm"
+                             [nzBordered]="false" >
                         <nz-list nzGrid>
                             <div nz-row [nzGutter]="16">
                                 <div nz-col [nzXXl]="6" [nzXl]="6" [nzLg]="8" [nzMd]="8" [nzSm]="12" [nzXs]="24" *ngFor="let dt of dataProductList">
                                     <nz-list-item>
-                                        <nz-card [nzTitle]="dt.code!" [nzActions]="[action]" class="card-item-background-color">
-                                            <nz-card-meta
-                                                    nzTitle="Thông tin sản phẩm"
-                                                    [nzDescription]="infoProduct"
-                                            ></nz-card-meta>
-                                            <nz-card-meta
+                                        <nz-card [nzTitle]="dt.code!" [nzActions]="[action]" class="card-item-background-color" >
+                                            <nz-card-meta class="package-scrollbar"
                                                     [nzTitle]="amountPackage"
                                                     [nzDescription]="infoPackageProduct"
                                             ></nz-card-meta>
@@ -22,20 +21,12 @@
                                     <ng-template #amountPackage>
                                         Gói sản phẩm <nz-tag [nzColor]="'processing'">{{dataPackageProductMap.get(dt.id!)?.length}}</nz-tag>
                                     </ng-template>
-                                    <ng-template #infoProduct>
-                                        <div style="color: black !important;">
-                                            <label>Tên:</label><span nz-tooltip [nzTooltipTitle]="tooltipTitle"> {{dt.name}}</span>
-                                        </div>
-                                    </ng-template>
-                                    <ng-template #tooltipTitle>
-                                        <div class="text-break custom-scrollbar" [innerHtml]="dt.description! | lineBreak"></div>
-                                    </ng-template>
                                     <ng-template #infoPackageProduct>
                                         <nz-list nzSize="small" class="custom-scrollbar">
                                             <nz-list-item>
-                                                <nz-list-item-meta nzAvatar="/assets/img/service-packages.png">
+                                                <nz-list-item-meta [ngStyle]="{'align-items': 'center'}" nzAvatar="/assets/img/service-packages.png">
                                                     <nz-list-item-meta-title>
-                                                        <ng-container  *ngFor="let item of dataPackageProductMap.get(dt.id!)">
+                                                        <ng-container *ngFor="let item of dataPackageProductMap.get(dt.id!)">
                                                             <nz-statistic
                                                                     [nzValueStyle]="{'font-size': 'unset'}"
                                                                     [nzValue]="item.name + ' - ' + (item.price | number)!"
@@ -48,15 +39,20 @@
                                         </nz-list>
                                     </ng-template>
                                     <ng-template #action>
-                                        <ng-container *ngIf="dt.status === STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE then active else unActive">
+                                        <ng-container class="card-item-action-background-color" *ngIf="dt.status === STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE then active else unActive">
                                         </ng-container>
                                     </ng-template>
                                     <ng-template #active>
-                                        <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
-                                            <button type="button" class="btn btn-success note-btn" (click)="createComponentModal(dt.id!)">
-                                                Mua sản phẩm
+                                        <nz-space>
+                                            <button *nzSpaceItem type="button" class="btn btn-outline-secondary note-btn" (click)="createComponentModalView(dt)">
+                                                Chi tiết
                                             </button>
-                                        </ng-container>
+                                            <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
+                                                <button *nzSpaceItem type="button" class="btn btn-success note-btn" (click)="createComponentModal(dt.id!)">
+                                                    Tạo đơn hàng
+                                                </button>
+                                            </ng-container>
+                                        </nz-space>
                                     </ng-template>
                                     <ng-template #unActive>
                                         <h6 style="color: orangered">Sản phẩm đang phát triển</h6>
@@ -65,9 +61,6 @@
                             </div>
                         </nz-list>
                     </nz-card>
-                    <ng-template #titleLeft>
-                        Danh sách Sản phẩm
-                    </ng-template>
                 </div>
             </div>
         </div>

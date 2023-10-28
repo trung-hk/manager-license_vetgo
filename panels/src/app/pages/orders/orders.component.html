@@ -2,7 +2,7 @@
     <div class="section-body">
         <div class="row">
             <div class="col-12">
-                <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
+                <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false" [nzBodyStyle]="{'padding': '12px', }">
                     <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
                     <nz-table *ngIf="modeView === MODE_DISPLAY.PC"
                             nzShowSizeChanger
@@ -67,9 +67,10 @@
                             <td class="align-center">
                                 <ng-container [ngSwitch]="dt.paymentStatus">
                                     <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID_VALUE">
-                                        <img class="payment-icon" (click)="paymentMoMo(dt.id)"  width="35px" src="/assets/img/payment-momo.png" alt="Thanh toán momo"/>
-                                        &nbsp;
-                                        <img class="payment-icon" (click)="paymentMoMo(dt.id)"  width="35px" src="/assets/img/payment-momo.png" alt=""/>
+                                        <nz-space>
+                                            <img *nzSpaceItem class="payment-icon" (click)="paymentMoMo(dt.id)"  width="35px" src="/assets/img/payment-momo.png" alt="Thanh toán momo"/>
+                                            <img *nzSpaceItem class="payment-icon" (click)="paymentMoMo(dt.id)"  width="35px" src="/assets/img/payment-momo.png" alt=""/>
+                                        </nz-space>
                                     </div>
                                     <div *ngSwitchDefault
                                          class="badge badge-shadow badge-success">
@@ -95,28 +96,27 @@
                                 </ng-container>
                             </td>
                             <td class="align-center action">
-                                <span nz-icon nzType="eye"
-                                      nzTheme="outline"
-                                      (click)="createComponentModal(dt, true)"
-                                      title="Xem chi tiết"></span>
-                                <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
-                                    <span nz-icon nzType="plus"
+                                <nz-space>
+                                    <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
+                                    <span *nzSpaceItem nz-icon nzType="diff"
                                           nzTheme="outline"
                                           (click)="createComponentModal(dt, true)"
                                           title="Thêm đơn mới">
                                     </span>
-                                    <ng-container
-                                            *ngIf="dt.paymentStatus === STATUS_PAYMENT.UN_PAID_VALUE && dt.status === STATUS_ORDER.IN_PROCESS_VALUE">
-                                        <span nz-icon nzType="edit" nzTheme="outline"
-                                                (click)="createComponentModal(dt)"
-                                                title="Chỉnh sửa">
+                                        <ng-container
+                                                *ngIf="dt.paymentStatus === STATUS_PAYMENT.UN_PAID_VALUE && dt.status === STATUS_ORDER.IN_PROCESS_VALUE">
+                                        <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline"
+                                              (click)="createComponentModal(dt)"
+                                              title="Chỉnh sửa">
                                         </span>
-                                        <span nz-icon nzType="delete" nzTheme="outline"
-                                                (click)="showDeleteModal(dt)"
-                                                title="Hủy đơn hàng">
+                                            <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline"
+                                                  (click)="showDeleteModal(dt)"
+                                                  title="Hủy đơn hàng">
                                         </span>
+                                        </ng-container>
                                     </ng-container>
-                                </ng-container>
+                                </nz-space>
+
                             </td>
                         </tr>
                         </tbody>
@@ -133,13 +133,77 @@
                     >
                         <thead>
                         <tr>
-                            <th nzWidth="15em" nzColumnKey="code" [nzSortFn]="true">Mã đơn hàng</th>
+                            <th nzColumnKey="code" [nzSortFn]="true">Mã đơn hàng</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let dt of dataList">
-                            <td>{{dt.code}}</td>
-                        </tr>
+                        <ng-container *ngFor="let dt of dataList">
+                            <tr>
+                                <td [nzExpand]="expandSet.has(dt.id!)" (nzExpandChange)="onExpandChange(dt.id!, $event)">
+                                    {{dt.code}}
+                                    <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
+                                        <div style="float: right" class="action">
+                                        <span nz-icon nzType="diff"
+                                              nzTheme="outline"
+                                              (click)="createComponentModal(dt, true)"
+                                              title="Thêm đơn mới">
+                                        </span>
+                                        </div>
+                                    </ng-container>
+
+                                </td>
+                            </tr>
+                            <tr [nzExpand]="expandSet.has(dt.id!)">
+                                <nz-descriptions nzBordered nzSize="small">
+                                    <nz-descriptions-item nzTitle="Tên">{{dt.customerName}}</nz-descriptions-item>
+                                    <nz-descriptions-item nzTitle="Số điên thoại">{{dt.customerPhone! | phoneFormat}}</nz-descriptions-item>
+                                    <nz-descriptions-item nzTitle="Tên sản phẩm">{{dataProductMap.get(dt.itemId!)?.name}}</nz-descriptions-item>
+                                    <nz-descriptions-item nzTitle="Gói đã mua">{{dataPackageMap.get(dt.packageId!)?.name}}</nz-descriptions-item>
+                                    <nz-descriptions-item nzTitle="Giá">{{dt.totalAmount | number}} VNĐ</nz-descriptions-item>
+                                    <nz-descriptions-item nzTitle="Thanh toán">
+                                        <ng-container [ngSwitch]="dt.paymentStatus">
+                                            <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID_VALUE">
+                                                <nz-space>
+                                                    <img *nzSpaceItem class="payment-icon" (click)="paymentMoMo(dt.id)"  width="35px" src="/assets/img/payment-momo.png" alt="Thanh toán momo"/>
+                                                    <img *nzSpaceItem class="payment-icon" (click)="paymentMoMo(dt.id)"  width="35px" src="/assets/img/payment-momo.png" alt=""/>
+                                                </nz-space>
+                                            </div>
+                                            <div *ngSwitchDefault
+                                                 class="badge badge-shadow badge-success">
+                                                {{STATUS_PAYMENT.PAID_LABEL}}
+                                            </div>
+                                        </ng-container>
+                                    </nz-descriptions-item>
+                                    <nz-descriptions-item nzTitle="Trạng thái">
+                                        <ng-container [ngSwitch]="dt.status">
+                                            <div *ngSwitchCase="STATUS_ORDER.IN_PROCESS_VALUE"
+                                                 class="badge badge-shadow badge-primary">
+                                                {{STATUS_ORDER.IN_PROCESS_LABEL}}
+                                            </div>
+                                            <div *ngSwitchCase="STATUS_ORDER.CANCEL_ORDER_VALUE"
+                                                 class="badge badge-shadow badge-danger">
+                                                {{STATUS_ORDER.CANCEL_ORDER_LABEL}}
+                                            </div>
+                                            <div *ngSwitchDefault
+                                                 class="badge badge-shadow badge-success">
+                                                {{STATUS_ORDER.FINISHED_VALUE}}
+                                            </div>
+                                        </ng-container>
+                                    </nz-descriptions-item>
+                                </nz-descriptions>
+                                <div style="text-align: center;margin-top: 10px;" class="action">
+                                    <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
+                                        <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.UN_PAID_VALUE && dt.status === STATUS_ORDER.IN_PROCESS_VALUE">
+                                            <nz-space>
+                                                <button *nzSpaceItem nz-button nzType="primary"  (click)="createComponentModal(dt)">Chỉnh sửa</button>
+                                                <button *nzSpaceItem nz-button nzType="default" nzDanger (click)="showDeleteModal(dt)">Hủy đơn hàng</button>
+                                            </nz-space>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                            </tr>
+                        </ng-container>
+
                         </tbody>
                     </nz-table>
                 </nz-card>
@@ -159,7 +223,7 @@
                                 </button>
                             </ng-container>
                         </div>
-                        <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
+                        <div nz-col [nzXXl]="{ span: 6, offset: 10 }" *ngIf="modeView === MODE_DISPLAY.PC"
                              [nzXl]="{ span: 6, offset: 10 }"
                              [nzLg]="{ span: 6, offset: 10 }"
                              [nzMd]="{ span: 6, offset: 10 }"

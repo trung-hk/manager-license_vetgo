@@ -1,0 +1,14 @@
+<article nz-typography>
+    <h4 nz-typography>Mô tả</h4>
+    <p nz-typography [innerHtml]="scriptFC.displayContentTextArea(product.description!)"></p>
+    <h4 nz-typography>Gói sản phẩm</h4>
+    <nz-descriptions nzBordered nzSize="small">
+        <nz-descriptions-item *ngFor="let p of packages" [nzTitle]="p.name!" [nzSpan]="3">
+            <nz-statistic
+                    [nzValueStyle]="{'font-size': 'unset'}"
+                    [nzValue]="(p.price | number)!"
+                    [nzSuffix]="'VNĐ'">
+            </nz-statistic>
+        </nz-descriptions-item>
+    </nz-descriptions>
+</article>

@@ -49,14 +49,17 @@
                             </td>
                             <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
                             <td class="align-center action">
-                                <span nz-icon nzType="edit" nzTheme="outline"
-                                      (click)="showModal(dt)"
-                                      title="Chỉnh sửa">
+                                <nz-space>
+                                    <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline"
+                                          (click)="showModal(dt)"
+                                          title="Chỉnh sửa">
                                 </span>
-                                <span nz-icon nzType="delete" nzTheme="outline"
-                                      (click)="showDeleteModal(dt.id)"
-                                      title="Xóa">
+                                    <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline"
+                                          (click)="showDeleteModal(dt.id)"
+                                          title="Xóa">
                                 </span>
+                                </nz-space>
+
                             </td>
                         </tr>
                         </tbody>

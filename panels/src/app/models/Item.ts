@@ -1,3 +1,5 @@
+import {PackageProduct} from "./PackageProduct";
+
 export class Item{
     id?: string | null ;
     name?: string | null;
@@ -18,5 +20,6 @@ export class Item{
     deleted?: boolean | null;
     storeId?: string | null;
     usingConfig?: string | null;
+    packages?: PackageProduct[] | [];
 }
 

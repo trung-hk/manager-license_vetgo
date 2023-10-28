@@ -9,11 +9,13 @@
                             <div nz-row [nzGutter]="16">
                                 <div nz-col [nzSpan]="6" *ngFor="let dt of dataProductList">
                                     <nz-list-item>
-                                        <nz-card [nzTitle]="dt.code!" [nzActions]="[action]" class="card-item-background-color">
+                                        <nz-card *ngIf="dataProductRegisterMap.get(dt.id!)?.status ===STATUS_AGENT_PRODUCT.REGISTERED_VALUE" [nzTitle]="dt.code!" [nzActions]="[action]" class="card-item-background-color">
                                             <nz-card-meta
-                                                    nzTitle="Thông tin sản phẩm"
-                                                    [nzDescription]="infoProduct"
+                                                    [nzTitle]="amountPackage"
+                                                    [nzDescription]="infoPackageProduct"
                                             ></nz-card-meta>
+                                        </nz-card>
+                                        <nz-card *ngIf="!dataProductRegisterMap.get(dt.id!)" [nzTitle]="dt.code!" [nzActions]="[action]" class="card-item-background-color-unregistered">
                                             <nz-card-meta
                                                     [nzTitle]="amountPackage"
                                                     [nzDescription]="infoPackageProduct"
@@ -21,24 +23,10 @@
                                         </nz-card>
                                     </nz-list-item>
                                     <ng-template #amountPackage>
-                                        Gói sản phẩm <nz-tag [nzColor]="'processing'">{{scriptFC.getPackageService(dt.attributes).length}}</nz-tag>
-                                    </ng-template>
-                                    <ng-template #infoProduct>
-                                        <div style="color: black !important;">
-                                            <label>Tên:</label><span nz-tooltip [nzTooltipTitle]="tooltipTitle"> {{dt.name}}</span>
-                                            <br>
-                                            <label>Trạng thái:</label>
-                                            <ng-container [ngSwitch]="dataProductRegisterList.get(dt.id!)?.status">&nbsp;
-                                                <nz-tag *ngSwitchCase="STATUS_AGENT_PRODUCT.REGISTERED_VALUE" nzColor="success">{{STATUS_AGENT_PRODUCT.REGISTERED_LABEL}}</nz-tag>
-                                                <nz-tag *ngSwitchDefault nzColor="error">{{STATUS_AGENT_PRODUCT.UN_REGISTERED_LABEL}}</nz-tag>
-                                            </ng-container>
-                                        </div>
-                                    </ng-template>
-                                    <ng-template #tooltipTitle>
-                                        <div class="text-break custom-scrollbar" [innerHtml]="scriptFC.displayContentTextArea(dt.description!)"></div>
+                                        Gói sản phẩm <nz-tag [nzColor]="'processing'">{{dt.packages?.length}}</nz-tag>
                                     </ng-template>
                                     <ng-template #infoPackageProduct>
-                                        <nz-list nzSize="small" class="custom-scrollbar">
+                                        <nz-list nzSize="small" class="package-view-for-agent">
                                             <nz-list-item *ngFor="let item of scriptFC.getPackageService(dt.attributes)">
                                                 <nz-list-item-meta
                                                         *ngIf="item"
@@ -62,14 +50,20 @@
                                     </ng-template>
                                     <ng-template #active>
                                         <ng-container *ngxPermissionsOnly="[ROLES.AGENT]">
-                                            <ng-container [ngSwitch]="dataProductRegisterList.get(dt.id!)?.status">&nbsp;
-                                                <button *ngSwitchCase="STATUS_AGENT_PRODUCT.REGISTERED_VALUE" type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dataProductRegisterList.get(dt.id!)?.id)">
-                                                    Hủy đăng ký
+                                            <nz-space>
+                                                <button *nzSpaceItem type="button" class="btn btn-outline-secondary note-btn" (click)="createComponentModalView(dt)">
+                                                    Chi tiết
                                                 </button>
-                                                <button *ngSwitchDefault type="button" class="btn btn-success note-btn" (click)="handleOk(dt.id!, $event)">
-                                                    Đăng ký
-                                                </button>
-                                            </ng-container>
+                                                <ng-container [ngSwitch]="dataProductRegisterMap.get(dt.id!)?.status" *nzSpaceItem>
+                                                    <button *ngSwitchCase="STATUS_AGENT_PRODUCT.REGISTERED_VALUE" type="button" class="btn btn-outline-danger note-btn" (click)="showDeleteModal(dataProductRegisterMap.get(dt.id!)?.id)">
+                                                        Hủy đăng ký
+                                                    </button>
+                                                    <button *ngSwitchDefault type="button" class="btn btn-outline-success note-btn" (click)="handleOk(dt.id!, $event)">
+                                                        Đăng ký
+                                                    </button>
+                                                </ng-container>
+                                            </nz-space>
+
                                         </ng-container>
                                     </ng-template>
                                     <ng-template #unActive>

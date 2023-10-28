@@ -35,6 +35,8 @@ import {NzTabsModule} from "ng-zorro-antd/tabs";
 import {NzImageModule} from "ng-zorro-antd/image";
 import {NzDescriptionsModule} from "ng-zorro-antd/descriptions";
 import {NzRadioModule} from "ng-zorro-antd/radio";
+import {NzSpaceModule} from "ng-zorro-antd/space";
+import {NzAlertModule} from "ng-zorro-antd/alert";
 
 @NgModule({
     exports: [
@@ -63,6 +65,8 @@ import {NzRadioModule} from "ng-zorro-antd/radio";
         NzImageModule,
         NzDescriptionsModule,
         NzRadioModule,
+        NzSpaceModule,
+        NzAlertModule,
     ],
     providers: [
         { provide: NZ_ICONS, useValue: icons }

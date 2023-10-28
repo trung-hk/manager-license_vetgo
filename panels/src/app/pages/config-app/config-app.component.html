@@ -66,16 +66,18 @@
                                     </div>
                                 </ng-container>
                             </td>
-                            <td class="align-center">
-                                <button type="button" class="btn btn-warning note-btn" (click)="showModal(dt)"
-                                        title="Chỉnh sửa">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                &nbsp;
-                                <button type="button" class="btn btn-danger note-btn" (click)="showDeleteModal(dt.id)"
-                                        title="Xóa">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                            <td class="align-center action">
+                                <nz-space>
+                                    <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline"
+                                          (click)="showModal(dt)"
+                                          title="Chỉnh sửa">
+                                </span>
+                                    <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline"
+                                          (click)="showDeleteModal(dt.id)"
+                                          title="Xóa">
+                                </span>
+                                </nz-space>
+
                             </td>
                         </tr>
                         </tbody>
@@ -172,7 +174,7 @@
 </nz-modal>
 
 <!-- Delete Confirmation -->
-<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Delete Confirmation" nzOkText="Ok" nzOkDanger="true"
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận xóa config" nzOkText="Ok" nzOkDanger="true"
           nzCancelText="Hủy" (nzOnOk)="handleConfirmToDelete()"
           [nzOkLoading] = "isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">

@@ -1,5 +1,5 @@
 import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
-import {ModalButtonOptions, NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
+import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
 import {IModalData} from "../../models/ModalData";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {ORDER_SERVICE_FORM, USER_FORM} from "../../Constants/Form";
@@ -39,7 +39,6 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        console.log("olala")
     }
 
     ngOnInit(): void {

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2, ViewContainerRef} from '@angular/core';
 import {Item} from "../../models/Item";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
@@ -20,7 +20,7 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
     protected readonly ROLES = ROLES;
     listScript = [];
     dataProductList: Item[] = [];
-    dataProductRegisterList: Map<string, AgentProduct> = new Map<string, AgentProduct>();
+    dataProductRegisterMap: Map<string, AgentProduct> = new Map<string, AgentProduct>();
     totalProduct: number = 0;
     totalRegisterProduct: number = 0;
     loading: boolean = true;
@@ -31,7 +31,8 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
                 private api: ApiCommonService,
                 private communicationService: CommunicationService,
                 private renderer: Renderer2,
-                public scriptFC: ScriptCommonService) {
+                public scriptFC: ScriptCommonService,
+                private viewContainerRef: ViewContainerRef) {
     }
 
     ngOnInit() {
@@ -61,7 +62,11 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
                 .subscribe((data) => {
                     console.log(data)
                     this.totalProduct = data.totalElements;
-                    this.dataProductList = data.content.sort(function(a, b){return ((JSON.parse(a.attributes!).packages).length - (JSON.parse(b.attributes!).packages).length)});
+                    this.dataProductList = data.content;
+                    this.dataProductList = this.dataProductList.map(d => {
+                        d.packages = this.scriptFC.getPackageService(d.attributes)
+                        return d;
+                    })
                     isSuccessLoadDataProduct = true;
                     if (!(isSuccessLoadDataProduct && isSuccessLoadDataProductRegister)) {
                         this.loading = false;
@@ -72,7 +77,7 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
                 .subscribe((data) => {
                     console.log(data)
                     this.totalRegisterProduct = data.totalElements;
-                    this.dataProductRegisterList = new Map<string, AgentProduct>(data.content.map(ap => [ap.itemId!, ap]));
+                    this.dataProductRegisterMap = new Map<string, AgentProduct>(data.content.map(ap => [ap.itemId!, ap]));
                     isSuccessLoadDataProductRegister = true;
                     if (!(isSuccessLoadDataProduct && isSuccessLoadDataProductRegister)) {
                         this.loading = false;
@@ -128,5 +133,8 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
     search(event: any): void {
         this.loadDataFromServer(event.target.value).then();
         event.target.value = "";
+    }
+    createComponentModalView(product: Item) {
+        this.scriptFC.createComponentModalViewProductDetails(product, this.viewContainerRef);
     }
 }

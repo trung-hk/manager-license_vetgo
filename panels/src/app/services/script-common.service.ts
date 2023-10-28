@@ -2,7 +2,7 @@ import {Injectable, ViewContainerRef} from '@angular/core';
 import {CommunicationService} from "./communication.service";
 import {PackageProduct} from "../models/PackageProduct";
 import {FormOrderServiceModalComponent} from "../pages/form-order-service-modal/form-order-service-modal.component";
-import {IModalData, IModalViewData} from "../models/ModalData";
+import {IModalData, IModalViewProductServiceData} from "../models/ModalData";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Item} from "../models/Item";
 import {User} from "../models/User";
@@ -10,8 +10,8 @@ import {OrderService} from "../models/OrderService";
 import {ModalFormOrderServiceCallback} from "../models/ModalFormOrderServiceCallback";
 import {AttributeObjectProductService} from "../models/AttributeObjectProductService";
 import {
-    OrderServiceDetailsModalComponent
-} from "../pages/order-service-details-modal/order-service-details-modal.component";
+    ProductServiceDetailsModalComponent
+} from "../pages/product-service-details-modal/product-service-details-modal.component";
 
 @Injectable({
     providedIn: 'root'
@@ -124,20 +124,24 @@ export class ScriptCommonService {
         });
     }
 
-    createComponentModalViewOrderService(userInfo: User,
-                                         productName: string | null,
-                                         order: OrderService,
-                                         viewContainerRef: ViewContainerRef): void {
-        const modal = this.modal.create<OrderServiceDetailsModalComponent, IModalViewData>({
-            nzTitle: "Thông tin đơn hàng",
-            nzContent: OrderServiceDetailsModalComponent,
+    createComponentModalViewProductDetails(product: Item, viewContainerRef: ViewContainerRef): void {
+        const modal = this.modal.create<ProductServiceDetailsModalComponent, IModalViewProductServiceData>({
+            nzTitle: "Thông tin sản phẩm",
+            nzContent: ProductServiceDetailsModalComponent,
             nzWidth: "800px",
             nzViewContainerRef: viewContainerRef,
             nzData: {
-                userInfo: userInfo,
-                productName: productName,
-                order: order,
-            }
+                product: product,
+            },
+            nzFooter: [
+                {
+                    type: "default",
+                    label: "Hủy",
+                    onClick: () => {
+                        modal.destroy();
+                    }
+                }
+            ]
         });
         // const instance = modal.getContentComponent();
         // modal.afterOpen.subscribe(() => {

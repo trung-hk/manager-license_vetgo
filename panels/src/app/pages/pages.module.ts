@@ -14,8 +14,8 @@ import { OrderServiceComponent } from './order-service/order-service.component';
 import { FormOrderServiceModalComponent } from './form-order-service-modal/form-order-service-modal.component';
 import {ShareModule} from "../pipe/share/share.module";
 import { OrdersComponent } from './orders/orders.component';
-import { OrderServiceDetailsModalComponent } from './order-service-details-modal/order-service-details-modal.component';
 import { CommissionsComponent } from './commissions/commissions.component';
+import { ProductServiceDetailsModalComponent } from './product-service-details-modal/product-service-details-modal.component';
 
 const routes: Routes =
     [
@@ -30,7 +30,15 @@ const routes: Routes =
     ]
 
 @NgModule({
-    declarations: [AntDemoComponent, DemPaginationComponent, AgentProductComponent, DistributorComponent, OrderServiceComponent, FormOrderServiceModalComponent, OrdersComponent, OrderServiceDetailsModalComponent, CommissionsComponent],
+    declarations: [AntDemoComponent,
+        DemPaginationComponent,
+        AgentProductComponent,
+        DistributorComponent,
+        OrderServiceComponent,
+        FormOrderServiceModalComponent,
+        OrdersComponent,
+        CommissionsComponent,
+        ProductServiceDetailsModalComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),

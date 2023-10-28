@@ -125,7 +125,7 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
-            only: [ROLES.PARTNER, ROLES.DISTRIBUTOR],
+            only: [ROLES.ADMIN, ROLES.AGENT, ROLES.PARTNER, ROLES.DISTRIBUTOR],
             redirectTo: '/error/403'
           }
         }

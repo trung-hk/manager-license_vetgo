@@ -9,7 +9,7 @@
       <li class="dropdown index">
         <a routerLink="dashboard" class="nav-link"><i data-feather="monitor"></i><span>Tổng quan</span></a>
       </li>
-      <li class="dropdown orders" *ngxPermissionsOnly="[ROLES.DISTRIBUTOR, ROLES.PARTNER]">
+      <li class="dropdown orders" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT, ROLES.PARTNER, ROLES.DISTRIBUTOR]">
         <a routerLink="orders" class="nav-link"><i data-feather="mail"></i><span>Đơn hàng</span></a>
       </li>
       <li class="dropdown config" *ngxPermissionsOnly="[ROLES.ADMIN]">
@@ -43,17 +43,17 @@
         <a class="nav-link" routerLink="commissions"><i data-feather="monitor"></i><span>Chiết khấu</span></a>
       </li>
       <li class="dropdown agent-distributor" *ngxPermissionsOnly="[ROLES.AGENT]">
-        <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Nhà phân phối</span></a>
+        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                data-feather="briefcase"></i><span>Nhà phân phối</span></a>
         <ul class="dropdown-menu">
-          <li class="distributor-list"><a class="nav-link" routerLink="distributors">Danh sách</a></li>
-          <li><a class="nav-link" href="#">User</a></li>
+          <li  class="distributor-list"><a class="nav-link" routerLink="distributors">Danh sách</a></li>
         </ul>
       </li>
       <li class="dropdown distributor" *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">
-        <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Cộng tác viên</span></a>
-        <ul class="dropdown-menu distributor-partner">
-          <li class="partner-list"><a class="nav-link" routerLink="partners">Danh sách</a></li>
-          <li><a class="nav-link" href="#">User</a></li>
+        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                data-feather="briefcase"></i><span>Cộng tác viên</span></a>
+        <ul class="dropdown-menu">
+          <li  class="distributor-list"><a class="nav-link" routerLink="partners">Danh sách</a></li>
         </ul>
       </li>
       <li class="dropdown partner" *ngxPermissionsOnly="[ROLES.PARTNER]">
