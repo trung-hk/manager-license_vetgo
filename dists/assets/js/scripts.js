@@ -942,3 +942,8 @@ function autoIncreaseCode(code) {
     return r.toString(10);
   });
 }
+$("#sidebar-wrapper li a").click(function (){
+  if (window.innerWidth < 765) {
+    $("#sidebar-control").click();
+  }
+});

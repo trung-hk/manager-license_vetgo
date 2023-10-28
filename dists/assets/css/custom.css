@@ -100,6 +100,46 @@ table thead{
     -webkit-animation-fill-mode: forwards;
     animation-fill-mode: forwards;
 }
+.package-scrollbar{
+    height: 140px;
+    overflow-y: hidden;
+}
+.package-scrollbar:hover {
+    overflow-y: auto;
+}
+.package-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    background-color: #949292;
+    -moz-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+.package-view-for-agent{
+    height: 210px;
+    overflow-y: hidden;
+}
+.package-view-for-agent:hover {
+    overflow-y: auto;
+}
+.package-view-for-agent::-webkit-scrollbar {
+    width: 4px;
+    background-color: #949292;
+    -moz-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
 @keyframes cssAnimation {
     to {
         width:0;
@@ -114,8 +154,13 @@ table thead{
         visibility:hidden;
     }
 }
-.card-item-background-color {
-    background-color: snow !important;
+.card-item-background-color, .card-item-background-color > .ant-card-actions, .card-item-background-color > .ant-card-head {
+    background-color: #f6ffed !important;
+    border-color: #b7eb8f !important;
+}
+.card-item-background-color-unregistered, .card-item-background-color-unregistered > .ant-card-actions, .card-item-background-color-unregistered > ant-card-head {
+    background-color: #fffbe6 !important;
+    border-color: #ffe58f !important;
 }
 .payment-icon{
     cursor: pointer;
@@ -123,8 +168,7 @@ table thead{
 button:focus{
     outline: unset !important;
 }
-table td.action [nz-icon] {
-    margin-right: 10px;
+table td.action [nz-icon], table div.action [nz-icon] {
     font-size: 20px;
     color: dodgerblue;
     cursor: pointer;
