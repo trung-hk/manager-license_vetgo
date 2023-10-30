@@ -181,3 +181,9 @@ table td.action [nz-icon], table div.action [nz-icon] {
     color: dodgerblue !important;
     transition: all 0.3s;
 }
+.table-th-right .ant-descriptions-item-label {
+    text-align: right;
+}
+.table-th-right .ant-descriptions-header {
+    margin-bottom: 10px;
+}
