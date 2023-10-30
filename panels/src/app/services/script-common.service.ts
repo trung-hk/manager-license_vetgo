@@ -12,6 +12,7 @@ import {AttributeObjectProductService} from "../models/AttributeObjectProductSer
 import {
     ProductServiceDetailsModalComponent
 } from "../pages/product-service-details-modal/product-service-details-modal.component";
+import {ERROR_LIST} from "../Constants/vg-constant";
 
 @Injectable({
     providedIn: 'root'
@@ -158,4 +159,19 @@ export class ScriptCommonService {
 
     formatterPercent = (value: number): string => `${value} %`;
     parserPercent = (value: string): string => value.replace(' %', '');
+    formatString (value: string, params: string[]) {
+        let result = value;
+        for (let i = 0; i < params.length; i++) {
+            let reg = new RegExp("\\{" + i + "\\}", "gm");
+            result = result.replace(reg, params[i]);
+        }
+        return result;
+    }
+    validateResponseAPI (status: string | number | null | undefined): boolean {
+        if (!status) return false;
+        for (let code of ERROR_LIST) {
+            if (status == code) return true;
+        }
+        return false;
+    }
 }

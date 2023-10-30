@@ -1,4 +1,3 @@
-
 export class AgentProduct{
     id?: string | null ;
     userId?: string | null;

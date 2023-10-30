@@ -16,6 +16,8 @@ import {DistributorComponent} from "./pages/distributor/distributor.component";
 import {OrderServiceComponent} from "./pages/order-service/order-service.component";
 import {OrdersComponent} from "./pages/orders/orders.component";
 import {CommissionsComponent} from "./pages/commissions/commissions.component";
+import {PaymentBankTransferComponent} from "./pages/payment-bank-transfer/payment-bank-transfer.component";
+import {PaymentCompleteDetailsComponent} from "./pages/payment-complete-details/payment-complete-details.component";
 
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
@@ -140,6 +142,21 @@ const routes: Routes = [
             redirectTo: '/error/403'
           }
         }
+      },
+      {
+        path: 'payment-bank-transfer/:id',
+        component: PaymentBankTransferComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.PARTNER],
+            redirectTo: '/error/403'
+          }
+        }
+      },
+      {
+        path: 'payment-complete-details/:id',
+        component: PaymentCompleteDetailsComponent,
       },
     ],
     canActivate: [isAuthenticated],

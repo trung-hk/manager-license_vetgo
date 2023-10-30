@@ -14,7 +14,9 @@ import {Item} from "../../models/Item";
 import {AgentProduct} from "../../models/AgentProduct";
 import {PackageProduct} from "../../models/PackageProduct";
 import {ModalFormOrderServiceCallback} from "../../models/ModalFormOrderServiceCallback";
-import {PAYMENTS_URL} from "../../Constants/payment-urls";
+import {PAYMENTS_METHOD, PAYMENTS_URL} from "../../Constants/payment-urls";
+import {ResponesePayment} from "../../models/ResponesePayment";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-orders',
@@ -25,6 +27,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly STATUS_ORDER = STATUS_ORDER;
     protected readonly ROLES = ROLES;
     protected readonly MODE_DISPLAY = MODE_DISPLAY;
+    protected readonly PAYMENTS_METHOD = PAYMENTS_METHOD;
     listScript = [];
     dataList: OrderService[] = [];
     productList: Item[] = [];
@@ -60,7 +63,8 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private scriptFC: ScriptCommonService,
                 private fb: UntypedFormBuilder,
                 private viewContainerRef: ViewContainerRef,
-                private elRef: ElementRef) {
+                private elRef: ElementRef,
+                private router: Router) {
     }
     expandSet = new Set<string>();
     onExpandChange(id: string, checked: boolean): void {
@@ -240,7 +244,39 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
        // this.scriptFC.createComponentModalViewOrderService()
     }
 
-    paymentMoMo(id: string | null | undefined): void {
-        window.open(PAYMENTS_URL.MOMO, "_blank")
+    payment(order: OrderService, method: string): void {
+        if (order.paymentStatus !== STATUS_PAYMENT.UN_PAID_VALUE) {
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_CHECK_PAYMENT);
+            return;
+        }
+        if (order.status !== STATUS_ORDER.IN_PROCESS_VALUE) {
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_CHECK_STATUS_ORDER);
+            return;
+        }
+        switch (method) {
+            case PAYMENTS_METHOD.MOMO:
+                const api = this.scriptFC.formatString(URL.API_PAYMENT_CONFIRM, [order.id!, PAYMENTS_METHOD.MOMO]);
+                this.api.payment<ResponesePayment>(api, PAYMENTS_URL.MOMO).subscribe((data) => {
+                    // Lấy thông tin thanh toán lỗi
+                    if (this.scriptFC.validateResponseAPI(data.status)) {
+                        this.scriptFC.alertShowMessageError(Message.MESSAGE_PAYMENT_FAILED);
+                        // lấy thông tin thanh toán thành công
+                    } else {
+                        data = data as ResponesePayment;
+                        window.open(data.url!)
+                    }
+
+                }, error => {
+                    console.log(error);
+                    this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
+                })
+                break;
+            case PAYMENTS_METHOD.BANK_TRANSFER:
+                this.router.navigate(['/payment-bank-transfer', order.id]);
+                break;
+            default:
+                break;
+        }
+
     }
 }

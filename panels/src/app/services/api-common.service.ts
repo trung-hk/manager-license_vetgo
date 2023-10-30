@@ -54,4 +54,10 @@ export class ApiCommonService {
     delete<T>(id: number | string, api: string): Observable<T | ResponseError> {
         return this.httpClient.delete<T | ResponseError>(`${this.url}/${api}/${id}`);
     }
+    payment<T>(api: string, returnURL?: string, prod?: string): Observable<T | ResponseError> {
+        let params = new HttpParams();
+        if (returnURL) params = params.append("returnURL", returnURL);
+        if (prod) params = params.append("prod", prod);
+        return this.httpClient.post<T | ResponseError>(`${this.url}/${api}`, null, {params});
+    }
 }

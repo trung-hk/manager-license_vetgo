@@ -14,4 +14,7 @@ export class Message{
     static readonly MESSAGE_LOAD_DATA_FAILED = "Load dữ lệu thất bại, kiểm tra lại đường truyền";
     static readonly MESSAGE_ERROR_UPDATE_ORDER = "Lưu thất bại, không thể thay đổi sản phẩm đã chọn";
     static readonly MESSAGE_SAVE_COMMISSION_FAILED = "Lưu thất bại, nhâp sai doanh thu hoặc tỉ lệ chiết khấu";
+    static readonly MESSAGE_CHECK_PAYMENT = "Hóa đơn đã được thanh toán, vui long kiểm tra lại";
+    static readonly MESSAGE_CHECK_STATUS_ORDER = "Hóa đơn đã được hủy hoặc đã được thanh toán, vui lòng kiêm tra lại";
+    static readonly MESSAGE_PAYMENT_FAILED = "Thanh toán thất bại, vui long kiểm tra lại";
 }

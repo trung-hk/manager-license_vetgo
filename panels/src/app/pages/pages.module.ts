@@ -16,6 +16,8 @@ import {ShareModule} from "../pipe/share/share.module";
 import { OrdersComponent } from './orders/orders.component';
 import { CommissionsComponent } from './commissions/commissions.component';
 import { ProductServiceDetailsModalComponent } from './product-service-details-modal/product-service-details-modal.component';
+import { PaymentBankTransferComponent } from './payment-bank-transfer/payment-bank-transfer.component';
+import { PaymentCompleteDetailsComponent } from './payment-complete-details/payment-complete-details.component';
 
 const routes: Routes =
     [
@@ -38,7 +40,9 @@ const routes: Routes =
         FormOrderServiceModalComponent,
         OrdersComponent,
         CommissionsComponent,
-        ProductServiceDetailsModalComponent],
+        ProductServiceDetailsModalComponent,
+        PaymentBankTransferComponent,
+        PaymentCompleteDetailsComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),

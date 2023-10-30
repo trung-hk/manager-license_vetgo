@@ -67,10 +67,6 @@ export enum STATUS_AGENT_PRODUCT {
 export enum STATUS_PAYMENT {
     UN_PAID_LABEL = "Chưa thanh toán",
     UN_PAID_VALUE = "UNPAID",
-    PAID_FOR_DISTRIBUTOR_LABEL = "Đã thanh toán",
-    PAID_FOR_DISTRIBUTOR_VALUE = "PAID_FOR_DISTRIBUTOR",
-    PAID_FOR_AGENT_LABEL = "Đã thanh toán",
-    PAID_FOR_AGENT_VALUE = "PAID_FOR_AGENT",
     PAID_LABEL = "Đã thanh toán",
     PAID_VALUE = "PAID",
 
@@ -110,3 +106,11 @@ export enum TYPE_COMMISSION {
     REVENUE_LABEL = "Theo doanh thu",
     REVENUE_VALUE = "REVENUE",
 }
+export enum STATUS_CODE_ERROR {
+    ERROR_400 = '400',
+    ERROR_404 = '404',
+    ERROR_409 = '409'
+}
+export const ERROR_LIST: string[] = [STATUS_CODE_ERROR.ERROR_400,
+    STATUS_CODE_ERROR.ERROR_404,
+    STATUS_CODE_ERROR.ERROR_409]
