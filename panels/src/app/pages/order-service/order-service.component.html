@@ -11,7 +11,7 @@
                             <div nz-row [nzGutter]="16">
                                 <div nz-col [nzXXl]="6" [nzXl]="6" [nzLg]="8" [nzMd]="8" [nzSm]="12" [nzXs]="24" *ngFor="let dt of dataProductList">
                                     <nz-list-item>
-                                        <nz-card [nzTitle]="dt.code!" [nzActions]="[action]" class="card-item-background-color" >
+                                        <nz-card [nzTitle]="dt.name!" [nzActions]="[action]" class="card-item-background-color" >
                                             <nz-card-meta class="package-scrollbar"
                                                     [nzTitle]="amountPackage"
                                                     [nzDescription]="infoPackageProduct"

@@ -9,13 +9,13 @@
                             <div nz-row [nzGutter]="16">
                                 <div nz-col [nzSpan]="6" *ngFor="let dt of dataProductList">
                                     <nz-list-item>
-                                        <nz-card *ngIf="dataProductRegisterMap.get(dt.id!)?.status ===STATUS_AGENT_PRODUCT.REGISTERED_VALUE" [nzTitle]="dt.code!" [nzActions]="[action]" class="card-item-background-color">
+                                        <nz-card *ngIf="dataProductRegisterMap.get(dt.id!)?.status ===STATUS_AGENT_PRODUCT.REGISTERED_VALUE" [nzTitle]="dt.name!" [nzActions]="[action]" class="card-item-background-color">
                                             <nz-card-meta
                                                     [nzTitle]="amountPackage"
                                                     [nzDescription]="infoPackageProduct"
                                             ></nz-card-meta>
                                         </nz-card>
-                                        <nz-card *ngIf="!dataProductRegisterMap.get(dt.id!)" [nzTitle]="dt.code!" [nzActions]="[action]" class="card-item-background-color-unregistered">
+                                        <nz-card *ngIf="!dataProductRegisterMap.get(dt.id!)" [nzTitle]="dt.name!" [nzActions]="[action]" class="card-item-background-color-unregistered">
                                             <nz-card-meta
                                                     [nzTitle]="amountPackage"
                                                     [nzDescription]="infoPackageProduct"
@@ -27,7 +27,7 @@
                                     </ng-template>
                                     <ng-template #infoPackageProduct>
                                         <nz-list nzSize="small" class="package-view-for-agent">
-                                            <nz-list-item *ngFor="let item of scriptFC.getPackageService(dt.attributes)">
+                                            <nz-list-item *ngFor="let item of dt.packages">
                                                 <nz-list-item-meta
                                                         *ngIf="item"
                                                         nzAvatar="/assets/img/service-packages.png"

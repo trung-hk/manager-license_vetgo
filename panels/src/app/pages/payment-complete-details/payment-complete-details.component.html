@@ -1,49 +1,36 @@
 <section class="section">
     <div class="section-body">
         <div nz-row>
-            <div nz-col nzSpan="24">
-                <nz-card style="width: 100%" nzTitle="Chi tiết thanh toán" [nzBordered]="false" [nzBodyStyle]="{'padding': 'unset', 'padding-top': '10px' }">
-                    <div nz-row>
-                        <div nz-col [nzXs]= "24" [nzSm]= "24" [nzXXl]="{span: 12, offset: 6}" [nzXl]="{span: 12, offset: 6}" [nzLg]="{span: 12, offset: 6}" [nzMd]="{span: 12, offset: 6}">
-                            <nz-descriptions [nzTitle]="titleDetailsCustomer" nzSize="small" nzBordered>
-                                <nz-descriptions-item nzTitle="Tên khách hàng">Huỳnh khắc trung</nz-descriptions-item>
-                                <nz-descriptions-item nzTitle="Số điện thoại">18100000000</nz-descriptions-item>
-                                <nz-descriptions-item nzTitle="E-mail">2332@gmail.com</nz-descriptions-item>
-                            </nz-descriptions>
-                            <nz-descriptions [nzTitle]="titleDetailsOrder" nzSize="small" nzBordered>
-                                <nz-descriptions-item nzTitle="Tên sản phẩm">VETGO</nz-descriptions-item>
-                                <nz-descriptions-item nzTitle="Tên gói">VETGO</nz-descriptions-item>
-                                <nz-descriptions-item nzTitle="Số tiền">10000000 VNĐ</nz-descriptions-item>
-                            </nz-descriptions>
-                            <nz-descriptions [nzTitle]="titleDetailsOrder" nzSize="small" nzBordered>
-                                <nz-descriptions-item nzTitle="Phương thức thanh toán">MOMO</nz-descriptions-item>
-                                <nz-descriptions-item nzTitle="Số tiền đã chuyển">10000000</nz-descriptions-item>
-                                <nz-descriptions-item nzTitle="Trạng thái">Chuyển thành công</nz-descriptions-item>
-                            </nz-descriptions>
-                            <div class="text-center" style="margin-top: 10px;">
-                                <button type="button" class="btn btn-outline-secondary note-btn" routerLink="/orders">Quay lại</button>
-                            </div>
-                        </div>
+            <div nz-col [nzXs]= "24" [nzSm]= "24" [nzXXl]="12" [nzXl]="12" [nzLg]="12" [nzMd]="12">
+                <nz-card [nzLoading]="loading" style="width: 100%" [nzTitle]="'Hóa đơn ' + orderService?.code!" [nzBordered]="true" >
+                    <b>Thông tin khách hàng</b>
+                    <br>
+                    Tên: {{orderService?.customerName!}}
+                    <br>
+                    Số điện thoại: {{orderService?.customerPhone! | phoneFormat}}
+                    <br>
+                    E-mail: {{orderService?.customerAddress!}}
+                    <nz-divider></nz-divider>
+                    <nz-descriptions nzSize="small" nzBordered >
+                        <nz-descriptions-item nzTitle="Sản phẩm">VETGO3232323232</nz-descriptions-item>
+                        <nz-descriptions-item nzTitle="Gói">{{packageOrder?.name}}</nz-descriptions-item>
+                        <nz-descriptions-item nzTitle="Giá">{{orderService?.totalAmount | moneyFormat}} VNĐ</nz-descriptions-item>
+                    </nz-descriptions>
+                    <nz-divider></nz-divider>
+                    <b>Thông tin thanh toán</b>
+                    <br>
+                    Phương thức thanh toán: MOMO
+                    <br>
+                    Số tiền thanh toán: {{orderService?.totalAmount | moneyFormat}} VNĐ
+                    <br>
+                    Trạng thái: Chuyển thành công
+                    <div class="text-center" style="margin-top: 10px;">
+                        <button type="button" class="btn btn-outline-secondary note-btn" routerLink="/orders">Quay lại</button>
                     </div>
                 </nz-card>
             </div>
         </div>
     </div>
 </section>
-<ng-template #titleDetailsCustomer>
-    <div class="text-center">
-        <span>Thông tin khách hàng</span>
-    </div>
-</ng-template>
-<ng-template #titleDetailsOrder>
-    <div class="text-center">
-        <span>Thông tin thanh toán</span>
-    </div>
-</ng-template>
-<ng-template #titleDetailsOrder>
-    <div class="text-center">
-        <span>Thông tin đơn hàng</span>
-    </div>
-</ng-template>
 
 

@@ -1,5 +1,5 @@
-import {AbstractControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
-import {TYPE_COMMISSION, TYPE_EXPIRED_PACKAGE, TYPE_PACKAGE} from "./vg-constant";
+import {Validators} from "@angular/forms";
+import {TYPE_EXPIRED_PACKAGE, TYPE_PACKAGE} from "./vg-constant";
 
 export const CONFIG_APP_FORM = {
     id: [null],
@@ -39,6 +39,7 @@ export const PRODUCT_SERVICE_FORM = {
     description: [null, [Validators.maxLength(4000)]],
     status: [null, [Validators.required]],
     usingConfig: [null, [Validators.required]],
+    typeProductService: [null, [Validators.required]],
 }
 
 export const PACKAGE_PRODUCT_SERVICE_FORM = {

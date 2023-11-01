@@ -9,6 +9,7 @@ import {URL} from "../../Constants/api-urls";
 import {ROLES, STATUS_AGENT_PRODUCT, STATUS_PRODUCT_SERVICE} from "../../Constants/vg-constant";
 import {AgentProduct} from "../../models/AgentProduct";
 import {Message} from "../../Constants/message-constant";
+import {PackageProduct} from "../../models/PackageProduct";
 
 @Component({
     selector: 'app-agent-product',

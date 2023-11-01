@@ -5,6 +5,7 @@ export class OrderService {
     customerId?: string | null;
     customerName?: string | null;
     customerPhone?: string | null;
+    customerAddress?: string | null;
     packageId?: string | null;
     attributes?: string | null;
     totalAmount?: string | null;

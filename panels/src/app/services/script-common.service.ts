@@ -127,7 +127,7 @@ export class ScriptCommonService {
 
     createComponentModalViewProductDetails(product: Item, viewContainerRef: ViewContainerRef): void {
         const modal = this.modal.create<ProductServiceDetailsModalComponent, IModalViewProductServiceData>({
-            nzTitle: "Thông tin sản phẩm",
+            nzTitle: product.name!,
             nzContent: ProductServiceDetailsModalComponent,
             nzWidth: "800px",
             nzViewContainerRef: viewContainerRef,

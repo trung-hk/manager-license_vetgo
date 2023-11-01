@@ -39,7 +39,7 @@
       <li class="dropdown agent-product" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">
         <a class="nav-link" routerLink="agent-product"><i data-feather="monitor"></i><span>Sản phẩm đăng ký</span></a>
       </li>
-      <li class="dropdown commission-list" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">
+      <li class="dropdown commission-list" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR]">
         <a class="nav-link" routerLink="commissions"><i data-feather="monitor"></i><span>Chiết khấu</span></a>
       </li>
       <li class="dropdown agent-distributor" *ngxPermissionsOnly="[ROLES.AGENT]">
@@ -53,7 +53,7 @@
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
                 data-feather="briefcase"></i><span>Cộng tác viên</span></a>
         <ul class="dropdown-menu">
-          <li  class="distributor-list"><a class="nav-link" routerLink="partners">Danh sách</a></li>
+          <li  class="partner-list"><a class="nav-link" routerLink="partners">Danh sách</a></li>
         </ul>
       </li>
       <li class="dropdown partner" *ngxPermissionsOnly="[ROLES.PARTNER]">

@@ -12,6 +12,7 @@ import {URL} from "../../Constants/api-urls";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {ResponseError} from "../../models/ResponseError";
 import {Message} from "../../Constants/message-constant";
+import {Commission} from "../../models/Commission";
 
 @Component({
   selector: 'app-partner',
@@ -21,6 +22,8 @@ export class PartnerComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly STATUS_DATA = STATUS_PARTNER;
   listScript = [];
   dataList: User[] = [];
+  dataCommission: Commission[] = [];
+  dataCommissionMap: Map<string, Commission> = new Map<string, Commission>();
   total: number = 1;
   loading: boolean = true;
   pageSize: number = 10;
@@ -74,11 +77,21 @@ export class PartnerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loadDataFromServer(keyWork?: string): void {
     this.loading = true;
+    let loading_success_1 = false;
+    let loading_success_2 = false;
     this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.PARTNER, this.pageIndex - 1, this.pageSize, this.sort, this.filter, keyWork).subscribe((data) => {
       console.log(data)
-      this.loading = false;
+      loading_success_1 = true;
       this.total = data.totalElements;
       this.dataList = data.content;
+      this.loading = !(loading_success_1 && loading_success_2);
+    });
+    this.api.getAll<ResponseDataGetAll<Commission>>(URL.API_COMMISSION, null, null, null, null, null).subscribe((data) => {
+      console.log(data)
+      loading_success_2 = true;
+      this.dataCommission = data.content;
+      this.dataCommissionMap = new Map<string, Commission>(data.content?.map(d => [d.id!, d]));
+      this.loading = !(loading_success_1 && loading_success_2);
     });
   }
 

@@ -39,18 +39,17 @@
                             </td>
                             <td>
                                 <nz-list nzSize="small" class="custom-scrollbar">
-                                    <nz-list-item *ngFor="let item of packageProductMap.get(dt.id!)">
-                                        <nz-skeleton *ngIf="!item" [nzAvatar]="true"
+                                    <nz-list-item *ngFor="let p of dt.packages">
+                                        <nz-skeleton *ngIf="!p" [nzAvatar]="true"
                                                      [nzParagraph]="{ rows: 1 }"></nz-skeleton>
                                         <nz-list-item-meta
-                                                *ngIf="item"
                                                 nzAvatar="/assets/img/service-packages.png"
-                                                [nzDescription]="item.name ? item.name : ''"
+                                                [nzDescription]="p.name ? p.name : ''"
                                         >
                                             <nz-list-item-meta-title>
                                                 <nz-statistic
                                                         [nzValueStyle]="{'font-size': 'unset'}"
-                                                        [nzValue]="(item.price | number)!"
+                                                        [nzValue]="(p.price | number)!"
                                                         [nzSuffix]="'VNĐ'">
                                                 </nz-statistic>
                                             </nz-list-item-meta-title>
@@ -121,7 +120,7 @@
           [nzTitle]="modalTitle"
           [nzContent]="modalContent"
           [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
-          (nzOnCancel)="handleCancel()" nzWidth="800px">
+          (nzOnCancel)="handleCancel()" [nzStyle] ="{'width': '800px', 'max-height': '750px', 'overflow-y': 'auto'}">
     <ng-template #modalTitle> {{idShowModal ? 'Cập nhật sản phẩm' : 'Thêm mới sản phẩm'}}</ng-template>
 
     <ng-template #modalContent>
@@ -161,6 +160,15 @@
                     <nz-select formControlName="usingConfig">
                         <nz-option *ngFor="let status of statusConfigList" nzValue="{{status.value}}"
                                    nzLabel="{{status.text}}"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Loại sản phẩm</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                    <nz-select formControlName="typeProductService">
+                        <nz-option *ngFor="let type of TYPE_PRODUCT_SERVICE_LIST" nzValue="{{type}}"
+                                   nzLabel="{{type}}"></nz-option>
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>

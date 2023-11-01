@@ -13,7 +13,7 @@ import {
     TYPE_EXPIRED_PACKAGE,
     TYPE_PRODUCT,
     TYPE_PACKAGE,
-    CONFIG
+    CONFIG, TYPE_PRODUCT_SERVICE_LIST
 } from "../../Constants/vg-constant";
 import {PACKAGE_PRODUCT_SERVICE_FORM, PRODUCT_SERVICE_FORM} from "../../Constants/Form";
 import {PackageProduct} from "../../models/PackageProduct";
@@ -30,6 +30,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     protected readonly CONFIG_USING = CONFIG;
     protected readonly JSON = JSON;
     protected readonly TYPE_EXPIRED_PACKAGE = TYPE_EXPIRED_PACKAGE;
+    protected readonly TYPE_PRODUCT_SERVICE_LIST = TYPE_PRODUCT_SERVICE_LIST;
     listScript = [];
     dataList: Item[] = [];
     total: number = 1;
@@ -58,7 +59,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         {text: this.CONFIG_USING.USING_LABEL, value: this.CONFIG_USING.USING_VALUE}
     ];
     formPackage!: FormArray;
-    packageProductMap: Map<string, PackageProduct[]> = new Map<string, PackageProduct[]>();
 
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
@@ -102,9 +102,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
             this.loading = false;
             this.total = data.totalElements;
             this.dataList = data.content;
-            this.packageProductMap = new Map<string, PackageProduct[]>(
-                this.dataList.map(data => [data.id!, this.scriptFC.getPackageService(data.attributes)])
-            )
+            this.dataList.forEach(d => d.packages = this.scriptFC.getPackageService(d.attributes));
         });
     }
 
@@ -134,16 +132,17 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         this.isVisible = true;
         this.formPackage.clear()
         if (product) {
-            const usingConfig = this.scriptFC.getAttributeProductService(product.attributes).usingConfig;
+            const attribute = this.scriptFC.getAttributeProductService(product.attributes);
             this.validateProductForm.setValue({
                 id: product.id,
                 code: product.code,
                 name: product.name,
                 description: product.description,
                 status: product.status,
-                usingConfig: usingConfig ? usingConfig : this.CONFIG_USING.NOT_USING_VALUE
+                usingConfig: attribute.usingConfig ? attribute.usingConfig : this.CONFIG_USING.NOT_USING_VALUE,
+                typeProductService: attribute.typeProductService ? attribute.typeProductService : ""
             });
-            this.packageProductMap.get(product.id!)?.forEach(packageItem => {
+            attribute.packages?.forEach(packageItem => {
                 packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.DAY;
                 if (packageItem.day) {
                     packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.DAY;
@@ -206,7 +205,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                             return p;
                         })
                 }
-                const attributeProduct: AttributeObjectProductService = {usingConfig: data.usingConfig, packages: packages.packages}
+                const attributeProduct: AttributeObjectProductService = {usingConfig: data.usingConfig, packages: packages.packages, typeProductService: data.typeProductService}
                 data.attributes = JSON.stringify(attributeProduct);
                 if (data.id) {
                     this.api.update<Item>(data.id, data, URL.API_ITEM).subscribe(() => {

@@ -21,5 +21,6 @@ export class Item{
     storeId?: string | null;
     usingConfig?: string | null;
     packages?: PackageProduct[] | [];
+    typeProductService?: string | null;
 }
 
