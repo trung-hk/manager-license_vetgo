@@ -8,9 +8,10 @@ import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {URL} from "../../Constants/api-urls";
-import {STATUS_CONFIG} from "../../Constants/vg-constant";
 import {CONFIG_APP_FORM} from "../../Constants/Form";
 import {Message} from "../../Constants/message-constant";
+import {ObjectSelectAll} from "../../models/ObjectSelectAll";
+import {STATUS_CONFIG} from "../../Constants/vg-constant";
 
 @Component({
     selector: 'app-config-app',
@@ -36,12 +37,6 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
     idShowModal: number | string | null | undefined = null;
     customerShowModal: { id: string | null | undefined, name: string | null | undefined } | null = null;
     filter: Array<{ key: string; value: string[] }> | null = null;
-    statusList: {text: string, value: string}[] = [
-        {text: this.STATUS_CONFIG.IN_ACTIVE_LABEL, value: this.STATUS_CONFIG.IN_ACTIVE_VALUE},
-        {text: this.STATUS_CONFIG.PENDING_ACTIVE_LABEL, value: this.STATUS_CONFIG.PENDING_ACTIVE_VALUE},
-        {text: this.STATUS_CONFIG.ACTIVATED_LABEL, value: this.STATUS_CONFIG.ACTIVATED_VALUE},
-    ];
-
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
                 private communicationService: CommunicationService,
@@ -75,7 +70,8 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     loadDataFromServer(keyWork?: string): void {
         this.loading = true;
-        this.api.getAll<ResponseDataGetAll<ConfigApp>>(URL.API_CONFIG_APP, this.pageIndex - 1, this.pageSize, this.sort, this.filter, keyWork).subscribe((data) => {
+        const objectSelectConfigApp: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
+        this.api.getAll<ResponseDataGetAll<ConfigApp>>(URL.API_CONFIG_APP, objectSelectConfigApp).subscribe((data) => {
             console.log(data)
             this.loading = false;
             this.total = data.totalElements;
@@ -128,7 +124,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             this.validateForm.reset();
             this.validateForm.patchValue({
-                status: this.STATUS_CONFIG.IN_ACTIVE_VALUE
+                status: this.STATUS_CONFIG.IN_ACTIVE.value
             })
             this.customerShowModal = null;
         }

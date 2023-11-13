@@ -2,32 +2,34 @@
     <div class="section-body">
         <div nz-row>
             <div nz-col [nzXs]= "24" [nzSm]= "24" [nzXXl]="12" [nzXl]="12" [nzLg]="12" [nzMd]="12">
-                <nz-card [nzLoading]="loading" style="width: 100%" [nzTitle]="'Hóa đơn ' + orderService?.code!" [nzBordered]="true" >
-                    <b>Thông tin khách hàng</b>
-                    <br>
-                    Tên: {{orderService?.customerName!}}
-                    <br>
-                    Số điện thoại: {{orderService?.customerPhone! | phoneFormat}}
-                    <br>
-                    E-mail: {{orderService?.customerAddress!}}
-                    <nz-divider></nz-divider>
-                    <nz-descriptions nzSize="small" nzBordered >
-                        <nz-descriptions-item nzTitle="Sản phẩm">VETGO3232323232</nz-descriptions-item>
-                        <nz-descriptions-item nzTitle="Gói">{{packageOrder?.name}}</nz-descriptions-item>
-                        <nz-descriptions-item nzTitle="Giá">{{orderService?.totalAmount | moneyFormat}} VNĐ</nz-descriptions-item>
-                    </nz-descriptions>
-                    <nz-divider></nz-divider>
-                    <b>Thông tin thanh toán</b>
-                    <br>
-                    Phương thức thanh toán: MOMO
-                    <br>
-                    Số tiền thanh toán: {{orderService?.totalAmount | moneyFormat}} VNĐ
-                    <br>
-                    Trạng thái: Chuyển thành công
-                    <div class="text-center" style="margin-top: 10px;">
-                        <button type="button" class="btn btn-outline-secondary note-btn" routerLink="/orders">Quay lại</button>
-                    </div>
-                </nz-card>
+                <nz-skeleton [nzLoading]="loading">
+                    <nz-card  style="width: 100%" [nzTitle]="'Hóa đơn ' + orderService?.code" [nzBordered]="true" >
+                        <b>Thông tin khách hàng</b>
+                        <br>
+                        Tên: {{orderService?.customerName}}
+                        <br>
+                        Số điện thoại: {{orderService?.customerPhone | phoneFormat}}
+                        <br>
+                        E-mail: {{orderService?.customerAddress}}
+                        <nz-divider></nz-divider>
+                        <nz-descriptions nzSize="small" nzBordered >
+                            <nz-descriptions-item nzTitle="Sản phẩm">VETGO3232323232</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Gói">{{packageOrder?.name}}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Giá">{{orderService?.totalAmount | moneyFormat}} VNĐ</nz-descriptions-item>
+                        </nz-descriptions>
+                        <nz-divider></nz-divider>
+                        <b>Thông tin thanh toán</b>
+                        <br>
+                        Phương thức thanh toán: MOMO
+                        <br>
+                        Số tiền thanh toán: {{orderService?.totalAmount | moneyFormat}} VNĐ
+                        <br>
+                        Trạng thái: Chuyển thành công
+                        <div class="text-center" style="margin-top: 10px;">
+                            <button type="button" class="btn btn-outline-secondary note-btn" routerLink="/orders">Quay lại</button>
+                        </div>
+                    </nz-card>
+                </nz-skeleton>
             </div>
         </div>
     </div>

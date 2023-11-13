@@ -39,14 +39,13 @@ export const PRODUCT_SERVICE_FORM = {
     description: [null, [Validators.maxLength(4000)]],
     status: [null, [Validators.required]],
     usingConfig: [null, [Validators.required]],
-    typeProductService: [null, [Validators.required]],
 }
 
 export const PACKAGE_PRODUCT_SERVICE_FORM = {
     id: [null],
     name: [null],
     price: [null],
-    typePackage: [TYPE_PACKAGE.PAYMENT_VALUE],
+    typePackage: [TYPE_PACKAGE.PAYMENT.value],
     typeExpired: [TYPE_EXPIRED_PACKAGE.DAY],
     expired: [null]
 }
@@ -66,4 +65,28 @@ export const COMMISSION_FORM = {
 export const COMMISSION_ACCUMULATE_FORM = {
     revenueFrom: [null],
     rate: [null],
+}
+export const CONFIG_VET_APP_FORM = {
+    codeApp: [null, [Validators.required]],
+}
+export const CONFIG_POS_FORM = {
+    codeApp: [null, [Validators.required]],
+}
+export const CONFIG_SPA_FORM = {
+    codeApp: [null, [Validators.required]],
+}
+export const CONFIG_CS_ZALO_FORM = {
+    phone: [null, [Validators.required, Validators.maxLength(15)]],
+}
+export const CONFIG_ADMIN_ONLINE_SHOP_FORM = {
+    name: [null, [Validators.required]],
+    customDomain: [null],
+    phone: [null, [Validators.required, Validators.maxLength(15)]],
+    email: [null, [Validators.required, Validators.minLength(5), Validators.maxLength(255), Validators.email]],
+    address: [null, [Validators.maxLength(500)]],
+}
+export const CONFIG_WIFI_MARKETING_FORM = {
+    cloudId: [null, [Validators.required]],
+    userName: [null, [Validators.required]],
+    password: [null, [Validators.required]],
 }

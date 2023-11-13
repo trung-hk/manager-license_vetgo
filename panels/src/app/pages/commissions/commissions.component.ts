@@ -15,6 +15,7 @@ import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {Message} from "../../Constants/message-constant";
 import {Commission, CommissionAccumulates} from "../../models/Commission";
 import {ResponseError} from "../../models/ResponseError";
+import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 
 @Component({
   selector: 'app-commissions',
@@ -41,10 +42,6 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
   idDelete: number | string | null | undefined = -1;
   idShowModal: number | string | null | undefined = null;
   filter: Array<{ key: string; value: string[] }> | null = null;
-  typeCommissionList: { text: string, value: string }[] = [
-    {text: this.TYPE_COMMISSION.DEFAULT_LABEL, value: this.TYPE_COMMISSION.DEFAULT_VALUE},
-    {text: this.TYPE_COMMISSION.REVENUE_LABEL, value: this.TYPE_COMMISSION.REVENUE_VALUE}
-  ];
   formAccumulates!: FormArray;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
@@ -79,7 +76,8 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loadDataFromServer(keyWork?: string): void {
     this.loading = true;
-    this.api.getAll<ResponseDataGetAll<Commission>>(URL.API_COMMISSION, this.pageIndex - 1, this.pageSize, this.sort, this.filter, keyWork).subscribe((data) => {
+    const objectSelectCommission: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
+    this.api.getAll<ResponseDataGetAll<Commission>>(URL.API_COMMISSION, objectSelectCommission).subscribe((data) => {
       console.log(data)
       this.loading = false;
       this.total = data.totalElements;
@@ -115,7 +113,7 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.validateCommissionForm.reset();
     this.validateCommissionForm.controls["rate"].setValidators(Validators.required);
     this.validateCommissionForm.patchValue({
-      commissionType: this.TYPE_COMMISSION.DEFAULT_VALUE
+      commissionType: this.TYPE_COMMISSION.DEFAULT.value
     });
     this.modalLoading = !(!commission?.id)
     if (commission) {
@@ -126,7 +124,7 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
           commissionType: data.commissionType,
           rate: data.rate
         });
-        if (data.commissionType === TYPE_COMMISSION.REVENUE_VALUE) {
+        if (data.commissionType === TYPE_COMMISSION.REVENUE.value) {
           data.commissionAccumulates?.forEach(accumulates => {
             this.formAccumulates.push(this.fb.group({
               revenueFrom: [accumulates.revenueFrom],
@@ -157,7 +155,7 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       this.isConfirmLoading = true;
       const data: Commission = this.validateCommissionForm.value;
-      if (data.commissionType === TYPE_COMMISSION.DEFAULT_VALUE) {
+      if (data.commissionType === TYPE_COMMISSION.DEFAULT.value) {
         if (!data.rate) {
           this.scriptFC.alertShowMessageError(Message.MESSAGE_SAVE_FAILED);
           this.isConfirmLoading = false;
@@ -274,7 +272,7 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onchangeCommissionType (value: string) {
 
-    if (value === TYPE_COMMISSION.DEFAULT_VALUE) {
+    if (value === TYPE_COMMISSION.DEFAULT.value) {
       this.validateCommissionForm.controls["rate"].setValidators(Validators.required);
     } else {
       this.validateCommissionForm.controls["rate"].removeValidators(Validators.required);

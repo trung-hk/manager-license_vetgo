@@ -8,7 +8,7 @@ export interface IModalData {
     productInfo: Item[];
     idProductSelect: string | null;
     order: OrderService | null | undefined;
-    packageProductMap: Map<string, PackageProduct[]>
+    mode: string;
 }
 
 export interface IModalViewProductServiceData {

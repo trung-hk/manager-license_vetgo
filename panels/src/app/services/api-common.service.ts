@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {ResponseError} from "../models/ResponseError";
 import {URL} from "../Constants/api-urls";
 import {User} from "../models/User";
+import {ObjectSelectAll} from "../models/ObjectSelectAll";
 
 @Injectable({
     providedIn: 'root'
@@ -14,27 +15,42 @@ export class ApiCommonService {
     constructor(private httpClient: HttpClient) {
     }
 
-    getAll<T>(api: string, page?: number | null, size?: number | null, sort?: string | null, filter?: Array<{
-        key: string;
-        value: string[]
-    }> | null, keyword?: string | null): Observable<T> {
+    // getAll<T>(api: string, page?: number | null, size?: number | null, sort?: string | null, filter?: Array<{
+    //     key: string;
+    //     value: string[]
+    // }> | null, keyword?: string | null, type?: string): Observable<T> {
+    //     let params = new HttpParams();
+    //     if (page) params = params.append("page", page);
+    //     if (size) params = params.append("size", size);
+    //     if (sort) params = params.append("sort", sort);
+    //     if (keyword) params = params.append("keyword", keyword);
+    //     if (filter) {
+    //         filter.filter(f => f.value.length > 0)
+    //             .forEach(f => params = params.append("filter", `${f.key},${f.value.join(",")}`));
+    //     }
+    //     if (type) params = params.append("type", type);
+    //     return this.httpClient.get<T>(`${this.url}/${api}`, {params});
+    // }
+    getAll<T>(api: string, objectSelect?: ObjectSelectAll): Observable<T> {
         let params = new HttpParams();
-        if (page) params = params.append("page", page);
-        if (size) params = params.append("size", size);
-        if (sort) params = params.append("sort", sort);
-        if (keyword) params = params.append("keyword", keyword);
-        if (filter) {
-            filter.filter(f => f.value.length > 0)
-                .forEach(f => params = params.append("filter", `${f.key},${f.value.join(",")}`));
+        if (objectSelect) {
+            Object.keys(objectSelect).forEach(key => {
+                let value = Reflect.get(objectSelect, key);
+                if (value || !isNaN(value)) {
+                    if (key === 'filter') {
+                        Reflect.get(objectSelect, key)?.filter(f => f.value.length > 0)
+                            .forEach(f => params = params.append("filter", `${f.key},${f.value.join(",")}`));
+                    } else {
+                        params = params.append(key, value);
+                    }
+                }
+            })
         }
         return this.httpClient.get<T>(`${this.url}/${api}`, {params});
     }
 
-    getAllUsersByType<T>(api: string, type: string, page?: number, size?: number, sort?: string | null, filter?: Array<{
-        key: string;
-        value: string[]
-    }> | null, keyword?: string | null): Observable<T> {
-        return this.getAll(`${api}/${type}`, page, size, sort, filter, keyword);
+    getAllUsersByType<T>(api: string, type: string, objectSelect?: ObjectSelectAll): Observable<T> {
+        return this.getAll(`${api}/${type}`, objectSelect);
     }
 
     getById<T>(id: number | string | null, api: string): Observable<T> {

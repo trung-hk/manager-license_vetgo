@@ -4,7 +4,8 @@ import { Pipe, PipeTransform } from '@angular/core';
     name: 'phoneFormat'
 })
 export class PhoneFormatPipe implements PipeTransform {
-    transform(value: string): string {
+    transform(value: string | null | undefined): string {
+        if (!value) return "";
         if (value.length <= 3) {
             return `${value.slice(0, 3)}`;
         }

@@ -25,7 +25,7 @@
                             <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                                 Ngày cập nhật
                             </th>
-                            <th class="align-center" nzWidth="12em" [nzFilters]="statusList" [nzFilterFn]="true"
+                            <th class="align-center" nzWidth="12em" [nzFilters]="STATUS_CONFIG.LIST" [nzFilterFn]="true"
                                 nzColumnKey="t1.status">Trạng thái
                             </th>
                             <th class="align-center" nzWidth="10em" nzColumnKey="action">Thao tác</th>
@@ -52,17 +52,17 @@
                             <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
                             <td class="align-center">
                                 <ng-container [ngSwitch]="dt.status">
-                                    <div *ngSwitchCase="STATUS_CONFIG.IN_ACTIVE_VALUE"
+                                    <div *ngSwitchCase="STATUS_CONFIG.IN_ACTIVE.value"
                                          class="badge badge-shadow badge-danger">
-                                        {{STATUS_CONFIG.IN_ACTIVE_LABEL}}
+                                        {{STATUS_CONFIG.IN_ACTIVE.text}}
                                     </div>
-                                    <div *ngSwitchCase="STATUS_CONFIG.PENDING_ACTIVE_VALUE"
+                                    <div *ngSwitchCase="STATUS_CONFIG.PENDING_ACTIVE.value"
                                          class="badge badge-shadow badge-primary">
-                                        {{STATUS_CONFIG.PENDING_ACTIVE_LABEL}}
+                                        {{STATUS_CONFIG.PENDING_ACTIVE.text}}
                                     </div>
-                                    <div *ngSwitchCase="STATUS_CONFIG.ACTIVATED_VALUE"
+                                    <div *ngSwitchCase="STATUS_CONFIG.ACTIVATED.value"
                                          class="badge badge-shadow badge-success">
-                                        {{STATUS_CONFIG.ACTIVATED_LABEL}}
+                                        {{STATUS_CONFIG.ACTIVATED.text}}
                                     </div>
                                 </ng-container>
                             </td>
@@ -152,7 +152,7 @@
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
                 <nz-form-control [nzSm]="18">
                     <nz-select formControlName="status">
-                        <nz-option *ngFor="let status of statusList" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
+                        <nz-option *ngFor="let status of STATUS_CONFIG.LIST" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>

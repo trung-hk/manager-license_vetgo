@@ -9,7 +9,7 @@
                             <div nz-row [nzGutter]="16">
                                 <div nz-col [nzSpan]="6" *ngFor="let dt of dataProductList">
                                     <nz-list-item>
-                                        <nz-card *ngIf="dataProductRegisterMap.get(dt.id!)?.status ===STATUS_AGENT_PRODUCT.REGISTERED_VALUE" [nzTitle]="dt.name!" [nzActions]="[action]" class="card-item-background-color">
+                                        <nz-card *ngIf="dataProductRegisterMap.get(dt.id!)?.status ===STATUS_AGENT_PRODUCT.REGISTERED.value" [nzTitle]="dt.name!" [nzActions]="[action]" class="card-item-background-color">
                                             <nz-card-meta
                                                     [nzTitle]="amountPackage"
                                                     [nzDescription]="infoPackageProduct"
@@ -45,7 +45,7 @@
                                         </nz-list>
                                     </ng-template>
                                     <ng-template #action>
-                                        <ng-container *ngIf="dt.status === STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE then active else unActive">
+                                        <ng-container *ngIf="dt.status === STATUS_PRODUCT_SERVICE.DEPLOYED.value then active else unActive">
                                         </ng-container>
                                     </ng-template>
                                     <ng-template #active>
@@ -55,7 +55,7 @@
                                                     Chi tiết
                                                 </button>
                                                 <ng-container [ngSwitch]="dataProductRegisterMap.get(dt.id!)?.status" *nzSpaceItem>
-                                                    <button *ngSwitchCase="STATUS_AGENT_PRODUCT.REGISTERED_VALUE" type="button" class="btn btn-outline-danger note-btn" (click)="showDeleteModal(dataProductRegisterMap.get(dt.id!)?.id)">
+                                                    <button *ngSwitchCase="STATUS_AGENT_PRODUCT.REGISTERED.value" type="button" class="btn btn-outline-danger note-btn" (click)="showDeleteModal(dataProductRegisterMap.get(dt.id!)?.id)">
                                                         Hủy đăng ký
                                                     </button>
                                                     <button *ngSwitchDefault type="button" class="btn btn-outline-success note-btn" (click)="handleOk(dt.id!, $event)">

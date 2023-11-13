@@ -10,6 +10,7 @@ import {ROLES, STATUS_AGENT_PRODUCT, STATUS_PRODUCT_SERVICE} from "../../Constan
 import {AgentProduct} from "../../models/AgentProduct";
 import {Message} from "../../Constants/message-constant";
 import {PackageProduct} from "../../models/PackageProduct";
+import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 
 @Component({
     selector: 'app-agent-product',
@@ -59,7 +60,8 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
             this.loading = true;
             let isSuccessLoadDataProduct = false;
             let isSuccessLoadDataProductRegister = false;
-             this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, null, null, null, null, keyWork)
+            const objectSelectItem: ObjectSelectAll = {keyword: keyWork}
+             this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, objectSelectItem)
                 .subscribe((data) => {
                     console.log(data)
                     this.totalProduct = data.totalElements;
@@ -94,7 +96,7 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
             this.scriptFC.alertShowMessageError(Message.MESSAGE_REGISTER_FAILED);
             return;
         } else {
-            const data: AgentProduct = {itemId: idProduct, status: STATUS_AGENT_PRODUCT.REGISTERED_VALUE}
+            const data: AgentProduct = {itemId: idProduct, status: STATUS_AGENT_PRODUCT.REGISTERED.value}
             this.api.insert(data, URL.API_AGENT_PRODUCT)
                 .subscribe(() => {
                     this.loadDataFromServer().then(() => this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_REGISTER_SUCCESS));

@@ -13,13 +13,16 @@ import {
     ProductServiceDetailsModalComponent
 } from "../pages/product-service-details-modal/product-service-details-modal.component";
 import {ERROR_LIST} from "../Constants/vg-constant";
+import {AttributeOrderProductService} from "../models/AttributeOrderProductService";
+import {NgxPermissionsService} from "ngx-permissions";
 
 @Injectable({
     providedIn: 'root'
 })
 export class ScriptCommonService {
     constructor(private communicationService: CommunicationService,
-                private modal: NzModalService) {
+                private modal: NzModalService,
+                private permissionsService: NgxPermissionsService) {
     }
 
     alertShowMessageSuccess(message: string, title?: string): void {
@@ -77,6 +80,11 @@ export class ScriptCommonService {
     getAttributeProductService(value: string | null | undefined): AttributeObjectProductService {
         return JSON.parse(value!);
     }
+    getAttributeOrderProductService(value: string | null | undefined): AttributeOrderProductService {
+        const result: AttributeOrderProductService = JSON.parse(value!);
+        result.packagesMap = new Map<string, PackageProduct>(result.packages?.map(r => [r.id!, r]));
+        return result;
+    }
 
     formatterMoney = (value: number) => value && `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     parserMoney = (value: string): string => value.replace(',', '');
@@ -84,10 +92,10 @@ export class ScriptCommonService {
 
     createComponentModalFormOrderService(idProductSelect: string | null,
                                          dataProductList: Item[],
-                                         dataPackageProductMap: Map<string, PackageProduct[]>,
                                          userId: string | null,
                                          order: OrderService | null | undefined,
                                          viewContainerRef: ViewContainerRef,
+                                         modeOpen: string,
                                          callBack?: ModalFormOrderServiceCallback): void {
         const modal = this.modal.create<FormOrderServiceModalComponent, IModalData>({
             nzTitle: order ? 'Cập nhật đơn hàng' : 'Đặt đơn hàng',
@@ -99,7 +107,7 @@ export class ScriptCommonService {
                 productInfo: dataProductList,
                 idProductSelect: idProductSelect,
                 order: order,
-                packageProductMap: dataPackageProductMap
+                mode: modeOpen
             },
             nzOkType:"primary",
             nzOkText: order ? 'Cập nhật đơn hàng' : 'Thêm đơn hàng',
@@ -144,17 +152,6 @@ export class ScriptCommonService {
                 }
             ]
         });
-        // const instance = modal.getContentComponent();
-        // modal.afterOpen.subscribe(() => {
-        //     modal.getConfig().nzOkDisabled = instance.validateCustomerForm.invalid || instance.validateOrderForm.invalid;
-        //     // Lắng nghe sự kiện statusChanges của form để cập nhật trạng thái của button disabled
-        //     instance.validateCustomerForm.statusChanges.subscribe(status => {
-        //         modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateOrderForm.invalid;
-        //     })
-        //     instance.validateOrderForm.statusChanges.subscribe(status => {
-        //         modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateCustomerForm.invalid;
-        //     })
-        // });
     }
 
     formatterPercent = (value: number): string => `${value} %`;
@@ -173,5 +170,8 @@ export class ScriptCommonService {
             if (status == code) return true;
         }
         return false;
+    }
+    hasPermission(role: string | string[]): Promise<boolean> {
+        return this.permissionsService.hasPermission(role);
     }
 }

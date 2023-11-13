@@ -1,10 +1,12 @@
-export enum STATUS_CONFIG {
-    IN_ACTIVE_LABEL = "Chưa kích hoạt",
-    IN_ACTIVE_VALUE = "IN_ACTIVE",
-    PENDING_ACTIVE_LABEL = "Chờ kích hoạt",
-    PENDING_ACTIVE_VALUE = "PENDING_ACTIVE",
-    ACTIVATED_LABEL = "Đã kích hoạt",
-    ACTIVATED_VALUE = "ACTIVATED",
+interface Enum {
+    text: string;
+    value: string;
+}
+export class STATUS_CONFIG {
+    static readonly IN_ACTIVE: Enum = {text: "Chưa kích hoạt", value: "IN_ACTIVE"};
+    static readonly PENDING_ACTIVE: Enum = {text: "Chờ kích hoạt", value: "PENDING_ACTIVE"};
+    static readonly ACTIVATED: Enum = {text: "Đã kích hoạt", value: "ACTIVATED"};
+    static readonly LIST: Enum[] = [this.IN_ACTIVE, this.PENDING_ACTIVE, this.ACTIVATED]
 }
 export enum USER_TYPE {
     ADMIN = "ADMIN",
@@ -14,29 +16,26 @@ export enum USER_TYPE {
     CUSTOMER = "CUSTOMER"
 }
 
-export enum STATUS_AGENT {
-    IN_ACTIVE_LABEL = "Ngừng hoạt động",
-    IN_ACTIVE_VALUE = "IN_ACTIVE",
-    ACTIVATED_LABEL = "Đang hoạt động",
-    ACTIVATED_VALUE = "ACTIVATED",
+export class STATUS_AGENT {
+    static readonly IN_ACTIVE: Enum = {text: "Ngừng hoạt động", value: "IN_ACTIVE"};
+    static readonly ACTIVATED: Enum = {text: "Đang hoạt động", value: "ACTIVATED"};
+    static readonly LIST: Enum[] = [this.IN_ACTIVE, this.ACTIVATED];
 }
-export enum STATUS_DISTRIBUTOR {
-    IN_ACTIVE_LABEL = "Ngừng hoạt động",
-    IN_ACTIVE_VALUE = "IN_ACTIVE",
-    ACTIVATED_LABEL = "Đang hoạt động",
-    ACTIVATED_VALUE = "ACTIVATED",
+
+export class STATUS_DISTRIBUTOR {
+    static readonly IN_ACTIVE: Enum = {text: "Ngừng hoạt động", value: "IN_ACTIVE"};
+    static readonly ACTIVATED: Enum = {text: "Đang hoạt động", value: "ACTIVATED"};
+    static readonly LIST: Enum[] = [this.IN_ACTIVE, this.ACTIVATED];
 }
-export enum STATUS_PARTNER {
-    IN_ACTIVE_LABEL = "Ngừng hoạt động",
-    IN_ACTIVE_VALUE = "IN_ACTIVE",
-    ACTIVATED_LABEL = "Đang hoạt động",
-    ACTIVATED_VALUE = "ACTIVATED",
+export class STATUS_PARTNER {
+    static readonly IN_ACTIVE: Enum = {text: "Ngừng hoạt động", value: "IN_ACTIVE"};
+    static readonly ACTIVATED: Enum = {text: "Đang hoạt động", value: "ACTIVATED"};
+    static readonly LIST: Enum[] = [this.IN_ACTIVE, this.ACTIVATED];
 }
-export enum STATUS_CUSTOMER {
-    IN_ACTIVE_LABEL = "Ngừng hoạt động",
-    IN_ACTIVE_VALUE = "IN_ACTIVE",
-    ACTIVATED_LABEL = "Đang hoạt động",
-    ACTIVATED_VALUE = "ACTIVATED",
+export class STATUS_CUSTOMER {
+    static readonly IN_ACTIVE: Enum = {text: "Ngừng hoạt động", value: "IN_ACTIVE"};
+    static readonly ACTIVATED: Enum = {text: "Đang hoạt động", value: "ACTIVATED"};
+    static readonly LIST: Enum[] = [this.IN_ACTIVE, this.ACTIVATED];
 }
 export enum ROLES {
     ADMIN = "ADMIN",
@@ -46,11 +45,10 @@ export enum ROLES {
     CUSTOMER = "CUSTOMER"
 }
 
-export enum STATUS_PRODUCT_SERVICE {
-    UN_DEPLOYED_LABEL = "Chưa triển khai",
-    UN_DEPLOYED_VALUE = "UN_DEPLOYED",
-    DEPLOYED_LABEL = "Đã triển khai",
-    DEPLOYED_VALUE = "DEPLOYED"
+export class STATUS_PRODUCT_SERVICE {
+    static readonly UN_DEPLOYED: Enum = {text: "Chưa triển khai", value: "UN_DEPLOYED"};
+    static readonly DEPLOYED: Enum = {text: "Đã triển khai", value: "DEPLOYED"};
+    static readonly LIST: Enum[] = [this.UN_DEPLOYED, this.DEPLOYED];
 }
 
 export enum TYPE_PRODUCT {
@@ -58,53 +56,57 @@ export enum TYPE_PRODUCT {
     SALES_PRODUCT = "SALES_PRODUCT"
 }
 
-export enum STATUS_AGENT_PRODUCT {
-    UN_REGISTERED_LABEL = "Chưa đăng ký",
-    UN_REGISTERED_VALUE = "UN_REGISTERED",
-    REGISTERED_LABEL = "Đã đăng ký",
-    REGISTERED_VALUE = "REGISTERED",
+export class STATUS_AGENT_PRODUCT {
+    static readonly UN_REGISTERED: Enum = {text: "Chưa đăng ký", value: "UN_REGISTERED"};
+    static readonly REGISTERED: Enum = {text: "Đã đăng ký", value: "REGISTERED"};
+    static readonly LIST: Enum[] = [this.UN_REGISTERED, this.REGISTERED];
 }
-export enum STATUS_PAYMENT {
-    UN_PAID_LABEL = "Chưa thanh toán",
-    UN_PAID_VALUE = "UNPAID",
-    PAID_LABEL = "Đã thanh toán",
-    PAID_VALUE = "PAID",
-
+export class STATUS_PAYMENT {
+    static readonly UN_PAID: Enum = {text: "Chưa thanh toán", value: "UNPAID"};
+    static readonly PAID: Enum = {text: "Đã thanh toán", value: "PAID"};
+    static readonly LIST: Enum[] = [this.UN_PAID, this.PAID];
 }
-export enum STATUS_ORDER {
-    IN_PROCESS_LABEL = "Đang tiến hành",
-    IN_PROCESS_VALUE = "IN_PROCESS",
-    FINISHED_LABEL = "Đã hoàn thành",
-    FINISHED_VALUE = "FINISHED",
-    CANCEL_ORDER_LABEL = "Đã hủy đơn",
-    CANCEL_ORDER_VALUE = "CANCEL_ORDER",
+export class STATUS_ORDER {
+    static readonly IN_PROCESS: Enum = {text: "Đang tiến hành", value: "IN_PROCESS"};
+    static readonly FINISHED: Enum = {text: "Đã hoàn thành", value: "FINISHED"};
+    static readonly CANCEL_ORDER: Enum = {text: "Đã hủy đơn", value: "CANCEL_ORDER"};
+    static readonly LIST: Enum[] = [this.IN_PROCESS, this.FINISHED, this.CANCEL_ORDER];
 }
 export enum TYPE_EXPIRED_PACKAGE {
     DAY = "day",
     MONTH = "month",
     YEAR = "year"
 }
-export enum TYPE_PACKAGE {
-    FREE_LABEL = "Không trả phí",
-    FREE_VALUE = "FREE",
-    PAYMENT_LABEL = "Trả phí",
-    PAYMENT_VALUE = "PAYMENT",
+export class TYPE_PACKAGE {
+    static readonly FREE: Enum = {text: "Không trả phí", value: "FREE"};
+    static readonly PAYMENT: Enum = {text: "Trả phí", value: "PAYMENT"};
+    static readonly LIST: Enum[] = [this.FREE, this.PAYMENT];
 }
 export enum MODE_DISPLAY {
     PC = "PC",
     MOBILE = "MOBILE"
 }
-export enum CONFIG {
-    NOT_USING_LABEL = "Không sử dụng",
-    NOT_USING_VALUE = "NOT_USING",
-    USING_LABEL = "Sử dụng",
-    USING_VALUE = "USING",
+export class CONFIG {
+    static readonly NOT_USING: Enum = {text: "Không sử dụng", value: "NOT_USING"};
+    static readonly VET_APP: Enum = {text: "VET-APP", value: "VET_APP"};
+    static readonly CS_ZALO: Enum = {text: "CS-ZALO", value: "CS_ZALO"};
+    static readonly ADMIN_ONLINE_SHOP: Enum = {text: "ADMIN-ONLINE-SHOP", value: "ADMIN_ONLINE_SHOP"};
+    static readonly WIFI_MARKETING: Enum = {text: "WIFI-MARKETING", value: "WIFI_MARKETING"};
+    static readonly POS: Enum = {text: "POS", value: "POS"};
+    static readonly SPA: Enum = {text: "SPA", value: "SPA"};
+    static readonly CONFIG_LIST: Enum[] = [
+        this.NOT_USING,
+        this.VET_APP,
+        this.CS_ZALO,
+        this.ADMIN_ONLINE_SHOP,
+        this.WIFI_MARKETING,
+        this.POS,
+        this.SPA]
 }
-export enum TYPE_COMMISSION {
-    DEFAULT_LABEL = "Theo sản phẩm",
-    DEFAULT_VALUE = "DEFAULT",
-    REVENUE_LABEL = "Theo doanh thu",
-    REVENUE_VALUE = "REVENUE",
+export class TYPE_COMMISSION {
+    static readonly DEFAULT: Enum = {text: "Theo sản phẩm", value: "DEFAULT"};
+    static readonly REVENUE: Enum = {text: "Theo doanh thu", value: "REVENUE"};
+    static readonly LIST: Enum[] = [this.DEFAULT, this.REVENUE];
 }
 export enum STATUS_CODE_ERROR {
     ERROR_400 = '400',
@@ -114,19 +116,8 @@ export enum STATUS_CODE_ERROR {
 export const ERROR_LIST: string[] = [STATUS_CODE_ERROR.ERROR_400,
     STATUS_CODE_ERROR.ERROR_404,
     STATUS_CODE_ERROR.ERROR_409]
-export enum TYPE_PRODUCT_SERVICE {
-    VETAPP = "VETAPP",
-    CS_ZALO = "CS-ZALO",
-    ADMIN_ONLINE_SHOP = "ADMIN-ONLINE-SHOP",
-    WIFI_MARKETING = "WIFI-MARKETING",
-    POS = "POS",
-    SPA = "SPA",
+export enum MODE_OPEN_MODAL_FORM_ORDER_SERVICE {
+    INSERT = "INSERT",
+    UPDATE = "UPDATE",
+    ADD_CONFIG = "ADD_CONFIG"
 }
-export const TYPE_PRODUCT_SERVICE_LIST: string[] = [
-    TYPE_PRODUCT_SERVICE.VETAPP,
-    TYPE_PRODUCT_SERVICE.CS_ZALO,
-    TYPE_PRODUCT_SERVICE.ADMIN_ONLINE_SHOP,
-    TYPE_PRODUCT_SERVICE.WIFI_MARKETING,
-    TYPE_PRODUCT_SERVICE.POS,
-    TYPE_PRODUCT_SERVICE.SPA
-]

@@ -23,17 +23,17 @@ export class PaymentCompleteDetailsComponent implements OnInit, AfterViewInit, O
   ngAfterViewInit(): void {
     this.loadScript.addListScript([]).then(() => {
     });
-    this.api.getById<OrderService>(this.route.snapshot.paramMap.get('id'), URL.API_ORDER_SERVICE).subscribe((data) => {
-      console.log(data)
-      this.orderService = data;
-      this.loading = false;
-      this.packageOrder = this.scriptFC.getPackageService(data.attributes).find(d => d.id === data.packageId)!;
-    })
   }
 
   ngOnDestroy(): void {
   }
 
   ngOnInit(): void {
+    this.api.getById<OrderService>(this.route.snapshot.paramMap.get('id'), URL.API_ORDER_SERVICE).subscribe((data) => {
+      console.log(data)
+      this.orderService = data;
+      this.loading = false;
+      this.packageOrder = this.scriptFC.getPackageService(data.attributes).find(d => d.id === data.packageId)!;
+    })
   }
 }

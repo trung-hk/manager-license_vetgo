@@ -38,6 +38,7 @@ import {NzRadioModule} from "ng-zorro-antd/radio";
 import {NzSpaceModule} from "ng-zorro-antd/space";
 import {NzAlertModule} from "ng-zorro-antd/alert";
 import {NzQRCodeModule} from "ng-zorro-antd/qr-code";
+import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
 
 @NgModule({
     exports: [
@@ -69,6 +70,7 @@ import {NzQRCodeModule} from "ng-zorro-antd/qr-code";
         NzSpaceModule,
         NzAlertModule,
         NzQRCodeModule,
+        NzAutocompleteModule,
     ],
     providers: [
         { provide: NZ_ICONS, useValue: icons }

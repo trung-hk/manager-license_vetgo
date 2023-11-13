@@ -10,8 +10,5 @@ export class URL{
     static readonly API_COMMISSION: string = "commissions";
     static readonly API_PAYMENT: string = "payment-service";
     static readonly API_PAYMENT_CONFIRM: string = `${this.API_PAYMENT}/confirm/order-service/{0}/method/{1}`;
-}
-export class REPLACE_PARAM_URL{
-    static readonly PARAM_ID: string = "{id}";
-    static readonly PARAM_METHOD: string = "{method}";
+    static readonly API_UPDATE_CONFIG_ORDER: string = `vg-order-service/config-order`;
 }

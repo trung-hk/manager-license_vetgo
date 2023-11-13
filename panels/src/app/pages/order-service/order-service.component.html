@@ -19,14 +19,14 @@
                                         </nz-card>
                                     </nz-list-item>
                                     <ng-template #amountPackage>
-                                        Gói sản phẩm <nz-tag [nzColor]="'processing'">{{dataPackageProductMap.get(dt.id!)?.length}}</nz-tag>
+                                        Gói sản phẩm <nz-tag [nzColor]="'processing'">{{dt.packages?.length}}</nz-tag>
                                     </ng-template>
                                     <ng-template #infoPackageProduct>
                                         <nz-list nzSize="small" class="custom-scrollbar">
                                             <nz-list-item>
                                                 <nz-list-item-meta [ngStyle]="{'align-items': 'center'}" nzAvatar="/assets/img/service-packages.png">
                                                     <nz-list-item-meta-title>
-                                                        <ng-container *ngFor="let item of dataPackageProductMap.get(dt.id!)">
+                                                        <ng-container *ngFor="let item of dt.packages">
                                                             <nz-statistic
                                                                     [nzValueStyle]="{'font-size': 'unset'}"
                                                                     [nzValue]="item.name + ' - ' + (item.price | number)!"
@@ -39,7 +39,7 @@
                                         </nz-list>
                                     </ng-template>
                                     <ng-template #action>
-                                        <ng-container class="card-item-action-background-color" *ngIf="dt.status === STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE then active else unActive">
+                                        <ng-container class="card-item-action-background-color" *ngIf="dt.status === STATUS_PRODUCT_SERVICE.DEPLOYED.value then active else unActive">
                                         </ng-container>
                                     </ng-template>
                                     <ng-template #active>

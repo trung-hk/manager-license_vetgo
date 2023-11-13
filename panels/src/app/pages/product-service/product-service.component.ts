@@ -12,13 +12,13 @@ import {
     STATUS_PRODUCT_SERVICE,
     TYPE_EXPIRED_PACKAGE,
     TYPE_PRODUCT,
-    TYPE_PACKAGE,
-    CONFIG, TYPE_PRODUCT_SERVICE_LIST
+    TYPE_PACKAGE, CONFIG,
 } from "../../Constants/vg-constant";
 import {PACKAGE_PRODUCT_SERVICE_FORM, PRODUCT_SERVICE_FORM} from "../../Constants/Form";
 import {PackageProduct} from "../../models/PackageProduct";
 import {Message} from "../../Constants/message-constant";
 import {AttributeObjectProductService} from "../../models/AttributeObjectProductService";
+import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 
 @Component({
     selector: 'app-product-service',
@@ -27,10 +27,10 @@ import {AttributeObjectProductService} from "../../models/AttributeObjectProduct
 export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly STATUS_PRODUCT_SERVICE = STATUS_PRODUCT_SERVICE;
     protected readonly TYPE_PACKAGE = TYPE_PACKAGE;
-    protected readonly CONFIG_USING = CONFIG;
     protected readonly JSON = JSON;
     protected readonly TYPE_EXPIRED_PACKAGE = TYPE_EXPIRED_PACKAGE;
-    protected readonly TYPE_PRODUCT_SERVICE_LIST = TYPE_PRODUCT_SERVICE_LIST;
+    protected readonly CONFIG = CONFIG;
+    protected readonly CONFIG_LIST = CONFIG.CONFIG_LIST;
     listScript = [];
     dataList: Item[] = [];
     total: number = 1;
@@ -50,14 +50,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     idDelete: number | string | null | undefined = -1;
     idShowModal: number | string | null | undefined = null;
     filter: Array<{ key: string; value: string[] }> | null = null;
-    statusList: { text: string, value: string }[] = [
-        {text: this.STATUS_PRODUCT_SERVICE.UN_DEPLOYED_LABEL, value: this.STATUS_PRODUCT_SERVICE.UN_DEPLOYED_VALUE},
-        {text: this.STATUS_PRODUCT_SERVICE.DEPLOYED_LABEL, value: this.STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE}
-    ];
-    statusConfigList: { text: string, value: string }[] = [
-        {text: this.CONFIG_USING.NOT_USING_LABEL, value: this.CONFIG_USING.NOT_USING_VALUE},
-        {text: this.CONFIG_USING.USING_LABEL, value: this.CONFIG_USING.USING_VALUE}
-    ];
     formPackage!: FormArray;
 
     constructor(private loadScript: LazyLoadScriptService,
@@ -97,7 +89,8 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
 
     loadDataFromServer(keyWork?: string): void {
         this.loading = true;
-        this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, this.pageIndex - 1, this.pageSize, this.sort, this.filter, keyWork).subscribe((data) => {
+        const objectSelectItem: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
+        this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, objectSelectItem).subscribe((data) => {
             console.log(data)
             this.loading = false;
             this.total = data.totalElements;
@@ -139,8 +132,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                 name: product.name,
                 description: product.description,
                 status: product.status,
-                usingConfig: attribute.usingConfig ? attribute.usingConfig : this.CONFIG_USING.NOT_USING_VALUE,
-                typeProductService: attribute.typeProductService ? attribute.typeProductService : ""
+                usingConfig: attribute.usingConfig ? attribute.usingConfig : this.CONFIG.NOT_USING.value,
             });
             attribute.packages?.forEach(packageItem => {
                 packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.DAY;
@@ -156,7 +148,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                     packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.YEAR;
                     packageItem.expired = packageItem.year;
                 }
-                if (!packageItem.typePackage) packageItem.typePackage = TYPE_PACKAGE.PAYMENT_VALUE;
+                if (!packageItem.typePackage) packageItem.typePackage = TYPE_PACKAGE.PAYMENT.value;
                 this.formPackage.push(this.fb.group({
                     id: [packageItem.id],
                     name: [packageItem.name],
@@ -169,8 +161,8 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         } else {
             this.validateProductForm.reset();
             this.validateProductForm.patchValue({
-                status: this.STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE,
-                usingConfig: this.CONFIG_USING.NOT_USING_VALUE
+                status: this.STATUS_PRODUCT_SERVICE.DEPLOYED.value,
+                usingConfig: this.CONFIG.NOT_USING.value
             });
         }
         this.idShowModal = this.validateProductForm.get("id")?.value;
@@ -205,7 +197,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                             return p;
                         })
                 }
-                const attributeProduct: AttributeObjectProductService = {usingConfig: data.usingConfig, packages: packages.packages, typeProductService: data.typeProductService}
+                const attributeProduct: AttributeObjectProductService = {usingConfig: data.usingConfig, packages: packages.packages}
                 data.attributes = JSON.stringify(attributeProduct);
                 if (data.id) {
                     this.api.update<Item>(data.id, data, URL.API_ITEM).subscribe(() => {

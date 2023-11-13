@@ -6,17 +6,26 @@ import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
-import {MODE_DISPLAY, ROLES, STATUS_ORDER, STATUS_PAYMENT} from "../../Constants/vg-constant";
+import {
+    CONFIG,
+    MODE_DISPLAY,
+    MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
+    ROLES,
+    STATUS_ORDER,
+    STATUS_PAYMENT, USER_TYPE
+} from "../../Constants/vg-constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {Message} from "../../Constants/message-constant";
 import {OrderService} from "../../models/OrderService";
 import {Item} from "../../models/Item";
 import {AgentProduct} from "../../models/AgentProduct";
-import {PackageProduct} from "../../models/PackageProduct";
 import {ModalFormOrderServiceCallback} from "../../models/ModalFormOrderServiceCallback";
 import {PAYMENTS_METHOD, PAYMENTS_URL} from "../../Constants/payment-urls";
 import {ResponesePayment} from "../../models/ResponesePayment";
 import {Router} from "@angular/router";
+import {ObjectSelectAll} from "../../models/ObjectSelectAll";
+import {User} from "../../models/User";
+import {BehaviorSubject, debounceTime, distinctUntilChanged} from "rxjs";
 
 @Component({
     selector: 'app-orders',
@@ -28,12 +37,12 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly ROLES = ROLES;
     protected readonly MODE_DISPLAY = MODE_DISPLAY;
     protected readonly PAYMENTS_METHOD = PAYMENTS_METHOD;
+    protected readonly MODE_OPEN_MODAL_FORM_ORDER_SERVICE = MODE_OPEN_MODAL_FORM_ORDER_SERVICE;
+    protected readonly CONFIG = CONFIG;
     listScript = [];
     dataList: OrderService[] = [];
     productList: Item[] = [];
-    dataProductMap: Map<string, Item> = new Map<string, Item>();
-    dataPackageProductMap: Map<string, PackageProduct[]> = new Map<string, PackageProduct[]>();
-    dataPackageMap: Map<string, PackageProduct> = new Map<string, PackageProduct>();
+    userList: User[] = [];
     total: number = 1;
     loading: boolean = true;
     pageSize: number = 10;
@@ -44,16 +53,13 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     isVisibleDelete = false;
     isConfirmLoadingDelete = false;
     orderDelete: OrderService | null | undefined = null;
-    filter: Array<{ key: string; value: string[] }> | null = null;
-    statusList: { text: string, value: string }[] = [
-        {text: this.STATUS_ORDER.IN_PROCESS_LABEL, value: this.STATUS_ORDER.IN_PROCESS_VALUE},
-        {text: this.STATUS_ORDER.CANCEL_ORDER_LABEL, value: this.STATUS_ORDER.CANCEL_ORDER_VALUE},
-        {text: this.STATUS_ORDER.FINISHED_LABEL, value: this.STATUS_ORDER.FINISHED_VALUE}
-    ];
-    paymentStatusList: { text: string, value: string }[] = [
-        {text: this.STATUS_PAYMENT.UN_PAID_LABEL, value: this.STATUS_PAYMENT.UN_PAID_VALUE},
-        {text: this.STATUS_PAYMENT.PAID_LABEL, value: this.STATUS_PAYMENT.PAID_VALUE}
-    ];
+    filter: Array<{ key: string; value: string[] }> = [];
+    selectUser: string = "";
+    private searchSubject = new BehaviorSubject<string>('');
+    search$ = this.searchSubject.asObservable();
+    test: string[] = [];
+    nzFilterOption = (): boolean => true;
+
     modeView!: string;
 
     constructor(private loadScript: LazyLoadScriptService,
@@ -64,7 +70,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private fb: UntypedFormBuilder,
                 private viewContainerRef: ViewContainerRef,
                 private elRef: ElementRef,
-                private router: Router) {
+                private router: Router,) {
     }
     expandSet = new Set<string>();
     onExpandChange(id: string, checked: boolean): void {
@@ -78,6 +84,15 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit() {
         this.modeView = this.elRef.nativeElement.offsetWidth < 765 ? MODE_DISPLAY.MOBILE : MODE_DISPLAY.PC;
         this.init();
+        this.search$
+            .pipe(
+                debounceTime(500), // Đặt thời gian debounce (miligiây)
+                distinctUntilChanged() // Chỉ gọi khi giá trị thay đổi
+            )
+            .subscribe(searchText => {
+                // Gọi hàm tìm kiếm của bạn ở đây
+                this.onSearch(searchText);
+            });
     }
 
     ngAfterViewInit(): void {
@@ -86,8 +101,6 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         window.addEventListener('resize', () => {
                 this.modeView = this.elRef.nativeElement.offsetWidth < 765 ? MODE_DISPLAY.MOBILE : MODE_DISPLAY.PC;
-            console.log(this.modeView);
-            console.log(this.elRef.nativeElement.offsetWidth);
         });
     }
 
@@ -96,67 +109,66 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     init(): void {
-        this.loadDataFromServer().then();
+        this.loadDataFromServer();
+        this.scriptFC.hasPermission(ROLES.ADMIN).then(result => {
+            if (result) this.filter = [{key: "realm", value: []}];
+        })
+        this.scriptFC.hasPermission(ROLES.AGENT).then(result => {
+            if (result) this.filter = [{key: "distributor_id", value: []}];
+        })
+        this.scriptFC.hasPermission(ROLES.DISTRIBUTOR).then(result => {
+            if (result) this.filter = [{key: "partner_id", value: []}];
+        })
+        this.scriptFC.hasPermission(ROLES.PARTNER).then(result => {
+            if (result) this.filter = [{key: "customer_id", value: []}];
+        })
+
     }
 
-    async loadDataFromServer(keyWork?: string): Promise<void> {
-        return new Promise(rs => {
-            this.loading = true;
-            let isLoadedDataOrderService = false;
-            let isLoadedDataProduct = false;
-            this.api.getAll<ResponseDataGetAll<OrderService>>(URL.API_ORDER_SERVICE, this.pageIndex - 1, this.pageSize, this.sort, this.filter, keyWork).subscribe((data) => {
+    loadDataFromServer(keyWork?: string): void {
+        this.loading = true;
+        let loading_success_1 = false;
+        let loading_success_2 = false;
+        const objectSelectOrderService: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
+        this.api.getAll<ResponseDataGetAll<OrderService>>(URL.API_ORDER_SERVICE, objectSelectOrderService).subscribe((data) => {
+            console.log(data)
+            loading_success_1 = true;
+            this.total = data.totalElements;
+            this.dataList = data.content.map(d => {
+                d.attributesObject = this.scriptFC.getAttributeOrderProductService(d.attributes);
+                return d;
+            });
+            this.loading = !(loading_success_1 && loading_success_2);
+        }, error => {
+            console.log(error);
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
+            this.loading = false;
+        });
+        this.api.getAll<ResponseDataGetAll<AgentProduct>>(URL.API_AGENT_PRODUCT)
+            .subscribe((data) => {
                 console.log(data)
-                this.loading = false;
-                this.total = data.totalElements;
-                this.dataList = data.content;
-                isLoadedDataOrderService = true;
+                const idProductRegisterList = data.content.map(ap => ap.itemId);
+                this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM)
+                    .subscribe((data) => {
+                        console.log(data)
+                        this.productList = data.content
+                            .filter(ps => idProductRegisterList.includes(ps.id))
+                            .map(product => {
+                                product.packages = this.scriptFC.getPackageService(product.attributes);
+                                return product;
+                            });
+                        loading_success_2 = true;
+                        this.loading = !(loading_success_1 && loading_success_2);
+                    }, error => {
+                        console.log(error);
+                        this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
+                        this.loading = false;
+                    });
             }, error => {
                 console.log(error);
                 this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-                rs()
                 this.loading = false;
             });
-            this.api.getAll<ResponseDataGetAll<AgentProduct>>(URL.API_AGENT_PRODUCT)
-                .subscribe((data) => {
-                    console.log(data)
-                    const idProductRegisterList = data.content.map(ap => ap.itemId);
-                    this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, null, null, null, null, null)
-                        .subscribe((data) => {
-                            console.log(data)
-                            this.productList = data.content.filter(ps => idProductRegisterList.includes(ps.id));
-                            this.dataProductMap = new Map<string, Item>(
-                                this.productList.map(p => [p.id!, p])
-                            )
-                            this.dataPackageProductMap = new Map<string, PackageProduct[]>(
-                                this.productList.map(product => {
-                                    const packageList = this.scriptFC.getPackageService(product.attributes);
-                                    packageList.forEach(p => this.dataPackageMap.set(p.id!, p));
-                                    return [product.id!, packageList];
-                                })
-                            )
-                            isLoadedDataProduct = true;
-                        }, error => {
-                            console.log(error);
-                            this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-                            rs()
-                            this.loading = false;
-                        });
-                }, error => {
-                    console.log(error);
-                    this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-                    rs()
-                    this.loading = false;
-                });
-            const interval = setInterval(() => {
-                if (isLoadedDataProduct && isLoadedDataOrderService) {
-                    this.loading = false;
-                    clearInterval(interval);
-                    rs();
-                }
-            }, 500);
-        })
-
-
     }
 
     onQueryParamsChange(params: NzTableQueryParams): void {
@@ -178,7 +190,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
             this.sort = `${sortField},${sortOrder}`;
         }
-        this.loadDataFromServer().then();
+        this.loadDataFromServer();
     }
     handleCancel(): void {
         this.isVisible = false;
@@ -197,13 +209,13 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     handleConfirmToDelete() {
         if (this.orderDelete) {
             this.isConfirmLoadingDelete = true;
-            this.orderDelete.status = STATUS_ORDER.CANCEL_ORDER_VALUE;
+            this.orderDelete.status = STATUS_ORDER.CANCEL_ORDER.value;
             this.api.update(this.orderDelete.id, this.orderDelete, URL.API_ORDER_SERVICE).subscribe((data) => {
                 if (data.status === 400 || data.status === 409) {
                     this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_FAILED);
                     this.isConfirmLoadingDelete = false;
                 } else {
-                    this.loadDataFromServer().then();
+                    this.loadDataFromServer();
                     this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
                     this.isConfirmLoadingDelete = false;
                 }
@@ -226,30 +238,32 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
 
-    createComponentModal(order?: OrderService, isNewOrder?: boolean): void {
+    createComponentModal(modeOpen: string, order?: OrderService): void {
         const callback: ModalFormOrderServiceCallback = {
             reloadData: () => {
                 // Gọi phương thức từ class đã định nghĩa ở đây
-                this.loadDataFromServer().then();
+                this.loadDataFromServer();
             }
         };
-        if (isNewOrder) {
-            this.scriptFC.createComponentModalFormOrderService(null, this.productList, this.dataPackageProductMap, order?.customerId!, null, this.viewContainerRef, callback);
-        } else {
-            this.scriptFC.createComponentModalFormOrderService(order?.itemId!, this.productList, this.dataPackageProductMap, order?.customerId!, order, this.viewContainerRef, callback);
+        switch (modeOpen) {
+            case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT:
+                this.scriptFC.createComponentModalFormOrderService(null, this.productList, order?.customerId!, null, this.viewContainerRef, MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT, callback);
+                break;
+            case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE:
+                this.scriptFC.createComponentModalFormOrderService(order?.itemId!, this.productList, order?.customerId!, order, this.viewContainerRef, MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE, callback);
+                break;
+            case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG:
+                this.scriptFC.createComponentModalFormOrderService(order?.itemId!, this.productList, order?.customerId!, order, this.viewContainerRef, MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG, callback);
+                break;
         }
-    }
-
-    createComponentModalViewOrderService(order: OrderService): void {
-       // this.scriptFC.createComponentModalViewOrderService()
     }
 
     payment(order: OrderService, method: string): void {
-        if (order.paymentStatus !== STATUS_PAYMENT.UN_PAID_VALUE) {
+        if (order.paymentStatus !== STATUS_PAYMENT.UN_PAID.value) {
             this.scriptFC.alertShowMessageError(Message.MESSAGE_CHECK_PAYMENT);
             return;
         }
-        if (order.status !== STATUS_ORDER.IN_PROCESS_VALUE) {
+        if (order.status !== STATUS_ORDER.IN_PROCESS.value) {
             this.scriptFC.alertShowMessageError(Message.MESSAGE_CHECK_STATUS_ORDER);
             return;
         }
@@ -278,5 +292,52 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 break;
         }
 
+    }
+    onSearch(searchText: string): void {
+        // Gọi hàm tìm kiếm của bạn ở đây
+        console.log('Searching for:', searchText);
+        const objectSelectUser: ObjectSelectAll = {keyword: searchText}
+        this.scriptFC.hasPermission(ROLES.ADMIN).then(result => {
+            if (result) {
+                this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.AGENT, objectSelectUser).subscribe((data) => {
+                    console.log(data)
+                    this.userList = data.content;
+                });
+            }
+        })
+        this.scriptFC.hasPermission(ROLES.AGENT).then(result => {
+            if (result) {
+                this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.DISTRIBUTOR, objectSelectUser).subscribe((data) => {
+                    console.log(data)
+                    this.userList = data.content;
+                });
+            }
+        })
+        this.scriptFC.hasPermission(ROLES.DISTRIBUTOR).then(result => {
+            if (result) {
+                this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.PARTNER, objectSelectUser).subscribe((data) => {
+                    console.log(data)
+                    this.userList = data.content;
+                });
+            }
+        })
+        this.scriptFC.hasPermission(ROLES.PARTNER).then(result => {
+            if (result) {
+                this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.CUSTOMER, objectSelectUser).subscribe((data) => {
+                    console.log(data)
+                    this.userList = data.content;
+                });
+            }
+        })
+    }
+
+    handleInputChange(searchText: any): void {
+        // Cập nhật giá trị BehaviorSubject khi có sự thay đổi
+        this.searchSubject.next(searchText);
+    }
+    filterOrder(e: string) {
+        this.filter[0].value = [e];
+        this.loadDataFromServer();
+        // this.filter = {}
     }
 }

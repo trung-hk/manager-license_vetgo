@@ -23,7 +23,7 @@
                             <th class="text-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                                 Ngày cập nhật
                             </th>
-                            <th class="text-center" nzColumnKey="status" nzWidth="12em" [nzSortFn]="true" [nzFilters]="statusList" [nzFilterFn]="true">
+                            <th class="text-center" nzColumnKey="status" nzWidth="12em" [nzSortFn]="true" [nzFilters]="STATUS_AGENT.LIST" [nzFilterFn]="true">
                                 Trạng thái
                             </th>
                             <th class="text-center" nzWidth="10em">Thao tác</th>
@@ -58,13 +58,13 @@
                             <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
                             <td class="align-center">
                                 <ng-container [ngSwitch]="dt.status">
-                                    <div *ngSwitchCase="STATUS_AGENT.IN_ACTIVE_VALUE"
+                                    <div *ngSwitchCase="STATUS_AGENT.IN_ACTIVE.value"
                                          class="badge badge-shadow badge-danger">
-                                        {{STATUS_AGENT.IN_ACTIVE_LABEL}}
+                                        {{STATUS_AGENT.IN_ACTIVE.text}}
                                     </div>
-                                    <div *ngSwitchCase="STATUS_AGENT.ACTIVATED_VALUE"
+                                    <div *ngSwitchCase="STATUS_AGENT.ACTIVATED.value"
                                          class="badge badge-shadow badge-success">
-                                        {{STATUS_AGENT.ACTIVATED_LABEL}}
+                                        {{STATUS_AGENT.ACTIVATED.text}}
                                     </div>
                                 </ng-container>
                             </td>
@@ -176,7 +176,7 @@
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
                 <nz-form-control [nzSm]="18">
                     <nz-select formControlName="status">
-                        <nz-option *ngFor="let status of statusList" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
+                        <nz-option *ngFor="let status of STATUS_AGENT.LIST" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>

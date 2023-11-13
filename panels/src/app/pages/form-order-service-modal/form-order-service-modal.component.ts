@@ -2,16 +2,30 @@ import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
 import {IModalData} from "../../models/ModalData";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
-import {ORDER_SERVICE_FORM, USER_FORM} from "../../Constants/Form";
+import {
+    CONFIG_ADMIN_ONLINE_SHOP_FORM,
+    CONFIG_CS_ZALO_FORM,
+    CONFIG_POS_FORM,
+    CONFIG_SPA_FORM, CONFIG_VET_APP_FORM, CONFIG_WIFI_MARKETING_FORM,
+    ORDER_SERVICE_FORM,
+    USER_FORM
+} from "../../Constants/Form";
 import {User} from "../../models/User";
 import {Item} from "../../models/Item";
 import {ScriptCommonService} from "../../services/script-common.service";
-import {STATUS_CUSTOMER, STATUS_ORDER, USER_TYPE} from "../../Constants/vg-constant";
+import {
+    CONFIG,
+    MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
+    STATUS_CUSTOMER,
+    STATUS_ORDER,
+    USER_TYPE
+} from "../../Constants/vg-constant";
 import {Message} from "../../Constants/message-constant";
 import {URL} from "../../Constants/api-urls";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ResponseError} from "../../models/ResponseError";
 import {OrderService} from "../../models/OrderService";
+import {AttributeOrderProductService} from "../../models/AttributeOrderProductService";
 @Component({
     selector: 'app-form-order-service-modal',
     templateUrl: './form-order-service-modal.component.html',
@@ -19,7 +33,7 @@ import {OrderService} from "../../models/OrderService";
 export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     validateCustomerForm!: UntypedFormGroup;
     validateOrderForm!: UntypedFormGroup;
-    isUpdateOrder: boolean = false;
+    validateConfigForm!: UntypedFormGroup;
 
     constructor(private fb: UntypedFormBuilder,
                 public scriptFC: ScriptCommonService,
@@ -33,6 +47,8 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     productSelect!: Item | null | undefined;
     order!: OrderService | null | undefined;
     totalPrice: string = "0";
+    mode!: string;
+    attributeOrder!: AttributeOrderProductService;
 
     destroyModal(): void {
         this.#modal.destroy({data: 'this the result data'});
@@ -47,6 +63,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
         this.customerId = this.nzModalData.userId;
         this.products = this.nzModalData.productInfo;
         this.order = this.nzModalData.order;
+        this.mode = this.nzModalData.mode;
         this.productSelect = this.products.find(p => p.id === this.nzModalData.idProductSelect);
         if (!this.productSelect) this.productSelect = this.products[0]
         if (this.customerId) {
@@ -55,16 +72,41 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             })
         } else {
             this.validateCustomerForm.patchValue({
-                status: STATUS_CUSTOMER.ACTIVATED_VALUE
+                status: STATUS_CUSTOMER.ACTIVATED.value
             })
         }
         if (this.order) {
-            this.isUpdateOrder = true;
+            this.attributeOrder = this.scriptFC.getAttributeOrderProductService(this.order.attributes);
             this.setValueFormOrderService(this.order);
         } else {
             this.validateOrderForm.patchValue({
                 itemId: this.productSelect.id?.toString()
             })
+        }
+        if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG) {
+            const attribute = this.scriptFC.getAttributeOrderProductService(this.order?.attributes);
+            switch (attribute.usingConfig) {
+                case CONFIG.VET_APP.value:
+                    this.validateConfigForm = this.fb.group(CONFIG_VET_APP_FORM);
+                    break;
+                case CONFIG.POS.value:
+                    this.validateConfigForm = this.fb.group(CONFIG_POS_FORM);
+                    break;
+                case CONFIG.SPA.value:
+                    this.validateConfigForm = this.fb.group(CONFIG_SPA_FORM);
+                    break;
+                case CONFIG.CS_ZALO.value:
+                    this.validateConfigForm = this.fb.group(CONFIG_CS_ZALO_FORM);
+                    break;
+                case CONFIG.WIFI_MARKETING.value:
+                    this.validateConfigForm = this.fb.group(CONFIG_WIFI_MARKETING_FORM);
+                    break;
+                case CONFIG.ADMIN_ONLINE_SHOP.value:
+                    this.validateConfigForm = this.fb.group(CONFIG_ADMIN_ONLINE_SHOP_FORM);
+                    break;
+                default: this.validateConfigForm = this.fb.group({});
+            }
+
         }
     }
 
@@ -102,7 +144,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             itemId: order.itemId?.toString(),
             packageId: order.packageId
         })
-        if (this.isUpdateOrder) this.validateOrderForm.get("itemId")?.disable();
+        if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE) this.validateOrderForm.get("itemId")?.disable();
         this.totalPrice = order.totalAmount!;
     }
 
@@ -118,12 +160,12 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     }
 
     handleChangePackage(id: any): void {
-        this.totalPrice = this.nzModalData.packageProductMap.get(this.productSelect?.id!)?.find(p => p.id === id)?.price!;
+        this.totalPrice = this.productSelect?.packages?.find(p => p.id === id)?.price!;
     }
 
     async handleSubmit(): Promise<void> {
         // validate form customer
-        if (!this.isUpdateOrder && this.validateCustomerForm.invalid) {
+        if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT && this.validateCustomerForm.invalid) {
             this.scriptFC.alertShowMessageError(Message.MESSAGE_REGISTER_CUSTOMER_PRODUCT_SERVICE_FAILED);
             Object.values(this.validateCustomerForm.controls).forEach(control => {
                 if (control.invalid) {
@@ -147,7 +189,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
         }
         let dataOrder: OrderService = this.validateOrderForm.value;
         // trường hợp update Order thì ko xử lý update thông tin customer
-        if (!this.isUpdateOrder) {
+        if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT) {
             // xử lý insertOrUpdate customer
             let dataCustomer: User = this.validateCustomerForm.value;
             dataCustomer.type = USER_TYPE.CUSTOMER;
@@ -156,13 +198,20 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             if (!dataCustomer.id) return;
             dataOrder.customerId = dataCustomer.id;
         }
-        // Trường hợp update Order thì không cho thay đổi sản phẩm
-        if (this.isUpdateOrder && this.order?.itemId != dataOrder.itemId) {
-            this.scriptFC.alertShowMessageError(Message.MESSAGE_ERROR_UPDATE_ORDER);
-            return;
+        // Trường hợp insert hoặc update order
+        if (this.mode !== MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG) {
+            // Trường hợp update Order thì không cho thay đổi sản phẩm
+            if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE && this.order?.itemId != dataOrder.itemId) {
+                this.scriptFC.alertShowMessageError(Message.MESSAGE_ERROR_UPDATE_ORDER);
+                return;
+            }
+            // xử lý insertOrUpdate order
+            await this.insertOrUpdateOrder(dataOrder);
+            // Trường hợp update config order
+        } else {
+            await this.updateConfigOrder();
         }
-        // xử lý insertOrUpdate order
-        await this.insertOrUpdateOrder(dataOrder);
+
     }
 
     /**/
@@ -210,7 +259,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
 
     insertOrUpdateOrder(dataOrder: OrderService): Promise<OrderService> {
         return new Promise(rs => {
-            dataOrder.status = STATUS_ORDER.IN_PROCESS_VALUE;
+            dataOrder.status = STATUS_ORDER.IN_PROCESS.value;
             console.log(dataOrder);
             if (dataOrder.id) {
                 // update order
@@ -247,6 +296,27 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             }
         })
     }
+    updateConfigOrder(): Promise<void> {
+        return new Promise(rs => {
+            const data = {id: this.order?.id, data: this.validateConfigForm.value};
+            console.log(data);
+            this.api.update(this.order?.id, data, URL.API_UPDATE_CONFIG_ORDER).subscribe((data) => {
+                data = data as ResponseError;
+                if (this.scriptFC.validateResponseAPI(data.status)) {
+                    this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
+                    rs();
+                } else {
+                    this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
+                    this.destroyModal();
+                    rs();
+                }
+            }, error => {
+                console.log(error);
+                this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
+                rs();
+            })
+        })
+    }
 
     onSearch(value: any): void {
         console.log(value)
@@ -254,9 +324,13 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
         if (phone?.length !== 10) return;
         this.api.getCustomerByPhone(phone).subscribe((data) => {
             console.log(data)
-            if (data.status === 404) return;
+            if (this.scriptFC.validateResponseAPI(data.status)) return;
             this.setValueFormCustomer(data as User, true);
         })
 
     }
+
+    protected readonly MODE_OPEN_MODAL_FORM_ORDER_SERVICE = MODE_OPEN_MODAL_FORM_ORDER_SERVICE;
+    protected readonly CONFIG = CONFIG;
+    protected readonly CONFIG_ADMIN_ONLINE_SHOP_FORM = CONFIG_ADMIN_ONLINE_SHOP_FORM;
 }

@@ -6,9 +6,14 @@ import {ApiCommonService} from "../../services/api-common.service";
 import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
-import {ROLES, STATUS_AGENT_PRODUCT, STATUS_PRODUCT_SERVICE} from "../../Constants/vg-constant";
+import {
+    MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
+    ROLES,
+    STATUS_AGENT_PRODUCT,
+    STATUS_PRODUCT_SERVICE
+} from "../../Constants/vg-constant";
 import {URL} from "../../Constants/api-urls";
-import {PackageProduct} from "../../models/PackageProduct";
+import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 
 @Component({
     selector: 'app-order-service',
@@ -20,7 +25,6 @@ export class OrderServiceComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly ROLES = ROLES;
     listScript = [];
     dataProductList: Item[] = [];
-    dataPackageProductMap: Map<string, PackageProduct[]> = new Map<string, PackageProduct[]>();
     loading: boolean = true;
 
     constructor(private loadScript: LazyLoadScriptService,
@@ -56,15 +60,14 @@ export class OrderServiceComponent implements OnInit, AfterViewInit, OnDestroy {
                 .subscribe((data) => {
                     console.log(data)
                     const IdProductRegisterList = data.content.map(ap => ap.itemId);
-                    this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, null, null, null, null, keyWork)
+                    const objectSelectItem: ObjectSelectAll = {keyword: keyWork}
+                    this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, objectSelectItem)
                         .subscribe((data) => {
                             console.log(data)
-                            this.dataProductList = data.content.filter(ps => IdProductRegisterList.includes(ps.id)).sort(function (a, b) {
-                                return ((JSON.parse(a.attributes!).packages).length - (JSON.parse(b.attributes!).packages).length)
+                            this.dataProductList = data.content.filter(ps => IdProductRegisterList.includes(ps.id)).map(d => {
+                                d.packages = this.scriptFC.getPackageService(d.attributes);
+                                return d;
                             });
-                            this.dataPackageProductMap = new Map<string, PackageProduct[]>(
-                                this.dataProductList.map(product => [product.id!, this.scriptFC.getPackageService(product.attributes)])
-                            )
                             this.loading = false;
                             rs();
                         });
@@ -82,7 +85,7 @@ export class OrderServiceComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     createComponentModal(idSelect: string): void {
-        this.scriptFC.createComponentModalFormOrderService(idSelect, this.dataProductList, this.dataPackageProductMap, null, null, this.viewContainerRef)
+        this.scriptFC.createComponentModalFormOrderService(idSelect, this.dataProductList, null, null, this.viewContainerRef, MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT)
     }
 
     createComponentModalView(product: Item) {

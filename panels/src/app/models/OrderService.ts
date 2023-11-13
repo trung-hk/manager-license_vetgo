@@ -1,3 +1,5 @@
+import {AttributeOrderProductService} from "./AttributeOrderProductService";
+
 export class OrderService {
     id?: string | null;
     code?: string | null;
@@ -21,5 +23,6 @@ export class OrderService {
     deleted?: boolean | null;
     itemId?: string | null;
     expiredDate?: string | null;
+    attributesObject?: AttributeOrderProductService | null;
 }
 

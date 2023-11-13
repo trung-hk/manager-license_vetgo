@@ -1,289 +1,341 @@
 <section class="section">
-    <div class="section-body">
-        <div class="row">
-            <div class="col-12">
-                <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false"
-                         [nzBodyStyle]="{'padding': 'unset' }">
-                    <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
-                    <nz-table *ngIf="modeView === MODE_DISPLAY.PC"
-                              nzShowSizeChanger
-                              [nzData]="dataList"
-                              [nzFrontPagination]="false"
-                              [nzLoading]="loading"
-                              [nzTotal]="total"
-                              [nzPageSize]="pageSize"
-                              [nzPageIndex]="pageIndex"
-                              (nzQueryParams)="onQueryParamsChange($event)"
-                    >
-                        <thead>
-                        <tr>
-                            <th nzWidth="15em" nzColumnKey="code" [nzSortFn]="true">Mã đơn hàng</th>
-                            <th nzWidth="15em" nzColumnKey="name" [nzSortFn]="true">Khách hàng</th>
-                            <th nzWidth="20em">Sản phẩm đã mua</th>
-                            <th class="text-center" nzWidth="10em" nzColumnKey="phone" [nzFilters]="paymentStatusList"
-                                [nzFilterFn]="true">
-                                Thanh toán
-                            </th>
-                            <th class="text-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
-                                Ngày cập nhật
-                            </th>
-                            <th class="text-center" nzColumnKey="status" nzWidth="12em" [nzFilters]="statusList"
-                                [nzFilterFn]="true">
-                                Trạng thái
-                            </th>
-                            <th class="text-center" nzWidth="10em">Thao tác</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let dt of dataList">
-                            <td>{{dt.code}}</td>
-                            <td>
-                                <nz-list-item-meta
-                                        *ngIf="dt"
-                                        [nzAvatar]="avatar"
-                                        [nzDescription]="dt.customerName!"
-                                >
-                                    <nz-list-item-meta-title>
-                                        {{dt.customerPhone! | phoneFormat}}
-                                    </nz-list-item-meta-title>
-                                </nz-list-item-meta>
-                                <ng-template #avatar>
-                                    <nz-avatar nzIcon="user" nzSrc=""></nz-avatar>
-                                </ng-template>
-                            </td>
-                            <td>
-                                <nz-list-item-meta
-                                        *ngIf="dt"
-                                        nzAvatar="/assets/img/service-packages.png"
-                                        [nzDescription]="dataProductMap.get(dt.itemId!)?.name! + ' - ' + dataPackageMap.get(dt.packageId!)?.name"
-                                >
-                                    <nz-list-item-meta-title>
-                                        <nz-statistic
-                                                [nzValueStyle]="{'font-size': 'unset'}"
-                                                [nzValue]="(dt.totalAmount | number)!"
-                                                [nzSuffix]="'VNĐ'">
-                                        </nz-statistic>
-                                    </nz-list-item-meta-title>
-                                </nz-list-item-meta>
-                            </td>
-                            <td class="align-center">
-                                <ng-container [ngSwitch]="dt.paymentStatus">
-                                    <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID_VALUE">
-                                        <nz-space>
-                                            <img *nzSpaceItem class="payment-icon"
-                                                 (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px" height="50px"
-                                                 src="/assets/img/payment-momo.png" title="Thanh toán momo"
-                                                 alt="Thanh toán momo"/>
-                                            <img *nzSpaceItem class="payment-icon"
-                                                 (click)="payment(dt!, PAYMENTS_METHOD.BANK_TRANSFER)" width="64px"
-                                                 height="50px" src="/assets/img/payment-bank-transfer.png"
-                                                 title="Thanh toán chuyển khoản" alt="Thanh toán chuyển khoản"/>
-                                        </nz-space>
-                                    </div>
-                                    <div *ngSwitchDefault
-                                         class="badge badge-shadow badge-success">
-                                        {{STATUS_PAYMENT.PAID_LABEL}}
-                                    </div>
-                                </ng-container>
-                            </td>
-                            <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
-                            <td class="align-center">
-                                <ng-container [ngSwitch]="dt.status">
-                                    <div *ngSwitchCase="STATUS_ORDER.IN_PROCESS_VALUE"
-                                         class="badge badge-shadow badge-primary">
-                                        {{STATUS_ORDER.IN_PROCESS_LABEL}}
-                                    </div>
-                                    <div *ngSwitchCase="STATUS_ORDER.CANCEL_ORDER_VALUE"
-                                         class="badge badge-shadow badge-danger">
-                                        {{STATUS_ORDER.CANCEL_ORDER_LABEL}}
-                                    </div>
-                                    <div *ngSwitchDefault
-                                         class="badge badge-shadow badge-success">
-                                        {{STATUS_ORDER.FINISHED_VALUE}}
-                                    </div>
-                                </ng-container>
-                            </td>
-                            <td class="align-center action">
-                                <nz-space>
-                                    <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.PAID_VALUE">
-                                        <span *nzSpaceItem
-                                              nz-icon nzType="credit-card"
-                                              nzTheme="outline"
-                                              [routerLink]="['/payment-complete-details', dt.id!]"
-                                              title="Chi tiết thanh toán">
-                                        </span>
-                                    </ng-container>
-                                    <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
-                                        <span *nzSpaceItem nz-icon nzType="diff"
-                                              nzTheme="outline"
-                                              (click)="createComponentModal(dt, true)"
-                                              title="Thêm đơn mới">
-                                        </span>
-                                        <ng-container
-                                                *ngIf="dt.paymentStatus === STATUS_PAYMENT.UN_PAID_VALUE && dt.status === STATUS_ORDER.IN_PROCESS_VALUE">
-                                            <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline"
-                                                  (click)="createComponentModal(dt)"
-                                                  title="Chỉnh sửa">
-                                            </span>
-                                            <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline"
-                                                  (click)="showDeleteModal(dt)"
-                                                  title="Hủy đơn hàng">
-                                            </span>
-                                        </ng-container>
-                                    </ng-container>
-                                </nz-space>
-
-                            </td>
-                        </tr>
-                        </tbody>
-                    </nz-table>
-                    <nz-table *ngIf="modeView === MODE_DISPLAY.MOBILE"
-                              nzShowSizeChanger
-                              [nzData]="dataList"
-                              [nzFrontPagination]="false"
-                              [nzLoading]="loading"
-                              [nzTotal]="total"
-                              [nzPageSize]="pageSize"
-                              [nzPageIndex]="pageIndex"
-                              (nzQueryParams)="onQueryParamsChange($event)"
-                    >
-                        <thead>
-                        <tr>
-                            <th nzColumnKey="code" [nzSortFn]="true">Mã đơn hàng</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <ng-container *ngFor="let dt of dataList">
-                            <tr>
-                                <td [nzExpand]="expandSet.has(dt.id!)"
-                                    (nzExpandChange)="onExpandChange(dt.id!, $event)">
-                                    {{dt.code}}
-                                    <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
-                                        <div style="float: right" class="action">
-                                            <nz-space>
-                                                <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.PAID_VALUE">
-                                                    <span *nzSpaceItem
-                                                          nz-icon nzType="credit-card"
-                                                          nzTheme="outline"
-                                                          [routerLink]="['/payment-complete-details', dt.id!]"
-                                                          title="Chi tiết thanh toán">
-                                                    </span>
-                                                </ng-container>
-                                                <span *nzSpaceItem nz-icon nzType="diff"
-                                                      nzTheme="outline"
-                                                      (click)="createComponentModal(dt, true)"
-                                                      title="Thêm đơn mới">
-                                                </span>
-                                            </nz-space>
-                                        </div>
-                                    </ng-container>
-
-                                </td>
-                            </tr>
-                            <tr [nzExpand]="expandSet.has(dt.id!)">
-                                <nz-descriptions nzBordered nzSize="small">
-                                    <nz-descriptions-item nzTitle="Tên">{{dt.customerName}}</nz-descriptions-item>
-                                    <nz-descriptions-item
-                                            nzTitle="Số điên thoại">{{dt.customerPhone! | phoneFormat}}</nz-descriptions-item>
-                                    <nz-descriptions-item
-                                            nzTitle="Tên sản phẩm">{{dataProductMap.get(dt.itemId!)?.name}}</nz-descriptions-item>
-                                    <nz-descriptions-item
-                                            nzTitle="Gói đã mua">{{dataPackageMap.get(dt.packageId!)?.name}}</nz-descriptions-item>
-                                    <nz-descriptions-item nzTitle="Giá">{{dt.totalAmount | number}}VNĐ
-                                    </nz-descriptions-item>
-                                    <nz-descriptions-item nzTitle="Thanh toán">
-                                        <ng-container [ngSwitch]="dt.paymentStatus">
-                                            <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID_VALUE">
-                                                <nz-space>
-                                                    <img *nzSpaceItem class="payment-icon"
-                                                         (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px"
-                                                         height="50px" src="/assets/img/payment-momo.png"
-                                                         alt="Thanh toán momo"/>
-                                                    <img *nzSpaceItem class="payment-icon"
-                                                         (click)="payment(dt!, PAYMENTS_METHOD.BANK_TRANSFER)"
-                                                         width="64px" height="50px"
-                                                         src="/assets/img/payment-bank-transfer.png" alt=""/>
-                                                </nz-space>
-                                            </div>
-                                            <div *ngSwitchDefault
-                                                 class="badge badge-shadow badge-success">
-                                                {{STATUS_PAYMENT.PAID_LABEL}}
-                                            </div>
-                                        </ng-container>
-                                    </nz-descriptions-item>
-                                    <nz-descriptions-item nzTitle="Trạng thái">
-                                        <ng-container [ngSwitch]="dt.status">
-                                            <div *ngSwitchCase="STATUS_ORDER.IN_PROCESS_VALUE"
-                                                 class="badge badge-shadow badge-primary">
-                                                {{STATUS_ORDER.IN_PROCESS_LABEL}}
-                                            </div>
-                                            <div *ngSwitchCase="STATUS_ORDER.CANCEL_ORDER_VALUE"
-                                                 class="badge badge-shadow badge-danger">
-                                                {{STATUS_ORDER.CANCEL_ORDER_LABEL}}
-                                            </div>
-                                            <div *ngSwitchDefault
-                                                 class="badge badge-shadow badge-success">
-                                                {{STATUS_ORDER.FINISHED_VALUE}}
-                                            </div>
-                                        </ng-container>
-                                    </nz-descriptions-item>
-                                </nz-descriptions>
-                                <div style="text-align: center;margin-top: 10px;" class="action">
-                                    <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
-                                        <ng-container
-                                                *ngIf="dt.paymentStatus === STATUS_PAYMENT.UN_PAID_VALUE && dt.status === STATUS_ORDER.IN_PROCESS_VALUE">
-                                            <nz-space>
-                                                <button *nzSpaceItem nz-button nzType="primary"
-                                                        (click)="createComponentModal(dt)">Chỉnh sửa
-                                                </button>
-                                                <button *nzSpaceItem nz-button nzType="default" nzDanger
-                                                        (click)="showDeleteModal(dt)">Hủy đơn hàng
-                                                </button>
-                                            </nz-space>
-                                        </ng-container>
-                                    </ng-container>
-                                </div>
-                            </tr>
-                        </ng-container>
-
-                        </tbody>
-                    </nz-table>
-                </nz-card>
-                <ng-template #titleLeft>
-                    Danh sách đơn hàng
-                    <nz-tag [nzColor]="'#33CCFF'">
-                        <nz-statistic [nzValueStyle]="{'font-size': 'unset'}"
-                                      [nzValue]="(total | number)!"></nz-statistic>
-                    </nz-tag>
+  <div class="section-body">
+    <div class="row">
+      <div class="col-12">
+        <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false"
+                 [nzBodyStyle]="{'padding': 'unset' }">
+          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <nz-table *ngIf="modeView === MODE_DISPLAY.PC" [nzScroll]="{ x: '500px' }"
+                    nzShowSizeChanger
+                    [nzData]="dataList"
+                    [nzFrontPagination]="false"
+                    [nzLoading]="loading"
+                    [nzTotal]="total"
+                    [nzPageSize]="pageSize"
+                    [nzPageIndex]="pageIndex"
+                    (nzQueryParams)="onQueryParamsChange($event)"
+          >
+            <thead>
+            <tr>
+              <th nzWidth="15em" nzColumnKey="code" [nzSortFn]="true">Mã đơn hàng</th>
+              <th nzWidth="15em" nzColumnKey="name" [nzSortFn]="true">Khách hàng</th>
+              <th nzWidth="20em">Sản phẩm đã mua</th>
+              <th class="text-center" nzWidth="10em" nzColumnKey="phone" [nzFilters]="STATUS_PAYMENT.LIST"
+                  [nzFilterFn]="true">
+                Thanh toán
+              </th>
+              <th class="text-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
+                Ngày cập nhật
+              </th>
+              <th class="text-center" nzColumnKey="status" nzWidth="12em" [nzFilters]="STATUS_ORDER.LIST" [nzFilterFn]="true">
+                Trạng thái
+              </th>
+              <th class="text-center" nzWidth="10em">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dt of dataList">
+              <td>{{dt.code}}</td>
+              <td>
+                <nz-list-item-meta
+                    *ngIf="dt"
+                    [nzAvatar]="avatar"
+                    [nzDescription]="dt.customerName!"
+                >
+                  <nz-list-item-meta-title>
+                    {{dt.customerPhone! | phoneFormat}}
+                  </nz-list-item-meta-title>
+                </nz-list-item-meta>
+                <ng-template #avatar>
+                  <nz-avatar nzIcon="user" nzSrc=""></nz-avatar>
                 </ng-template>
-                <ng-template #titleAction>
-                    <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
-                        <div nz-col [nzXXl]="8" [nzXl]="8" [nzLg]="8" [nzMd]="8" [nzSm]="10" [nzXs]="10">
-                            <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
-                                <button type="button" (click)="createComponentModal()" class="btn btn-success">
-                                    <i class="fas fa-plus"></i> Thêm mới
-                                </button>
-                            </ng-container>
-                        </div>
-                        <div nz-col [nzXXl]="{ span: 6, offset: 10 }" *ngIf="modeView === MODE_DISPLAY.PC"
-                             [nzXl]="{ span: 6, offset: 10 }"
-                             [nzLg]="{ span: 6, offset: 10 }"
-                             [nzMd]="{ span: 6, offset: 10 }"
-                             [nzSm]="{ span: 6, offset: 8 }"
-                             [nzXs]="{ span: 6, offset: 8 }">
-                            <nz-input-group [nzSuffix]="suffixIconSearch">
-                                <input nzSize="large" type="search" nz-input placeholder="input search text"
-                                       (keyup.enter)="search($event)"/>
-                            </nz-input-group>
-                            <ng-template #suffixIconSearch>
-                                <span nz-icon nzType="search"></span>
-                            </ng-template>
-                        </div>
+              </td>
+              <td>
+                <nz-list-item-meta
+                    *ngIf="dt"
+                    nzAvatar="/assets/img/service-packages.png"
+                    [nzDescription]="dt.attributesObject?.itemName! + ' - ' + dt.attributesObject?.packagesMap?.get(dt.packageId!)?.name"
+                >
+                  <nz-list-item-meta-title>
+                    <nz-statistic
+                        [nzValueStyle]="{'font-size': 'unset'}"
+                        [nzValue]="(dt.totalAmount | number)!"
+                        [nzSuffix]="'VNĐ'">
+                    </nz-statistic>
+                  </nz-list-item-meta-title>
+                </nz-list-item-meta>
+              </td>
+              <td class="align-center">
+                <ng-container [ngSwitch]="dt.paymentStatus">
+                  <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value">
+                    <nz-space>
+                      <img *nzSpaceItem class="payment-icon"
+                           (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px" height="50px"
+                           src="/assets/img/payment-momo.png" title="Thanh toán momo"
+                           alt="Thanh toán momo"/>
+                      <img *nzSpaceItem class="payment-icon"
+                           (click)="payment(dt!, PAYMENTS_METHOD.BANK_TRANSFER)" width="64px"
+                           height="50px" src="/assets/img/payment-bank-transfer.png"
+                           title="Thanh toán chuyển khoản" alt="Thanh toán chuyển khoản"/>
+                    </nz-space>
+                  </div>
+                  <div *ngSwitchDefault
+                       class="badge badge-shadow badge-success">
+                    {{STATUS_PAYMENT.PAID.text}}
+                  </div>
+                </ng-container>
+              </td>
+              <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+              <td class="align-center">
+                <ng-container [ngSwitch]="dt.status">
+                  <div *ngSwitchCase="STATUS_ORDER.IN_PROCESS.value"
+                       class="badge badge-shadow badge-primary">
+                    {{STATUS_ORDER.IN_PROCESS.text}}
+                  </div>
+                  <div *ngSwitchCase="STATUS_ORDER.CANCEL_ORDER.value"
+                       class="badge badge-shadow badge-danger">
+                    {{STATUS_ORDER.CANCEL_ORDER.text}}
+                  </div>
+                  <div *ngSwitchDefault
+                       class="badge badge-shadow badge-success">
+                    {{STATUS_ORDER.FINISHED.value}}
+                  </div>
+                </ng-container>
+              </td>
+              <td class="align-center action">
+                <nz-space>
+                  <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.PAID.value">
+                    <span *nzSpaceItem
+                           nz-icon nzType="credit-card"
+                           nzTheme="outline"
+                           [routerLink]="['/payment-complete-details', dt.id!]"
+                           title="Chi tiết thanh toán">
+                    </span>
+                    <ng-container *ngIf="dt.attributesObject?.usingConfig !== CONFIG.NOT_USING.value && !dt.attributesObject?.data">
+                      <span *nzSpaceItem
+                            nz-icon nzType="setting"
+                            nzTheme="outline"
+                            (click)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG, dt)"
+                            title="Thêm config">
+                      </span>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
+                    <span *nzSpaceItem nz-icon nzType="diff"
+                          nzTheme="outline"
+                          (click)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT, dt)"
+                          title="Thêm đơn mới">
+                    </span>
+                    <ng-container
+                        *ngIf="dt.paymentStatus === STATUS_PAYMENT.UN_PAID.value && dt.status === STATUS_ORDER.IN_PROCESS.value">
+                      <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline"
+                            (click)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE, dt)"
+                            title="Chỉnh sửa">
+                      </span>
+                      <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline"
+                            (click)="showDeleteModal(dt)"
+                            title="Hủy đơn hàng">
+                      </span>
+                    </ng-container>
+                  </ng-container>
+                </nz-space>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+          <nz-table *ngIf="modeView === MODE_DISPLAY.MOBILE"
+                    nzShowSizeChanger
+                    [nzData]="dataList"
+                    [nzFrontPagination]="false"
+                    [nzLoading]="loading"
+                    [nzTotal]="total"
+                    [nzPageSize]="pageSize"
+                    [nzPageIndex]="pageIndex"
+                    (nzQueryParams)="onQueryParamsChange($event)"
+          >
+            <tbody>
+            <ng-container *ngFor="let dt of dataList">
+              <tr>
+                <td class="custom-button-toggled" [nzExpand]="expandSet.has(dt.id!)"
+                    (nzExpandChange)="onExpandChange(dt.id!, $event)">
+                  <div nz-row>
+                    <div nz-col nzSpan="16">
+                      <span>{{dt.code}}</span><br>
+                      <span>{{dt.customerPhone | phoneFormat}}</span><br>
+                      <span>{{dt.customerName}}</span><br>
+                      
                     </div>
-                </ng-template>
+                    <div nz-col nzSpan="8" class="icon-center-row">
+                      <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
+                        <div class="action">
+                          <nz-space>
+                            <span *nzSpaceItem nz-icon nzType="diff"
+                                  nzTheme="outline"
+                                  (click)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT, dt)"
+                                  title="Thêm đơn mới">
+                            </span>
+                            <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.PAID.value">
+                              <span *nzSpaceItem
+                                    nz-icon nzType="credit-card"
+                                    nzTheme="outline"
+                                    [routerLink]="['/payment-complete-details', dt.id!]"
+                                    title="Chi tiết thanh toán">
+                              </span>
+                              <ng-container
+                                  *ngIf="dt.attributesObject?.usingConfig !== CONFIG.NOT_USING.value && !dt.attributesObject?.data">
+                                <span *nzSpaceItem
+                                      nz-icon nzType="setting"
+                                      nzTheme="outline"
+                                      (click)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG, dt)"
+                                      title="Thêm config">
+                                </span>
+                              </ng-container>
+                            </ng-container>
+                          </nz-space>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr [nzExpand]="expandSet.has(dt.id!)">
+                <nz-descriptions nzBordered nzSize="small">
+                  <nz-descriptions-item nzSpan="3" nzTitle="Tên">{{dt.customerName}}</nz-descriptions-item>
+                  <nz-descriptions-item nzSpan="3" nzTitle="Số điên thoại">{{dt.customerPhone! | phoneFormat}}</nz-descriptions-item>
+                  <nz-descriptions-item nzSpan="3" nzTitle="Tên sản phẩm">{{dt.attributesObject?.itemName}}</nz-descriptions-item>
+                  <nz-descriptions-item nzSpan="3" nzTitle="Gói đã mua">{{dt.attributesObject?.packagesMap?.get(dt.packageId!)?.name}}</nz-descriptions-item>
+                  <nz-descriptions-item nzSpan="3" nzTitle="Giá">{{dt.totalAmount | number}} VNĐ</nz-descriptions-item>
+                  <nz-descriptions-item nzSpan="3" nzTitle="Thanh toán">
+                    <ng-container [ngSwitch]="dt.paymentStatus">
+                      <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value">
+                        <nz-space>
+                          <img *nzSpaceItem class="payment-icon"
+                               (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px"
+                               height="50px" src="/assets/img/payment-momo.png"
+                               alt="Thanh toán momo"/>
+                          <img *nzSpaceItem class="payment-icon"
+                               (click)="payment(dt!, PAYMENTS_METHOD.BANK_TRANSFER)"
+                               width="64px" height="50px"
+                               src="/assets/img/payment-bank-transfer.png" alt=""/>
+                        </nz-space>
+                      </div>
+                      <div *ngSwitchDefault
+                           class="badge badge-shadow badge-success">
+                        {{STATUS_PAYMENT.PAID.text}}
+                      </div>
+                    </ng-container>
+                  </nz-descriptions-item>
+                  <nz-descriptions-item nzSpan="3" nzTitle="Trạng thái">
+                    <ng-container [ngSwitch]="dt.status">
+                      <div *ngSwitchCase="STATUS_ORDER.IN_PROCESS.value"
+                           class="badge badge-shadow badge-primary">
+                        {{STATUS_ORDER.IN_PROCESS.text}}
+                      </div>
+                      <div *ngSwitchCase="STATUS_ORDER.CANCEL_ORDER.value"
+                           class="badge badge-shadow badge-danger">
+                        {{STATUS_ORDER.CANCEL_ORDER.text}}
+                      </div>
+                      <div *ngSwitchDefault
+                           class="badge badge-shadow badge-success">
+                        {{STATUS_ORDER.FINISHED.value}}
+                      </div>
+                    </ng-container>
+                  </nz-descriptions-item>
+                </nz-descriptions>
+                <div style="text-align: center;margin-top: 10px;" class="action">
+                  <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
+                    <ng-container
+                        *ngIf="dt.paymentStatus === STATUS_PAYMENT.UN_PAID.value && dt.status === STATUS_ORDER.IN_PROCESS.value">
+                      <nz-space>
+                        <button *nzSpaceItem nz-button nzType="primary"
+                                (click)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE, dt)">Chỉnh sửa
+                        </button>
+                        <button *nzSpaceItem nz-button nzType="default" nzDanger
+                                (click)="showDeleteModal(dt)">Hủy đơn hàng
+                        </button>
+                      </nz-space>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </tr>
+            </ng-container>
+
+            </tbody>
+          </nz-table>
+        </nz-card>
+        <ng-template #titleLeft>
+          Danh sách đơn hàng
+          <nz-tag [nzColor]="'#33CCFF'">
+            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}"
+                          [nzValue]="(total | number)!"></nz-statistic>
+          </nz-tag>
+        </ng-template>
+        <ng-template #titleAction>
+          <div nz-row [ngStyle]="{'margin-top': '15px'}">
+            <div nz-col [nzXXl]="8" [nzXl]="10" [nzLg]="10" [nzMd]="8" [nzSm]="10" [nzXs]="8">
+              <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
+                <button type="button" (click)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT)"
+                        class="btn btn-success">
+                  <i class="fas fa-plus"></i> Thêm mới
+                </button>
+              </ng-container>
             </div>
-        </div>
+            <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
+                 [nzXl]="{ span: 8, offset: 6 }"
+                 [nzLg]="{ span: 10, offset: 4 }"
+                 [nzMd]="{ span: 12, offset: 4 }"
+                 [nzSm]="{ span: 12, offset: 2 }"
+                 [nzXs]="16">
+              <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
+                <input nzSize="large" type="search" nz-input placeholder="Mã đơn hàng"
+                       (keyup.enter)="search($event)"/>
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search"></span>
+              </ng-template>
+            </div>
+          </div>
+          <div nz-row [ngStyle]="{'margin-top': '15px'}">
+            <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
+                 [nzXl]="{ span: 8, offset: 16 }"
+                 [nzLg]="{ span: 10, offset: 14 }"
+                 [nzMd]="{ span: 12, offset: 12 }"
+                 [nzSm]="{ span: 12, offset: 12 }"
+                 [nzXs]="24">
+              <nz-select
+                  style="width: 100%"
+                  nzShowSearch
+                  nzServerSearch
+                  [nzPlaceHolder]="placeHolder"
+                  [(ngModel)]="selectUser"
+                  [nzShowArrow]="false"
+                  [nzFilterOption]="nzFilterOption"
+                  (nzOnSearch)="handleInputChange($event)"
+                  (ngModelChange)="filterOrder($event)"
+              >
+                <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]; else option">
+                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone | phoneFormat)"
+                             [nzValue]="user.code"></nz-option>
+                </ng-container>
+                <ng-template #option>
+                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone | phoneFormat)"
+                             [nzValue]="user.id"></nz-option>
+                </ng-template>
+              </nz-select>
+              <ng-template #placeHolder>
+                Chọn
+                <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]">Đại lý</ng-container>
+                <ng-container *ngxPermissionsOnly="[ROLES.AGENT]">Nhà phân phối</ng-container>
+                <ng-container *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">Cộng tác viên</ng-container>
+                <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">Khách hàng</ng-container>
+              </ng-template>
+            </div>
+          </div>
+          <nz-divider></nz-divider>
+        </ng-template>
+      </div>
     </div>
+  </div>
 </section>
 
 <!-- Delete Confirmation -->
@@ -291,7 +343,7 @@
           nzCancelText="Hủy bỏ" (nzOnOk)="handleConfirmToDelete()"
           [nzOkLoading]="isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">
-    <ng-container *nzModalContent>
-        Hủy đơn hàng này?
-    </ng-container>
+  <ng-container *nzModalContent>
+    Hủy đơn hàng này?
+  </ng-container>
 </nz-modal>

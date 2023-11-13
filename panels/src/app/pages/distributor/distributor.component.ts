@@ -13,6 +13,7 @@ import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {ResponseError} from "../../models/ResponseError";
 import {Message} from "../../Constants/message-constant";
 import {Commission} from "../../models/Commission";
+import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 
 @Component({
   selector: 'app-distributor',
@@ -39,11 +40,6 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
   idDelete: number | string | null | undefined = -1;
   idShowModal: number | string | null | undefined = null;
   filter: Array<{ key: string; value: string[] }> | null = null;
-  statusList: {text: string, value: string}[] = [
-    {text: this.STATUS_DATA.IN_ACTIVE_LABEL, value: this.STATUS_DATA.IN_ACTIVE_VALUE},
-    {text: this.STATUS_DATA.ACTIVATED_LABEL, value: this.STATUS_DATA.ACTIVATED_VALUE}
-  ];
-
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
               private communicationService: CommunicationService,
@@ -79,14 +75,16 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
     this.loading = true;
     let loading_success_1 = false;
     let loading_success_2 = false;
-    this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.DISTRIBUTOR, this.pageIndex - 1, this.pageSize, this.sort, this.filter, keyWork).subscribe((data) => {
+    const objectSelectUser: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
+    this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.DISTRIBUTOR, objectSelectUser).subscribe((data) => {
       console.log(data)
       loading_success_1 = true;
       this.total = data.totalElements;
       this.dataList = data.content;
       this.loading = !(loading_success_1 && loading_success_2);
     });
-    this.api.getAll<ResponseDataGetAll<Commission>>(URL.API_COMMISSION, null, null, null, null, keyWork).subscribe((data) => {
+    const objectSelectCommission: ObjectSelectAll = {keyword: keyWork}
+    this.api.getAll<ResponseDataGetAll<Commission>>(URL.API_COMMISSION, objectSelectCommission).subscribe((data) => {
       console.log(data)
       loading_success_2 = true;
       this.dataCommission = data.content;
@@ -136,7 +134,7 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
       this.validateForm.get("code")?.enable();
       this.validateForm.reset();
       this.validateForm.patchValue({
-        status: this.STATUS_DATA.ACTIVATED_VALUE
+        status: this.STATUS_DATA.ACTIVATED.value
       })
     }
     this.idShowModal = this.validateForm.get("id")?.value;

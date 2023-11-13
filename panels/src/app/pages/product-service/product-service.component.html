@@ -22,7 +22,7 @@
                             <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                                 Ngày cập nhật
                             </th>
-                            <th nzColumnKey="status" nzWidth="12em" [nzSortFn]="true" [nzFilters]="statusList"
+                            <th nzColumnKey="status" nzWidth="12em" [nzSortFn]="true" [nzFilters]="STATUS_PRODUCT_SERVICE.LIST"
                                 [nzFilterFn]="true">
                                 Trạng thái
                             </th>
@@ -60,13 +60,13 @@
                             <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
                             <td class="align-center">
                                 <ng-container [ngSwitch]="dt.status">
-                                    <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.UN_DEPLOYED_VALUE"
+                                    <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.UN_DEPLOYED.value"
                                          class="badge badge-shadow badge-danger">
-                                        {{STATUS_PRODUCT_SERVICE.UN_DEPLOYED_LABEL}}
+                                        {{STATUS_PRODUCT_SERVICE.UN_DEPLOYED.text}}
                                     </div>
-                                    <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.DEPLOYED_VALUE"
+                                    <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.DEPLOYED.value"
                                          class="badge badge-shadow badge-success">
-                                        {{STATUS_PRODUCT_SERVICE.DEPLOYED_LABEL}}
+                                        {{STATUS_PRODUCT_SERVICE.DEPLOYED.text}}
                                     </div>
                                 </ng-container>
                             </td>
@@ -149,7 +149,7 @@
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
                 <nz-form-control [nzSm]="18">
                     <nz-select formControlName="status">
-                        <nz-option *ngFor="let status of statusList" nzValue="{{status.value}}"
+                        <nz-option *ngFor="let status of STATUS_PRODUCT_SERVICE.LIST" nzValue="{{status.value}}"
                                    nzLabel="{{status.text}}"></nz-option>
                     </nz-select>
                 </nz-form-control>
@@ -158,17 +158,8 @@
                 <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Sử dụng config</nz-form-label>
                 <nz-form-control [nzSm]="18">
                     <nz-select formControlName="usingConfig">
-                        <nz-option *ngFor="let status of statusConfigList" nzValue="{{status.value}}"
-                                   nzLabel="{{status.text}}"></nz-option>
-                    </nz-select>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Loại sản phẩm</nz-form-label>
-                <nz-form-control [nzSm]="18">
-                    <nz-select formControlName="typeProductService">
-                        <nz-option *ngFor="let type of TYPE_PRODUCT_SERVICE_LIST" nzValue="{{type}}"
-                                   nzLabel="{{type}}"></nz-option>
+                        <nz-option *ngFor="let config of CONFIG_LIST" nzValue="{{config.value}}"
+                                   nzLabel="{{config.text}}"></nz-option>
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>
@@ -200,8 +191,8 @@
                                 <div nz-col nzSpan="12">
                                     <nz-input-group nzAddOnBefore="Loại gói">
                                         <nz-select formControlName="typePackage">
-                                            <nz-option [nzLabel]="TYPE_PACKAGE.FREE_LABEL" [nzValue]="TYPE_PACKAGE.FREE_VALUE"></nz-option>
-                                            <nz-option [nzLabel]="TYPE_PACKAGE.PAYMENT_LABEL" [nzValue]="TYPE_PACKAGE.PAYMENT_VALUE"></nz-option>
+                                            <nz-option [nzLabel]="TYPE_PACKAGE.FREE.text" [nzValue]="TYPE_PACKAGE.FREE.value"></nz-option>
+                                            <nz-option [nzLabel]="TYPE_PACKAGE.PAYMENT.text" [nzValue]="TYPE_PACKAGE.PAYMENT.value"></nz-option>
                                         </nz-select>
                                     </nz-input-group>
                                     <nz-input-group nzAddOnBefore="Thời hạn" [nzAddOnAfter]="chooseTypeExpired">

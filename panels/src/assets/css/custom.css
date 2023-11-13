@@ -32,13 +32,9 @@
 }
 #category-nav ul {
     list-style: none;
-    /*padding: 10px;*/
 }
 #category-nav > ul {
     padding-left: unset;
-}
-#category-nav .sub-menu {
-    /*padding-left: 20px;*/
 }
 #category-nav ul li a {
     display: inline-block;
@@ -186,4 +182,19 @@ table td.action [nz-icon], table div.action [nz-icon] {
 }
 .table-th-right .ant-descriptions-header {
     margin-bottom: 10px;
+}
+.custom-button-toggled [nz-row-expand-button] {
+    display: flex;
+    top: 1.5em;
+}
+.icon-center-row {
+    align-items: center;
+    display: flex !important;
+    justify-content: end;
+}
+.search-input {
+    padding: 6px 11px !important;
+}
+nz-input-group, [nz-input], nz-select-top-control {
+    border-radius: 5px !important;
 }
