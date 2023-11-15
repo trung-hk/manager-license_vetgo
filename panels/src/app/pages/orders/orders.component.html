@@ -20,14 +20,13 @@
               <th nzWidth="15em" nzColumnKey="code" [nzSortFn]="true">Mã đơn hàng</th>
               <th nzWidth="15em" nzColumnKey="name" [nzSortFn]="true">Khách hàng</th>
               <th nzWidth="20em">Sản phẩm đã mua</th>
-              <th class="text-center" nzWidth="10em" nzColumnKey="phone" [nzFilters]="STATUS_PAYMENT.LIST"
-                  [nzFilterFn]="true">
+              <th class="text-center" nzWidth="10em">
                 Thanh toán
               </th>
               <th class="text-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                 Ngày cập nhật
               </th>
-              <th class="text-center" nzColumnKey="status" nzWidth="12em" [nzFilters]="STATUS_ORDER.LIST" [nzFilterFn]="true">
+              <th class="text-center" nzColumnKey="status" nzWidth="12em">
                 Trạng thái
               </th>
               <th class="text-center" nzWidth="10em">Thao tác</th>
@@ -111,13 +110,15 @@
                            [routerLink]="['/payment-complete-details', dt.id!]"
                            title="Chi tiết thanh toán">
                     </span>
-                    <ng-container *ngIf="dt.attributesObject?.usingConfig !== CONFIG.NOT_USING.value && !dt.attributesObject?.data">
-                      <span *nzSpaceItem
-                            nz-icon nzType="setting"
-                            nzTheme="outline"
-                            (click)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG, dt)"
-                            title="Thêm config">
-                      </span>
+                    <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
+                      <ng-container *ngIf="dt.attributesObject?.usingConfig !== CONFIG.NOT_USING.value && !dt.attributesObject?.data">
+                        <span *nzSpaceItem
+                              nz-icon nzType="setting"
+                              nzTheme="outline"
+                              (click)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG, dt)"
+                              title="Thêm config">
+                        </span>
+                      </ng-container>
                     </ng-container>
                   </ng-container>
                   <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
@@ -166,21 +167,23 @@
                       
                     </div>
                     <div nz-col nzSpan="8" class="icon-center-row">
-                      <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
-                        <div class="action">
-                          <nz-space>
+                      <div class="action">
+                        <nz-space>
+                          <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
                             <span *nzSpaceItem nz-icon nzType="diff"
                                   nzTheme="outline"
                                   (click)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT, dt)"
                                   title="Thêm đơn mới">
                             </span>
-                            <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.PAID.value">
-                              <span *nzSpaceItem
-                                    nz-icon nzType="credit-card"
-                                    nzTheme="outline"
-                                    [routerLink]="['/payment-complete-details', dt.id!]"
-                                    title="Chi tiết thanh toán">
-                              </span>
+                          </ng-container>
+                          <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.PAID.value">
+                            <span *nzSpaceItem
+                                  nz-icon nzType="credit-card"
+                                  nzTheme="outline"
+                                  [routerLink]="['/payment-complete-details', dt.id!]"
+                                  title="Chi tiết thanh toán">
+                            </span>
+                            <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
                               <ng-container
                                   *ngIf="dt.attributesObject?.usingConfig !== CONFIG.NOT_USING.value && !dt.attributesObject?.data">
                                 <span *nzSpaceItem
@@ -191,9 +194,9 @@
                                 </span>
                               </ng-container>
                             </ng-container>
-                          </nz-space>
-                        </div>
-                      </ng-container>
+                          </ng-container>
+                        </nz-space>
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -306,6 +309,7 @@
                   style="width: 100%"
                   nzShowSearch
                   nzServerSearch
+                  nzAllowClear
                   [nzPlaceHolder]="placeHolder"
                   [(ngModel)]="selectUser"
                   [nzShowArrow]="false"

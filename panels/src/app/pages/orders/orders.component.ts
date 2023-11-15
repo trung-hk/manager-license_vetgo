@@ -110,19 +110,6 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     init(): void {
         this.loadDataFromServer();
-        this.scriptFC.hasPermission(ROLES.ADMIN).then(result => {
-            if (result) this.filter = [{key: "realm", value: []}];
-        })
-        this.scriptFC.hasPermission(ROLES.AGENT).then(result => {
-            if (result) this.filter = [{key: "distributor_id", value: []}];
-        })
-        this.scriptFC.hasPermission(ROLES.DISTRIBUTOR).then(result => {
-            if (result) this.filter = [{key: "partner_id", value: []}];
-        })
-        this.scriptFC.hasPermission(ROLES.PARTNER).then(result => {
-            if (result) this.filter = [{key: "customer_id", value: []}];
-        })
-
     }
 
     loadDataFromServer(keyWork?: string): void {
@@ -182,7 +169,6 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         const sortField = (currentSort && currentSort.key) || null;
         this.pageIndex = pageIndex;
         this.pageSize = pageSize;
-        this.filter = filter;
         if (!sortField) {
             this.sort = "last_modified_date,desc";
         } else {
@@ -336,8 +322,36 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.searchSubject.next(searchText);
     }
     filterOrder(e: string) {
-        this.filter[0].value = [e];
-        this.loadDataFromServer();
-        // this.filter = {}
+        this.setFilter(e).then(() => {
+            this.loadDataFromServer();
+        })
+    }
+    setFilter(value: string): Promise<void> {
+        return new Promise( rs => {
+            this.scriptFC.hasPermission(ROLES.ADMIN).then(result => {
+                if (result) {
+                    this.filter = [{key: "ods.realm", value: [value]}];
+                    rs();
+                }
+            })
+            this.scriptFC.hasPermission(ROLES.AGENT).then(result => {
+                if (result) {
+                    this.filter = [{key: "ods.distributor_id", value: [value]}];
+                    rs();
+                }
+            })
+            this.scriptFC.hasPermission(ROLES.DISTRIBUTOR).then(result => {
+                if (result) {
+                    this.filter = [{key: "ods.partner_id", value: [value]}];
+                    rs();
+                }
+            })
+            this.scriptFC.hasPermission(ROLES.PARTNER).then(result => {
+                if (result) {
+                    this.filter = [{key: "ods.customer_id", value: [value]}];
+                    rs();
+                }
+            })
+        })
     }
 }

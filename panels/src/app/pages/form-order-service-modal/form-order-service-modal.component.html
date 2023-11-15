@@ -133,9 +133,9 @@
             </ng-template>
             <ng-template #CONFIG_WIFI_MARKETING_FORM>
                 <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã App</nz-form-label>
+                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">CloundId</nz-form-label>
                     <nz-form-control [nzSm]="18">
-                        <input formControlName="cloudId" nz-input/>
+                        <input formControlName="cloundId" nz-input/>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
@@ -147,7 +147,7 @@
                 <nz-form-item>
                     <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mật khẩu</nz-form-label>
                     <nz-form-control [nzSm]="18">
-                        <input formControlName="password" nz-input type="password"/>
+                        <input formControlName="password" nz-input/>
                     </nz-form-control>
                 </nz-form-item>
             </ng-template>
@@ -159,7 +159,7 @@
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Sub Domain</nz-form-label>
+                    <nz-form-label nzLabelAlign="right" [nzSm]="5">Sub Domain</nz-form-label>
                     <nz-form-control [nzSm]="18">
                         <input formControlName="customDomain" nz-input placeholder="VETGO"/>
                     </nz-form-control>

@@ -198,3 +198,11 @@ table td.action [nz-icon], table div.action [nz-icon] {
 nz-input-group, [nz-input], nz-select-top-control {
     border-radius: 5px !important;
 }
+.main-sidebar .sidebar-menu li a [nz-icon] {
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+}

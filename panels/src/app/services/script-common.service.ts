@@ -12,7 +12,7 @@ import {AttributeObjectProductService} from "../models/AttributeObjectProductSer
 import {
     ProductServiceDetailsModalComponent
 } from "../pages/product-service-details-modal/product-service-details-modal.component";
-import {ERROR_LIST} from "../Constants/vg-constant";
+import {ERROR_LIST, MODE_OPEN_MODAL_FORM_ORDER_SERVICE} from "../Constants/vg-constant";
 import {AttributeOrderProductService} from "../models/AttributeOrderProductService";
 import {NgxPermissionsService} from "ngx-permissions";
 
@@ -97,8 +97,24 @@ export class ScriptCommonService {
                                          viewContainerRef: ViewContainerRef,
                                          modeOpen: string,
                                          callBack?: ModalFormOrderServiceCallback): void {
+        let titleModal;
+        let buttonText;
+        switch (modeOpen) {
+            case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT:
+                titleModal = "Đặt đơn hàng";
+                buttonText = "Thêm đơn hàng";
+                break;
+            case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE:
+                titleModal = "Cập nhật đơn hàng";
+                buttonText = "Cập nhật đơn hàng";
+                break;
+            case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG:
+                titleModal = "Cài đặt";
+                buttonText = "Thêm cài đặt";
+                break;
+        }
         const modal = this.modal.create<FormOrderServiceModalComponent, IModalData>({
-            nzTitle: order ? 'Cập nhật đơn hàng' : 'Đặt đơn hàng',
+            nzTitle: titleModal,
             nzContent: FormOrderServiceModalComponent,
             nzWidth: "800px",
             nzViewContainerRef: viewContainerRef,
@@ -110,7 +126,7 @@ export class ScriptCommonService {
                 mode: modeOpen
             },
             nzOkType:"primary",
-            nzOkText: order ? 'Cập nhật đơn hàng' : 'Thêm đơn hàng',
+            nzOkText: buttonText,
             nzOnOk: (componentInstance: FormOrderServiceModalComponent) => {
                 return new Promise((resolve) => {
                     componentInstance.handleSubmit().then(() => {
@@ -122,14 +138,21 @@ export class ScriptCommonService {
         });
         const instance = modal.getContentComponent();
         modal.afterOpen.subscribe(() => {
-            modal.getConfig().nzOkDisabled = instance.validateCustomerForm.invalid || instance.validateOrderForm.invalid;
-            // Lắng nghe sự kiện statusChanges của form để cập nhật trạng thái của button disabled
-            instance.validateCustomerForm.statusChanges.subscribe(status => {
-                modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateOrderForm.invalid;
-            })
-            instance.validateOrderForm.statusChanges.subscribe(status => {
-                modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateCustomerForm.invalid;
-            })
+            if (modeOpen !== MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG) {
+                modal.getConfig().nzOkDisabled = instance.validateCustomerForm.invalid || instance.validateOrderForm.invalid;
+                // Lắng nghe sự kiện statusChanges của form để cập nhật trạng thái của button disabled
+                instance.validateCustomerForm.statusChanges.subscribe(status => {
+                    modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateOrderForm.invalid;
+                })
+                instance.validateOrderForm.statusChanges.subscribe(status => {
+                    modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateCustomerForm.invalid;
+                })
+            } else {
+                modal.getConfig().nzOkDisabled = instance.validateConfigForm.invalid;
+                instance.validateConfigForm.statusChanges.subscribe(status => {
+                    modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateConfigForm.invalid;
+                })
+            }
         });
     }
 

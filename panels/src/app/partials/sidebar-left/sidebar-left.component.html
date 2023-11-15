@@ -7,14 +7,14 @@
     </div>
     <ul class="sidebar-menu">
       <li class="dropdown index">
-        <a routerLink="dashboard" class="nav-link"><i data-feather="monitor"></i><span>Tổng quan</span></a>
+        <a routerLink="dashboard" class="nav-link"><i nz-icon nzType="dashboard" nzTheme="outline"></i><span>Tổng quan</span></a>
       </li>
       <li class="dropdown orders" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT, ROLES.PARTNER, ROLES.DISTRIBUTOR]">
-        <a routerLink="orders" class="nav-link"><i data-feather="mail"></i><span>Đơn hàng</span></a>
+        <a routerLink="orders" class="nav-link"><i nz-icon nzType="shopping-cart" nzTheme="outline"></i><span>Đơn hàng</span></a>
       </li>
       <li class="dropdown config" *ngxPermissionsOnly="[ROLES.ADMIN]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-          data-feather="briefcase"></i><span>Cấu hình</span></a>
+            nz-icon nzType="api" nzTheme="outline"></i><span>Cấu hình</span></a>
         <ul class="dropdown-menu">
           <li class="manager-config-app"><a class="nav-link" routerLink="manager-config-app">Ứng dụng</a></li>
           <li class=""><a class="nav-link" href="#">License zalo</a></li>
@@ -22,7 +22,7 @@
       </li>
       <li class="dropdown product" *ngxPermissionsOnly="[ROLES.ADMIN]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-          data-feather="briefcase"></i><span>Sản phẩm</span></a>
+            nz-icon nzType="appstore" nzTheme="outline"></i><span>Sản phẩm</span></a>
         <ul class="dropdown-menu">
           <!--<li class="product-list"><a class="nav-link" href="product.html">Sản phẩm bán hàng</a></li>-->
           <li  class="product-service"><a class="nav-link" routerLink="product-service">Sản phẩm dịch vụ</a></li>
@@ -30,34 +30,37 @@
       </li>
       <li class="dropdown agent" *ngxPermissionsOnly="[ROLES.ADMIN]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-          data-feather="briefcase"></i><span>Đại lý</span></a>
+            nz-icon nzType="apartment" nzTheme="outline"></i><span>Đại lý</span></a>
         <ul class="dropdown-menu">
           <li class="agent-list"><a class="nav-link" routerLink="agents">Danh sách</a></li>
           <li class="agent-user"><a class="nav-link" href="#">User</a></li>
         </ul>
       </li>
       <li class="dropdown agent-product" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">
-        <a class="nav-link" routerLink="agent-product"><i data-feather="monitor"></i><span>Sản phẩm đăng ký</span></a>
+        <a class="nav-link" routerLink="agent-product"><i nz-icon nzType="appstore-add" nzTheme="outline"></i><span>Sản phẩm đăng ký</span></a>
       </li>
       <li class="dropdown commission-list" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR]">
-        <a class="nav-link" routerLink="commissions"><i data-feather="monitor"></i><span>Chiết khấu</span></a>
+        <a class="nav-link" routerLink="commissions"><i nz-icon nzType="percentage" nzTheme="outline"></i><span>Chiết khấu</span></a>
       </li>
       <li class="dropdown agent-distributor" *ngxPermissionsOnly="[ROLES.AGENT]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                data-feather="briefcase"></i><span>Nhà phân phối</span></a>
+            nz-icon nzType="cluster" nzTheme="outline"></i><span>Nhà phân phối</span></a>
         <ul class="dropdown-menu">
           <li  class="distributor-list"><a class="nav-link" routerLink="distributors">Danh sách</a></li>
         </ul>
       </li>
       <li class="dropdown distributor" *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                data-feather="briefcase"></i><span>Cộng tác viên</span></a>
+            nz-icon nzType="team" nzTheme="outline"></i><span>Cộng tác viên</span></a>
         <ul class="dropdown-menu">
           <li  class="partner-list"><a class="nav-link" routerLink="partners">Danh sách</a></li>
         </ul>
       </li>
       <li class="dropdown partner" *ngxPermissionsOnly="[ROLES.PARTNER]">
-        <a routerLink="order-service" class="nav-link"><i data-feather="mail"></i><span>Danh sách SP</span></a>
+        <a routerLink="order-service" class="nav-link"><i nz-icon nzType="unordered-list" nzTheme="outline"></i><span>Danh sách SP</span></a>
+      </li>
+      <li class="dropdown customers" *ngxPermissionsExcept="[ROLES.CUSTOMER]">
+        <a routerLink="customers" class="nav-link"><i nz-icon nzType="user" nzTheme="outline"></i><span>Khách hàng</span></a>
       </li>
     </ul>
   </aside>

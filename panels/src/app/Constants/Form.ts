@@ -86,7 +86,7 @@ export const CONFIG_ADMIN_ONLINE_SHOP_FORM = {
     address: [null, [Validators.maxLength(500)]],
 }
 export const CONFIG_WIFI_MARKETING_FORM = {
-    cloudId: [null, [Validators.required]],
+    cloundId: [null, [Validators.required]],
     userName: [null, [Validators.required]],
     password: [null, [Validators.required]],
 }
