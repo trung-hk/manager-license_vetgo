@@ -57,7 +57,6 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     selectUser: string = "";
     private searchSubject = new BehaviorSubject<string>('');
     search$ = this.searchSubject.asObservable();
-    test: string[] = [];
     nzFilterOption = (): boolean => true;
 
     modeView!: string;

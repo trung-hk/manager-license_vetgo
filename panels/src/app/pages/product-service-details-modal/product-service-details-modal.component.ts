@@ -1,12 +1,8 @@
-import {Component, inject, OnInit, Renderer2} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
 import {IModalViewProductServiceData} from "../../models/ModalData";
 import {Item} from "../../models/Item";
-import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
-import {ApiCommonService} from "../../services/api-common.service";
-import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
-import {UntypedFormBuilder} from "@angular/forms";
 import {PackageProduct} from "../../models/PackageProduct";
 
 @Component({

@@ -19,6 +19,7 @@ import { ProductServiceDetailsModalComponent } from './product-service-details-m
 import { PaymentBankTransferComponent } from './payment-bank-transfer/payment-bank-transfer.component';
 import { PaymentCompleteDetailsComponent } from './payment-complete-details/payment-complete-details.component';
 import { CustomersComponent } from './customers/customers.component';
+import { CustomerDetailsModalComponent } from './customer-details-modal/customer-details-modal.component';
 
 const routes: Routes =
     [
@@ -44,7 +45,8 @@ const routes: Routes =
         ProductServiceDetailsModalComponent,
         PaymentBankTransferComponent,
         PaymentCompleteDetailsComponent,
-        CustomersComponent],
+        CustomersComponent,
+        CustomerDetailsModalComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),

@@ -2,7 +2,7 @@ import {Injectable, ViewContainerRef} from '@angular/core';
 import {CommunicationService} from "./communication.service";
 import {PackageProduct} from "../models/PackageProduct";
 import {FormOrderServiceModalComponent} from "../pages/form-order-service-modal/form-order-service-modal.component";
-import {IModalData, IModalViewProductServiceData} from "../models/ModalData";
+import {IModalData, IModalViewCustomerData, IModalViewProductServiceData} from "../models/ModalData";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Item} from "../models/Item";
 import {User} from "../models/User";
@@ -15,6 +15,7 @@ import {
 import {ERROR_LIST, MODE_OPEN_MODAL_FORM_ORDER_SERVICE} from "../Constants/vg-constant";
 import {AttributeOrderProductService} from "../models/AttributeOrderProductService";
 import {NgxPermissionsService} from "ngx-permissions";
+import {CustomerDetailsModalComponent} from "../pages/customer-details-modal/customer-details-modal.component";
 
 @Injectable({
     providedIn: 'root'
@@ -164,6 +165,26 @@ export class ScriptCommonService {
             nzViewContainerRef: viewContainerRef,
             nzData: {
                 product: product,
+            },
+            nzFooter: [
+                {
+                    type: "default",
+                    label: "Hủy",
+                    onClick: () => {
+                        modal.destroy();
+                    }
+                }
+            ]
+        });
+    }
+    createComponentModalViewCustomerDetails(customer: User, viewContainerRef: ViewContainerRef): void {
+        const modal = this.modal.create<CustomerDetailsModalComponent, IModalViewCustomerData>({
+            nzTitle: "Thông tin khách hàng",
+            nzContent: CustomerDetailsModalComponent,
+            nzWidth: "800px",
+            nzViewContainerRef: viewContainerRef,
+            nzData: {
+                customer: customer,
             },
             nzFooter: [
                 {

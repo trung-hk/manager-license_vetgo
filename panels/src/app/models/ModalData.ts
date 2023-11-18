@@ -14,3 +14,6 @@ export interface IModalData {
 export interface IModalViewProductServiceData {
     product: Item;
 }
+export interface IModalViewCustomerData {
+    customer: User;
+}
