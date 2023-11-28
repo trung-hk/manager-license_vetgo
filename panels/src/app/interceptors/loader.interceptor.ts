@@ -26,9 +26,11 @@ export class LoaderInterceptor implements HttpInterceptor {
     if (window.location.href.startsWith('https://phanmemvet.vn')) {
       realm  = 'phanmemvet';
     }
-    request = request.clone({
-      setHeaders: { realm: realm}
-    });
+    if (!request.url.includes('https://script.google.com')) {
+      request = request.clone({
+        setHeaders: { realm: realm}
+      });
+    }
     return next.handle(request);
   }
 }

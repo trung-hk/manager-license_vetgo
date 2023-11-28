@@ -16,6 +16,9 @@ export enum USER_TYPE {
     CUSTOMER = "CUSTOMER"
 }
 
+export class Constant {
+    static readonly API_CONFIG_SYSTEM_LIST: string[] = ["TIME_ACTIVE", "CONFIG_BROWSER"];
+}
 export class STATUS_AGENT {
     static readonly IN_ACTIVE: Enum = {text: "Ngừng hoạt động", value: "IN_ACTIVE"};
     static readonly ACTIVATED: Enum = {text: "Đang hoạt động", value: "ACTIVATED"};
@@ -120,4 +123,9 @@ export enum MODE_OPEN_MODAL_FORM_ORDER_SERVICE {
     INSERT = "INSERT",
     UPDATE = "UPDATE",
     ADD_CONFIG = "ADD_CONFIG"
+}
+export class TYPE_LICENSE {
+    static readonly TRIAL: Enum = {text: "Bản dùng thử", value: "Trial"};
+    static readonly PRO: Enum = {text: "Bản Pro", value: "Pro"};
+    static readonly LIST: Enum[] = [this.TRIAL, this.PRO];
 }

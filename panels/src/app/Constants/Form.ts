@@ -86,7 +86,20 @@ export const CONFIG_ADMIN_ONLINE_SHOP_FORM = {
     address: [null, [Validators.maxLength(500)]],
 }
 export const CONFIG_WIFI_MARKETING_FORM = {
-    cloundId: [null, [Validators.required]],
+    cloudId: [null, [Validators.required]],
     userName: [null, [Validators.required]],
     password: [null, [Validators.required]],
+}
+
+export const CONFIG_LICENSE_ZALO_FORM = {
+    name: [null],
+    id: [null, [Validators.required]],
+    phone: [null],
+    email: [null, [Validators.minLength(5), Validators.maxLength(255), Validators.email]],
+    expiryDate: [null],
+    license: [null],
+}
+export const CONFIG_LICENSE_ZALO_SYSTEM_FORM = {
+    id: [null],
+    data: [null],
 }

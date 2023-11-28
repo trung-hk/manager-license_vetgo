@@ -1,7 +1,7 @@
-export class PAYMENTS_URL{
+export class PAYMENTS_URL {
     static readonly MOMO: string = "https://phanmemvet.vn";
 }
-export class PAYMENTS_METHOD{
+export class PAYMENTS_METHOD {
     static readonly CASH: string = "CASH";
     static readonly COD: string = "COD";
     static readonly ATM: string = "ATM";

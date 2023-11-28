@@ -1,4 +1,4 @@
-export class URL{
+export class URL {
     static readonly API_CATEGORY: string = "categories";
     static readonly API_CONFIG_APP: string = "config-apps";
     static readonly API_USER: string = "users";

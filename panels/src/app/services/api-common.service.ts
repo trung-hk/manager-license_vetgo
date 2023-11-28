@@ -9,9 +9,10 @@ import {ObjectSelectAll} from "../models/ObjectSelectAll";
 @Injectable({
     providedIn: 'root'
 })
+
 export class ApiCommonService {
     url: string = "https://dev-api.phanmemvet.vn/api";
-
+    regex = /^(?!\s*$).+/;
     constructor(private httpClient: HttpClient) {
     }
 
@@ -20,7 +21,7 @@ export class ApiCommonService {
         if (objectSelect) {
             Object.keys(objectSelect).forEach(key => {
                 let value = Reflect.get(objectSelect, key);
-                if (!isNaN(value) && value != "" || value) {
+                if (this.regex.test(value) && value != undefined) {
                     if (key === 'filter') {
                         Reflect.get(objectSelect, key)?.filter(f => f.value.length > 0)
                             .forEach(f => {

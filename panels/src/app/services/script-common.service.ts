@@ -86,7 +86,6 @@ export class ScriptCommonService {
         result.packagesMap = new Map<string, PackageProduct>(result.packages?.map(r => [r.id!, r]));
         return result;
     }
-
     formatterMoney = (value: number) => value && `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     parserMoney = (value: string): string => value.replace(',', '');
     displayContentTextArea = (value: string): string => value ? value.replaceAll("\n", `<br>`) : "";
@@ -217,5 +216,14 @@ export class ScriptCommonService {
     }
     hasPermission(role: string | string[]): Promise<boolean> {
         return this.permissionsService.hasPermission(role);
+    }
+    formatDate_DD_MM_YYYY = (date: string): Date => new Date(date.split('/').reverse().join('/'));
+    parseFormatDateToString(date?: string | null): string | null {
+        if (!date) return null;
+        const stringToDate = new Date(date);
+        const day = String(stringToDate.getDate()).padStart(2, '0'); // Lấy ngày và thêm '0' nếu cần thiết
+        const month = String(stringToDate.getMonth() + 1).padStart(2, '0'); // Lấy tháng (lưu ý tháng bắt đầu từ 0)
+        const year = stringToDate.getFullYear(); // Lấy năm
+        return `${day}/${month}/${year}`;
     }
 }

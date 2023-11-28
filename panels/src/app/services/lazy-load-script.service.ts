@@ -59,13 +59,13 @@ export class LazyLoadScriptService {
     private addCss(url: string): void {
         const exits = document.querySelector(`link[href="${url}"]`);
         if (exits) {
-            console.log('url css exits ' + url);
+            // console.log('url css exits ' + url);
         } else {
             const script = this.document.createElement('link');
             script.rel = 'stylesheet';
             script.href = url;
             script.onload = () => {
-                console.log('loaded css ' + url);
+                // console.log('loaded css ' + url);
             };
             this.document.body.appendChild(script);
         }
@@ -75,14 +75,14 @@ export class LazyLoadScriptService {
         return new Promise(rs => {
             const exits = document.querySelector(`script[src="${url}"]`);
             if (exits) {
-                console.log('url exits ' + url);
+                // console.log('url exits ' + url);
                 rs();
             } else {
                 const script = this.document.createElement('script');
                 script.type = 'text/javascript';
                 script.src = url;
                 script.onload = () => {
-                    console.log('loaded ' + url);
+                    // console.log('loaded ' + url);
                     rs();
                 };
                 this.document.body.appendChild(script);

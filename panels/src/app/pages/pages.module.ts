@@ -20,6 +20,7 @@ import { PaymentBankTransferComponent } from './payment-bank-transfer/payment-ba
 import { PaymentCompleteDetailsComponent } from './payment-complete-details/payment-complete-details.component';
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerDetailsModalComponent } from './customer-details-modal/customer-details-modal.component';
+import { LicenseZaloConfigComponent } from './license-zalo-config/license-zalo-config.component';
 
 const routes: Routes =
     [
@@ -46,7 +47,8 @@ const routes: Routes =
         PaymentBankTransferComponent,
         PaymentCompleteDetailsComponent,
         CustomersComponent,
-        CustomerDetailsModalComponent],
+        CustomerDetailsModalComponent,
+        LicenseZaloConfigComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),

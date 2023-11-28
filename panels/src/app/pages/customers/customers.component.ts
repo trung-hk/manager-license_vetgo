@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewContainerRef} from '@angular/core';
-import {OrderService} from "../../models/OrderService";
 import {Item} from "../../models/Item";
 import {User} from "../../models/User";
 import {BehaviorSubject, debounceTime, distinctUntilChanged} from "rxjs";
@@ -13,16 +12,12 @@ import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {Message} from "../../Constants/message-constant";
-import {AgentProduct} from "../../models/AgentProduct";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
-import {ModalFormOrderServiceCallback} from "../../models/ModalFormOrderServiceCallback";
-import {ResponesePayment} from "../../models/ResponesePayment";
-import {PAYMENTS_URL} from "../../Constants/payment-urls";
 import {
   CONFIG,
   MODE_DISPLAY,
   MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
-  ROLES, STATUS_AGENT, STATUS_CUSTOMER, STATUS_DISTRIBUTOR,
+  ROLES, STATUS_CUSTOMER,
   STATUS_ORDER,
   STATUS_PAYMENT, USER_TYPE
 } from "../../Constants/vg-constant";
@@ -34,16 +29,11 @@ import {ResponseError} from "../../models/ResponseError";
   templateUrl: './customers.component.html',
 })
 export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
-  protected readonly STATUS_PAYMENT = STATUS_PAYMENT;
-  protected readonly STATUS_ORDER = STATUS_ORDER;
   protected readonly ROLES = ROLES;
   protected readonly MODE_DISPLAY = MODE_DISPLAY;
-  protected readonly MODE_OPEN_MODAL_FORM_ORDER_SERVICE = MODE_OPEN_MODAL_FORM_ORDER_SERVICE;
-  protected readonly CONFIG = CONFIG;
   protected readonly STATUS_CUSTOMER = STATUS_CUSTOMER;
   listScript = [];
   dataList: User[] = [];
-  productList: Item[] = [];
   userList: User[] = [];
   total: number = 1;
   loading: boolean = true;
@@ -317,6 +307,4 @@ export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
   createComponentModalViewCustomer(user: User) {
     this.scriptFC.createComponentModalViewCustomerDetails(user, this.viewContainerRef);
   }
-  protected readonly STATUS_AGENT = STATUS_AGENT;
-  protected readonly STATUS_DISTRIBUTOR = STATUS_DISTRIBUTOR;
 }

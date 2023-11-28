@@ -1,7 +1,7 @@
 // export class Message {
 //
 // }
-export class Message{
+export class Message {
     static readonly MESSAGE_SAVE_SUCCESS = "Lưu thành công";
     static readonly MESSAGE_SAVE_FAILED = "Lưu thất bại";
     static readonly MESSAGE_CONNECT_FAILED = "Lưu thất bại, kiểm tra lại đường truyền";
@@ -17,4 +17,6 @@ export class Message{
     static readonly MESSAGE_CHECK_PAYMENT = "Hóa đơn đã được thanh toán, vui long kiểm tra lại";
     static readonly MESSAGE_CHECK_STATUS_ORDER = "Hóa đơn đã được hủy hoặc đã được thanh toán, vui lòng kiêm tra lại";
     static readonly MESSAGE_PAYMENT_FAILED = "Thanh toán thất bại, vui long kiểm tra lại";
+    static readonly MESSAGE_EXECUTE_API_SUCCESS = "Thực thi Api thành công";
+    static readonly MESSAGE_EXECUTE_API_FAILED = "Thực thi Api Thất bại";
 }
