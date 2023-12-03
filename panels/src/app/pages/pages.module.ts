@@ -21,6 +21,7 @@ import { PaymentCompleteDetailsComponent } from './payment-complete-details/paym
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerDetailsModalComponent } from './customer-details-modal/customer-details-modal.component';
 import { LicenseZaloConfigComponent } from './license-zalo-config/license-zalo-config.component';
+import { PackagePurchasedComponent } from './package-purchased/package-purchased.component';
 
 const routes: Routes =
     [
@@ -48,7 +49,8 @@ const routes: Routes =
         PaymentCompleteDetailsComponent,
         CustomersComponent,
         CustomerDetailsModalComponent,
-        LicenseZaloConfigComponent],
+        LicenseZaloConfigComponent,
+        PackagePurchasedComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),

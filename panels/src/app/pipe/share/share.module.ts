@@ -5,7 +5,7 @@ import {MoneyPipe} from "../MoneyPipe";
 import {ParseMoneyPipe} from "../ParseMoneyPipe";
 import {PhoneFormatPipe} from "../PhoneFormatPipe";
 import {SplitCommanPipe} from "../SplitCommanPipe";
-import {ReplaceParamPipe} from "../ReplaceParamPhonePipe";
+import {ReplaceParamPipe} from "../ReplaceParamPipe";
 
 
 

@@ -16,6 +16,7 @@ import {ERROR_LIST, MODE_OPEN_MODAL_FORM_ORDER_SERVICE} from "../Constants/vg-co
 import {AttributeOrderProductService} from "../models/AttributeOrderProductService";
 import {NgxPermissionsService} from "ngx-permissions";
 import {CustomerDetailsModalComponent} from "../pages/customer-details-modal/customer-details-modal.component";
+import {AttributePackagePurchased} from "../models/PackagePurchased";
 
 @Injectable({
     providedIn: 'root'
@@ -82,6 +83,17 @@ export class ScriptCommonService {
         return JSON.parse(value!);
     }
     getAttributeOrderProductService(value: string | null | undefined): AttributeOrderProductService {
+        const result: AttributeOrderProductService = JSON.parse(value!);
+        result.packagesMap = new Map<string, PackageProduct>(result.packages?.map(r => [r.id!, r]));
+        return result;
+    }
+    convertAttributeStringToObjectForPackagePurchased(value: string | null | undefined): AttributePackagePurchased {
+        try {
+            return JSON.parse(value!);
+        } catch (error) {
+            console.error(error);
+            return new AttributePackagePurchased();
+        }
         const result: AttributeOrderProductService = JSON.parse(value!);
         result.packagesMap = new Map<string, PackageProduct>(result.packages?.map(r => [r.id!, r]));
         return result;
@@ -225,5 +237,8 @@ export class ScriptCommonService {
         const month = String(stringToDate.getMonth() + 1).padStart(2, '0'); // Lấy tháng (lưu ý tháng bắt đầu từ 0)
         const year = stringToDate.getFullYear(); // Lấy năm
         return `${day}/${month}/${year}`;
+    }
+    getDayDiff(startDate: any, endDate: any): number {
+        return Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
     }
 }

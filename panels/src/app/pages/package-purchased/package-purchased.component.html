@@ -1,0 +1,69 @@
+<section class="section">
+  <div class="section-body">
+  <div nz-row [nzGutter]="16">
+    <ng-container *ngFor="let dt of dataList">
+      <div nz-col [nzXXl]="8" [nzXl]="8" [nzLg]="12" [nzMd]="12" [nzSm]="24" [nzXs]="24">
+        <div class="pricing pricing-highlight">
+          <div class="pricing-title">
+            {{dt.attributeObject?.itemName}}
+          </div>
+          <div class="pricing-padding">
+            <div class="pricing-price">
+              <div>Ngày hết hạn</div>
+              <div>{{dt.expiredDate}}</div>
+            </div>
+            <div class="pricing-details">
+              <ng-container *ngIf="!dt.quantityDateUsing || dt.quantityDateUsing < 0 then packageExpired else packageUsing"></ng-container>
+              <div class="pricing-item">
+                <div class="pricing-item-icon bg-yellow"><i class="far fa-clock"></i></div>
+                <div class="pricing-item-label">Còn lại {{!dt.quantityDateUsing || dt.quantityDateUsing < 0 ? 0 : dt.quantityDateUsing}} ngày</div>
+              </div>
+            </div>
+          </div>
+          <div class="pricing-cta">
+            <a href="#">Gia hạn gói <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #packageUsing>
+      <div class="pricing-item">
+        <div class="pricing-item-icon"><i class="fas fa-check"></i></div>
+        <div class="pricing-item-label">Đang sử dụng</div>
+      </div>
+    </ng-template>
+    <ng-template #packageExpired>
+      <div class="pricing-item">
+        <div class="pricing-item-icon bg-danger text-white"><i class="fas fa-times"></i></div>
+        <div class="pricing-item-label">Gói đã hết hạn</div>
+      </div>
+    </ng-template>
+<!--    <div nz-col [nzXXl]="8" [nzXl]="8" [nzLg]="12" [nzMd]="12" [nzSm]="24" [nzXs]="24">-->
+<!--      <div class="pricing pricing-highlight">-->
+<!--        <div class="pricing-title">-->
+<!--          Small Team-->
+<!--        </div>-->
+<!--        <div class="pricing-padding">-->
+<!--          <div class="pricing-price">-->
+<!--            <div>Ngày hết hạn</div>-->
+<!--            <div>2023/06/06</div>-->
+<!--          </div>-->
+<!--          <div class="pricing-details">-->
+<!--            <div class="pricing-item">-->
+<!--              <div class="pricing-item-icon bg-danger text-white"><i class="fas fa-times"></i></div>-->
+<!--              <div class="pricing-item-label">Gói đã hết hạn</div>-->
+<!--            </div>-->
+<!--            <div class="pricing-item">-->
+<!--              <div class="pricing-item-icon bg-yellow"><i class="far fa-clock"></i></div>-->
+<!--              <div class="pricing-item-label">Thời gian còn lại 0 ngày</div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="pricing-cta">-->
+<!--          <a href="#">Subscribe <i class="fas fa-arrow-right"></i></a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+  </div>
+  </div>
+</section>

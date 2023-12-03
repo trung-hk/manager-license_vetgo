@@ -41,12 +41,13 @@ if (storedCorporate) {
 if (window.location.href.startsWith('https://phanmemvet.vn')) {
     realm = 'phanmemvet';
 }
-
+const URL_KEY_CLOAK_PRO: string = 'https://keycloak.phanmemvet.vn';
+const URL_KEY_CLOAK_DEV: string = 'https://dev-keycloak.phanmemvet.vn/';
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
         keycloak.init({
             config: {
-                url: 'https://keycloak.phanmemvet.vn',
+                url: window.location.origin.startsWith('http://localhost') ? URL_KEY_CLOAK_DEV : URL_KEY_CLOAK_PRO,
                 realm: realm,
                 clientId: 'vetgo-fe'
             },
