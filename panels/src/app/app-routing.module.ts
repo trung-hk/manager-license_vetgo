@@ -21,6 +21,7 @@ import {PaymentCompleteDetailsComponent} from "./pages/payment-complete-details/
 import {CustomersComponent} from "./pages/customers/customers.component";
 import {LicenseZaloConfigComponent} from "./pages/license-zalo-config/license-zalo-config.component";
 import {PackagePurchasedComponent} from "./pages/package-purchased/package-purchased.component";
+import {PackageRenewalComponent} from "./pages/package-renewal/package-renewal.component";
 
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
@@ -186,6 +187,17 @@ const routes: Routes = [
       {
         path: 'package-purchased',
         component: PackagePurchasedComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.ADMIN],
+            redirectTo: '/error/403'
+          }
+        }
+      },
+      {
+        path: 'package-renewal/:id',
+        component: PackageRenewalComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {

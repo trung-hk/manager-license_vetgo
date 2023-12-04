@@ -3,7 +3,6 @@ import {NzTableQueryParams} from 'ng-zorro-antd/table';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {ApiCommonService} from 'src/app/services/api-common.service';
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
-import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
@@ -42,7 +41,6 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     filter: Array<{ key: string; value: string[] }> | null = null;
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
-                private communicationService: CommunicationService,
                 private renderer: Renderer2,
                 public scriptFC: ScriptCommonService,
                 private fb: UntypedFormBuilder) {

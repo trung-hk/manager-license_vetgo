@@ -1,25 +1,19 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewContainerRef} from '@angular/core';
-import {Item} from "../../models/Item";
 import {User} from "../../models/User";
 import {BehaviorSubject, debounceTime, distinctUntilChanged} from "rxjs";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
-import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
-import {Router} from "@angular/router";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {Message} from "../../Constants/message-constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {
-  CONFIG,
   MODE_DISPLAY,
-  MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
   ROLES, STATUS_CUSTOMER,
-  STATUS_ORDER,
-  STATUS_PAYMENT, USER_TYPE
+  USER_TYPE
 } from "../../Constants/vg-constant";
 import {USER_FORM} from "../../Constants/Form";
 import {ResponseError} from "../../models/ResponseError";
@@ -55,13 +49,11 @@ export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
   validateForm!: UntypedFormGroup;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
-              private communicationService: CommunicationService,
               private renderer: Renderer2,
               private scriptFC: ScriptCommonService,
               private fb: UntypedFormBuilder,
               private viewContainerRef: ViewContainerRef,
-              private elRef: ElementRef,
-              private router: Router,) {
+              private elRef: ElementRef,) {
   }
   expandSet = new Set<string>();
   onExpandChange(id: string, checked: boolean): void {

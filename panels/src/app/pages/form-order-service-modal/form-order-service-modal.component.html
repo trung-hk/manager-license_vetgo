@@ -1,192 +1,190 @@
 <nz-tabset>
-    <nz-tab *ngIf="mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT" nzTitle="Khách hàng">
-        <form nz-form [formGroup]="validateCustomerForm">
-            <input type="hidden" formControlName="id">
-            <input type="hidden" formControlName="status">
-            <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
-                <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập số điện thoại">
-                    <nz-input-group nzAddOnBefore="+84">
-                        <input [maxLength]="14" formControlName="phone" nz-input placeholder="(090) 123-4567"
-                               (keyup)="formatPhone($event)" (ngModelChange)="onSearch($event)"/>
-                    </nz-input-group>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã KH</nz-form-label>
-                <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập mã khách hàng">
-                    <input formControlName="code" nz-input placeholder="VETGO" />
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên KH</nz-form-label>
-                <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập tên khách hàng">
-                    <input formControlName="name" nz-input placeholder="Vet go"/>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">E-mail</nz-form-label>
-                <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập địa chỉ e-mail">
-                    <input type="email" formControlName="email" nz-input placeholder="vetgo@gmail.com"/>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzLabelAlign="right" [nzSm]="5">Địa chỉ</nz-form-label>
-                <nz-form-control [nzSm]="18">
-                    <textarea rows="4" formControlName="address" nz-input
-                              placeholder="Đường x, phường x, quận x..."></textarea>
-                </nz-form-control>
-            </nz-form-item>
-        </form>
-    </nz-tab>
-    <nz-tab nzTitle="Sản phẩm" *ngIf="mode !== MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG">
-        <form nz-form [formGroup]="validateOrderForm">
-            <input type="hidden" formControlName="id">
-            <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn sản phẩm</nz-form-label>
-                <nz-form-control [nzSm]="18">
-                    <nz-select formControlName="itemId"  (ngModelChange)="handleChangeProduct($event)">
-                        <nz-option *ngFor="let product of products" nzValue="{{product.id}}"
-                                   nzLabel="{{product.name}}"></nz-option>
-                    </nz-select>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn gói</nz-form-label>
-                <nz-form-control [nzSm]="18">
-                    <nz-select formControlName="packageId" (ngModelChange)="handleChangePackage($event)">
-                        <nz-option *ngFor="let pk of productSelect?.packages"
-                                   nzValue="{{pk.id}}" nzLabel="{{pk.name}}"></nz-option>
-                    </nz-select>
-                </nz-form-control>
-            </nz-form-item>
-            <hr>
-            <div nz-row>
-                <div nz-col nzSpan="12">
-                    <h5>Tổng tiền</h5>
-                </div>
-                <div nz-col nzSpan="11" class="text-right">
-                    <h5>{{totalPrice| moneyFormat}} VNĐ</h5>
-                </div>
-            </div>
-        </form>
-    </nz-tab>
-    <nz-tab
-            *ngIf="mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG
+  <nz-tab *ngIf="mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT" nzTitle="Khách hàng">
+    <form nz-form [formGroup]="validateCustomerForm">
+      <input type="hidden" formControlName="id">
+      <input type="hidden" formControlName="status">
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
+        <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập số điện thoại">
+          <nz-input-group nzAddOnBefore="+84">
+            <input [maxLength]="14" formControlName="phone" nz-input placeholder="(090) 123-4567"
+                   (keyup)="formatPhone($event)" (ngModelChange)="onSearch($event)"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã KH</nz-form-label>
+        <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập mã khách hàng">
+          <input formControlName="code" nz-input placeholder="VETGO"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên KH</nz-form-label>
+        <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập tên khách hàng">
+          <input formControlName="name" nz-input placeholder="Vet go"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">E-mail</nz-form-label>
+        <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập địa chỉ e-mail">
+          <input type="email" formControlName="email" nz-input placeholder="vetgo@gmail.com"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzLabelAlign="right" [nzSm]="5">Địa chỉ</nz-form-label>
+        <nz-form-control [nzSm]="18">
+                    <textarea rows="4" formControlName="address" nz-input placeholder="Đường x, phường x, quận x..."></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </nz-tab>
+  <nz-tab nzTitle="Sản phẩm" *ngIf="mode !== MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG">
+    <form nz-form [formGroup]="validateOrderForm">
+      <input type="hidden" formControlName="id">
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn sản phẩm</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <nz-select formControlName="itemId" (ngModelChange)="handleChangeProduct($event)">
+            <nz-option *ngFor="let product of products" nzValue="{{product.id}}"
+                       nzLabel="{{product.name}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn gói</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <nz-select formControlName="packageId" (ngModelChange)="handleChangePackage($event)">
+            <nz-option *ngFor="let pk of productSelect?.packages"
+                       nzValue="{{pk.id}}" nzLabel="{{pk.name}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <hr>
+      <div nz-row>
+        <div nz-col nzSpan="12">
+          <h5>Tổng tiền</h5>
+        </div>
+        <div nz-col nzSpan="11" class="text-right">
+          <h5>{{totalPrice| moneyFormat}} VNĐ</h5>
+        </div>
+      </div>
+    </form>
+  </nz-tab>
+  <nz-tab
+      *ngIf="mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG
                     && attributeOrder.usingConfig !== CONFIG.NOT_USING.value && !attributeOrder.data"
-            nzTitle="Cài đặt">
-        <form nz-form [formGroup]="validateConfigForm">
-            <ng-container [ngSwitch]="attributeOrder.usingConfig">
-                <ng-container *ngSwitchCase="CONFIG.VET_APP.value">
-                    <ng-container *ngTemplateOutlet="CONFIG_VET_APP_FORM"></ng-container>
-                </ng-container>
-                <ng-container *ngSwitchCase="CONFIG.POS.value">
-                    <ng-container *ngTemplateOutlet="CONFIG_POS_FORM"></ng-container>
-                </ng-container>
-                <ng-container *ngSwitchCase="CONFIG.SPA.value">
-                    <ng-container *ngTemplateOutlet="CONFIG_SPA_FORM"></ng-container>
-                </ng-container>
-                <ng-container *ngSwitchCase="CONFIG.CS_ZALO.value">
-                    <ng-container *ngTemplateOutlet="CONFIG_CS_ZALO_FORM"></ng-container>
-                </ng-container>
-                <ng-container *ngSwitchCase="CONFIG.WIFI_MARKETING.value">
-                    <ng-container *ngTemplateOutlet="CONFIG_WIFI_MARKETING_FORM"></ng-container>
-                </ng-container>
-                <ng-container *ngSwitchCase="CONFIG.ADMIN_ONLINE_SHOP.value">
-                    <ng-container *ngTemplateOutlet="CONFIG_ADMIN_ONLINE_SHOP_FORM"></ng-container>
-                </ng-container>
-            </ng-container>
-            <ng-template #CONFIG_VET_APP_FORM>
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã App</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <input formControlName="codeApp" nz-input placeholder="VETGO"/>
-                    </nz-form-control>
-                </nz-form-item>
-            </ng-template>
-            <ng-template #CONFIG_POS_FORM>
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã App</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <input formControlName="codeApp" nz-input placeholder="VETGO"/>
-                    </nz-form-control>
-                </nz-form-item>
-            </ng-template>
-            <ng-template #CONFIG_SPA_FORM>
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã App</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <input formControlName="codeApp" nz-input placeholder="VETGO"/>
-                    </nz-form-control>
-                </nz-form-item>
-            </ng-template>
-            <ng-template #CONFIG_CS_ZALO_FORM>
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <nz-input-group nzAddOnBefore="+84">
-                            <input [maxLength]="15" formControlName="phone" nz-input placeholder="(090) 123-4567"
-                                   (keyup)="formatPhone($event)"/>
-                        </nz-input-group>
-                    </nz-form-control>
-                </nz-form-item>
-            </ng-template>
-            <ng-template #CONFIG_WIFI_MARKETING_FORM>
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">CloudId</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <input formControlName="cloudId" nz-input/>
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên đăng nhập</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <input formControlName="userName" nz-input/>
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mật khẩu</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <input formControlName="password" nz-input/>
-                    </nz-form-control>
-                </nz-form-item>
-            </ng-template>
-            <ng-template #CONFIG_ADMIN_ONLINE_SHOP_FORM>
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <input formControlName="name" nz-input placeholder="VETGO"/>
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item>
-                    <nz-form-label nzLabelAlign="right" [nzSm]="5">Sub Domain</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <input formControlName="customDomain" nz-input placeholder="VETGO"/>
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <nz-input-group nzAddOnBefore="+84">
-                            <input [maxLength]="15" formControlName="phone" nz-input placeholder="(090) 123-4567"
-                                   (keyup)="formatPhone($event)"/>
-                        </nz-input-group>
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">E-mail</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <input formControlName="email" nz-input placeholder="VETGO"/>
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item>
-                    <nz-form-label nzLabelAlign="right" [nzSm]="5">Địa chỉ</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                    <textarea rows="4" formControlName="address" nz-input
-                              placeholder="Đường x, phường x, quận x..."></textarea>
-                    </nz-form-control>
-                </nz-form-item>
-            </ng-template>
-        </form>
-    </nz-tab>
+      nzTitle="Cài đặt">
+    <form nz-form [formGroup]="validateConfigForm">
+      <ng-container [ngSwitch]="attributeOrder.usingConfig">
+        <ng-container *ngSwitchCase="CONFIG.VET_APP.value">
+          <ng-container *ngTemplateOutlet="CONFIG_VET_APP_FORM"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="CONFIG.POS.value">
+          <ng-container *ngTemplateOutlet="CONFIG_POS_FORM"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="CONFIG.SPA.value">
+          <ng-container *ngTemplateOutlet="CONFIG_SPA_FORM"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="CONFIG.CS_ZALO.value">
+          <ng-container *ngTemplateOutlet="CONFIG_CS_ZALO_FORM"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="CONFIG.WIFI_MARKETING.value">
+          <ng-container *ngTemplateOutlet="CONFIG_WIFI_MARKETING_FORM"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="CONFIG.ADMIN_ONLINE_SHOP.value">
+          <ng-container *ngTemplateOutlet="CONFIG_ADMIN_ONLINE_SHOP_FORM"></ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-template #CONFIG_VET_APP_FORM>
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã App</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <input formControlName="codeApp" nz-input placeholder="VETGO"/>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-template>
+      <ng-template #CONFIG_POS_FORM>
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã App</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <input formControlName="codeApp" nz-input placeholder="VETGO"/>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-template>
+      <ng-template #CONFIG_SPA_FORM>
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã App</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <input formControlName="codeApp" nz-input placeholder="VETGO"/>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-template>
+      <ng-template #CONFIG_CS_ZALO_FORM>
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <nz-input-group nzAddOnBefore="+84">
+              <input [maxLength]="15" formControlName="phone" nz-input placeholder="(090) 123-4567"
+                     (keyup)="formatPhone($event)"/>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-template>
+      <ng-template #CONFIG_WIFI_MARKETING_FORM>
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">CloudId</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <input formControlName="cloudId" nz-input/>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên đăng nhập</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <input formControlName="userName" nz-input/>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mật khẩu</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <input formControlName="password" nz-input/>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-template>
+      <ng-template #CONFIG_ADMIN_ONLINE_SHOP_FORM>
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <input formControlName="name" nz-input placeholder="VETGO"/>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzLabelAlign="right" [nzSm]="5">Sub Domain</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <input formControlName="customDomain" nz-input placeholder="VETGO"/>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <nz-input-group nzAddOnBefore="+84">
+              <input [maxLength]="15" formControlName="phone" nz-input placeholder="(090) 123-4567"
+                     (keyup)="formatPhone($event)"/>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">E-mail</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <input formControlName="email" nz-input placeholder="VETGO"/>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzLabelAlign="right" [nzSm]="5">Địa chỉ</nz-form-label>
+          <nz-form-control [nzSm]="18">
+                    <textarea rows="4" formControlName="address" nz-input placeholder="Đường x, phường x, quận x..."></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-template>
+    </form>
+  </nz-tab>
 </nz-tabset>

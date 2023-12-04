@@ -2,14 +2,12 @@ import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2, ViewContainerRef
 import {Item} from "../../models/Item";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
-import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {ROLES, STATUS_AGENT_PRODUCT, STATUS_PRODUCT_SERVICE} from "../../Constants/vg-constant";
 import {AgentProduct} from "../../models/AgentProduct";
 import {Message} from "../../Constants/message-constant";
-import {PackageProduct} from "../../models/PackageProduct";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 
 @Component({
@@ -31,7 +29,6 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
     idDelete: number | string | null | undefined = -1;
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
-                private communicationService: CommunicationService,
                 private renderer: Renderer2,
                 public scriptFC: ScriptCommonService,
                 private viewContainerRef: ViewContainerRef) {

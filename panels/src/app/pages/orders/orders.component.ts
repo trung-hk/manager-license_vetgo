@@ -1,8 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewContainerRef} from '@angular/core';
-import {UntypedFormBuilder} from "@angular/forms";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
-import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
@@ -63,10 +61,8 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
-                private communicationService: CommunicationService,
                 private renderer: Renderer2,
                 private scriptFC: ScriptCommonService,
-                private fb: UntypedFormBuilder,
                 private viewContainerRef: ViewContainerRef,
                 private elRef: ElementRef,
                 private router: Router,) {

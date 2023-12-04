@@ -1,17 +1,11 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewContainerRef} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
-import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
-import {UntypedFormBuilder} from "@angular/forms";
 import {Router} from "@angular/router";
-import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
-import {OrderService} from "../../models/OrderService";
 import {URL} from "../../Constants/api-urls";
 import {Message} from "../../Constants/message-constant";
-import {AgentProduct} from "../../models/AgentProduct";
-import {Item} from "../../models/Item";
 import {PackagePurchased} from "../../models/PackagePurchased";
 import {format} from "date-fns";
 
@@ -26,13 +20,8 @@ export class PackagePurchasedComponent implements OnInit, AfterViewInit, OnDestr
 
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
-              private communicationService: CommunicationService,
               private renderer: Renderer2,
-              private scriptFC: ScriptCommonService,
-              private fb: UntypedFormBuilder,
-              private viewContainerRef: ViewContainerRef,
-              private elRef: ElementRef,
-              private router: Router,) {
+              private scriptFC: ScriptCommonService,) {
   }
   ngAfterViewInit(): void {
     this.loadScript.addListScript(this.listScript).then(() => {
@@ -53,9 +42,6 @@ export class PackagePurchasedComponent implements OnInit, AfterViewInit, OnDestr
   }
   loadDataFromServer(): void {
     this.loading = true;
-    // let loading_success_1 = false;
-    // let loading_success_2 = false;
-    // const objectSelectOrderService: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
     this.api.getAll<ResponseDataGetAll<PackagePurchased>>(URL.API_PACKAGE_PURCHASED).subscribe((data) => {
       data.content = [
         {
@@ -63,7 +49,7 @@ export class PackagePurchasedComponent implements OnInit, AfterViewInit, OnDestr
           customerId: "1",
           itemId: "1",
           attributes: "{\"itemName\": \"vet go app\"}",
-          expiredDate: "2023-12-03T16:02:17.574Z"
+          expiredDate: "2023-12-04T16:02:17.574Z"
 
         },
         {
@@ -96,31 +82,6 @@ export class PackagePurchasedComponent implements OnInit, AfterViewInit, OnDestr
       this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
       this.loading = false;
     });
-    // this.api.getAll<ResponseDataGetAll<AgentProduct>>(URL.API_AGENT_PRODUCT)
-    //     .subscribe((data) => {
-    //       console.log(data)
-    //       const idProductRegisterList = data.content.map(ap => ap.itemId);
-    //       this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM)
-    //           .subscribe((data) => {
-    //             console.log(data)
-    //             this.productList = data.content
-    //                 .filter(ps => idProductRegisterList.includes(ps.id))
-    //                 .map(product => {
-    //                   product.packages = this.scriptFC.getPackageService(product.attributes);
-    //                   return product;
-    //                 });
-    //             loading_success_2 = true;
-    //             this.loading = !(loading_success_1 && loading_success_2);
-    //           }, error => {
-    //             console.log(error);
-    //             this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-    //             this.loading = false;
-    //           });
-    //     }, error => {
-    //       console.log(error);
-    //       this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-    //       this.loading = false;
-    //     });
   }
 
 }

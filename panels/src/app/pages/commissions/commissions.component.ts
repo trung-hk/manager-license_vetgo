@@ -3,7 +3,6 @@ import {TYPE_COMMISSION} from "../../Constants/vg-constant";
 import {FormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
-import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {
   COMMISSION_ACCUMULATE_FORM,
@@ -45,7 +44,6 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
   formAccumulates!: FormArray;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
-              private communicationService: CommunicationService,
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,
               private fb: UntypedFormBuilder) {

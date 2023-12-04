@@ -18,7 +18,6 @@ export class PaymentBankTransferComponent implements OnInit, AfterViewInit, OnDe
     this.loadScript.addListScript([]).then(() => {
     });
   }
-
   ngOnDestroy(): void {
   }
 

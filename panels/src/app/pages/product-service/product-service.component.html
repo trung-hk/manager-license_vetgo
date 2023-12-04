@@ -1,250 +1,233 @@
 <section class="section">
-    <div class="section-body">
-        <div class="row">
-            <div class="col-12">
-                <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzExtra]="titleRight" [nzBordered]="false">
-                    <nz-table
-                            nzShowSizeChanger
-                            [nzData]="dataList"
-                            [nzFrontPagination]="false"
-                            [nzLoading]="loading"
-                            [nzTotal]="total"
-                            [nzPageSize]="pageSize"
-                            [nzPageIndex]="pageIndex"
-                            (nzQueryParams)="onQueryParamsChange($event)"
-                    >
-                        <thead>
-                        <tr>
-                            <th nzColumnKey="code" [nzSortFn]="true">Mã sản phẩm</th>
-                            <th nzColumnKey="name" [nzSortFn]="true">Sản phẩm</th>
-                            <th nzWidth="16em" nzColumnKey="description">Thông tin sản phẩm</th>
-                            <th nzWidth="16em">Thông tin Gói</th>
-                            <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
-                                Ngày cập nhật
-                            </th>
-                            <th nzColumnKey="status" nzWidth="12em" [nzSortFn]="true" [nzFilters]="STATUS_PRODUCT_SERVICE.LIST"
-                                [nzFilterFn]="true">
-                                Trạng thái
-                            </th>
-                            <th class="align-center" nzWidth="10em">Thao tác</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let dt of dataList">
-                            <td>{{dt.code}}</td>
-                            <td>{{dt.name}}</td>
-                            <td>
-                                <div class="custom-scrollbar" contenteditable="true"
-                                     [innerHtml]="dt.description! | lineBreak"></div>
-                            </td>
-                            <td>
-                                <nz-list nzSize="small" class="custom-scrollbar">
-                                    <nz-list-item *ngFor="let p of dt.packages">
-                                        <nz-skeleton *ngIf="!p" [nzAvatar]="true"
-                                                     [nzParagraph]="{ rows: 1 }"></nz-skeleton>
-                                        <nz-list-item-meta
-                                                nzAvatar="/assets/img/service-packages.png"
-                                                [nzDescription]="p.name ? p.name : ''"
-                                        >
-                                            <nz-list-item-meta-title>
-                                                <nz-statistic
-                                                        [nzValueStyle]="{'font-size': 'unset'}"
-                                                        [nzValue]="(p.price | number)!"
-                                                        [nzSuffix]="'VNĐ'">
-                                                </nz-statistic>
-                                            </nz-list-item-meta-title>
-                                        </nz-list-item-meta>
-                                    </nz-list-item>
-                                </nz-list>
-                            </td>
-                            <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
-                            <td class="align-center">
-                                <ng-container [ngSwitch]="dt.status">
-                                    <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.UN_DEPLOYED.value"
-                                         class="badge badge-shadow badge-danger">
-                                        {{STATUS_PRODUCT_SERVICE.UN_DEPLOYED.text}}
-                                    </div>
-                                    <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.DEPLOYED.value"
-                                         class="badge badge-shadow badge-success">
-                                        {{STATUS_PRODUCT_SERVICE.DEPLOYED.text}}
-                                    </div>
-                                </ng-container>
-                            </td>
-                            <td class="align-center action">
-                                <nz-space>
-                                    <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline"
-                                          (click)="showModal(dt)"
-                                          title="Chỉnh sửa">
-                                </span>
-                                    <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline"
-                                          (click)="showDeleteModal(dt.id)"
-                                          title="Xóa">
-                                </span>
-                                </nz-space>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </nz-table>
-                </nz-card>
-                <ng-template #titleLeft>
-                    Danh sách Sản phẩm
-                    <nz-tag [nzColor]="'#33CCFF'">
-                        <nz-statistic [nzValueStyle]="{'font-size': 'unset'}"
-                                      [nzValue]="(total | number)!"></nz-statistic>
-                    </nz-tag>
-                </ng-template>
-                <ng-template #titleRight>
-                    <div nz-row [nzGutter]="8">
-                        <div nz-col [nzSm]="14">
-                            <nz-input-group [nzSuffix]="suffixIconSearch">
-                                <input nzSize="large" type="search" nz-input placeholder="input search text"
-                                       (keyup.enter)="search($event)"/>
-                            </nz-input-group>
-                            <ng-template #suffixIconSearch>
-                                <span nz-icon nzType="search"></span>
-                            </ng-template>
-                        </div>
-                        <div nz-col [nzSpan]="10">
-                            <button type="button" (click)="showModal()" class="btn btn-success pull-right note-btn">
-                                <i class="fas fa-plus"></i> Thêm mới
-                            </button>
-                        </div>
-                    </div>
-                </ng-template>
+  <div class="section-body">
+    <div class="row">
+      <div class="col-12">
+        <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzExtra]="titleRight" [nzBordered]="false">
+          <nz-table
+              nzShowSizeChanger
+              [nzData]="dataList"
+              [nzFrontPagination]="false"
+              [nzLoading]="loading"
+              [nzTotal]="total"
+              [nzPageSize]="pageSize"
+              [nzPageIndex]="pageIndex"
+              (nzQueryParams)="onQueryParamsChange($event)"
+          >
+            <thead>
+            <tr>
+              <th nzColumnKey="code" [nzSortFn]="true">Mã sản phẩm</th>
+              <th nzColumnKey="name" [nzSortFn]="true">Sản phẩm</th>
+              <th nzWidth="16em" nzColumnKey="description">Thông tin sản phẩm</th>
+              <th nzWidth="16em">Thông tin Gói</th>
+              <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
+                Ngày cập nhật
+              </th>
+              <th nzColumnKey="status" nzWidth="12em" [nzSortFn]="true" [nzFilters]="STATUS_PRODUCT_SERVICE.LIST" [nzFilterFn]="true">
+                Trạng thái
+              </th>
+              <th class="align-center" nzWidth="10em">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dt of dataList">
+              <td>{{dt.code}}</td>
+              <td>{{dt.name}}</td>
+              <td>
+                <div class="custom-scrollbar" contenteditable="true" [innerHtml]="dt.description! | lineBreak"></div>
+              </td>
+              <td>
+                <nz-list nzSize="small" class="custom-scrollbar">
+                  <nz-list-item *ngFor="let p of dt.packages">
+                    <nz-skeleton *ngIf="!p" [nzAvatar]="true"
+                                 [nzParagraph]="{ rows: 1 }"></nz-skeleton>
+                    <nz-list-item-meta nzAvatar="/assets/img/service-packages.png" [nzDescription]="p.name ? p.name : ''">
+                      <nz-list-item-meta-title>
+                        <nz-statistic
+                            [nzValueStyle]="{'font-size': 'unset'}"
+                            [nzValue]="(p.price | number)!"
+                            [nzSuffix]="'VNĐ'">
+                        </nz-statistic>
+                      </nz-list-item-meta-title>
+                    </nz-list-item-meta>
+                  </nz-list-item>
+                </nz-list>
+              </td>
+              <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+              <td class="align-center">
+                <ng-container [ngSwitch]="dt.status">
+                  <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.UN_DEPLOYED.value"
+                       class="badge badge-shadow badge-danger">
+                    {{STATUS_PRODUCT_SERVICE.UN_DEPLOYED.text}}
+                  </div>
+                  <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.DEPLOYED.value"
+                       class="badge badge-shadow badge-success">
+                    {{STATUS_PRODUCT_SERVICE.DEPLOYED.text}}
+                  </div>
+                </ng-container>
+              </td>
+              <td class="align-center action">
+                <nz-space>
+                  <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline" (click)="showModal(dt)" title="Chỉnh sửa"> </span>
+                  <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline" (click)="showDeleteModal(dt.id)" title="Xóa"></span>
+                </nz-space>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </nz-card>
+        <ng-template #titleLeft>
+          Danh sách Sản phẩm
+          <nz-tag [nzColor]="'#33CCFF'">
+            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
+          </nz-tag>
+        </ng-template>
+        <ng-template #titleRight>
+          <div nz-row [nzGutter]="8">
+            <div nz-col [nzSm]="14">
+              <nz-input-group [nzSuffix]="suffixIconSearch">
+                <input nzSize="large" type="search" nz-input placeholder="input search text" (keyup.enter)="search($event)"/>
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search"></span>
+              </ng-template>
             </div>
-        </div>
+            <div nz-col [nzSpan]="10">
+              <button type="button" (click)="showModal()" class="btn btn-success pull-right note-btn">
+                <i class="fas fa-plus"></i> Thêm mới
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
     </div>
+  </div>
 </section>
 <!-- Create/Update Form -->
 <nz-modal [(nzVisible)]="isVisible"
           [nzTitle]="modalTitle"
           [nzContent]="modalContent"
           [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
-          (nzOnCancel)="handleCancel()" [nzStyle] ="{'width': '800px', 'max-height': '750px', 'overflow-y': 'auto'}">
-    <ng-template #modalTitle> {{idShowModal ? 'Cập nhật sản phẩm' : 'Thêm mới sản phẩm'}}</ng-template>
-
-    <ng-template #modalContent>
-        <form nz-form [formGroup]="validateProductForm">
-            <input type="hidden" formControlName="id">
-            <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã sản phẩm</nz-form-label>
-                <nz-form-control [nzSm]="18">
-                    <input formControlName="code" nz-input placeholder="VETGO"/>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên sản phẩm</nz-form-label>
-                <nz-form-control [nzSm]="18">
-                    <input formControlName="name" nz-input placeholder="Vet go"/>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzLabelAlign="right" [nzSm]="5">Mô tả sản phẩm</nz-form-label>
-                <nz-form-control [nzSm]="18">
-                    <textarea rows="4" formControlName="description" nz-input
-                              placeholder="vet go..."></textarea>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
-                <nz-form-control [nzSm]="18">
-                    <nz-select formControlName="status">
-                        <nz-option *ngFor="let status of STATUS_PRODUCT_SERVICE.LIST" nzValue="{{status.value}}"
-                                   nzLabel="{{status.text}}"></nz-option>
-                    </nz-select>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Sử dụng config</nz-form-label>
-                <nz-form-control [nzSm]="18">
-                    <nz-select formControlName="usingConfig">
-                        <nz-option *ngFor="let config of CONFIG_LIST" nzValue="{{config.value}}"
-                                   nzLabel="{{config.text}}"></nz-option>
-                    </nz-select>
-                </nz-form-control>
-            </nz-form-item>
-            <form nz-form [formGroup]="validatePackageProductForm">
-                <div [formArrayName]="attributeArrayForm">
-                    <nz-form-item *ngFor="let item of formPackage.controls; let i = index" [formGroupName]="i">
-                        <nz-form-label nzNoColon="{{i !== 0}}" nzLabelAlign="right" [nzSm]="5">
-                            <ng-container *ngIf="i === 0">
-                                Thông tin gói
-                            </ng-container>
-                        </nz-form-label>
-                        <nz-form-control [nzSm]="18">
-                            <input type="hidden" formControlName="id">
-                            <div nz-row [nzGutter]="16">
-                                <div nz-col nzSpan="10">
-                                    <nz-input-group nzAddOnBefore="Tên">
-                                        <input formControlName="name" nz-input
-                                               placeholder="1 năm"/>
-                                    </nz-input-group>
-                                    <nz-input-number-group nzAddOnBefore="Giá " nzAddOnAfter="VNĐ">
-                                        <nz-input-number
-                                                formControlName="price"
-                                                [nzPlaceHolder]="'1,000,000'"
-                                                [nzFormatter]="scriptFC.formatterMoney"
-                                                [nzParser]="scriptFC.parserMoney">
-                                        </nz-input-number>
-                                    </nz-input-number-group>
-                                </div>
-                                <div nz-col nzSpan="12">
-                                    <nz-input-group nzAddOnBefore="Loại gói">
-                                        <nz-select formControlName="typePackage">
-                                            <nz-option [nzLabel]="TYPE_PACKAGE.FREE.text" [nzValue]="TYPE_PACKAGE.FREE.value"></nz-option>
-                                            <nz-option [nzLabel]="TYPE_PACKAGE.PAYMENT.text" [nzValue]="TYPE_PACKAGE.PAYMENT.value"></nz-option>
-                                        </nz-select>
-                                    </nz-input-group>
-                                    <nz-input-group nzAddOnBefore="Thời hạn" [nzAddOnAfter]="chooseTypeExpired">
-                                        <input formControlName="expired" nz-input />
-                                    </nz-input-group>
-                                </div>
-                                <div nz-col nzSpan="2" style="top:1em;">
-                                    <span nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeField(i, $event)"></span>
-                                </div>
-                            </div>
-                        </nz-form-control>
-                        <ng-template #chooseTypeExpired>
-                            <nz-select formControlName="typeExpired">
-                                <nz-option nzLabel="Ngày" [nzValue]="TYPE_EXPIRED_PACKAGE.DAY"></nz-option>
-                                <nz-option nzLabel="Tháng" [nzValue]="TYPE_EXPIRED_PACKAGE.MONTH"></nz-option>
-                                <nz-option nzLabel="Năm" [nzValue]="TYPE_EXPIRED_PACKAGE.YEAR"></nz-option>
-                            </nz-select>
-                        </ng-template>
-                    </nz-form-item>
-                    <nz-form-item>
-                        <nz-form-control [nzSm]="5"></nz-form-control>
-                        <nz-form-control [nzSm]="18" class="align-center">
-                            <button nz-button nzBlock nzType="dashed" class="add-button" (click)="addPackage()">
-                                <span nz-icon nzType="plus" style="vertical-align:text-top;"></span>
-                                Thêm gói
-                            </button>
-                        </nz-form-control>
-                    </nz-form-item>
+          (nzOnCancel)="handleCancel()" [nzStyle]="{'width': '800px', 'max-height': '750px', 'overflow-y': 'auto'}">
+  <ng-template #modalTitle> {{idShowModal ? 'Cập nhật sản phẩm' : 'Thêm mới sản phẩm'}}</ng-template>
+  
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="validateProductForm">
+      <input type="hidden" formControlName="id">
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã sản phẩm</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <input formControlName="code" nz-input placeholder="VETGO"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên sản phẩm</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <input formControlName="name" nz-input placeholder="Vet go"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzLabelAlign="right" [nzSm]="5">Mô tả sản phẩm</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <textarea rows="4" formControlName="description" nz-input placeholder="vet go..."></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <nz-select formControlName="status">
+            <nz-option *ngFor="let status of STATUS_PRODUCT_SERVICE.LIST" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Sử dụng config</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <nz-select formControlName="usingConfig">
+            <nz-option *ngFor="let config of CONFIG_LIST" nzValue="{{config.value}}" nzLabel="{{config.text}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <form nz-form [formGroup]="validatePackageProductForm">
+        <div [formArrayName]="attributeArrayForm">
+          <nz-form-item *ngFor="let item of formPackage.controls; let i = index" [formGroupName]="i">
+            <nz-form-label nzNoColon="{{i !== 0}}" nzLabelAlign="right" [nzSm]="5">
+              <ng-container *ngIf="i === 0">
+                Thông tin gói
+              </ng-container>
+            </nz-form-label>
+            <nz-form-control [nzSm]="18">
+              <input type="hidden" formControlName="id">
+              <div nz-row [nzGutter]="16">
+                <div nz-col nzSpan="10">
+                  <nz-input-group nzAddOnBefore="Tên">
+                    <input formControlName="name" nz-input placeholder="1 năm"/>
+                  </nz-input-group>
+                  <nz-input-number-group nzAddOnBefore="Giá " nzAddOnAfter="VNĐ">
+                    <nz-input-number
+                        formControlName="price"
+                        [nzPlaceHolder]="'1,000,000'"
+                        [nzFormatter]="scriptFC.formatterMoney"
+                        [nzParser]="scriptFC.parserMoney">
+                    </nz-input-number>
+                  </nz-input-number-group>
                 </div>
-            </form>
-        </form>
-    </ng-template>
-    <ng-template #modalFooterAdd>
-        <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
-        <button nz-button nzType="primary" [disabled]="validateProductForm.invalid" (click)="handleOk()"
-                [nzLoading]="isConfirmLoading">Thêm mới
-        </button>
-    </ng-template>
-    <ng-template #modalFooterUpdate>
-        <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
-        <button nz-button nzType="primary" [disabled]="validateProductForm.invalid" (click)="handleOk()"
-                [nzLoading]="isConfirmLoading">Câp nhật
-        </button>
-    </ng-template>
+                <div nz-col nzSpan="12">
+                  <nz-input-group nzAddOnBefore="Loại gói">
+                    <nz-select formControlName="typePackage">
+                      <nz-option [nzLabel]="TYPE_PACKAGE.FREE.text" [nzValue]="TYPE_PACKAGE.FREE.value"></nz-option>
+                      <nz-option [nzLabel]="TYPE_PACKAGE.PAYMENT.text" [nzValue]="TYPE_PACKAGE.PAYMENT.value"></nz-option>
+                    </nz-select>
+                  </nz-input-group>
+                  <nz-input-group nzAddOnBefore="Thời hạn" [nzAddOnAfter]="chooseTypeExpired">
+                    <input formControlName="expired" nz-input/>
+                  </nz-input-group>
+                </div>
+                <div nz-col nzSpan="2" style="top:1em;">
+                  <span nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeField(i, $event)"></span>
+                </div>
+              </div>
+            </nz-form-control>
+            <ng-template #chooseTypeExpired>
+              <nz-select formControlName="typeExpired">
+                <nz-option nzLabel="Ngày" [nzValue]="TYPE_EXPIRED_PACKAGE.DAY"></nz-option>
+                <nz-option nzLabel="Tháng" [nzValue]="TYPE_EXPIRED_PACKAGE.MONTH"></nz-option>
+                <nz-option nzLabel="Năm" [nzValue]="TYPE_EXPIRED_PACKAGE.YEAR"></nz-option>
+              </nz-select>
+            </ng-template>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control [nzSm]="5"></nz-form-control>
+            <nz-form-control [nzSm]="18" class="align-center">
+              <button nz-button nzBlock nzType="dashed" class="add-button" (click)="addPackage()">
+                <span nz-icon nzType="plus" style="vertical-align:text-top;"></span>
+                Thêm gói
+              </button>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </form>
+    </form>
+  </ng-template>
+  <ng-template #modalFooterAdd>
+    <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
+    <button nz-button nzType="primary" [disabled]="validateProductForm.invalid" (click)="handleOk()"
+            [nzLoading]="isConfirmLoading">Thêm mới
+    </button>
+  </ng-template>
+  <ng-template #modalFooterUpdate>
+    <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
+    <button nz-button nzType="primary" [disabled]="validateProductForm.invalid" (click)="handleOk()"
+            [nzLoading]="isConfirmLoading">Câp nhật
+    </button>
+  </ng-template>
 </nz-modal>
 
 <!-- Delete Confirmation -->
 <nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận xoá sản phẩm" nzOkText="Ok" nzOkDanger="true"
           nzCancelText="Hủy" (nzOnOk)="handleConfirmToDelete()"
-          [nzOkLoading] = "isConfirmLoadingDelete"
+          [nzOkLoading]="isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">
-    <ng-container *nzModalContent>
-        Xóa data đã chọn ?
-    </ng-container>
+  <ng-container *nzModalContent>
+    Xóa data đã chọn ?
+  </ng-container>
 </nz-modal>

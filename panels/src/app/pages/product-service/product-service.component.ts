@@ -1,7 +1,6 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import {CommunicationService} from 'src/app/services/communication.service';
 import {LazyLoadScriptService} from 'src/app/services/lazy-load-script.service';
-import {FormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
+import {FormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
@@ -54,7 +53,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
 
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
-                private communicationService: CommunicationService,
                 private renderer: Renderer2,
                 public scriptFC: ScriptCommonService,
                 private fb: UntypedFormBuilder) {

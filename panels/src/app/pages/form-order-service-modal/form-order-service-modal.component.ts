@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
 import {IModalData} from "../../models/ModalData";
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
@@ -31,6 +31,9 @@ import {AttributeOrderProductService} from "../../models/AttributeOrderProductSe
     templateUrl: './form-order-service-modal.component.html',
 })
 export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
+    protected readonly MODE_OPEN_MODAL_FORM_ORDER_SERVICE = MODE_OPEN_MODAL_FORM_ORDER_SERVICE;
+    protected readonly CONFIG = CONFIG;
+    protected readonly CONFIG_ADMIN_ONLINE_SHOP_FORM = CONFIG_ADMIN_ONLINE_SHOP_FORM;
     validateCustomerForm!: UntypedFormGroup;
     validateOrderForm!: UntypedFormGroup;
     validateConfigForm!: UntypedFormGroup;
@@ -330,7 +333,4 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
 
     }
 
-    protected readonly MODE_OPEN_MODAL_FORM_ORDER_SERVICE = MODE_OPEN_MODAL_FORM_ORDER_SERVICE;
-    protected readonly CONFIG = CONFIG;
-    protected readonly CONFIG_ADMIN_ONLINE_SHOP_FORM = CONFIG_ADMIN_ONLINE_SHOP_FORM;
 }

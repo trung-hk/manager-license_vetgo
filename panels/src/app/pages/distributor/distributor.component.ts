@@ -3,7 +3,6 @@ import {User} from "../../models/User";
 import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
-import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {USER_FORM} from "../../Constants/Form";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
@@ -42,7 +41,6 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
   filter: Array<{ key: string; value: string[] }> | null = null;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
-              private communicationService: CommunicationService,
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,
               private fb: UntypedFormBuilder) {

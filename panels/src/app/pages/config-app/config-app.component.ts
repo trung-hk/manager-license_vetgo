@@ -1,12 +1,11 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
-import {CommunicationService} from "../../services/communication.service";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ConfigApp} from "../../models/ConfigApp";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {URL} from "../../Constants/api-urls";
 import {CONFIG_APP_FORM} from "../../Constants/Form";
 import {Message} from "../../Constants/message-constant";
@@ -39,7 +38,6 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
     filter: Array<{ key: string; value: string[] }> | null = null;
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
-                private communicationService: CommunicationService,
                 private renderer: Renderer2,
                 private scriptFC: ScriptCommonService,
                 private fb: UntypedFormBuilder) {

@@ -1,80 +1,75 @@
 <section class="section">
-    <div class="section-body">
-        <div class="row">
-            <div class="col-12">
-                <nz-card [nzTitle]="titleLeft" [nzBordered]="false">
-                    <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
-                    <nz-table
-                            nzShowSizeChanger
-                            [nzData]="dataList"
-                            [nzFrontPagination]="false"
-                            [nzLoading]="loading"
-                            [nzTotal]="total"
-                            [nzPageSize]="pageSize"
-                            [nzPageIndex]="pageIndex"
-                            (nzQueryParams)="onQueryParamsChange($event)"
-                    >
-                        <thead>
-                        <tr>
-                            <th nzColumnKey="name" [nzSortFn]="true">Tên</th>
-                            <th>Loại</th>
-                            <th nzWidth="15em" nzColumnKey="description">Tỉ lệ chiết khấu</th>
-                            <th nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
-                                Ngày cập nhật
-                            </th>
-                            <th nzWidth="10em">Thao tác</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let dt of dataList">
-                            <td><div class="custom-scrollbar" contenteditable="true"
-                                     [innerHtml]="dt.name! | lineBreak"></div>
-                            </td>
-                            <td>
-                                <ng-container [ngSwitch]="dt.commissionType">
-                                    <div *ngSwitchCase="TYPE_COMMISSION.DEFAULT.value">
-                                        {{TYPE_COMMISSION.DEFAULT.text}}
-                                    </div>
-                                    <div *ngSwitchCase="TYPE_COMMISSION.REVENUE.value">
-                                        {{TYPE_COMMISSION.REVENUE.text}}
-                                    </div>
-                                </ng-container>
-                            </td>
-                            <td>
-                                <nz-statistic *ngIf="dt.commissionType === TYPE_COMMISSION.DEFAULT.value"
-                                        [nzValue]="(dt.rate | number: '1.0-2')!"
-                                        [nzSuffix]="'%'"
-                                        [nzValueStyle]="{ color: '#3F8600', 'font-size': '14px' }"
-                                ></nz-statistic>
-                            </td>
-                            <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
-                            <td class="align-center action">
-                                <nz-space>
-                                    <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline"
-                                          (click)="showModal(dt)"
-                                          title="Chỉnh sửa">
-                                </span>
-                                    <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline"
-                                          (click)="showDeleteModal(dt.id)"
-                                          title="Xóa">
-                                </span>
-                                </nz-space>
-
-                            </td>
-                        </tr>
-                        </tbody>
-                    </nz-table>
-                </nz-card>
-                <ng-template #titleLeft>
-                    Danh sách chiết khấu
-                    <nz-tag [nzColor]="'#33CCFF'">
-                        <nz-statistic [nzValueStyle]="{'font-size': 'unset'}"
-                                      [nzValue]="(total | number)!"></nz-statistic>
-                    </nz-tag>
-                </ng-template>
-            </div>
-        </div>
+  <div class="section-body">
+    <div class="row">
+      <div class="col-12">
+        <nz-card [nzTitle]="titleLeft" [nzBordered]="false">
+          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <nz-table
+              nzShowSizeChanger
+              [nzData]="dataList"
+              [nzFrontPagination]="false"
+              [nzLoading]="loading"
+              [nzTotal]="total"
+              [nzPageSize]="pageSize"
+              [nzPageIndex]="pageIndex"
+              (nzQueryParams)="onQueryParamsChange($event)"
+          >
+            <thead>
+            <tr>
+              <th nzColumnKey="name" [nzSortFn]="true">Tên</th>
+              <th>Loại</th>
+              <th nzWidth="15em" nzColumnKey="description">Tỉ lệ chiết khấu</th>
+              <th nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
+                Ngày cập nhật
+              </th>
+              <th nzWidth="10em">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dt of dataList">
+              <td>
+                <div class="custom-scrollbar" contenteditable="true"
+                     [innerHtml]="dt.name! | lineBreak"></div>
+              </td>
+              <td>
+                <ng-container [ngSwitch]="dt.commissionType">
+                  <div *ngSwitchCase="TYPE_COMMISSION.DEFAULT.value">
+                    {{TYPE_COMMISSION.DEFAULT.text}}
+                  </div>
+                  <div *ngSwitchCase="TYPE_COMMISSION.REVENUE.value">
+                    {{TYPE_COMMISSION.REVENUE.text}}
+                  </div>
+                </ng-container>
+              </td>
+              <td>
+                <nz-statistic *ngIf="dt.commissionType === TYPE_COMMISSION.DEFAULT.value"
+                              [nzValue]="(dt.rate | number: '1.0-2')!"
+                              [nzSuffix]="'%'"
+                              [nzValueStyle]="{ color: '#3F8600', 'font-size': '14px' }"
+                ></nz-statistic>
+              </td>
+              <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+              <td class="align-center action">
+                <nz-space>
+                  <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline" (click)="showModal(dt)" title="Chỉnh sửa"></span>
+                  <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline"(click)="showDeleteModal(dt.id)" title="Xóa"></span>
+                </nz-space>
+              
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </nz-card>
+        <ng-template #titleLeft>
+          Danh sách chiết khấu
+          <nz-tag [nzColor]="'#33CCFF'">
+            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}"
+                          [nzValue]="(total | number)!"></nz-statistic>
+          </nz-tag>
+        </ng-template>
+      </div>
     </div>
+  </div>
 </section>
 <!-- Create/Update Form -->
 <nz-modal [(nzVisible)]="isVisible"
@@ -82,121 +77,128 @@
           [nzContent]="modalContent"
           [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
           (nzOnCancel)="handleCancel()" nzWidth="800px">
-    <ng-template #modalTitle> {{idShowModal ? 'Cập nhật' : 'Thêm mới'}}</ng-template>
-    <ng-template #modalContent>
-        <nz-skeleton [nzLoading]="modalLoading">
-            <form nz-form [formGroup]="validateCommissionForm">
-                <input type="hidden" formControlName="id">
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <input formControlName="name" nz-input />
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item>
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chiết khấu</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <nz-radio-group nzName="commission-group" formControlName="commissionType" (ngModelChange)="onchangeCommissionType($event)">
-                            <label *ngFor="let type of TYPE_COMMISSION.LIST" nz-radio [nzValue]="type.value">{{type.text}}</label>
-                        </nz-radio-group>
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item *ngIf="validateCommissionForm.get('commissionType')?.value === TYPE_COMMISSION.DEFAULT.value">
-                    <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tỉ lệ chiết khấu</nz-form-label>
-                    <nz-form-control [nzSm]="18">
-                        <nz-input-number-group nzAddOnAfter="%">
-                            <nz-input-number formControlName="rate" [nzStep]="1" [nzMin]="1" [nzMax]="100"></nz-input-number>
-                        </nz-input-number-group>
-                    </nz-form-control>
-                </nz-form-item>
-                <form nz-form [formGroup]="validateCommissionAccumulateForm" *ngIf="validateCommissionForm.get('commissionType')?.value === TYPE_COMMISSION.REVENUE.value">
-                    <div [formArrayName]="attributeArrayForm">
-                        <nz-form-item *ngFor="let item of formAccumulates.controls; let i = index" [formGroupName]="i">
-                            <nz-form-label nzNoColon="{{i !== 0}}" nzLabelAlign="right" [nzSm]="5">
-                                <ng-container *ngIf="i === 0">
-                                    Tỉ lệ chiết khấu
-                                </ng-container>
-                            </nz-form-label>
-                            <nz-form-control [nzSm]="18">
-                                <div nz-row [nzGutter]="16">
-                                    <div nz-col nzSpan="13">
-                                        <nz-input-number-group nzAddOnBefore="Doanh thu từ" nzAddOnAfter="VNĐ">
-                                            <nz-input-number
-                                                    formControlName="revenueFrom"
-                                                    [nzPlaceHolder]="'1,000,000'"
-                                                    [nzFormatter]="scriptFC.formatterMoney"
-                                                    [nzParser]="scriptFC.parserMoney">
-                                            </nz-input-number>
-                                        </nz-input-number-group>
-                                    </div>
-                                    <div nz-col nzSpan="9">
-                                        <nz-input-number-group nzAddOnBefore="Chiết khấu" nzAddOnAfter="%">
-                                            <nz-input-number formControlName="rate" [nzStep]="1" [nzMin]="1" [nzMax]="100"> </nz-input-number>
-                                        </nz-input-number-group>
-                                    </div>
-                                    <div nz-col nzSpan="2">
-                                        <span nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeField(i, $event)"></span>
-                                    </div>
-                                </div>
-                            </nz-form-control>
-                        </nz-form-item>
-                        <nz-form-item>
-                            <nz-form-control [nzSm]="5"></nz-form-control>
-                            <nz-form-control [nzSm]="18" class="align-center">
-                                <button nz-button nzBlock nzType="dashed" class="add-button" (click)="addCommission()">
-                                    <span nz-icon nzType="plus" style="vertical-align:text-top;"></span>
-                                    Thêm chiết khấu
-                                </button>
-                            </nz-form-control>
-                        </nz-form-item>
-                    </div>
-                </form>
-            </form>
-        </nz-skeleton>
-    </ng-template>
-    <ng-template #modalFooterAdd>
-        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
-        <button nz-button nzType="primary" [disabled]="validateCommissionForm.invalid || (validateCommissionForm.get('commissionType')?.value === TYPE_COMMISSION.REVENUE.value && formAccumulates.length === 0)" (click)="handleOk()"
-                [nzLoading]="isConfirmLoading">Thêm mới
-        </button>
-    </ng-template>
-    <ng-template #modalFooterUpdate>
-        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
-        <button nz-button nzType="primary" [disabled]="validateCommissionForm.invalid || (validateCommissionForm.get('commissionType')?.value === TYPE_COMMISSION.REVENUE.value && formAccumulates.length === 0)" (click)="handleOk()"
-                [nzLoading]="isConfirmLoading">Câp nhật
-        </button>
-    </ng-template>
+  <ng-template #modalTitle> {{idShowModal ? 'Cập nhật' : 'Thêm mới'}}</ng-template>
+  <ng-template #modalContent>
+    <nz-skeleton [nzLoading]="modalLoading">
+      <form nz-form [formGroup]="validateCommissionForm">
+        <input type="hidden" formControlName="id">
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <input formControlName="name" nz-input/>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chiết khấu</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <nz-radio-group nzName="commission-group" formControlName="commissionType"
+                            (ngModelChange)="onchangeCommissionType($event)">
+              <label *ngFor="let type of TYPE_COMMISSION.LIST" nz-radio [nzValue]="type.value">{{type.text}}</label>
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="validateCommissionForm.get('commissionType')?.value === TYPE_COMMISSION.DEFAULT.value">
+          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tỉ lệ chiết khấu</nz-form-label>
+          <nz-form-control [nzSm]="18">
+            <nz-input-number-group nzAddOnAfter="%">
+              <nz-input-number formControlName="rate" [nzStep]="1" [nzMin]="1" [nzMax]="100"></nz-input-number>
+            </nz-input-number-group>
+          </nz-form-control>
+        </nz-form-item>
+        <form nz-form [formGroup]="validateCommissionAccumulateForm"
+              *ngIf="validateCommissionForm.get('commissionType')?.value === TYPE_COMMISSION.REVENUE.value">
+          <div [formArrayName]="attributeArrayForm">
+            <nz-form-item *ngFor="let item of formAccumulates.controls; let i = index" [formGroupName]="i">
+              <nz-form-label nzNoColon="{{i !== 0}}" nzLabelAlign="right" [nzSm]="5">
+                <ng-container *ngIf="i === 0">
+                  Tỉ lệ chiết khấu
+                </ng-container>
+              </nz-form-label>
+              <nz-form-control [nzSm]="18">
+                <div nz-row [nzGutter]="16">
+                  <div nz-col nzSpan="13">
+                    <nz-input-number-group nzAddOnBefore="Doanh thu từ" nzAddOnAfter="VNĐ">
+                      <nz-input-number
+                          formControlName="revenueFrom"
+                          [nzPlaceHolder]="'1,000,000'"
+                          [nzFormatter]="scriptFC.formatterMoney"
+                          [nzParser]="scriptFC.parserMoney">
+                      </nz-input-number>
+                    </nz-input-number-group>
+                  </div>
+                  <div nz-col nzSpan="9">
+                    <nz-input-number-group nzAddOnBefore="Chiết khấu" nzAddOnAfter="%">
+                      <nz-input-number formControlName="rate" [nzStep]="1" [nzMin]="1" [nzMax]="100"></nz-input-number>
+                    </nz-input-number-group>
+                  </div>
+                  <div nz-col nzSpan="2">
+                    <span nz-icon nzType="minus-circle-o" class="dynamic-delete-button"
+                          (click)="removeField(i, $event)"></span>
+                  </div>
+                </div>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-control [nzSm]="5"></nz-form-control>
+              <nz-form-control [nzSm]="18" class="align-center">
+                <button nz-button nzBlock nzType="dashed" class="add-button" (click)="addCommission()">
+                  <span nz-icon nzType="plus" style="vertical-align:text-top;"></span>
+                  Thêm chiết khấu
+                </button>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </form>
+      </form>
+    </nz-skeleton>
+  </ng-template>
+  <ng-template #modalFooterAdd>
+    <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+    <button nz-button nzType="primary"
+            [disabled]="validateCommissionForm.invalid || (validateCommissionForm.get('commissionType')?.value === TYPE_COMMISSION.REVENUE.value && formAccumulates.length === 0)"
+            (click)="handleOk()"
+            [nzLoading]="isConfirmLoading">Thêm mới
+    </button>
+  </ng-template>
+  <ng-template #modalFooterUpdate>
+    <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+    <button nz-button nzType="primary"
+            [disabled]="validateCommissionForm.invalid || (validateCommissionForm.get('commissionType')?.value === TYPE_COMMISSION.REVENUE.value && formAccumulates.length === 0)"
+            (click)="handleOk()"
+            [nzLoading]="isConfirmLoading">Câp nhật
+    </button>
+  </ng-template>
 </nz-modal>
 
 <!-- Delete Confirmation -->
 <nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận xóa chiết khấu" nzOkText="Ok" nzOkDanger="true"
           nzCancelText="Hủy" (nzOnOk)="handleConfirmToDelete()"
-          [nzOkLoading] = "isConfirmLoadingDelete"
+          [nzOkLoading]="isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">
-    <ng-container *nzModalContent>
-        Xóa data đã chọn ?
-    </ng-container>
+  <ng-container *nzModalContent>
+    Xóa data đã chọn ?
+  </ng-container>
 </nz-modal>
 <ng-template #titleAction>
-    <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
-        <div nz-col [nzXXl]="8" [nzXl]="8" [nzLg]="8" [nzMd]="8" [nzSm]="10" [nzXs]="10">
-            <button type="button" (click)="showModal()" class="btn btn-success">
-                <i class="fas fa-plus"></i> Thêm mới
-            </button>
-        </div>
-        <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
-             [nzXl]="{ span: 6, offset: 10 }"
-             [nzLg]="{ span: 6, offset: 10 }"
-             [nzMd]="{ span: 6, offset: 10 }"
-             [nzSm]="{ span: 6, offset: 8 }"
-             [nzXs]="{ span: 6, offset: 8 }">
-            <nz-input-group [nzSuffix]="suffixIconSearch">
-                <input nzSize="large" type="search" nz-input placeholder="input search text"
-                       (keyup.enter)="search($event)"/>
-            </nz-input-group>
-            <ng-template #suffixIconSearch>
-                <span nz-icon nzType="search"></span>
-            </ng-template>
-        </div>
+  <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
+    <div nz-col [nzXXl]="8" [nzXl]="8" [nzLg]="8" [nzMd]="8" [nzSm]="10" [nzXs]="10">
+      <button type="button" (click)="showModal()" class="btn btn-success">
+        <i class="fas fa-plus"></i> Thêm mới
+      </button>
     </div>
+    <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
+         [nzXl]="{ span: 6, offset: 10 }"
+         [nzLg]="{ span: 6, offset: 10 }"
+         [nzMd]="{ span: 6, offset: 10 }"
+         [nzSm]="{ span: 6, offset: 8 }"
+         [nzXs]="{ span: 6, offset: 8 }">
+      <nz-input-group [nzSuffix]="suffixIconSearch">
+        <input nzSize="large" type="search" nz-input placeholder="input search text"
+               (keyup.enter)="search($event)"/>
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+    </div>
+  </div>
 </ng-template>

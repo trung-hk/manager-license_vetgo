@@ -40,6 +40,7 @@ import {NzAlertModule} from "ng-zorro-antd/alert";
 import {NzQRCodeModule} from "ng-zorro-antd/qr-code";
 import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
 import {NzDatePickerModule} from "ng-zorro-antd/date-picker";
+import {NzEmptyModule} from "ng-zorro-antd/empty";
 
 @NgModule({
     exports: [
@@ -73,6 +74,7 @@ import {NzDatePickerModule} from "ng-zorro-antd/date-picker";
         NzQRCodeModule,
         NzAutocompleteModule,
         NzDatePickerModule,
+        NzEmptyModule,
     ],
     providers: [
         { provide: NZ_ICONS, useValue: icons }

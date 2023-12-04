@@ -1,41 +1,44 @@
 <section class="section">
-    <div class="section-body">
-        <div nz-row>
-            <div nz-col nzSpan="24">
-                <nz-card style="width: 100%" nzTitle="Chuyển khoản ngân hàng" [nzBordered]="false" [nzBodyStyle]="{'padding': 'unset', 'padding-top': '10px' }">
-                    <div nz-row>
-                        <div nz-col [nzXs]= "24" [nzSm]= "24" [nzXXl]="{span: 12, offset: 6}" [nzXl]="{span: 12, offset: 6}" [nzLg]="{span: 12, offset: 6}" [nzMd]="{span: 12, offset: 6}">
-                            <div class="text-center"><nz-qrcode
-                                    nzValue="https://ng.ant.design/"
-                                    nzIcon="https://img.alicdn.com/imgextra/i2/O1CN01TBIkzL1Nk3IBB0DLA_!!6000000001607-2-tps-106-120.png"
-                                    nzLevel="H"></nz-qrcode>
-                            </div>
-                            <div class="text-center">
-                                <nz-alert nzType="warning" nzMessage="Vui lòng nhập đúng nội dung DH325 để chúng tôi xác nhận thanh toán"></nz-alert>
-                            </div>
-                            <nz-descriptions [nzTitle]="titleBanking" nzBordered nzSize="small" class="table-th-right">
-                                <nz-descriptions-item nzSpan="3" nzTitle="Tên tài khoản">Huỳnh khắc trung</nz-descriptions-item>
-                                <nz-descriptions-item nzSpan="3" nzTitle="Số tài khoản">18100000000</nz-descriptions-item>
-                                <nz-descriptions-item nzSpan="3" nzTitle="Tên ngân hàng">Hangzhou, Zhejiang</nz-descriptions-item>
-                                <nz-descriptions-item nzSpan="3" nzTitle="Chi nhánh">Empty</nz-descriptions-item>
-                                <nz-descriptions-item nzSpan="3" nzTitle="Sản phẩm">DH325</nz-descriptions-item>
-                                <nz-descriptions-item nzSpan="3" nzTitle="Số tiền">1,000,000 VNĐ</nz-descriptions-item>
-                                <nz-descriptions-item nzSpan="3" nzTitle="Nội dung">DH325</nz-descriptions-item>
-                            </nz-descriptions>
-                            <div class="text-center" style="margin-top: 10px;">
-                                <button type="button" class="btn btn-outline-secondary note-btn" routerLink="/orders">Quay lại</button>
-                            </div>
-                        </div>
-                    </div>
-                </nz-card>
+  <div class="section-body">
+    <div nz-row>
+      <div nz-col nzSpan="24">
+        <nz-card style="width: 100%" nzTitle="Chuyển khoản ngân hàng" [nzBordered]="false"
+                 [nzBodyStyle]="{'padding': 'unset', 'padding-top': '10px' }">
+          <div nz-row>
+            <div nz-col [nzXs]="24" [nzSm]="24" [nzXXl]="{span: 12, offset: 6}" [nzXl]="{span: 12, offset: 6}"
+                 [nzLg]="{span: 12, offset: 6}" [nzMd]="{span: 12, offset: 6}">
+              <div class="text-center">
+                <nz-qrcode
+                    nzValue="https://ng.ant.design/"
+                    nzIcon="https://img.alicdn.com/imgextra/i2/O1CN01TBIkzL1Nk3IBB0DLA_!!6000000001607-2-tps-106-120.png"
+                    nzLevel="H"></nz-qrcode>
+              </div>
+              <div class="text-center">
+                <nz-alert nzType="warning" nzMessage="Vui lòng nhập đúng nội dung DH325 để chúng tôi xác nhận thanh toán"></nz-alert>
+              </div>
+              <nz-descriptions [nzTitle]="titleBanking" nzBordered nzSize="small" class="table-th-right">
+                <nz-descriptions-item nzSpan="3" nzTitle="Tên tài khoản">Huỳnh khắc trung</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Số tài khoản">18100000000</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Tên ngân hàng">Hangzhou, Zhejiang</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Chi nhánh">Empty</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Sản phẩm">DH325</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Số tiền">1,000,000 VNĐ</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Nội dung">DH325</nz-descriptions-item>
+              </nz-descriptions>
+              <div class="text-center" style="margin-top: 10px;">
+                <button type="button" class="btn btn-outline-secondary note-btn" routerLink="/orders">Quay lại</button>
+              </div>
             </div>
-        </div>
+          </div>
+        </nz-card>
+      </div>
     </div>
+  </div>
 </section>
 <ng-template #titleBanking>
-    <div class="text-center">
-        <span>Thông tin chuyển khoản</span>
-    </div>
+  <div class="text-center">
+    <span>Thông tin chuyển khoản</span>
+  </div>
 </ng-template>
 
 

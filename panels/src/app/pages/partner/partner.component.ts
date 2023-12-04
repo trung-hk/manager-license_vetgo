@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import { CommunicationService } from 'src/app/services/communication.service';
 import { LazyLoadScriptService } from 'src/app/services/lazy-load-script.service';
 import {STATUS_PARTNER, USER_TYPE} from "../../Constants/vg-constant";
 import {User} from "../../models/User";
@@ -42,7 +41,6 @@ export class PartnerComponent implements OnInit, AfterViewInit, OnDestroy {
   filter: Array<{ key: string; value: string[] }> | null = null;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
-              private communicationService: CommunicationService,
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,
               private fb: UntypedFormBuilder) {

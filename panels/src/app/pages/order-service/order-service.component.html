@@ -1,68 +1,67 @@
 <nz-spin [nzSpinning]="loading" nzTip="Đang cập nhật dữ liệu...">
-    <section class="section">
-        <div class="section-body">
-            <div class="row">
-                <div class="col-12">
-                    <nz-card [ngStyle]="{'width': '100%' }"
-                             [nzBodyStyle]="{'padding': '12px', }"
-                             nzTitle="Danh sách Sản phẩm"
-                             [nzBordered]="false" >
-                        <nz-list nzGrid>
-                            <div nz-row [nzGutter]="16">
-                                <div nz-col [nzXXl]="6" [nzXl]="6" [nzLg]="8" [nzMd]="8" [nzSm]="12" [nzXs]="24" *ngFor="let dt of dataProductList">
-                                    <nz-list-item>
-                                        <nz-card [nzTitle]="dt.name!" [nzActions]="[action]" class="card-item-background-color" >
-                                            <nz-card-meta class="package-scrollbar"
-                                                    [nzTitle]="amountPackage"
-                                                    [nzDescription]="infoPackageProduct"
-                                            ></nz-card-meta>
-                                        </nz-card>
-                                    </nz-list-item>
-                                    <ng-template #amountPackage>
-                                        Gói sản phẩm <nz-tag [nzColor]="'processing'">{{dt.packages?.length}}</nz-tag>
-                                    </ng-template>
-                                    <ng-template #infoPackageProduct>
-                                        <nz-list nzSize="small" class="custom-scrollbar">
-                                            <nz-list-item>
-                                                <nz-list-item-meta [ngStyle]="{'align-items': 'center'}" nzAvatar="/assets/img/service-packages.png">
-                                                    <nz-list-item-meta-title>
-                                                        <ng-container *ngFor="let item of dt.packages">
-                                                            <nz-statistic
-                                                                    [nzValueStyle]="{'font-size': 'unset'}"
-                                                                    [nzValue]="item.name + ' - ' + (item.price | number)!"
-                                                                    [nzSuffix]="'VNĐ'">
-                                                            </nz-statistic>
-                                                        </ng-container>
-                                                    </nz-list-item-meta-title>
-                                                </nz-list-item-meta>
-                                            </nz-list-item>
-                                        </nz-list>
-                                    </ng-template>
-                                    <ng-template #action>
-                                        <ng-container class="card-item-action-background-color" *ngIf="dt.status === STATUS_PRODUCT_SERVICE.DEPLOYED.value then active else unActive">
-                                        </ng-container>
-                                    </ng-template>
-                                    <ng-template #active>
-                                        <nz-space>
-                                            <button *nzSpaceItem type="button" class="btn btn-outline-secondary note-btn" (click)="createComponentModalView(dt)">
-                                                Chi tiết
-                                            </button>
-                                            <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
-                                                <button *nzSpaceItem type="button" class="btn btn-success note-btn" (click)="createComponentModal(dt.id!)">
-                                                    Tạo đơn hàng
-                                                </button>
-                                            </ng-container>
-                                        </nz-space>
-                                    </ng-template>
-                                    <ng-template #unActive>
-                                        <h6 style="color: orangered">Sản phẩm đang phát triển</h6>
-                                    </ng-template>
-                                </div>
-                            </div>
-                        </nz-list>
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <nz-card [ngStyle]="{'width': '100%' }"
+                   [nzBodyStyle]="{'padding': '12px', }"
+                   nzTitle="Danh sách Sản phẩm"
+                   [nzBordered]="false">
+            <nz-list nzGrid>
+              <div nz-row [nzGutter]="16">
+                <div nz-col [nzXXl]="6" [nzXl]="6" [nzLg]="8" [nzMd]="8" [nzSm]="12" [nzXs]="24"
+                     *ngFor="let dt of dataProductList">
+                  <nz-list-item>
+                    <nz-card [nzTitle]="dt.name!" [nzActions]="[action]" class="card-item-background-color">
+                      <nz-card-meta class="package-scrollbar" [nzTitle]="amountPackage" [nzDescription]="infoPackageProduct"></nz-card-meta>
                     </nz-card>
+                  </nz-list-item>
+                  <ng-template #amountPackage>
+                    Gói sản phẩm
+                    <nz-tag [nzColor]="'processing'">{{dt.packages?.length}}</nz-tag>
+                  </ng-template>
+                  <ng-template #infoPackageProduct>
+                    <nz-list nzSize="small" class="custom-scrollbar">
+                      <nz-list-item>
+                        <nz-list-item-meta [ngStyle]="{'align-items': 'center'}" nzAvatar="/assets/img/service-packages.png">
+                          <nz-list-item-meta-title>
+                            <ng-container *ngFor="let item of dt.packages">
+                              <nz-statistic
+                                  [nzValueStyle]="{'font-size': 'unset'}"
+                                  [nzValue]="item.name + ' - ' + (item.price | number)!"
+                                  [nzSuffix]="'VNĐ'">
+                              </nz-statistic>
+                            </ng-container>
+                          </nz-list-item-meta-title>
+                        </nz-list-item-meta>
+                      </nz-list-item>
+                    </nz-list>
+                  </ng-template>
+                  <ng-template #action>
+                    <ng-container class="card-item-action-background-color" *ngIf="dt.status === STATUS_PRODUCT_SERVICE.DEPLOYED.value then active else unActive">
+                    </ng-container>
+                  </ng-template>
+                  <ng-template #active>
+                    <nz-space>
+                      <button *nzSpaceItem type="button" class="btn btn-outline-secondary note-btn" (click)="createComponentModalView(dt)">
+                        Chi tiết
+                      </button>
+                      <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
+                        <button *nzSpaceItem type="button" class="btn btn-success note-btn" (click)="createComponentModal(dt.id!)">
+                          Tạo đơn hàng
+                        </button>
+                      </ng-container>
+                    </nz-space>
+                  </ng-template>
+                  <ng-template #unActive>
+                    <h6 style="color: orangered">Sản phẩm đang phát triển</h6>
+                  </ng-template>
                 </div>
-            </div>
+              </div>
+            </nz-list>
+          </nz-card>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 </nz-spin>

@@ -1,108 +1,115 @@
 <nz-spin [nzSpinning]="loading" nzTip="Đang cập nhật dữ liệu...">
-    <section class="section">
-        <div class="section-body">
-            <div class="row">
-                <div class="col-12">
-                    <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false" >
-                        <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
-                        <nz-list nzGrid>
-                            <div nz-row [nzGutter]="16">
-                                <div nz-col [nzSpan]="6" *ngFor="let dt of dataProductList">
-                                    <nz-list-item>
-                                        <nz-card *ngIf="dataProductRegisterMap.get(dt.id!)?.status ===STATUS_AGENT_PRODUCT.REGISTERED.value" [nzTitle]="dt.name!" [nzActions]="[action]" class="card-item-background-color">
-                                            <nz-card-meta
-                                                    [nzTitle]="amountPackage"
-                                                    [nzDescription]="infoPackageProduct"
-                                            ></nz-card-meta>
-                                        </nz-card>
-                                        <nz-card *ngIf="!dataProductRegisterMap.get(dt.id!)" [nzTitle]="dt.name!" [nzActions]="[action]" class="card-item-background-color-unregistered">
-                                            <nz-card-meta
-                                                    [nzTitle]="amountPackage"
-                                                    [nzDescription]="infoPackageProduct"
-                                            ></nz-card-meta>
-                                        </nz-card>
-                                    </nz-list-item>
-                                    <ng-template #amountPackage>
-                                        Gói sản phẩm <nz-tag [nzColor]="'processing'">{{dt.packages?.length}}</nz-tag>
-                                    </ng-template>
-                                    <ng-template #infoPackageProduct>
-                                        <nz-list nzSize="small" class="package-view-for-agent">
-                                            <nz-list-item *ngFor="let item of dt.packages">
-                                                <nz-list-item-meta
-                                                        *ngIf="item"
-                                                        nzAvatar="/assets/img/service-packages.png"
-                                                        [nzDescription]="item.name ? item.name : ''"
-                                                >
-                                                    <nz-list-item-meta-title>
-                                                        <nz-statistic
-                                                                [nzValueStyle]="{'font-size': 'unset'}"
-                                                                [nzValue]="(item.price | number)!"
-                                                                [nzSuffix]="'VNĐ'">
-                                                        </nz-statistic>
-                                                    </nz-list-item-meta-title>
-                                                </nz-list-item-meta>
-                                            </nz-list-item>
-                                        </nz-list>
-                                    </ng-template>
-                                    <ng-template #action>
-                                        <ng-container *ngIf="dt.status === STATUS_PRODUCT_SERVICE.DEPLOYED.value then active else unActive">
-                                        </ng-container>
-                                    </ng-template>
-                                    <ng-template #active>
-                                        <ng-container *ngxPermissionsOnly="[ROLES.AGENT]">
-                                            <nz-space>
-                                                <button *nzSpaceItem type="button" class="btn btn-outline-secondary note-btn" (click)="createComponentModalView(dt)">
-                                                    Chi tiết
-                                                </button>
-                                                <ng-container [ngSwitch]="dataProductRegisterMap.get(dt.id!)?.status" *nzSpaceItem>
-                                                    <button *ngSwitchCase="STATUS_AGENT_PRODUCT.REGISTERED.value" type="button" class="btn btn-outline-danger note-btn" (click)="showDeleteModal(dataProductRegisterMap.get(dt.id!)?.id)">
-                                                        Hủy đăng ký
-                                                    </button>
-                                                    <button *ngSwitchDefault type="button" class="btn btn-outline-success note-btn" (click)="handleOk(dt.id!, $event)">
-                                                        Đăng ký
-                                                    </button>
-                                                </ng-container>
-                                            </nz-space>
-
-                                        </ng-container>
-                                    </ng-template>
-                                    <ng-template #unActive>
-                                        <h6 style="color: orangered">Sản phẩm đang phát triển</h6>
-                                    </ng-template>
-                                </div>
-                            </div>
-                        </nz-list>
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
+            <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+            <nz-list nzGrid>
+              <div nz-row [nzGutter]="16">
+                <div nz-col [nzSpan]="6" *ngFor="let dt of dataProductList">
+                  <nz-list-item>
+                    <nz-card *ngIf="dataProductRegisterMap.get(dt.id!)?.status ===STATUS_AGENT_PRODUCT.REGISTERED.value"
+                             [nzTitle]="dt.name!" [nzActions]="[action]" class="card-item-background-color">
+                      <nz-card-meta
+                          [nzTitle]="amountPackage"
+                          [nzDescription]="infoPackageProduct"
+                      ></nz-card-meta>
                     </nz-card>
-                    <ng-template #titleLeft>
-                        Danh sách Sản phẩm
-                        <nz-tag [nzColor]="'#04ab0c'"> Đã đăng ký {{totalRegisterProduct}}</nz-tag>
-                        <nz-tag [nzColor]="'#F1091DFF'"> Chưa đăng ký {{totalProduct - totalRegisterProduct}}
-                        </nz-tag>
-                    </ng-template>
-                    <ng-template #titleAction>
-                        <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
-                            <div nz-col nzSpan="6" nzOffset="18">
-                                <nz-input-group [nzSuffix]="suffixIconSearch">
-                                    <input nzSize="large" type="search" nz-input placeholder="input search text"
-                                           (keyup.enter)="search($event)"/>
-                                </nz-input-group>
-                                <ng-template #suffixIconSearch>
-                                    <span nz-icon nzType="search"></span>
-                                </ng-template>
-                            </div>
-                        </div>
-                    </ng-template>
+                    <nz-card *ngIf="!dataProductRegisterMap.get(dt.id!)" [nzTitle]="dt.name!" [nzActions]="[action]"
+                             class="card-item-background-color-unregistered">
+                      <nz-card-meta
+                          [nzTitle]="amountPackage"
+                          [nzDescription]="infoPackageProduct"
+                      ></nz-card-meta>
+                    </nz-card>
+                  </nz-list-item>
+                  <ng-template #amountPackage>
+                    Gói sản phẩm
+                    <nz-tag [nzColor]="'processing'">{{dt.packages?.length}}</nz-tag>
+                  </ng-template>
+                  <ng-template #infoPackageProduct>
+                    <nz-list nzSize="small" class="package-view-for-agent">
+                      <nz-list-item *ngFor="let item of dt.packages">
+                        <nz-list-item-meta
+                            *ngIf="item"
+                            nzAvatar="/assets/img/service-packages.png"
+                            [nzDescription]="item.name ? item.name : ''"
+                        >
+                          <nz-list-item-meta-title>
+                            <nz-statistic
+                                [nzValueStyle]="{'font-size': 'unset'}"
+                                [nzValue]="(item.price | number)!"
+                                [nzSuffix]="'VNĐ'">
+                            </nz-statistic>
+                          </nz-list-item-meta-title>
+                        </nz-list-item-meta>
+                      </nz-list-item>
+                    </nz-list>
+                  </ng-template>
+                  <ng-template #action>
+                    <ng-container *ngIf="dt.status === STATUS_PRODUCT_SERVICE.DEPLOYED.value then active else unActive">
+                    </ng-container>
+                  </ng-template>
+                  <ng-template #active>
+                    <ng-container *ngxPermissionsOnly="[ROLES.AGENT]">
+                      <nz-space>
+                        <button *nzSpaceItem type="button" class="btn btn-outline-secondary note-btn"
+                                (click)="createComponentModalView(dt)">
+                          Chi tiết
+                        </button>
+                        <ng-container [ngSwitch]="dataProductRegisterMap.get(dt.id!)?.status" *nzSpaceItem>
+                          <button *ngSwitchCase="STATUS_AGENT_PRODUCT.REGISTERED.value" type="button"
+                                  class="btn btn-outline-danger note-btn"
+                                  (click)="showDeleteModal(dataProductRegisterMap.get(dt.id!)?.id)">
+                            Hủy đăng ký
+                          </button>
+                          <button *ngSwitchDefault type="button" class="btn btn-outline-success note-btn"
+                                  (click)="handleOk(dt.id!, $event)">
+                            Đăng ký
+                          </button>
+                        </ng-container>
+                      </nz-space>
+                    
+                    </ng-container>
+                  </ng-template>
+                  <ng-template #unActive>
+                    <h6 style="color: orangered">Sản phẩm đang phát triển</h6>
+                  </ng-template>
                 </div>
+              </div>
+            </nz-list>
+          </nz-card>
+          <ng-template #titleLeft>
+            Danh sách Sản phẩm
+            <nz-tag [nzColor]="'#04ab0c'"> Đã đăng ký {{totalRegisterProduct}}</nz-tag>
+            <nz-tag [nzColor]="'#F1091DFF'"> Chưa đăng ký {{totalProduct - totalRegisterProduct}}
+            </nz-tag>
+          </ng-template>
+          <ng-template #titleAction>
+            <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
+              <div nz-col nzSpan="6" nzOffset="18">
+                <nz-input-group [nzSuffix]="suffixIconSearch">
+                  <input nzSize="large" type="search" nz-input placeholder="input search text"
+                         (keyup.enter)="search($event)"/>
+                </nz-input-group>
+                <ng-template #suffixIconSearch>
+                  <span nz-icon nzType="search"></span>
+                </ng-template>
+              </div>
             </div>
+          </ng-template>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 </nz-spin>
 <!-- Delete Confirmation -->
 <nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận hủy đăng ký sản phẩm" nzOkText="Ok" nzOkDanger="true"
           nzCancelText="Hủy" (nzOnOk)="handleConfirmToDelete()"
-          [nzOkLoading] = "isConfirmLoadingDelete"
+          [nzOkLoading]="isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">
-    <ng-container *nzModalContent>
-        Hủy đăng ký sản phâm này ?
-    </ng-container>
+  <ng-container *nzModalContent>
+    Hủy đăng ký sản phâm này ?
+  </ng-container>
 </nz-modal>

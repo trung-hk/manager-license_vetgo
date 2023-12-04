@@ -3,7 +3,6 @@ import {Item} from "../../models/Item";
 import {AgentProduct} from "../../models/AgentProduct";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
-import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {
@@ -29,7 +28,6 @@ export class OrderServiceComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
-                private communicationService: CommunicationService,
                 private renderer: Renderer2,
                 public scriptFC: ScriptCommonService,
                 private viewContainerRef: ViewContainerRef) {

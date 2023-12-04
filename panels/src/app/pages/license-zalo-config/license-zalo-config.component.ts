@@ -2,7 +2,6 @@ import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/c
 import {AbstractControl, FormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
-import {CommunicationService} from "../../services/communication.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {
   CONFIG_LICENSE_ZALO_FORM,
@@ -49,7 +48,6 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
   executingIdList: string[] = [];
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
-              private communicationService: CommunicationService,
               private renderer: Renderer2,
               private scriptFC: ScriptCommonService,
               private fb: UntypedFormBuilder,
