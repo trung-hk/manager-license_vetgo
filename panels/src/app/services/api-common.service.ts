@@ -13,7 +13,7 @@ import {ObjectSelectAll} from "../models/ObjectSelectAll";
 export class ApiCommonService {
     URL_DEV: string = "https://dev-api.phanmemvet.vn/api";
     URL_PRO: string = "https://api.phanmemvet.vn/api";
-    url: string = location.hostname.includes("localhost") ? this.URL_DEV: this.URL_PRO;
+    url: string = window.location.origin.startsWith("http://localhost") ? this.URL_DEV: this.URL_PRO;
     regex = /^(?!\s*$).+/;
     constructor(private httpClient: HttpClient) {
     }
