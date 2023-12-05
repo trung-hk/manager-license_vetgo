@@ -149,7 +149,7 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
         data.phone = phoneUnFormat?.slice(0, 10);
         if (data.id) {
           this.api.update(data.id, data, URL.API_USER).subscribe((data) => {
-            if (data.status == 400){
+            if (this.scriptFC.validateResponseAPI(data.status)){
               data = data as ResponseError;
               this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
             } else {
@@ -166,7 +166,7 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
         } else {
           this.api.insert(data, URL.API_USER)
               .subscribe((data) => {
-                if (data.status == 400 || data.status == 409){
+                if (this.scriptFC.validateResponseAPI(data.status)){
                   data = data as ResponseError;
                   this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
                 } else {

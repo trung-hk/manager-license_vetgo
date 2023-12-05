@@ -223,7 +223,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             if (dataCustomer.id) {
                 // update customer
                 this.api.update<User>(dataCustomer.id, dataCustomer, URL.API_USER).subscribe((data) => {
-                    if (data.status == 400 || data.status == 409) {
+                    if (this.scriptFC.validateResponseAPI(data.status)) {
                         data = data as ResponseError;
                         this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
                         this.setValueFormCustomer(dataCustomer);
@@ -241,7 +241,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             } else {
                 // insert customer
                 this.api.insert<User>(dataCustomer, URL.API_USER).subscribe((data) => {
-                    if (data.status == 400 || data.status == 409) {
+                    if (this.scriptFC.validateResponseAPI(data.status)) {
                         data = data as ResponseError;
                         this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
                         this.setValueFormCustomer(dataCustomer);
@@ -267,7 +267,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             if (dataOrder.id) {
                 // update order
                 this.api.update<OrderService>(dataOrder.id, dataOrder, URL.API_ORDER_SERVICE).subscribe((data) => {
-                    if (data.status == 400 || data.status == 409) {
+                    if (this.scriptFC.validateResponseAPI(data.status)) {
                         data = data as ResponseError;
                         this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
                         rs(dataOrder);
@@ -281,7 +281,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             } else {
                 // insert order
                 this.api.insert<OrderService>(dataOrder, URL.API_ORDER_SERVICE).subscribe((data) => {
-                    if (data.status == 400 || data.status == 409) {
+                    if (this.scriptFC.validateResponseAPI(data.status)) {
                         data = data as ResponseError;
                         this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
                         rs(dataOrder);
