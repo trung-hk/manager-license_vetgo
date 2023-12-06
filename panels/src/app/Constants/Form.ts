@@ -46,7 +46,7 @@ export const PACKAGE_PRODUCT_SERVICE_FORM = {
     name: [null],
     price: [null],
     typePackage: [TYPE_PACKAGE.PAYMENT.value],
-    typeExpired: [TYPE_EXPIRED_PACKAGE.DAY],
+    typeExpired: [TYPE_EXPIRED_PACKAGE.DAY.value],
     expired: [null]
 }
 export const ORDER_SERVICE_FORM = {

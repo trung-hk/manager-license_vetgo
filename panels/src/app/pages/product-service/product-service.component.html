@@ -2,7 +2,8 @@
   <div class="section-body">
     <div class="row">
       <div class="col-12">
-        <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzExtra]="titleRight" [nzBordered]="false">
+        <nz-card style="width: 100%" [nzTitle]="titleLeft"  [nzBordered]="false">
+          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
           <nz-table
               nzShowSizeChanger
               [nzData]="dataList"
@@ -81,23 +82,6 @@
             <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
           </nz-tag>
         </ng-template>
-        <ng-template #titleRight>
-          <div nz-row [nzGutter]="8">
-            <div nz-col [nzSm]="14">
-              <nz-input-group [nzSuffix]="suffixIconSearch">
-                <input nzSize="large" type="search" nz-input placeholder="input search text" (keyup.enter)="search($event)"/>
-              </nz-input-group>
-              <ng-template #suffixIconSearch>
-                <span nz-icon nzType="search"></span>
-              </ng-template>
-            </div>
-            <div nz-col [nzSpan]="10">
-              <button type="button" (click)="showModal()" class="btn btn-success pull-right note-btn">
-                <i class="fas fa-plus"></i> Thêm mới
-              </button>
-            </div>
-          </div>
-        </ng-template>
       </div>
     </div>
   </div>
@@ -113,6 +97,14 @@
   <ng-template #modalContent>
     <form nz-form [formGroup]="validateProductForm">
       <input type="hidden" formControlName="id">
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Loại Config</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <nz-select formControlName="usingConfig" [ngModel]="" (ngModelChange)="eventChangeTypeConfig($event)">
+            <nz-option *ngFor="let config of CONFIG_LIST" nzValue="{{config.value}}" nzLabel="{{config.text}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
       <nz-form-item>
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Mã sản phẩm</nz-form-label>
         <nz-form-control [nzSm]="18">
@@ -139,14 +131,6 @@
           </nz-select>
         </nz-form-control>
       </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Sử dụng config</nz-form-label>
-        <nz-form-control [nzSm]="18">
-          <nz-select formControlName="usingConfig">
-            <nz-option *ngFor="let config of CONFIG_LIST" nzValue="{{config.value}}" nzLabel="{{config.text}}"></nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
       <form nz-form [formGroup]="validatePackageProductForm">
         <div [formArrayName]="attributeArrayForm">
           <nz-form-item *ngFor="let item of formPackage.controls; let i = index" [formGroupName]="i">
@@ -158,6 +142,17 @@
             <nz-form-control [nzSm]="18">
               <input type="hidden" formControlName="id">
               <div nz-row [nzGutter]="16">
+                <div nz-col nzSpan="12">
+                  <nz-input-group nzAddOnBefore="Loại gói">
+                    <nz-select formControlName="typePackage" [ngModel]=""  (ngModelChange)="changeTypePackage($event, i)">
+                      <nz-option [nzLabel]="TYPE_PACKAGE.FREE.text" [nzValue]="TYPE_PACKAGE.FREE.value"></nz-option>
+                      <nz-option [nzLabel]="TYPE_PACKAGE.PAYMENT.text" [nzValue]="TYPE_PACKAGE.PAYMENT.value"></nz-option>
+                    </nz-select>
+                  </nz-input-group>
+                  <nz-input-group nzAddOnBefore="Thời hạn" [nzAddOnAfter]="chooseTypeExpired">
+                    <input formControlName="expired" nz-input (keyup)="inputExpired($event, i)"/>
+                  </nz-input-group>
+                </div>
                 <div nz-col nzSpan="10">
                   <nz-input-group nzAddOnBefore="Tên">
                     <input formControlName="name" nz-input placeholder="1 năm"/>
@@ -171,27 +166,14 @@
                     </nz-input-number>
                   </nz-input-number-group>
                 </div>
-                <div nz-col nzSpan="12">
-                  <nz-input-group nzAddOnBefore="Loại gói">
-                    <nz-select formControlName="typePackage">
-                      <nz-option [nzLabel]="TYPE_PACKAGE.FREE.text" [nzValue]="TYPE_PACKAGE.FREE.value"></nz-option>
-                      <nz-option [nzLabel]="TYPE_PACKAGE.PAYMENT.text" [nzValue]="TYPE_PACKAGE.PAYMENT.value"></nz-option>
-                    </nz-select>
-                  </nz-input-group>
-                  <nz-input-group nzAddOnBefore="Thời hạn" [nzAddOnAfter]="chooseTypeExpired">
-                    <input formControlName="expired" nz-input/>
-                  </nz-input-group>
-                </div>
                 <div nz-col nzSpan="2" style="top:1em;">
                   <span nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeField(i, $event)"></span>
                 </div>
               </div>
             </nz-form-control>
             <ng-template #chooseTypeExpired>
-              <nz-select formControlName="typeExpired">
-                <nz-option nzLabel="Ngày" [nzValue]="TYPE_EXPIRED_PACKAGE.DAY"></nz-option>
-                <nz-option nzLabel="Tháng" [nzValue]="TYPE_EXPIRED_PACKAGE.MONTH"></nz-option>
-                <nz-option nzLabel="Năm" [nzValue]="TYPE_EXPIRED_PACKAGE.YEAR"></nz-option>
+              <nz-select formControlName="typeExpired" [ngModel]="" (ngModelChange)="changeExpired($event, i)">
+                <nz-option *ngFor="let typeExpiredPackage of TYPE_EXPIRED_PACKAGE.LIST" [nzLabel]="typeExpiredPackage.text" [nzValue]="typeExpiredPackage.value"></nz-option>
               </nz-select>
             </ng-template>
           </nz-form-item>
@@ -231,3 +213,27 @@
     Xóa data đã chọn ?
   </ng-container>
 </nz-modal>
+
+<ng-template #titleAction>
+  <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
+    <div nz-col [nzXXl]="8" [nzXl]="8" [nzLg]="8" [nzMd]="8" [nzSm]="10" [nzXs]="10">
+      <button type="button" (click)="showModal()" class="btn btn-success">
+        <i class="fas fa-plus"></i> Thêm mới
+      </button>
+    </div>
+    <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
+         [nzXl]="{ span: 6, offset: 10 }"
+         [nzLg]="{ span: 6, offset: 10 }"
+         [nzMd]="{ span: 6, offset: 10 }"
+         [nzSm]="{ span: 6, offset: 8 }"
+         [nzXs]="{ span: 6, offset: 8 }">
+      <nz-input-group [nzSuffix]="suffixIconSearch">
+        <input nzSize="large" type="search" nz-input placeholder="input search text"
+               (keyup.enter)="search($event)"/>
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+    </div>
+  </div>
+</ng-template>
