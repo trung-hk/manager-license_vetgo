@@ -64,8 +64,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private renderer: Renderer2,
                 private scriptFC: ScriptCommonService,
                 private viewContainerRef: ViewContainerRef,
-                private elRef: ElementRef,
-                private router: Router,) {
+                private elRef: ElementRef,) {
     }
     expandSet = new Set<string>();
     onExpandChange(id: string, checked: boolean): void {
@@ -240,39 +239,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     payment(order: OrderService, method: string): void {
-        if (order.paymentStatus !== STATUS_PAYMENT.UN_PAID.value) {
-            this.scriptFC.alertShowMessageError(Message.MESSAGE_CHECK_PAYMENT);
-            return;
-        }
-        if (order.status !== STATUS_ORDER.IN_PROCESS.value) {
-            this.scriptFC.alertShowMessageError(Message.MESSAGE_CHECK_STATUS_ORDER);
-            return;
-        }
-        switch (method) {
-            case PAYMENTS_METHOD.MOMO:
-                const api = this.scriptFC.formatString(URL.API_PAYMENT_CONFIRM, [order.id!, PAYMENTS_METHOD.MOMO]);
-                this.api.payment<ResponesePayment>(api, PAYMENTS_URL.MOMO).subscribe((data) => {
-                    // Lấy thông tin thanh toán lỗi
-                    if (this.scriptFC.validateResponseAPI(data.status)) {
-                        this.scriptFC.alertShowMessageError(Message.MESSAGE_PAYMENT_FAILED);
-                        // lấy thông tin thanh toán thành công
-                    } else {
-                        data = data as ResponesePayment;
-                        window.open(data.url!)
-                    }
-
-                }, error => {
-                    console.log(error);
-                    this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
-                })
-                break;
-            case PAYMENTS_METHOD.BANK_TRANSFER:
-                this.router.navigate(['/payment-bank-transfer', order.id]);
-                break;
-            default:
-                break;
-        }
-
+        this.scriptFC.payment(order, method);
     }
     onSearch(searchText: string): void {
         // Gọi hàm tìm kiếm của bạn ở đây

@@ -1,30 +1,52 @@
 <section class="section">
   <div class="section-body">
-    <nz-card style="width: 100%" [nzTitle]="data.name!" [nzBordered]="false" [nzBodyStyle]="{'padding': 'unset' }" [nzLoading]="loading">
-      <div nz-row [nzGutter]="16">
+    <nz-card style="width: 100%" [nzTitle]="infoProduct" [nzBordered]="false" [nzBodyStyle]="{'padding': 'unset' }" [nzLoading]="loading">
+      <div nz-row [nzGutter]="16" style="margin-top: 1.5em">
         <ng-container *ngFor="let dt of data.packages">
           <div nz-col [nzXXl]="8" [nzXl]="8" [nzLg]="12" [nzMd]="12" [nzSm]="24" [nzXs]="24">
             <div class="pricing pricing-highlight">
               <div class="pricing-title">
                 {{dt.name}}
               </div>
-              <div class="pricing-padding">
+              <div class="pricing-padding" style="padding-bottom: unset">
                 <div class="pricing-price">
                   <div>Giá</div>
                   <div>{{dt.price | moneyFormat}} VNĐ</div>
                 </div>
-<!--                <div class="pricing-details">-->
-<!--                  <div class="pricing-item">-->
-<!--                    <div class="pricing-item-icon bg-yellow"><i class="far fa-clock"></i></div>-->
-<!--                    <div class="pricing-item-label">Còn lại {{!dt.quantityDateUsing || dt.quantityDateUsing < 0 ? 0 : dt.quantityDateUsing}} ngày</div>-->
-<!--                  </div>-->
-<!--                </div>-->
               </div>
-              <div class="pricing-cta">Mua</div>
+              <div class="pricing-cta">
+                <a href="javascript:void(0);" (click)="showModalChoosePayment()">Mua <i class="fas fa-arrow-right"></i></a>
+              </div>
             </div>
           </div>
+          <nz-modal
+              [(nzVisible)]="isOpenModalChooseTypePayment"
+              nzTitle="Phương thức thanh toán"
+              nzCentered
+              [nzFooter]="footerModal"
+              [nzBodyStyle]="{'padding': '0px 10px'}"
+              nzWidth="300px"
+              (nzOnCancel)="handleCancelChoosePayment()"
+          >
+            <ng-container *nzModalContent>
+              <nz-list nzSize="small">
+                <nz-list-item>
+                  <a href="javascript:void(0);" (click)="payment(dt.id!, PAYMENTS_METHOD.MOMO)">MoMo</a>
+                </nz-list-item>
+                <nz-list-item>
+                  <a href="javascript:void(0);" (click)="payment(dt.id!, PAYMENTS_METHOD.BANK_TRANSFER)">Chuyển khoản</a>
+                </nz-list-item>
+              </nz-list>
+            </ng-container>
+          </nz-modal>
+          <ng-template #footerModal>
+            <button nz-button nzType="default" (click)="handleCancelChoosePayment()">Hủy</button>
+          </ng-template>
         </ng-container>
       </div>
     </nz-card>
   </div>
 </section>
+<ng-template #infoProduct>
+  <h5>Thông tin gói {{data.name!}}</h5>
+</ng-template>
