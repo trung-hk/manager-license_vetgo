@@ -43,32 +43,6 @@ export class PackagePurchasedComponent implements OnInit, AfterViewInit, OnDestr
   loadDataFromServer(): void {
     this.loading = true;
     this.api.getAll<ResponseDataGetAll<PackagePurchased>>(URL.API_PACKAGE_PURCHASED).subscribe((data) => {
-      data.content = [
-        {
-          id: "1",
-          customerId: "1",
-          itemId: "1",
-          attributes: "{\"itemName\": \"vet go app\"}",
-          expiredDate: "2023-12-04T16:02:17.574Z"
-
-        },
-        {
-          id: "2",
-          customerId: "1",
-          itemId: "2",
-          attributes: "{\"itemName\": \"Wifi maketting\"}",
-          expiredDate: "2023-11-03T16:02:17.574Z"
-
-        },
-        {
-          id: "3",
-          customerId: "1",
-          itemId: "3",
-          attributes: "{\"itemName\": \"CSKH ZALO\"}",
-          expiredDate: "2024-12-02T16:02:17.574Z"
-
-        }
-      ]
       this.dataList = data.content.map(d => {
         const expiredDate = new Date(d.expiredDate!);
         d.expiredDate = format(expiredDate, 'yyyy/MM/dd');

@@ -12,11 +12,17 @@ import {AttributeObjectProductService} from "../models/AttributeObjectProductSer
 import {
     ProductServiceDetailsModalComponent
 } from "../pages/product-service-details-modal/product-service-details-modal.component";
-import {ERROR_LIST, MODE_OPEN_MODAL_FORM_ORDER_SERVICE} from "../Constants/vg-constant";
+import {ERROR_LIST, MODE_OPEN_MODAL_FORM_ORDER_SERVICE, STATUS_ORDER, STATUS_PAYMENT} from "../Constants/vg-constant";
 import {AttributeOrderProductService} from "../models/AttributeOrderProductService";
 import {NgxPermissionsService} from "ngx-permissions";
 import {CustomerDetailsModalComponent} from "../pages/customer-details-modal/customer-details-modal.component";
 import {AttributePackagePurchased} from "../models/PackagePurchased";
+import {Message} from "../Constants/message-constant";
+import {URL} from "../Constants/api-urls";
+import {ResponesePayment} from "../models/ResponesePayment";
+import {PAYMENTS_METHOD, PAYMENTS_URL} from "../Constants/payment-urls";
+import {Router} from "@angular/router";
+import {ApiCommonService} from "./api-common.service";
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +30,9 @@ import {AttributePackagePurchased} from "../models/PackagePurchased";
 export class ScriptCommonService {
     constructor(private communicationService: CommunicationService,
                 private modal: NzModalService,
-                private permissionsService: NgxPermissionsService) {
+                private permissionsService: NgxPermissionsService,
+                private router: Router,
+                private api: ApiCommonService,) {
     }
 
     alertShowMessageSuccess(message: string, title?: string): void {
@@ -240,5 +248,40 @@ export class ScriptCommonService {
     }
     getDayDiff(startDate: any, endDate: any): number {
         return Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+    }
+    payment(order: OrderService, method: string): void {
+        if (order.paymentStatus !== STATUS_PAYMENT.UN_PAID.value) {
+            this.alertShowMessageError(Message.MESSAGE_CHECK_PAYMENT);
+            return;
+        }
+        if (order.status !== STATUS_ORDER.IN_PROCESS.value) {
+            this.alertShowMessageError(Message.MESSAGE_CHECK_STATUS_ORDER);
+            return;
+        }
+        switch (method) {
+            case PAYMENTS_METHOD.MOMO:
+                const api = this.formatString(URL.API_PAYMENT_CONFIRM, [order.id!, PAYMENTS_METHOD.MOMO]);
+                this.api.payment<ResponesePayment>(api, PAYMENTS_URL.MOMO).subscribe((data) => {
+                    // Lấy thông tin thanh toán lỗi
+                    if (this.validateResponseAPI(data.status)) {
+                        this.alertShowMessageError(Message.MESSAGE_PAYMENT_FAILED);
+                        // lấy thông tin thanh toán thành công
+                    } else {
+                        data = data as ResponesePayment;
+                        window.open(data.url!)
+                    }
+
+                }, error => {
+                    console.log(error);
+                    this.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
+                })
+                break;
+            case PAYMENTS_METHOD.BANK_TRANSFER:
+                this.router.navigate(['/payment-bank-transfer', order.id]);
+                break;
+            default:
+                break;
+        }
+
     }
 }

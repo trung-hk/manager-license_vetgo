@@ -11,7 +11,7 @@ import {
     STATUS_PRODUCT_SERVICE,
     TYPE_EXPIRED_PACKAGE,
     TYPE_PRODUCT,
-    TYPE_PACKAGE, CONFIG,
+    TYPE_PACKAGE, CONFIG, Enum,
 } from "../../Constants/vg-constant";
 import {PACKAGE_PRODUCT_SERVICE_FORM, PRODUCT_SERVICE_FORM} from "../../Constants/Form";
 import {PackageProduct} from "../../models/PackageProduct";
@@ -30,6 +30,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     protected readonly TYPE_EXPIRED_PACKAGE = TYPE_EXPIRED_PACKAGE;
     protected readonly CONFIG = CONFIG;
     protected readonly CONFIG_LIST = CONFIG.CONFIG_LIST;
+    CONFIG_MAP = new Map(this.CONFIG_LIST.map(config => [config.value, config]));
     listScript = [];
     dataList: Item[] = [];
     total: number = 1;
@@ -133,17 +134,17 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                 usingConfig: attribute.usingConfig ? attribute.usingConfig : this.CONFIG.NOT_USING.value,
             });
             attribute.packages?.forEach(packageItem => {
-                packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.DAY;
+                packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.DAY.value;
                 if (packageItem.day) {
-                    packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.DAY;
+                    packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.DAY.value;
                     packageItem.expired = packageItem.day;
                 }
                 if (packageItem.month) {
-                    packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.MONTH;
+                    packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.MONTH.value;
                     packageItem.expired = packageItem.month;
                 }
                 if (packageItem.year) {
-                    packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.YEAR;
+                    packageItem.typeExpired = TYPE_EXPIRED_PACKAGE.YEAR.value;
                     packageItem.expired = packageItem.year;
                 }
                 if (!packageItem.typePackage) packageItem.typePackage = TYPE_PACKAGE.PAYMENT.value;
@@ -178,13 +179,13 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                         .map(p => {
                             p.id = !p.id ? this.scriptFC.generateUUID() : p.id;
                             switch (p.typeExpired) {
-                                case TYPE_EXPIRED_PACKAGE.DAY:
+                                case TYPE_EXPIRED_PACKAGE.DAY.value:
                                     p.day = p.expired;
                                     break;
-                                case TYPE_EXPIRED_PACKAGE.MONTH:
+                                case TYPE_EXPIRED_PACKAGE.MONTH.value:
                                     p.month = p.expired;
                                     break;
-                                case TYPE_EXPIRED_PACKAGE.YEAR:
+                                case TYPE_EXPIRED_PACKAGE.YEAR.value:
                                     p.year = p.expired;
                                     break;
                                 default:
@@ -281,5 +282,57 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     removeField(index: number, e: MouseEvent): void {
         e.preventDefault();
         this.formPackage.removeAt(index)
+    }
+    eventChangeTypeConfig(value: string) {
+        if (value != CONFIG.NOT_USING.value) {
+            const conFig = this.CONFIG_MAP.get(value);
+            this.validateProductForm.patchValue({
+                code: conFig?.value,
+                name: conFig?.text
+            });
+        }
+    }
+    changeTypePackage(value: string, i: number) {
+        switch (value) {
+            case TYPE_PACKAGE.FREE.value:
+                this.formPackage.controls[i].patchValue({
+                    name: "Dùng thử",
+                    price: 0,
+                    expired: 7
+                })
+                break;
+        }
+    }
+    inputExpired(event: any, i: number) {
+        if (this.formPackage.controls[i].get('typePackage')?.value === TYPE_PACKAGE.FREE.value) return;
+        let name = event.target.value;
+        switch (this.formPackage.controls[i].get('typeExpired')?.value) {
+            case TYPE_EXPIRED_PACKAGE.DAY.value:
+                name += ` ${TYPE_EXPIRED_PACKAGE.DAY.text}`;
+                break;
+            case TYPE_EXPIRED_PACKAGE.MONTH.value:
+                name += ` ${TYPE_EXPIRED_PACKAGE.MONTH.text}`;
+                break;
+            case TYPE_EXPIRED_PACKAGE.YEAR.value:
+                name += ` ${TYPE_EXPIRED_PACKAGE.YEAR.text}`;
+                break;
+        }
+        this.formPackage.controls[i].patchValue({name})
+    }
+    changeExpired(value: string, i: number) {
+        if (this.formPackage.controls[i].get('typePackage')?.value === TYPE_PACKAGE.FREE.value) return;
+        let name = this.formPackage.controls[i].get('expired')?.value;
+        switch (value) {
+            case TYPE_EXPIRED_PACKAGE.DAY.value:
+                name += ` ${TYPE_EXPIRED_PACKAGE.DAY.text}`;
+                break;
+            case TYPE_EXPIRED_PACKAGE.MONTH.value:
+                name += ` ${TYPE_EXPIRED_PACKAGE.MONTH.text}`;
+                break;
+            case TYPE_EXPIRED_PACKAGE.YEAR.value:
+                name += ` ${TYPE_EXPIRED_PACKAGE.YEAR.text}`;
+                break;
+        }
+        this.formPackage.controls[i].patchValue({name})
     }
 }

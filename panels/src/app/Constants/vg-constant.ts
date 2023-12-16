@@ -1,4 +1,4 @@
-interface Enum {
+export interface Enum {
     text: string;
     value: string;
 }
@@ -75,10 +75,11 @@ export class STATUS_ORDER {
     static readonly CANCEL_ORDER: Enum = {text: "Đã hủy đơn", value: "CANCEL_ORDER"};
     static readonly LIST: Enum[] = [this.IN_PROCESS, this.FINISHED, this.CANCEL_ORDER];
 }
-export enum TYPE_EXPIRED_PACKAGE {
-    DAY = "day",
-    MONTH = "month",
-    YEAR = "year"
+export class TYPE_EXPIRED_PACKAGE {
+    static readonly DAY: Enum = {text: "Ngày", value: "day"};
+    static readonly MONTH: Enum = {text: "Tháng", value: "month"};
+    static readonly YEAR: Enum = {text: "Năm", value: "year"};
+    static readonly LIST: Enum[] = [this.DAY, this.MONTH, this.YEAR];
 }
 export class TYPE_PACKAGE {
     static readonly FREE: Enum = {text: "Không trả phí", value: "FREE"};
