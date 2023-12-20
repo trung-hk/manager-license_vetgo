@@ -1,5 +1,5 @@
 import {Validators} from "@angular/forms";
-import {TYPE_EXPIRED_PACKAGE, TYPE_PACKAGE} from "./vg-constant";
+import {TYPE_PACKAGE, TYPE_PAYMENT_PACKAGE} from "./vg-constant";
 
 export const CONFIG_APP_FORM = {
     id: [null],
@@ -45,9 +45,10 @@ export const PACKAGE_PRODUCT_SERVICE_FORM = {
     id: [null],
     name: [null],
     price: [null],
-    typePackage: [TYPE_PACKAGE.PAYMENT.value],
-    typeExpired: [TYPE_EXPIRED_PACKAGE.DAY.value],
-    expired: [null]
+    typePackage: [TYPE_PAYMENT_PACKAGE.PAYMENT.value],
+    type: [null],
+    expired: [null],
+    quantity: [null],
 }
 export const ORDER_SERVICE_FORM = {
     id: [null],

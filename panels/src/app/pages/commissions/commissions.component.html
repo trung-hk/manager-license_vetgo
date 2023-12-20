@@ -117,14 +117,9 @@
               <nz-form-control [nzSm]="18">
                 <div nz-row [nzGutter]="16">
                   <div nz-col nzSpan="13">
-                    <nz-input-number-group nzAddOnBefore="Doanh thu từ" nzAddOnAfter="VNĐ">
-                      <nz-input-number
-                          formControlName="revenueFrom"
-                          [nzPlaceHolder]="'1,000,000'"
-                          [nzFormatter]="scriptFC.formatterMoney"
-                          [nzParser]="scriptFC.parserMoney">
-                      </nz-input-number>
-                    </nz-input-number-group>
+                    <nz-input-group nzAddOnBefore="Doanh thu từ " nzAddOnAfter="VNĐ">
+                      <input nz-input formControlName="revenueFrom" placeholder="1,000,000" mask="separator" thousandSeparator=",">
+                    </nz-input-group>
                   </div>
                   <div nz-col nzSpan="9">
                     <nz-input-number-group nzAddOnBefore="Chiết khấu" nzAddOnAfter="%">

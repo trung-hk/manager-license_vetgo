@@ -40,7 +40,6 @@ export class ScriptCommonService {
             event: "alert-success",
             data: {title: title, message: message}
         });
-        // this.notificationService.template(notificationTemplate!, { nzData: {message: message, color: "green"} });
     }
 
     alertShowMessageError(message?: string, title?: string): void {
@@ -48,23 +47,6 @@ export class ScriptCommonService {
             event: "alert-error",
             data: {title: title, message: message}
         })
-        // this.notificationService.template(notificationTemplate!, { nzData: {message: message, color: "red"} });
-    }
-
-    formatPhone(value: string | null | undefined): string | null {
-        value = this.convertInputFormatToNumber(value);
-        if (!value) return null;
-        if (value.length <= 3) {
-            return `${value.slice(0, 3)}`;
-        }
-        if (value.length > 3 && value.length <= 6) {
-            return `(${value.slice(0, 3)}) ${value.slice(3, 6)}`;
-        }
-        return `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
-    }
-
-    convertInputFormatToNumber(value: string | null | undefined): string | null {
-        return value ? value.replace(/\D/g, "") : null;
     }
 
     generateUUID() { // Public Domain/MIT
@@ -106,8 +88,6 @@ export class ScriptCommonService {
         result.packagesMap = new Map<string, PackageProduct>(result.packages?.map(r => [r.id!, r]));
         return result;
     }
-    formatterMoney = (value: number) => value && `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    parserMoney = (value: string): string => value.replace(',', '');
     displayContentTextArea = (value: string): string => value ? value.replaceAll("\n", `<br>`) : "";
 
     createComponentModalFormOrderService(idProductSelect: string | null,

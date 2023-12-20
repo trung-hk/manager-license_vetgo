@@ -5,7 +5,7 @@ import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {
-    CONFIG,
+    CONFIG, Constant,
     MODE_DISPLAY,
     MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
     ROLES,
@@ -211,11 +211,6 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         event.target.value = "";
     }
 
-    formatPhone(event: any): void {
-        event.target.value = this.scriptFC.formatPhone(event.target.value);
-    }
-
-
     createComponentModal(modeOpen: string, order?: OrderService): void {
         const callback: ModalFormOrderServiceCallback = {
             reloadData: () => {
@@ -314,4 +309,6 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             })
         })
     }
+
+    protected readonly Constant = Constant;
 }

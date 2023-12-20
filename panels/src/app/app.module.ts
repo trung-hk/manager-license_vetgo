@@ -24,6 +24,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NgZorroAntdModule} from "./ng-zorro-antd.module";
 import {ShareModule} from "./pipe/share/share.module";
+import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 registerLocaleData(vi);
 
 // for production
@@ -47,7 +48,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
         keycloak.init({
             config: {
-                url: window.location.origin.startsWith('http://localhost') ? URL_KEY_CLOAK_DEV : URL_KEY_CLOAK_PRO,
+                url: fullURL.startsWith('http://localhost') ? URL_KEY_CLOAK_PRO : URL_KEY_CLOAK_PRO,
                 realm: realm,
                 clientId: 'vetgo-fe'
             },
@@ -84,19 +85,22 @@ function initializeKeycloak(keycloak: KeycloakService) {
         BrowserAnimationsModule,
         NgZorroAntdModule,
         ReactiveFormsModule,
-        ShareModule
+        ShareModule,
+        NgxMaskPipe,
+        NgxMaskDirective,
     ],
   providers: [
     {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
       multi: true,
-      deps: [KeycloakService]
+      deps: [KeycloakService],
     },
     [
       { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
       { provide: NZ_I18N, useValue: vi_VN }
-  ]
+  ],
+      provideNgxMask()
   ],
   bootstrap: [AppComponent]
 })

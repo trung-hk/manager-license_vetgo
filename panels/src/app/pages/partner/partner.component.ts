@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import { LazyLoadScriptService } from 'src/app/services/lazy-load-script.service';
-import {STATUS_PARTNER, USER_TYPE} from "../../Constants/vg-constant";
+import {Constant, STATUS_PARTNER, USER_TYPE} from "../../Constants/vg-constant";
 import {User} from "../../models/User";
 import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {ApiCommonService} from "../../services/api-common.service";
@@ -121,7 +121,7 @@ export class PartnerComponent implements OnInit, AfterViewInit, OnDestroy {
         code: partner.code,
         name: partner.name,
         email: partner.email,
-        phone: this.scriptFC.formatPhone(partner.phone),
+        phone: partner.phone,
         status: partner.status,
         address: partner.address,
         commissionId: partner.commissionId
@@ -144,9 +144,6 @@ export class PartnerComponent implements OnInit, AfterViewInit, OnDestroy {
         this.validateForm.get("code")?.enable();
         const data: User = this.validateForm.value
         data.type = USER_TYPE.PARTNER;
-        const phoneUnFormat = this.scriptFC.convertInputFormatToNumber(data.phone);
-        data.phone = phoneUnFormat?.slice(0, 10);
-        console.log(data);
         if (data.id) {
           this.api.update(data.id, data, URL.API_USER).subscribe((data) => {
             if (this.scriptFC.validateResponseAPI(data.status)){
@@ -230,7 +227,5 @@ export class PartnerComponent implements OnInit, AfterViewInit, OnDestroy {
     event.target.value = "";
   }
 
-  formatPhone(event: any): void {
-    event.target.value = this.scriptFC.formatPhone(event.target.value);
-  }
+    protected readonly Constant = Constant;
 }

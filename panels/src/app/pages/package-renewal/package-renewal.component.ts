@@ -5,7 +5,7 @@ import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {Item} from "../../models/Item";
 import {ActivatedRoute} from "@angular/router";
-import {STATUS_ORDER, STATUS_PAYMENT, TYPE_PACKAGE} from "../../Constants/vg-constant";
+import {Constant, STATUS_ORDER, STATUS_PAYMENT, TYPE_PAYMENT_PACKAGE} from "../../Constants/vg-constant";
 import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
 import {OrderService} from "../../models/OrderService";
 
@@ -46,7 +46,7 @@ export class PackageRenewalComponent implements OnInit, AfterViewInit, OnDestroy
     this.api.getById<Item>(this.route.snapshot.paramMap.get('id'), URL.API_ITEM).subscribe((data) => {
       console.log(data)
       this.data = data;
-      this.data.packages = this.scriptFC.getPackageService(this.data.attributes).filter(pk => pk.typePackage != TYPE_PACKAGE.FREE.value);
+      this.data.packages = this.scriptFC.getPackageService(this.data.attributes).filter(pk => pk.typePackage != TYPE_PAYMENT_PACKAGE.FREE.value);
       this.loading = false;
     })
   }
@@ -65,4 +65,6 @@ export class PackageRenewalComponent implements OnInit, AfterViewInit, OnDestroy
     };
     this.scriptFC.payment(order, method);
   }
+
+    protected readonly Constant = Constant;
 }

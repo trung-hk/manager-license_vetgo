@@ -36,7 +36,7 @@
               <td>{{dt.code}}</td>
               <td>{{dt.name}}</td>
               <td>{{dt.email}}</td>
-              <td>{{dt.phone! | phoneFormat}}</td>
+              <td>{{dt.phone! | mask: Constant.FORMAT_PHONE_INPUT}}</td>
               <td>
                 <div class="text-break custom-scrollbar" [innerHtml]="dt.address! | lineBreak"></div>
               </td>
@@ -120,8 +120,7 @@
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
         <nz-form-control [nzSm]="18">
           <nz-input-group nzAddOnBefore="+84">
-            <input [maxLength]="15" formControlName="phone" nz-input placeholder="(090) 123-4567"
-                   (keyup)="formatPhone($event)"/>
+            <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>

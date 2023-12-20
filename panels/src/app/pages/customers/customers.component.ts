@@ -11,9 +11,10 @@ import {URL} from "../../Constants/api-urls";
 import {Message} from "../../Constants/message-constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {
-  MODE_DISPLAY,
-  ROLES, STATUS_CUSTOMER,
-  USER_TYPE
+    Constant,
+    MODE_DISPLAY,
+    ROLES, STATUS_CUSTOMER,
+    USER_TYPE
 } from "../../Constants/vg-constant";
 import {USER_FORM} from "../../Constants/Form";
 import {ResponseError} from "../../models/ResponseError";
@@ -116,8 +117,6 @@ export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isConfirmLoading = true;
         this.validateForm.get("code")?.enable();
         const data: User = this.validateForm.value
-        const phoneUnFormat = this.scriptFC.convertInputFormatToNumber(data.phone);
-        data.phone = phoneUnFormat?.slice(0, 10);
         data.type = USER_TYPE.CUSTOMER;
         if (data.id) {
           this.api.update(data.id, data, URL.API_USER).subscribe((data) => {
@@ -157,7 +156,7 @@ export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
       code: customer.code,
       name: customer.name,
       email: customer.email,
-      phone: this.scriptFC.formatPhone(customer.phone),
+      phone: customer.phone,
       status: customer.status,
       address: customer.address,
       commissionId: customer.commissionId
@@ -222,10 +221,6 @@ export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
   search(event: any): void {
     this.loadDataFromServer(event.target.value);
     event.target.value = "";
-  }
-
-  formatPhone(event: any): void {
-    event.target.value = this.scriptFC.formatPhone(event.target.value);
   }
   onSearch(searchText: string): void {
     // Gọi hàm tìm kiếm của bạn ở đây
@@ -299,4 +294,6 @@ export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
   createComponentModalViewCustomer(user: User) {
     this.scriptFC.createComponentModalViewCustomerDetails(user, this.viewContainerRef);
   }
+
+    protected readonly Constant = Constant;
 }

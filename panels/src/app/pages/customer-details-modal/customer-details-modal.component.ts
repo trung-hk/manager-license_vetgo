@@ -3,6 +3,7 @@ import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
 import {IModalViewCustomerData} from "../../models/ModalData";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {User} from "../../models/User";
+import {Constant} from "../../Constants/vg-constant";
 
 @Component({
   selector: 'app-customer-details-modal',
@@ -17,4 +18,6 @@ export class CustomerDetailsModalComponent implements OnInit {
   ngOnInit(): void {
     this.customer = this.nzModalData.customer;
   }
+
+    protected readonly Constant = Constant;
 }

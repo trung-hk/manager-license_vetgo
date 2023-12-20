@@ -7,8 +7,7 @@
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
         <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập số điện thoại">
           <nz-input-group nzAddOnBefore="+84">
-            <input [maxLength]="14" formControlName="phone" nz-input placeholder="(090) 123-4567"
-                   (keyup)="formatPhone($event)" (ngModelChange)="onSearch($event)"/>
+            <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567" (ngModelChange)="onSearch($event)"/>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
@@ -65,7 +64,7 @@
           <h5>Tổng tiền</h5>
         </div>
         <div nz-col nzSpan="11" class="text-right">
-          <h5>{{totalPrice| moneyFormat}} VNĐ</h5>
+          <h5>{{totalPrice! | mask: 'separator' : Constant.FORMAT_MONEY }}</h5>
         </div>
       </div>
     </form>
@@ -93,6 +92,9 @@
         </ng-container>
         <ng-container *ngSwitchCase="CONFIG.ADMIN_ONLINE_SHOP.value">
           <ng-container *ngTemplateOutlet="CONFIG_ADMIN_ONLINE_SHOP_FORM"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="CONFIG.CS_ZALO_EXPAND.value">
+          <ng-container *ngTemplateOutlet="CONFIG_CS_ZALO_EXPAND_FORM"></ng-container>
         </ng-container>
       </ng-container>
       <ng-template #CONFIG_VET_APP_FORM>
@@ -124,11 +126,23 @@
           <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
           <nz-form-control [nzSm]="18">
             <nz-input-group nzAddOnBefore="+84">
-              <input [maxLength]="15" formControlName="phone" nz-input placeholder="(090) 123-4567"
-                     (keyup)="formatPhone($event)"/>
+              <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
+      </ng-template>
+      <ng-template #CONFIG_CS_ZALO_EXPAND_FORM>
+        <div [formArrayName]="attributePhoneFormArray">
+          <nz-form-item *ngFor="let item of phonesArrayForm.controls; let i = index" [formGroupName]="i">
+            <nz-form-label *ngIf="i == 0" nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
+            <nz-form-label *ngIf="i != 0" nzNoColon="true" nzLabelAlign="right" [nzSm]="5"></nz-form-label>
+            <nz-form-control [nzSm]="18">
+              <nz-input-group nzAddOnBefore="+84">
+                <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
       </ng-template>
       <ng-template #CONFIG_WIFI_MARKETING_FORM>
         <nz-form-item>
@@ -167,8 +181,7 @@
           <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
           <nz-form-control [nzSm]="18">
             <nz-input-group nzAddOnBefore="+84">
-              <input [maxLength]="15" formControlName="phone" nz-input placeholder="(090) 123-4567"
-                     (keyup)="formatPhone($event)"/>
+              <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
