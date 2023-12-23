@@ -30,7 +30,7 @@ registerLocaleData(vi);
 
 // for production
 const fullURL = window.location.href
-const domainRegex = new RegExp('\\.(phanmemvet|moonpet)\\.vn(.*)', 'g');
+const domainRegex = new RegExp('.(phanmemvet|moonpet).vn(.*)', 'g');
 const storedCorporate = fullURL.replace(domainRegex, '')
     .replace(/localhost(.*)/g, '')
     .replace(/^http(.*):\/\//g, '')
