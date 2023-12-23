@@ -20,8 +20,8 @@ export class Constant {
     static readonly API_CONFIG_SYSTEM_LIST: string[] = ["TIME_ACTIVE", "CONFIG_BROWSER"];
     static readonly FORMAT_PHONE_INPUT: string = "(000) 000-0000";
     static readonly FORMAT_MONEY = {thousandSeparator:',', suffix: ' VNĐ'};
-    static readonly EXTENSION_DOMAIN_PRO = '.phanmemvet.vn';
-    static readonly EXTENSION_DOMAIN_DEV = '.moonpet.vn';
+    static readonly EXTENSION_DOMAIN_PRO = 'phanmemvet.vn';
+    static readonly EXTENSION_DOMAIN_DEV = 'moonpet.vn';
 }
 export class STATUS_AGENT {
     static readonly IN_ACTIVE: Enum = {text: "Ngừng hoạt động", value: "IN_ACTIVE"};
