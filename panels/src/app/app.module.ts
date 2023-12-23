@@ -30,11 +30,12 @@ registerLocaleData(vi);
 
 // for production
 const fullURL = window.location.origin
-const domainRegex = new RegExp('.(phanmemvet|moonpet).vn(.*)', 'g');
+const domainRegex = new RegExp('(.phanmemvet.vn(.*)|.moonpet.vn(.*))', 'g');
 const storedCorporate = fullURL.replace(domainRegex, '')
     .replace(/localhost(.*)/g, '')
     .replace(/^http(.*):\/\//g, '')
     .replace(/\./g, '');
+console.log("url: " + window.location.href);
 console.log("brand id: " + storedCorporate);
 let realm = 'portal';
 if (storedCorporate) {

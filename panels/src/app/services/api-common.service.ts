@@ -14,7 +14,7 @@ import {Constant} from "../Constants/vg-constant";
 export class ApiCommonService {
     URL_DEV: string = "https://api.moonpet.vn/api";
     URL_PRO: string = "https://api.phanmemvet.vn/api";
-    url: string = window.location.href.endsWith(Constant.EXTENSION_DOMAIN_PRO) ? this.URL_PRO: this.URL_DEV;
+    url: string = window.location.origin.endsWith(Constant.EXTENSION_DOMAIN_PRO) ? this.URL_PRO: this.URL_DEV;
     regex = /^(?!\s*$).+/;
     constructor(private httpClient: HttpClient) {
     }
