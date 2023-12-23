@@ -25,30 +25,33 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NgZorroAntdModule} from "./ng-zorro-antd.module";
 import {ShareModule} from "./pipe/share/share.module";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
+import {Constant} from "./Constants/vg-constant";
 registerLocaleData(vi);
 
 // for production
 const fullURL = window.location.href
-const domainRegex = new RegExp('.phanmemvet.vn(.*)', 'g');
+const domainRegex = new RegExp('\\.(phanmemvet|moonpet)\\.vn(.*)', 'g');
 const storedCorporate = fullURL.replace(domainRegex, '')
     .replace(/localhost(.*)/g, '')
     .replace(/^http(.*):\/\//g, '')
     .replace(/\./g, '');
 console.log("brand id: " + storedCorporate);
 let realm = 'phanmemvet';
+// let realm = 'portal';
 if (storedCorporate) {
     realm = storedCorporate;
 }
-if (window.location.href.startsWith('https://phanmemvet.vn')) {
+if (fullURL.startsWith('https://phanmemvet.vn') || fullURL.startsWith('https://moonpet.vn')) {
     realm = 'phanmemvet';
+    // realm = 'portal';
 }
 const URL_KEY_CLOAK_PRO: string = 'https://keycloak.phanmemvet.vn';
-const URL_KEY_CLOAK_DEV: string = 'https://dev-keycloak.phanmemvet.vn/';
+const URL_KEY_CLOAK_DEV: string = 'https://keycloak.moonpet.vn';
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
         keycloak.init({
             config: {
-                url: fullURL.startsWith('http://localhost') ? URL_KEY_CLOAK_PRO : URL_KEY_CLOAK_PRO,
+                url: fullURL.endsWith(Constant.EXTENSION_DOMAIN_PRO) ? URL_KEY_CLOAK_PRO : URL_KEY_CLOAK_DEV,
                 realm: realm,
                 clientId: 'vetgo-fe'
             },

@@ -19,7 +19,7 @@ import {CustomerDetailsModalComponent} from "../pages/customer-details-modal/cus
 import {AttributePackagePurchased} from "../models/PackagePurchased";
 import {Message} from "../Constants/message-constant";
 import {URL} from "../Constants/api-urls";
-import {ResponesePayment} from "../models/ResponesePayment";
+import {ResponsePaymentMoMo} from "../models/ResponesePayment";
 import {PAYMENTS_METHOD, PAYMENTS_URL} from "../Constants/payment-urls";
 import {Router} from "@angular/router";
 import {ApiCommonService} from "./api-common.service";
@@ -241,13 +241,13 @@ export class ScriptCommonService {
         switch (method) {
             case PAYMENTS_METHOD.MOMO:
                 const api = this.formatString(URL.API_PAYMENT_CONFIRM, [order.id!, PAYMENTS_METHOD.MOMO]);
-                this.api.payment<ResponesePayment>(api, PAYMENTS_URL.MOMO).subscribe((data) => {
+                this.api.payment<ResponsePaymentMoMo>(api, PAYMENTS_URL.MOMO).subscribe((data) => {
                     // Lấy thông tin thanh toán lỗi
                     if (this.validateResponseAPI(data.status)) {
                         this.alertShowMessageError(Message.MESSAGE_PAYMENT_FAILED);
                         // lấy thông tin thanh toán thành công
                     } else {
-                        data = data as ResponesePayment;
+                        data = data as ResponsePaymentMoMo;
                         window.open(data.url!)
                     }
 
@@ -257,6 +257,7 @@ export class ScriptCommonService {
                 })
                 break;
             case PAYMENTS_METHOD.BANK_TRANSFER:
+            case PAYMENTS_METHOD.VIET_QR:
                 this.router.navigate(['/payment-bank-transfer', order.id]);
                 break;
             default:

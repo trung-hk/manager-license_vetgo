@@ -48,7 +48,7 @@
                   <label>E-mail: <span>{{dt.email}}</span></label>
                 </div>
               </td>
-              <td><a href="https://{{dt.realm}}.phanmemvet.vn">https://{{dt.realm}}.phanmemvet.vn</a></td>
+              <td><a href="https://{{dt.realm + extensionDomain}}">https://{{dt.realm + extensionDomain}}</a></td>
               <td>
                 {{dataCommissionMap.get(dt.commissionId!)?.name}}
               </td>
@@ -135,7 +135,7 @@
       <nz-form-item>
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên miền web</nz-form-label>
         <nz-form-control [nzSm]="18">
-          <nz-input-group nzAddOnBefore="https://" nzAddOnAfter=".phanmemvet.vn">
+          <nz-input-group nzAddOnBefore="https://" [nzAddOnAfter]="extensionDomain">
             <input nz-input formControlName="realm" placeholder="vetgo"/>
           </nz-input-group>
         </nz-form-control>
