@@ -36,14 +36,12 @@ const storedCorporate = fullURL.replace(domainRegex, '')
     .replace(/^http(.*):\/\//g, '')
     .replace(/\./g, '');
 console.log("brand id: " + storedCorporate);
-let realm = 'phanmemvet';
-// let realm = 'portal';
+let realm = 'portal';
 if (storedCorporate) {
     realm = storedCorporate;
 }
 if (fullURL.startsWith('https://phanmemvet.vn') || fullURL.startsWith('https://moonpet.vn')) {
-    realm = 'phanmemvet';
-    // realm = 'portal';
+    realm = 'portal';
 }
 const URL_KEY_CLOAK_PRO: string = 'https://keycloak.phanmemvet.vn';
 const URL_KEY_CLOAK_DEV: string = 'https://keycloak.moonpet.vn';
