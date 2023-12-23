@@ -6,29 +6,16 @@ import {
   HttpInterceptor
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {REALM} from "../Constants/vg-constant";
 
 @Injectable()
 export class LoaderInterceptor implements HttpInterceptor {
   constructor() { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const fullURL = window.location.href
-    const domainRegex = new RegExp('.phanmemvet.vn(.*)', 'g');
-    const  storedCorporate = fullURL.replace(domainRegex, '')
-        .replace(/localhost(.*)/g, '')
-        .replace(/^http(.*):\/\//g, '')
-        .replace(/\./g, '');
-    console.log( "brand id: " +  storedCorporate);
-    let realm  = 'phanmemvet';
-    if (storedCorporate) {
-      realm = storedCorporate;
-    }
-    if (window.location.href.startsWith('https://phanmemvet.vn')) {
-      realm  = 'phanmemvet';
-    }
     if (!request.url.includes('https://script.google.com')) {
       request = request.clone({
-        setHeaders: { realm: realm}
+        setHeaders: { realm: REALM()}
       });
     }
     return next.handle(request);

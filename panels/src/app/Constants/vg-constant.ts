@@ -139,3 +139,20 @@ export class TYPE_LICENSE {
     static readonly PRO: Enum = {text: "Bản Pro", value: "Pro"};
     static readonly LIST: Enum[] = [this.TRIAL, this.PRO];
 }
+export const REALM = (): string => {
+    const fullURL = window.location.origin;
+    const domainRegex = new RegExp('(.phanmemvet.vn(.*)|.moonpet.vn(.*))', 'g');
+    const  storedCorporate = fullURL.replace(domainRegex, '')
+        .replace(/localhost(.*)/g, '')
+        .replace(/^http(.*):\/\//g, '')
+        .replace(/\./g, '');
+    console.log( "brand id: " +  storedCorporate);
+    let realm = 'portal';
+    if (storedCorporate) {
+        realm = storedCorporate;
+    }
+    if (fullURL.startsWith('https://phanmemvet.vn') || fullURL.startsWith('https://moonpet.vn')) {
+        realm = 'portal';
+    }
+    return realm;
+}
