@@ -29,7 +29,7 @@ import {Constant} from "./Constants/vg-constant";
 registerLocaleData(vi);
 
 // for production
-const fullURL = window.location.href
+const fullURL = window.location.origin
 const domainRegex = new RegExp('.(phanmemvet|moonpet).vn(.*)', 'g');
 const storedCorporate = fullURL.replace(domainRegex, '')
     .replace(/localhost(.*)/g, '')
@@ -40,7 +40,7 @@ let realm = 'portal';
 if (storedCorporate) {
     realm = storedCorporate;
 }
-if (fullURL.startsWith('https://phanmemvet.vn') || fullURL.startsWith('https://moonpet.vn')) {
+if (window.location.origin.startsWith('https://phanmemvet.vn') || window.location.origin.startsWith('https://moonpet.vn')) {
     realm = 'portal';
 }
 const URL_KEY_CLOAK_PRO: string = 'https://keycloak.phanmemvet.vn';
