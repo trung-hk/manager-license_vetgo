@@ -8,4 +8,5 @@ export class PAYMENTS_METHOD {
     static readonly MOMO: string = "MOMO";
     static readonly VISA: string = "VISA";
     static readonly BANK_TRANSFER: string = "BANK_TRANSFER";
+    static readonly VIET_QR: string = "VIET_QR";
 }

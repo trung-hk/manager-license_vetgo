@@ -5,15 +5,16 @@ import {ResponseError} from "../models/ResponseError";
 import {URL} from "../Constants/api-urls";
 import {User} from "../models/User";
 import {ObjectSelectAll} from "../models/ObjectSelectAll";
+import {Constant} from "../Constants/vg-constant";
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class ApiCommonService {
-    URL_DEV: string = "https://dev-api.phanmemvet.vn/api";
+    URL_DEV: string = "https://api.moonpet.vn/api";
     URL_PRO: string = "https://api.phanmemvet.vn/api";
-    url: string = window.location.origin.startsWith("http://localhost") ? this.URL_DEV: this.URL_PRO;
+    url: string = window.location.href.endsWith(Constant.EXTENSION_DOMAIN_PRO) ? this.URL_PRO: this.URL_DEV;
     regex = /^(?!\s*$).+/;
     constructor(private httpClient: HttpClient) {
     }

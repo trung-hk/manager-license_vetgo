@@ -1,7 +1,7 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
 import {IModalData} from "../../models/ModalData";
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
+import {FormArray, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {
     CONFIG_ADMIN_ONLINE_SHOP_FORM,
     CONFIG_CS_ZALO_FORM,
@@ -14,7 +14,7 @@ import {User} from "../../models/User";
 import {Item} from "../../models/Item";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {
-    CONFIG,
+    CONFIG, Constant,
     MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
     STATUS_CUSTOMER,
     STATUS_ORDER,
@@ -37,6 +37,8 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     validateCustomerForm!: UntypedFormGroup;
     validateOrderForm!: UntypedFormGroup;
     validateConfigForm!: UntypedFormGroup;
+    attributePhoneFormArray = "phones";
+    phonesArrayForm!: FormArray;
 
     constructor(private fb: UntypedFormBuilder,
                 public scriptFC: ScriptCommonService,
@@ -87,8 +89,8 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             })
         }
         if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG) {
-            const attribute = this.scriptFC.getAttributeOrderProductService(this.order?.attributes);
-            switch (attribute.usingConfig) {
+            console.log(this.attributeOrder)
+            switch (this.attributeOrder.usingConfig) {
                 case CONFIG.VET_APP.value:
                     this.validateConfigForm = this.fb.group(CONFIG_VET_APP_FORM);
                     break;
@@ -100,6 +102,14 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
                     break;
                 case CONFIG.CS_ZALO.value:
                     this.validateConfigForm = this.fb.group(CONFIG_CS_ZALO_FORM);
+                    break;
+                case CONFIG.CS_ZALO_EXPAND.value:
+                    this.validateConfigForm = this.fb.group({phones: this.fb.array([])});
+                    this.phonesArrayForm = this.validateConfigForm.get(this.attributePhoneFormArray) as FormArray;
+                    const packageOrder = this.attributeOrder.packagesMap?.get(this.order?.packageId!);
+                    for (let i = 0; i < parseInt(packageOrder?.quantity!); i++) {
+                        this.phonesArrayForm.push(this.fb.group(CONFIG_CS_ZALO_FORM));
+                    }
                     break;
                 case CONFIG.WIFI_MARKETING.value:
                     this.validateConfigForm = this.fb.group(CONFIG_WIFI_MARKETING_FORM);
@@ -130,7 +140,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
                 code: customer.code,
                 name: customer.name,
                 email: customer.email,
-                phone: this.scriptFC.formatPhone(customer.phone),
+                phone: customer.phone,
                 address: customer.address,
                 status: customer.status,
                 commissionId: customer.commissionId
@@ -149,10 +159,6 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
         })
         if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE) this.validateOrderForm.get("itemId")?.disable();
         this.totalPrice = order.totalAmount!;
-    }
-
-    formatPhone(event: any): void {
-        event.target.value = this.scriptFC.formatPhone(event.target.value);
     }
 
     handleChangeProduct(e: any): void {
@@ -196,7 +202,6 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             // xử lý insertOrUpdate customer
             let dataCustomer: User = this.validateCustomerForm.value;
             dataCustomer.type = USER_TYPE.CUSTOMER;
-            dataCustomer.phone = this.scriptFC.convertInputFormatToNumber(dataCustomer.phone);
             dataCustomer = await this.insertOrUpdateCustomer(dataCustomer);
             if (!dataCustomer.id) return;
             dataOrder.customerId = dataCustomer.id;
@@ -322,10 +327,8 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     }
 
     onSearch(value: any): void {
-        console.log(value)
-        const phone = this.scriptFC.convertInputFormatToNumber(value);
-        if (phone?.length !== 10) return;
-        this.api.getCustomerByPhone(phone).subscribe((data) => {
+        if (value.length !== 10) return;
+        this.api.getCustomerByPhone(value).subscribe((data) => {
             console.log(data)
             if (this.scriptFC.validateResponseAPI(data.status)) return;
             this.setValueFormCustomer(data as User, true);
@@ -333,4 +336,5 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
 
     }
 
+    protected readonly Constant = Constant;
 }

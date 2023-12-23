@@ -59,10 +59,10 @@
       <li class="dropdown partner" *ngxPermissionsOnly="[ROLES.PARTNER]">
         <a routerLink="order-service" class="nav-link"><i nz-icon nzType="unordered-list" nzTheme="outline"></i><span>Danh sách SP</span></a>
       </li>
-      <li class="dropdown customers" *ngxPermissionsOnly="[ROLES.CUSTOMER]">
+      <li class="dropdown customers" *ngxPermissionsExcept="[ROLES.CUSTOMER]">
         <a routerLink="customers" class="nav-link"><i nz-icon nzType="user" nzTheme="outline"></i><span>Khách hàng</span></a>
       </li>
-      <li class="dropdown package-purchased">
+      <li class="dropdown package-purchased" *ngxPermissionsOnly="[ROLES.CUSTOMER]">
         <a routerLink="package-purchased" class="nav-link"><i nz-icon nzType="cloud-server" nzTheme="outline"></i><span>Dịch vụ đã mua</span></a>
       </li>
     </ul>

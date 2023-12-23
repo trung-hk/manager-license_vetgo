@@ -19,7 +19,7 @@ import {CustomerDetailsModalComponent} from "../pages/customer-details-modal/cus
 import {AttributePackagePurchased} from "../models/PackagePurchased";
 import {Message} from "../Constants/message-constant";
 import {URL} from "../Constants/api-urls";
-import {ResponesePayment} from "../models/ResponesePayment";
+import {ResponsePaymentMoMo} from "../models/ResponesePayment";
 import {PAYMENTS_METHOD, PAYMENTS_URL} from "../Constants/payment-urls";
 import {Router} from "@angular/router";
 import {ApiCommonService} from "./api-common.service";
@@ -40,7 +40,6 @@ export class ScriptCommonService {
             event: "alert-success",
             data: {title: title, message: message}
         });
-        // this.notificationService.template(notificationTemplate!, { nzData: {message: message, color: "green"} });
     }
 
     alertShowMessageError(message?: string, title?: string): void {
@@ -48,23 +47,6 @@ export class ScriptCommonService {
             event: "alert-error",
             data: {title: title, message: message}
         })
-        // this.notificationService.template(notificationTemplate!, { nzData: {message: message, color: "red"} });
-    }
-
-    formatPhone(value: string | null | undefined): string | null {
-        value = this.convertInputFormatToNumber(value);
-        if (!value) return null;
-        if (value.length <= 3) {
-            return `${value.slice(0, 3)}`;
-        }
-        if (value.length > 3 && value.length <= 6) {
-            return `(${value.slice(0, 3)}) ${value.slice(3, 6)}`;
-        }
-        return `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
-    }
-
-    convertInputFormatToNumber(value: string | null | undefined): string | null {
-        return value ? value.replace(/\D/g, "") : null;
     }
 
     generateUUID() { // Public Domain/MIT
@@ -106,8 +88,6 @@ export class ScriptCommonService {
         result.packagesMap = new Map<string, PackageProduct>(result.packages?.map(r => [r.id!, r]));
         return result;
     }
-    formatterMoney = (value: number) => value && `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    parserMoney = (value: string): string => value.replace(',', '');
     displayContentTextArea = (value: string): string => value ? value.replaceAll("\n", `<br>`) : "";
 
     createComponentModalFormOrderService(idProductSelect: string | null,
@@ -261,13 +241,13 @@ export class ScriptCommonService {
         switch (method) {
             case PAYMENTS_METHOD.MOMO:
                 const api = this.formatString(URL.API_PAYMENT_CONFIRM, [order.id!, PAYMENTS_METHOD.MOMO]);
-                this.api.payment<ResponesePayment>(api, PAYMENTS_URL.MOMO).subscribe((data) => {
+                this.api.payment<ResponsePaymentMoMo>(api, PAYMENTS_URL.MOMO).subscribe((data) => {
                     // Lấy thông tin thanh toán lỗi
                     if (this.validateResponseAPI(data.status)) {
                         this.alertShowMessageError(Message.MESSAGE_PAYMENT_FAILED);
                         // lấy thông tin thanh toán thành công
                     } else {
-                        data = data as ResponesePayment;
+                        data = data as ResponsePaymentMoMo;
                         window.open(data.url!)
                     }
 
@@ -277,6 +257,7 @@ export class ScriptCommonService {
                 })
                 break;
             case PAYMENTS_METHOD.BANK_TRANSFER:
+            case PAYMENTS_METHOD.VIET_QR:
                 this.router.navigate(['/payment-bank-transfer', order.id]);
                 break;
             default:

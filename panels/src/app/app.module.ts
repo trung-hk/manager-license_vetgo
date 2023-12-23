@@ -24,30 +24,32 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NgZorroAntdModule} from "./ng-zorro-antd.module";
 import {ShareModule} from "./pipe/share/share.module";
+import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
+import {Constant} from "./Constants/vg-constant";
 registerLocaleData(vi);
 
 // for production
 const fullURL = window.location.href
-const domainRegex = new RegExp('.phanmemvet.vn(.*)', 'g');
+const domainRegex = new RegExp('\\.(phanmemvet|moonpet)\\.vn(.*)', 'g');
 const storedCorporate = fullURL.replace(domainRegex, '')
     .replace(/localhost(.*)/g, '')
     .replace(/^http(.*):\/\//g, '')
     .replace(/\./g, '');
 console.log("brand id: " + storedCorporate);
-let realm = 'phanmemvet';
+let realm = 'portal';
 if (storedCorporate) {
     realm = storedCorporate;
 }
-if (window.location.href.startsWith('https://phanmemvet.vn')) {
-    realm = 'phanmemvet';
+if (fullURL.startsWith('https://phanmemvet.vn') || fullURL.startsWith('https://moonpet.vn')) {
+    realm = 'portal';
 }
 const URL_KEY_CLOAK_PRO: string = 'https://keycloak.phanmemvet.vn';
-const URL_KEY_CLOAK_DEV: string = 'https://dev-keycloak.phanmemvet.vn/';
+const URL_KEY_CLOAK_DEV: string = 'https://keycloak.moonpet.vn';
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
         keycloak.init({
             config: {
-                url: window.location.origin.startsWith('http://localhost') ? URL_KEY_CLOAK_DEV : URL_KEY_CLOAK_PRO,
+                url: fullURL.endsWith(Constant.EXTENSION_DOMAIN_PRO) ? URL_KEY_CLOAK_PRO : URL_KEY_CLOAK_DEV,
                 realm: realm,
                 clientId: 'vetgo-fe'
             },
@@ -84,19 +86,22 @@ function initializeKeycloak(keycloak: KeycloakService) {
         BrowserAnimationsModule,
         NgZorroAntdModule,
         ReactiveFormsModule,
-        ShareModule
+        ShareModule,
+        NgxMaskPipe,
+        NgxMaskDirective,
     ],
   providers: [
     {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
       multi: true,
-      deps: [KeycloakService]
+      deps: [KeycloakService],
     },
     [
       { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
       { provide: NZ_I18N, useValue: vi_VN }
-  ]
+  ],
+      provideNgxMask()
   ],
   bootstrap: [AppComponent]
 })

@@ -18,6 +18,10 @@ export enum USER_TYPE {
 
 export class Constant {
     static readonly API_CONFIG_SYSTEM_LIST: string[] = ["TIME_ACTIVE", "CONFIG_BROWSER"];
+    static readonly FORMAT_PHONE_INPUT: string = "(000) 000-0000";
+    static readonly FORMAT_MONEY = {thousandSeparator:',', suffix: ' VNĐ'};
+    static readonly EXTENSION_DOMAIN_PRO = '.phanmemvet.vn';
+    static readonly EXTENSION_DOMAIN_DEV = '.moonpet.vn';
 }
 export class STATUS_AGENT {
     static readonly IN_ACTIVE: Enum = {text: "Ngừng hoạt động", value: "IN_ACTIVE"};
@@ -75,13 +79,15 @@ export class STATUS_ORDER {
     static readonly CANCEL_ORDER: Enum = {text: "Đã hủy đơn", value: "CANCEL_ORDER"};
     static readonly LIST: Enum[] = [this.IN_PROCESS, this.FINISHED, this.CANCEL_ORDER];
 }
-export class TYPE_EXPIRED_PACKAGE {
+export class TYPE_PACKAGE {
     static readonly DAY: Enum = {text: "Ngày", value: "day"};
     static readonly MONTH: Enum = {text: "Tháng", value: "month"};
     static readonly YEAR: Enum = {text: "Năm", value: "year"};
+    static readonly QUANTITY_SDT: Enum = {text: "SĐT", value: "quantity"};
     static readonly LIST: Enum[] = [this.DAY, this.MONTH, this.YEAR];
+    static readonly LIST_EXPAND: Enum[] = [this.QUANTITY_SDT];
 }
-export class TYPE_PACKAGE {
+export class TYPE_PAYMENT_PACKAGE {
     static readonly FREE: Enum = {text: "Không trả phí", value: "FREE"};
     static readonly PAYMENT: Enum = {text: "Trả phí", value: "PAYMENT"};
     static readonly LIST: Enum[] = [this.FREE, this.PAYMENT];
@@ -98,6 +104,7 @@ export class CONFIG {
     static readonly WIFI_MARKETING: Enum = {text: "WIFI-MARKETING", value: "WIFI_MARKETING"};
     static readonly POS: Enum = {text: "POS", value: "POS"};
     static readonly SPA: Enum = {text: "SPA", value: "SPA"};
+    static readonly CS_ZALO_EXPAND: Enum = {text: "Thêm tài khoản ZALO", value: "CS_ZALO_EXPAND"};
     static readonly CONFIG_LIST: Enum[] = [
         this.NOT_USING,
         this.VET_APP,
@@ -105,7 +112,9 @@ export class CONFIG {
         this.ADMIN_ONLINE_SHOP,
         this.WIFI_MARKETING,
         this.POS,
-        this.SPA]
+        this.SPA,
+        this.CS_ZALO_EXPAND,
+    ]
 }
 export class TYPE_COMMISSION {
     static readonly DEFAULT: Enum = {text: "Theo sản phẩm", value: "DEFAULT"};

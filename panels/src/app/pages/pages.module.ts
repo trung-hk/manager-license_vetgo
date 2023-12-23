@@ -23,6 +23,7 @@ import { CustomerDetailsModalComponent } from './customer-details-modal/customer
 import { LicenseZaloConfigComponent } from './license-zalo-config/license-zalo-config.component';
 import { PackagePurchasedComponent } from './package-purchased/package-purchased.component';
 import { PackageRenewalComponent } from './package-renewal/package-renewal.component';
+import {NgxMaskDirective, NgxMaskPipe} from "ngx-mask";
 
 const routes: Routes =
     [
@@ -62,7 +63,9 @@ const routes: Routes =
         ReactiveFormsModule,
         NgxPermissionsModule,
         ShareModule,
-        FormsModule
+        FormsModule,
+        NgxMaskDirective,
+        NgxMaskPipe
     ]
 })
 export class PagesModule {

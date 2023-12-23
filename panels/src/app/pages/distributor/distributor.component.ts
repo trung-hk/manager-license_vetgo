@@ -7,7 +7,7 @@ import {ScriptCommonService} from "../../services/script-common.service";
 import {USER_FORM} from "../../Constants/Form";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
-import {STATUS_DISTRIBUTOR, USER_TYPE} from "../../Constants/vg-constant";
+import {Constant, STATUS_DISTRIBUTOR, USER_TYPE} from "../../Constants/vg-constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {ResponseError} from "../../models/ResponseError";
 import {Message} from "../../Constants/message-constant";
@@ -122,7 +122,7 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
         code: distributor.code,
         name: distributor.name,
         email: distributor.email,
-        phone: this.scriptFC.formatPhone(distributor.phone),
+        phone: distributor.phone,
         status: distributor.status,
         address: distributor.address,
         commissionId: distributor.commissionId ? distributor.commissionId.toString() : null
@@ -145,8 +145,6 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
         this.validateForm.get("code")?.enable();
         const data: User = this.validateForm.value
         data.type = USER_TYPE.DISTRIBUTOR;
-        const phoneUnFormat = this.scriptFC.convertInputFormatToNumber(data.phone);
-        data.phone = phoneUnFormat?.slice(0, 10);
         if (data.id) {
           this.api.update(data.id, data, URL.API_USER).subscribe((data) => {
             if (this.scriptFC.validateResponseAPI(data.status)){
@@ -224,13 +222,9 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
       });
     }
   }
-
   search(event: any): void {
     this.loadDataFromServer(event.target.value);
     event.target.value = "";
   }
-
-  formatPhone(event: any): void {
-    event.target.value = this.scriptFC.formatPhone(event.target.value);
-  }
+    protected readonly Constant = Constant;
 }

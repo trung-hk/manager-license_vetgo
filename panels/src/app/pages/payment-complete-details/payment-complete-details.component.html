@@ -8,21 +8,21 @@
             <br>
             Tên: {{orderService?.customerName}}
             <br>
-            Số điện thoại: {{orderService?.customerPhone | phoneFormat}}
+            Số điện thoại: {{orderService?.customerPhone! | mask: Constant.FORMAT_PHONE_INPUT}}
             <br>
             E-mail: {{orderService?.customerAddress}}
             <nz-divider></nz-divider>
             <nz-descriptions nzSize="small" nzBordered>
               <nz-descriptions-item nzTitle="Sản phẩm">VETGO3232323232</nz-descriptions-item>
               <nz-descriptions-item nzTitle="Gói">{{packageOrder?.name}}</nz-descriptions-item>
-              <nz-descriptions-item nzTitle="Giá">{{orderService?.totalAmount | moneyFormat}} VNĐ</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Giá">{{orderService?.totalAmount! | mask: 'separator' : Constant.FORMAT_MONEY}}</nz-descriptions-item>
             </nz-descriptions>
             <nz-divider></nz-divider>
             <b>Thông tin thanh toán</b>
             <br>
             Phương thức thanh toán: MOMO
             <br>
-            Số tiền thanh toán: {{orderService?.totalAmount | moneyFormat}} VNĐ
+            Số tiền thanh toán: {{orderService?.totalAmount! | mask: 'separator' : Constant.FORMAT_MONEY}}
             <br>
             Trạng thái: Chuyển thành công
             <div class="text-center" style="margin-top: 10px;">

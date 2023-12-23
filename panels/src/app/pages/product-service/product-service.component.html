@@ -145,26 +145,22 @@
                 <div nz-col nzSpan="12">
                   <nz-input-group nzAddOnBefore="Loại gói">
                     <nz-select formControlName="typePackage" [ngModel]=""  (ngModelChange)="changeTypePackage($event, i)">
-                      <nz-option [nzLabel]="TYPE_PACKAGE.FREE.text" [nzValue]="TYPE_PACKAGE.FREE.value"></nz-option>
-                      <nz-option [nzLabel]="TYPE_PACKAGE.PAYMENT.text" [nzValue]="TYPE_PACKAGE.PAYMENT.value"></nz-option>
+                      <nz-option [nzLabel]="TYPE_PAYMENT_PACKAGE.FREE.text" [nzValue]="TYPE_PAYMENT_PACKAGE.FREE.value"></nz-option>
+                      <nz-option [nzLabel]="TYPE_PAYMENT_PACKAGE.PAYMENT.text" [nzValue]="TYPE_PAYMENT_PACKAGE.PAYMENT.value"></nz-option>
                     </nz-select>
                   </nz-input-group>
-                  <nz-input-group nzAddOnBefore="Thời hạn" [nzAddOnAfter]="chooseTypeExpired">
-                    <input formControlName="expired" nz-input (keyup)="inputExpired($event, i)"/>
+                  <nz-input-group nzAddOnBefore="Đơn vị" [nzAddOnAfter]="chooseTypeExpired">
+                    <input *ngIf="!isChooseProductExpand" formControlName="expired" nz-input (keyup)="inputExpired($event, i)"/>
+                    <input *ngIf="isChooseProductExpand" formControlName="quantity" nz-input (keyup)="inputExpired($event, i)"/>
                   </nz-input-group>
                 </div>
                 <div nz-col nzSpan="10">
                   <nz-input-group nzAddOnBefore="Tên">
                     <input formControlName="name" nz-input placeholder="1 năm"/>
                   </nz-input-group>
-                  <nz-input-number-group nzAddOnBefore="Giá " nzAddOnAfter="VNĐ">
-                    <nz-input-number
-                        formControlName="price"
-                        [nzPlaceHolder]="'1,000,000'"
-                        [nzFormatter]="scriptFC.formatterMoney"
-                        [nzParser]="scriptFC.parserMoney">
-                    </nz-input-number>
-                  </nz-input-number-group>
+                  <nz-input-group nzAddOnBefore="Giá " nzAddOnAfter="VNĐ">
+                    <input nz-input formControlName="price" placeholder="1,000,000" mask="separator" thousandSeparator=",">
+                  </nz-input-group>
                 </div>
                 <div nz-col nzSpan="2" style="top:1em;">
                   <span nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeField(i, $event)"></span>
@@ -172,8 +168,13 @@
               </div>
             </nz-form-control>
             <ng-template #chooseTypeExpired>
-              <nz-select formControlName="typeExpired" [ngModel]="" (ngModelChange)="changeExpired($event, i)">
-                <nz-option *ngFor="let typeExpiredPackage of TYPE_EXPIRED_PACKAGE.LIST" [nzLabel]="typeExpiredPackage.text" [nzValue]="typeExpiredPackage.value"></nz-option>
+              <nz-select formControlName="type" [ngModel]="" (ngModelChange)="changeExpired($event, i)">
+                <ng-container *ngIf="isChooseProductExpand">
+                  <nz-option *ngFor="let typeExpiredPackage of TYPE_PACKAGE.LIST_EXPAND" [nzLabel]="typeExpiredPackage.text" [nzValue]="typeExpiredPackage.value"></nz-option>
+                </ng-container>
+                <ng-container *ngIf="!isChooseProductExpand">
+                  <nz-option *ngFor="let typeExpiredPackage of TYPE_PACKAGE.LIST" [nzLabel]="typeExpiredPackage.text" [nzValue]="typeExpiredPackage.value"></nz-option>
+                </ng-container>
               </nz-select>
             </ng-template>
           </nz-form-item>

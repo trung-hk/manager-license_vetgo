@@ -6,6 +6,7 @@ import {ApiCommonService} from "../../services/api-common.service";
 import {URL} from "../../Constants/api-urls";
 import {PackageProduct} from "../../models/PackageProduct";
 import {ScriptCommonService} from "../../services/script-common.service";
+import {Constant} from "../../Constants/vg-constant";
 
 @Component({
   selector: 'app-payment-complete-details',
@@ -36,4 +37,6 @@ export class PaymentCompleteDetailsComponent implements OnInit, AfterViewInit, O
       this.packageOrder = this.scriptFC.getPackageService(data.attributes).find(d => d.id === data.packageId)!;
     })
   }
+
+    protected readonly Constant = Constant;
 }

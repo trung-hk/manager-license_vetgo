@@ -6,7 +6,7 @@ import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
-import {STATUS_AGENT, USER_TYPE} from "../../Constants/vg-constant";
+import {Constant, STATUS_AGENT, USER_TYPE} from "../../Constants/vg-constant";
 import {User} from "../../models/User";
 import {USER_FORM_FOR_AGENT} from "../../Constants/Form";
 import {ResponseError} from "../../models/ResponseError";
@@ -39,6 +39,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     idDelete: number | string | null | undefined = -1;
     idShowModal: number | string | null | undefined = null;
     filter: Array<{ key: string; value: string[] }> | null = null;
+    extensionDomain = window.location.href.endsWith(Constant.EXTENSION_DOMAIN_PRO) ? Constant.EXTENSION_DOMAIN_PRO : Constant.EXTENSION_DOMAIN_DEV;
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
                 private renderer: Renderer2,
@@ -123,7 +124,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
                 code: agent.code,
                 name: agent.name,
                 email: agent.email,
-                phone: this.scriptFC.formatPhone(agent.phone),
+                phone: agent.phone,
                 status: agent.status,
                 address: agent.address,
                 commissionId: agent.commissionId ? agent.commissionId.toString() : null
@@ -149,8 +150,6 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.validateForm.get("realm")?.enable();
                 const data: User = this.validateForm.value
                 data.type = USER_TYPE.AGENT;
-                const phoneUnFormat = this.scriptFC.convertInputFormatToNumber(data.phone);
-                data.phone = phoneUnFormat?.slice(0, 10);
                 if (data.id) {
                     this.api.update(data.id, data, URL.API_USER).subscribe((data) => {
                         if (this.scriptFC.validateResponseAPI(data.status)){
@@ -234,7 +233,5 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
         event.target.value = "";
     }
 
-    formatPhone(event: any): void {
-        event.target.value = this.scriptFC.formatPhone(event.target.value);
-    }
+    protected readonly Constant = Constant;
 }

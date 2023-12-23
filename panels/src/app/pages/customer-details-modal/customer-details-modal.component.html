@@ -2,7 +2,7 @@
   <nz-descriptions nzSize="small" nzTitle="Thông tin cơ bản">
     <nz-descriptions-item nzSpan="1" nzTitle="Mã khách hàng">{{customer.code}}</nz-descriptions-item>
     <nz-descriptions-item nzSpan="2" nzTitle="Tên khách hàng">{{customer.name}}</nz-descriptions-item>
-    <nz-descriptions-item nzSpan="1" nzTitle="Số điện thoại">{{customer.phone | phoneFormat}}</nz-descriptions-item>
+    <nz-descriptions-item nzSpan="1" nzTitle="Số điện thoại">{{customer.phone! | mask: Constant.FORMAT_PHONE_INPUT}}</nz-descriptions-item>
     <nz-descriptions-item nzSpan="2" nzTitle="E-mail">{{customer.email}}</nz-descriptions-item>
     <nz-descriptions-item nzSpan="3" nzTitle="Địa chỉ"><div [innerHtml]="customer.address! | lineBreak"></div></nz-descriptions-item>
   </nz-descriptions>

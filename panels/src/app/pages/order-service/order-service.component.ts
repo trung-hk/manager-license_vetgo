@@ -78,10 +78,6 @@ export class OrderServiceComponent implements OnInit, AfterViewInit, OnDestroy {
         event.target.value = "";
     }
 
-    formatPhone(event: any): void {
-        event.target.value = this.scriptFC.formatPhone(event.target.value);
-    }
-
     createComponentModal(idSelect: string): void {
         this.scriptFC.createComponentModalFormOrderService(idSelect, this.dataProductList, null, null, this.viewContainerRef, MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT)
     }
