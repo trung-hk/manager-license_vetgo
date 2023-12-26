@@ -135,7 +135,7 @@
       <nz-form-item>
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên miền web</nz-form-label>
         <nz-form-control [nzSm]="18">
-          <nz-input-group nzAddOnBefore="https://" [nzAddOnAfter]="extensionDomain">
+          <nz-input-group nzAddOnBefore="https://" [nzAddOnAfter]="'.' + extensionDomain">
             <input nz-input formControlName="realm" placeholder="vetgo"/>
           </nz-input-group>
         </nz-form-control>

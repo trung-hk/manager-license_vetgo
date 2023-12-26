@@ -39,7 +39,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     idDelete: number | string | null | undefined = -1;
     idShowModal: number | string | null | undefined = null;
     filter: Array<{ key: string; value: string[] }> | null = null;
-    extensionDomain = window.location.href.endsWith(Constant.EXTENSION_DOMAIN_PRO) ? Constant.EXTENSION_DOMAIN_PRO : Constant.EXTENSION_DOMAIN_DEV;
+    extensionDomain = window.location.origin.endsWith(Constant.EXTENSION_DOMAIN_PRO) ? Constant.EXTENSION_DOMAIN_PRO : Constant.EXTENSION_DOMAIN_DEV;
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
                 private renderer: Renderer2,
