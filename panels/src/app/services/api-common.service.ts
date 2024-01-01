@@ -49,6 +49,9 @@ export class ApiCommonService {
     getById<T>(id: number | string | null, api: string): Observable<T> {
         return this.httpClient.get<T>(`${this.url}/${api}/${id}`);
     }
+    getByCode<T>(code: string | null, api: string): Observable<T> {
+        return this.httpClient.get<T>(`${this.url}/${api}/${code}`);
+    }
     getCustomerByPhone(phone: number | string | null): Observable<User | ResponseError> {
         return this.httpClient.get<User | ResponseError>(`${this.url}/${URL.API_CUSTOMER_BY_PHONE}/${phone}`);
     }

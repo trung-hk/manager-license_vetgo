@@ -70,8 +70,9 @@ export class STATUS_AGENT_PRODUCT {
 }
 export class STATUS_PAYMENT {
     static readonly UN_PAID: Enum = {text: "Chưa thanh toán", value: "UNPAID"};
+    static readonly IN_PAYMENT: Enum = {text: "Đang thanh toán", value: "IN_PAYMENT"};
     static readonly PAID: Enum = {text: "Đã thanh toán", value: "PAID"};
-    static readonly LIST: Enum[] = [this.UN_PAID, this.PAID];
+    static readonly LIST: Enum[] = [this.UN_PAID, this.PAID, this.IN_PAYMENT];
 }
 export class STATUS_ORDER {
     static readonly IN_PROCESS: Enum = {text: "Đang tiến hành", value: "IN_PROCESS"};
@@ -83,9 +84,7 @@ export class TYPE_PACKAGE {
     static readonly DAY: Enum = {text: "Ngày", value: "day"};
     static readonly MONTH: Enum = {text: "Tháng", value: "month"};
     static readonly YEAR: Enum = {text: "Năm", value: "year"};
-    static readonly QUANTITY_SDT: Enum = {text: "SĐT", value: "quantity"};
     static readonly LIST: Enum[] = [this.DAY, this.MONTH, this.YEAR];
-    static readonly LIST_EXPAND: Enum[] = [this.QUANTITY_SDT];
 }
 export class TYPE_PAYMENT_PACKAGE {
     static readonly FREE: Enum = {text: "Không trả phí", value: "FREE"};
@@ -105,6 +104,7 @@ export class CONFIG {
     static readonly POS: Enum = {text: "POS", value: "POS"};
     static readonly SPA: Enum = {text: "SPA", value: "SPA"};
     static readonly CS_ZALO_EXPAND: Enum = {text: "Thêm tài khoản ZALO", value: "CS_ZALO_EXPAND"};
+    static readonly CS_ZALO_TIME_EXTENSION: Enum = {text: "Gia hạn tài khoản ZALO", value: "CS_ZALO_TIME_EXTENSION"};
     static readonly CONFIG_LIST: Enum[] = [
         this.NOT_USING,
         this.VET_APP,
@@ -114,10 +114,15 @@ export class CONFIG {
         this.POS,
         this.SPA,
         this.CS_ZALO_EXPAND,
+        this.CS_ZALO_TIME_EXTENSION
+    ];
+    static readonly CONFIG_LIST_DIRECT_SALES: string[] = [
+        this.CS_ZALO_EXPAND.value,
+        this.CS_ZALO_TIME_EXTENSION.value
     ]
 }
 export class TYPE_COMMISSION {
-    static readonly DEFAULT: Enum = {text: "Theo sản phẩm", value: "DEFAULT"};
+    static readonly DEFAULT: Enum = {text: "Cố định", value: "DEFAULT"};
     static readonly REVENUE: Enum = {text: "Theo doanh thu", value: "REVENUE"};
     static readonly LIST: Enum[] = [this.DEFAULT, this.REVENUE];
 }
@@ -132,7 +137,8 @@ export const ERROR_LIST: string[] = [STATUS_CODE_ERROR.ERROR_400,
 export enum MODE_OPEN_MODAL_FORM_ORDER_SERVICE {
     INSERT = "INSERT",
     UPDATE = "UPDATE",
-    ADD_CONFIG = "ADD_CONFIG"
+    ADD_CONFIG = "ADD_CONFIG",
+    RENEW_PACKAGE = "RENEW_PACKAGE"
 }
 export class TYPE_LICENSE {
     static readonly TRIAL: Enum = {text: "Bản dùng thử", value: "Trial"};
@@ -155,4 +161,7 @@ export const REALM = (): string => {
         realm = 'portal';
     }
     return realm;
+}
+export class TYPE_ORDER_SERVICE {
+    static readonly RENEW_PACKAGE: string = "RENEW_PACKAGE";
 }

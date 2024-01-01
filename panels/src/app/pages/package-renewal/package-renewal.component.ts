@@ -1,11 +1,18 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2, ViewContainerRef} from '@angular/core';
 import {URL} from "../../Constants/api-urls";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {Item} from "../../models/Item";
 import {ActivatedRoute} from "@angular/router";
-import {Constant, STATUS_ORDER, STATUS_PAYMENT, TYPE_PAYMENT_PACKAGE} from "../../Constants/vg-constant";
+import {
+  CONFIG,
+  Constant,
+  MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
+  STATUS_ORDER,
+  STATUS_PAYMENT,
+  TYPE_PAYMENT_PACKAGE
+} from "../../Constants/vg-constant";
 import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
 import {OrderService} from "../../models/OrderService";
 
@@ -19,13 +26,15 @@ export class PackageRenewalComponent implements OnInit, AfterViewInit, OnDestroy
   data: Item = {};
   isOpenModalChooseTypePayment = false;
   protected readonly PAYMENTS_METHOD = PAYMENTS_METHOD;
+  protected readonly Constant = Constant;
+  protected readonly CONFIG = CONFIG;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
               private renderer: Renderer2,
               private scriptFC: ScriptCommonService,
-              private route: ActivatedRoute,) {
+              private activatedRoute: ActivatedRoute,
+              private viewContainerRef: ViewContainerRef,) {
   }
-
   ngAfterViewInit(): void {
     this.loadScript.addListScript(this.listScript).then(() => {
       this.renderer.addClass(document.querySelector('.package-purchased'), "active");
@@ -43,7 +52,7 @@ export class PackageRenewalComponent implements OnInit, AfterViewInit, OnDestroy
     this.loadDataFromServer();
   }
   loadDataFromServer(): void {
-    this.api.getById<Item>(this.route.snapshot.paramMap.get('id'), URL.API_ITEM).subscribe((data) => {
+    this.api.getById<Item>(this.scriptFC.getParamUrl("id", this.activatedRoute), URL.API_ITEM).subscribe((data) => {
       console.log(data)
       this.data = data;
       this.data.packages = this.scriptFC.getPackageService(this.data.attributes).filter(pk => pk.typePackage != TYPE_PAYMENT_PACKAGE.FREE.value);
@@ -65,6 +74,7 @@ export class PackageRenewalComponent implements OnInit, AfterViewInit, OnDestroy
     };
     this.scriptFC.payment(order, method);
   }
-
-    protected readonly Constant = Constant;
+  createComponentModal(packageId: string): void {
+    this.scriptFC.createComponentModalFormOrderService(this.data.id!, [this.data], null, null, this.viewContainerRef, MODE_OPEN_MODAL_FORM_ORDER_SERVICE.RENEW_PACKAGE, undefined, packageId)
+  }
 }

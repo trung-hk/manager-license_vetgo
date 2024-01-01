@@ -5,7 +5,7 @@ import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
-import {ROLES, STATUS_AGENT_PRODUCT, STATUS_PRODUCT_SERVICE} from "../../Constants/vg-constant";
+import {CONFIG, ROLES, STATUS_AGENT_PRODUCT, STATUS_PRODUCT_SERVICE} from "../../Constants/vg-constant";
 import {AgentProduct} from "../../models/AgentProduct";
 import {Message} from "../../Constants/message-constant";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
@@ -63,7 +63,9 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
                     console.log(data)
                     this.totalProduct = data.totalElements;
                     this.dataProductList = data.content;
-                    this.dataProductList = this.dataProductList.map(d => {
+                    this.dataProductList = this.dataProductList.filter(d => {
+                        return !CONFIG.CONFIG_LIST_DIRECT_SALES.includes(this.scriptFC.getAttributeProductService(d.attributes)?.usingConfig!);
+                    }).map(d => {
                         d.packages = this.scriptFC.getPackageService(d.attributes)
                         return d;
                     })

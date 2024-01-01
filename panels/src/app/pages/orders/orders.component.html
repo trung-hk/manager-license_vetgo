@@ -68,15 +68,18 @@
                 <ng-container [ngSwitch]="dt.paymentStatus">
                   <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value">
                     <nz-space>
-                      <img *nzSpaceItem class="payment-icon"
-                           (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px" height="50px"
-                           src="/assets/img/payment-momo.png" title="Thanh toán momo"
-                           alt="Thanh toán momo"/>
+<!--                      <img *nzSpaceItem class="payment-icon"-->
+<!--                           (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px" height="50px"-->
+<!--                           src="/assets/img/payment-momo.png" title="Thanh toán momo"-->
+<!--                           alt="Thanh toán momo"/>-->
                       <img *nzSpaceItem class="payment-icon"
                            (click)="payment(dt!, PAYMENTS_METHOD.BANK_TRANSFER)" width="64px"
                            height="50px" src="/assets/img/payment-bank-transfer.png"
                            title="Thanh toán chuyển khoản" alt="Thanh toán chuyển khoản"/>
                     </nz-space>
+                  </div>
+                  <div *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value" class="badge badge-shadow badge-info">
+                    {{STATUS_PAYMENT.IN_PAYMENT.text}}
                   </div>
                   <div *ngSwitchDefault
                        class="badge badge-shadow badge-success">
@@ -212,15 +215,18 @@
                     <ng-container [ngSwitch]="dt.paymentStatus">
                       <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value">
                         <nz-space>
-                          <img *nzSpaceItem class="payment-icon"
-                               (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px"
-                               height="50px" src="/assets/img/payment-momo.png"
-                               alt="Thanh toán momo"/>
+<!--                          <img *nzSpaceItem class="payment-icon"-->
+<!--                               (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px"-->
+<!--                               height="50px" src="/assets/img/payment-momo.png"-->
+<!--                               alt="Thanh toán momo"/>-->
                           <img *nzSpaceItem class="payment-icon"
                                (click)="payment(dt!, PAYMENTS_METHOD.VIET_QR)"
                                width="64px" height="50px"
                                src="/assets/img/payment-bank-transfer.png" alt=""/>
                         </nz-space>
+                      </div>
+                      <div *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value" class="badge badge-shadow badge-info">
+                        {{STATUS_PAYMENT.IN_PAYMENT.text}}
                       </div>
                       <div *ngSwitchDefault
                            class="badge badge-shadow badge-success">

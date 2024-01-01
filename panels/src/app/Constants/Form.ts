@@ -1,5 +1,6 @@
 import {Validators} from "@angular/forms";
 import {TYPE_PACKAGE, TYPE_PAYMENT_PACKAGE} from "./vg-constant";
+import {PackageProduct} from "../models/PackageProduct";
 
 export const CONFIG_APP_FORM = {
     id: [null],
@@ -41,21 +42,21 @@ export const PRODUCT_SERVICE_FORM = {
     usingConfig: [null, [Validators.required]],
 }
 
-export const PACKAGE_PRODUCT_SERVICE_FORM = {
+export const PACKAGE_PRODUCT_SERVICE_FORM  = {
     id: [null],
     name: [null],
     price: [null],
     typePackage: [TYPE_PAYMENT_PACKAGE.PAYMENT.value],
-    type: [null],
+    type: [TYPE_PACKAGE.DAY.value],
     expired: [null],
     quantity: [null],
-}
+};
 export const ORDER_SERVICE_FORM = {
     id: [null],
     code: [null],
     customerId: [null],
     itemId: [{value: [null], disabled: false}, [Validators.required]],
-    packageId: [null, [Validators.required]]
+    packageId: [null, [Validators.required]],
 }
 export const COMMISSION_FORM = {
     id: [null],
@@ -77,7 +78,7 @@ export const CONFIG_SPA_FORM = {
     codeApp: [null, [Validators.required]],
 }
 export const CONFIG_CS_ZALO_FORM = {
-    phone: [null, [Validators.required, Validators.maxLength(15)]],
+    phone: [null, [Validators.required, Validators.minLength(10)]],
 }
 export const CONFIG_ADMIN_ONLINE_SHOP_FORM = {
     name: [null, [Validators.required]],

@@ -9,6 +9,7 @@ export interface IModalData {
     idProductSelect: string | null;
     order: OrderService | null | undefined;
     mode: string;
+    packageId: string;
 }
 
 export interface IModalViewProductServiceData {

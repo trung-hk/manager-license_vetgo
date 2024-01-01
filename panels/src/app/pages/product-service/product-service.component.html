@@ -149,9 +149,8 @@
                       <nz-option [nzLabel]="TYPE_PAYMENT_PACKAGE.PAYMENT.text" [nzValue]="TYPE_PAYMENT_PACKAGE.PAYMENT.value"></nz-option>
                     </nz-select>
                   </nz-input-group>
-                  <nz-input-group nzAddOnBefore="Đơn vị" [nzAddOnAfter]="chooseTypeExpired">
-                    <input *ngIf="!isChooseProductExpand" formControlName="expired" nz-input (keyup)="inputExpired($event, i)"/>
-                    <input *ngIf="isChooseProductExpand" formControlName="quantity" nz-input (keyup)="inputExpired($event, i)"/>
+                  <nz-input-group nzAddOnBefore="Thời hạn" [nzAddOnAfter]="chooseTypeExpired">
+                    <input formControlName="expired" nz-input (keyup)="inputExpired($event, i)"/>
                   </nz-input-group>
                 </div>
                 <div nz-col nzSpan="10">
@@ -169,12 +168,7 @@
             </nz-form-control>
             <ng-template #chooseTypeExpired>
               <nz-select formControlName="type" [ngModel]="" (ngModelChange)="changeExpired($event, i)">
-                <ng-container *ngIf="isChooseProductExpand">
-                  <nz-option *ngFor="let typeExpiredPackage of TYPE_PACKAGE.LIST_EXPAND" [nzLabel]="typeExpiredPackage.text" [nzValue]="typeExpiredPackage.value"></nz-option>
-                </ng-container>
-                <ng-container *ngIf="!isChooseProductExpand">
-                  <nz-option *ngFor="let typeExpiredPackage of TYPE_PACKAGE.LIST" [nzLabel]="typeExpiredPackage.text" [nzValue]="typeExpiredPackage.value"></nz-option>
-                </ng-container>
+                <nz-option *ngFor="let typeExpiredPackage of TYPE_PACKAGE.LIST" [nzLabel]="typeExpiredPackage.text" [nzValue]="typeExpiredPackage.value"></nz-option>
               </nz-select>
             </ng-template>
           </nz-form-item>

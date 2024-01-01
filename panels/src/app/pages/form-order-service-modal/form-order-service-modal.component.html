@@ -52,12 +52,48 @@
       <nz-form-item>
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn gói</nz-form-label>
         <nz-form-control [nzSm]="18">
-          <nz-select formControlName="packageId" (ngModelChange)="handleChangePackage($event)">
+          <nz-select formControlName="packageId" (ngModelChange)="handleChangePackage()">
             <nz-option *ngFor="let pk of productSelect?.packages"
                        nzValue="{{pk.id}}" nzLabel="{{pk.name}}"></nz-option>
           </nz-select>
         </nz-form-control>
       </nz-form-item>
+      <ng-container *ngIf="mode == MODE_OPEN_MODAL_FORM_ORDER_SERVICE.RENEW_PACKAGE && productSelect?.code == CONFIG.CS_ZALO_EXPAND.value">
+        <form nz-form [formGroup]="validateConfigForm">
+          <div [formArrayName]="attributePhoneFormArray">
+            <nz-form-item *ngFor="let item of phonesArrayForm.controls; let i = index" [formGroupName]="i">
+              <ng-container *ngIf="i == 0">
+                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
+                <nz-form-control [nzSm]="18">
+                  <nz-input-group nzAddOnBefore="+84">
+                    <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+                  </nz-input-group>
+                </nz-form-control>
+              </ng-container>
+              <ng-container *ngIf="i != 0">
+                <nz-form-label nzNoColon="true" nzLabelAlign="right" [nzSm]="5"></nz-form-label>
+                <nz-form-control [nzSm]="17">
+                  <nz-input-group nzAddOnBefore="+84">
+                    <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+                  </nz-input-group>
+                </nz-form-control>
+                <div nz-col [nzSm]="1" class="text-center">
+                  <span nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removePhone(i, $event)"></span>
+                </div>
+              </ng-container>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-control [nzSm]="5"></nz-form-control>
+              <nz-form-control [nzSm]="18" class="align-center">
+                <button nz-button nzBlock nzType="dashed" class="add-button" (click)="addPhone()">
+                  <span nz-icon nzType="plus" style="vertical-align:text-top;"></span>
+                  Thêm tài khoản
+                </button>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </form>
+      </ng-container>
       <hr>
       <div nz-row>
         <div nz-col nzSpan="12">
@@ -93,9 +129,6 @@
         <ng-container *ngSwitchCase="CONFIG.ADMIN_ONLINE_SHOP.value">
           <ng-container *ngTemplateOutlet="CONFIG_ADMIN_ONLINE_SHOP_FORM"></ng-container>
         </ng-container>
-        <ng-container *ngSwitchCase="CONFIG.CS_ZALO_EXPAND.value">
-          <ng-container *ngTemplateOutlet="CONFIG_CS_ZALO_EXPAND_FORM"></ng-container>
-        </ng-container>
       </ng-container>
       <ng-template #CONFIG_VET_APP_FORM>
         <nz-form-item>
@@ -122,20 +155,9 @@
         </nz-form-item>
       </ng-template>
       <ng-template #CONFIG_CS_ZALO_FORM>
-        <nz-form-item>
-          <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
-          <nz-form-control [nzSm]="18">
-            <nz-input-group nzAddOnBefore="+84">
-              <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
-            </nz-input-group>
-          </nz-form-control>
-        </nz-form-item>
-      </ng-template>
-      <ng-template #CONFIG_CS_ZALO_EXPAND_FORM>
         <div [formArrayName]="attributePhoneFormArray">
           <nz-form-item *ngFor="let item of phonesArrayForm.controls; let i = index" [formGroupName]="i">
             <nz-form-label *ngIf="i == 0" nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
-            <nz-form-label *ngIf="i != 0" nzNoColon="true" nzLabelAlign="right" [nzSm]="5"></nz-form-label>
             <nz-form-control [nzSm]="18">
               <nz-input-group nzAddOnBefore="+84">
                 <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>

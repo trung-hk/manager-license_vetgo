@@ -50,8 +50,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     idShowModal: number | string | null | undefined = null;
     filter: Array<{ key: string; value: string[] }> | null = null;
     formPackage!: FormArray;
-    isChooseProductExpand: boolean = false;
-    expandProductList: string[] = [CONFIG.CS_ZALO_EXPAND.value]
 
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
@@ -124,10 +122,8 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     showModal(product?: Item): void {
         this.isVisible = true;
         this.formPackage.clear();
-        this.isChooseProductExpand = false;
         if (product) {
             const attribute = this.scriptFC.getAttributeProductService(product.attributes);
-            this.isChooseProductExpand = this.expandProductList.includes(attribute.usingConfig!);
             this.validateProductForm.setValue({
                 id: product.id,
                 code: product.code,
@@ -154,9 +150,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                     packageItem.type = TYPE_PACKAGE.YEAR.value;
                     packageItem.expired = packageItem.year;
                 }
-                if (packageItem.quantity) {
-                    packageItem.type = TYPE_PACKAGE.QUANTITY_SDT.value;
-                }
                 if (!packageItem.typePackage) packageItem.typePackage = TYPE_PAYMENT_PACKAGE.PAYMENT.value;
                 this.formPackage.push(this.fb.group({
                     id: [packageItem.id],
@@ -165,7 +158,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                     type: [packageItem.type],
                     expired: [packageItem.expired],
                     typePackage: [packageItem.typePackage],
-                    quantity: [packageItem.quantity]
                 }));
             });
         } else {
@@ -198,9 +190,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                                     break;
                                 case TYPE_PACKAGE.YEAR.value:
                                     p.year = p.expired;
-                                    break;
-                                case TYPE_PACKAGE.QUANTITY_SDT.value:
-                                    p.quantity = p.quantity;
                                     break;
                                 default:
                                     p.day = p.expired;
@@ -286,17 +275,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     addPackage() {
-        const packageAdd = this.fb.group(PACKAGE_PRODUCT_SERVICE_FORM);
-        let type: string = "";
-        switch (this.validateProductForm.get("usingConfig")?.value) {
-            case this.CONFIG.CS_ZALO_EXPAND.value:
-                type = TYPE_PACKAGE.QUANTITY_SDT.value;
-                break;
-            default:
-                type = TYPE_PACKAGE.DAY.value;
-        }
-        packageAdd.patchValue({type});
-        this.formPackage.push(packageAdd);
+       this.formPackage.push(this.fb.group(PACKAGE_PRODUCT_SERVICE_FORM));
     }
 
     removeField(index: number, e: MouseEvent): void {
@@ -311,7 +290,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                 name: conFig?.text
             });
         }
-        this.isChooseProductExpand = this.expandProductList.includes(value);
     }
     changeTypePackage(value: string, i: number) {
         switch (value) {
@@ -337,9 +315,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
             case TYPE_PACKAGE.YEAR.value:
                 name += ` ${TYPE_PACKAGE.YEAR.text}`;
                 break;
-            case TYPE_PACKAGE.QUANTITY_SDT.value:
-                name += ` ${TYPE_PACKAGE.QUANTITY_SDT.text}`;
-                break;
         }
         this.formPackage.controls[i].patchValue({name})
     }
@@ -355,9 +330,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                 break;
             case TYPE_PACKAGE.YEAR.value:
                 name = `${this.formPackage.controls[i].get('expired')?.value} ${TYPE_PACKAGE.YEAR.text}`;
-                break;
-            case TYPE_PACKAGE.QUANTITY_SDT.value:
-                name = `${this.formPackage.controls[i].get('quantity')?.value} ${TYPE_PACKAGE.QUANTITY_SDT.text}`;
                 break;
         }
         this.formPackage.controls[i].patchValue({name})

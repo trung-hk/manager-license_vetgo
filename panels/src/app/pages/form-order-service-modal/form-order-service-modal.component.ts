@@ -1,13 +1,13 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
 import {IModalData} from "../../models/ModalData";
-import {FormArray, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
+import {FormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {
     CONFIG_ADMIN_ONLINE_SHOP_FORM,
     CONFIG_CS_ZALO_FORM,
     CONFIG_POS_FORM,
     CONFIG_SPA_FORM, CONFIG_VET_APP_FORM, CONFIG_WIFI_MARKETING_FORM,
-    ORDER_SERVICE_FORM,
+    ORDER_SERVICE_FORM, PACKAGE_PRODUCT_SERVICE_FORM,
     USER_FORM
 } from "../../Constants/Form";
 import {User} from "../../models/User";
@@ -17,7 +17,7 @@ import {
     CONFIG, Constant,
     MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
     STATUS_CUSTOMER,
-    STATUS_ORDER,
+    STATUS_ORDER, TYPE_ORDER_SERVICE,
     USER_TYPE
 } from "../../Constants/vg-constant";
 import {Message} from "../../Constants/message-constant";
@@ -34,6 +34,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     protected readonly MODE_OPEN_MODAL_FORM_ORDER_SERVICE = MODE_OPEN_MODAL_FORM_ORDER_SERVICE;
     protected readonly CONFIG = CONFIG;
     protected readonly CONFIG_ADMIN_ONLINE_SHOP_FORM = CONFIG_ADMIN_ONLINE_SHOP_FORM;
+    protected readonly Constant = Constant;
     validateCustomerForm!: UntypedFormGroup;
     validateOrderForm!: UntypedFormGroup;
     validateConfigForm!: UntypedFormGroup;
@@ -54,6 +55,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     totalPrice: string = "0";
     mode!: string;
     attributeOrder!: AttributeOrderProductService;
+    packageId!: string
 
     destroyModal(): void {
         this.#modal.destroy({data: 'this the result data'});
@@ -89,7 +91,6 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             })
         }
         if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG) {
-            console.log(this.attributeOrder)
             switch (this.attributeOrder.usingConfig) {
                 case CONFIG.VET_APP.value:
                     this.validateConfigForm = this.fb.group(CONFIG_VET_APP_FORM);
@@ -101,15 +102,9 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
                     this.validateConfigForm = this.fb.group(CONFIG_SPA_FORM);
                     break;
                 case CONFIG.CS_ZALO.value:
-                    this.validateConfigForm = this.fb.group(CONFIG_CS_ZALO_FORM);
-                    break;
-                case CONFIG.CS_ZALO_EXPAND.value:
                     this.validateConfigForm = this.fb.group({phones: this.fb.array([])});
                     this.phonesArrayForm = this.validateConfigForm.get(this.attributePhoneFormArray) as FormArray;
-                    const packageOrder = this.attributeOrder.packagesMap?.get(this.order?.packageId!);
-                    for (let i = 0; i < parseInt(packageOrder?.quantity!); i++) {
-                        this.phonesArrayForm.push(this.fb.group(CONFIG_CS_ZALO_FORM));
-                    }
+                    this.phonesArrayForm.push(this.fb.group(CONFIG_CS_ZALO_FORM));
                     break;
                 case CONFIG.WIFI_MARKETING.value:
                     this.validateConfigForm = this.fb.group(CONFIG_WIFI_MARKETING_FORM);
@@ -121,8 +116,28 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             }
 
         }
+        if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.RENEW_PACKAGE) {
+            this.validateOrderForm.patchValue({
+                itemId: this.nzModalData.idProductSelect?.toString(),
+                packageId: this.nzModalData.packageId,
+            })
+            if (this.productSelect?.code == CONFIG.CS_ZALO_EXPAND.value) {
+                this.validateConfigForm = this.fb.group({phones: this.fb.array([])});
+                this.phonesArrayForm = this.validateConfigForm.get(this.attributePhoneFormArray) as FormArray;
+                this.phonesArrayForm.push(this.fb.group(CONFIG_CS_ZALO_FORM));
+            }
+            this.handleChangePackage();
+        }
     }
-
+    addPhone() {
+        this.phonesArrayForm.push(this.fb.group(CONFIG_CS_ZALO_FORM));
+        this.handleChangePackage();
+    }
+    removePhone(index: number, e: MouseEvent): void {
+        e.preventDefault();
+        this.phonesArrayForm.removeAt(index)
+        this.handleChangePackage();
+    }
     setValueFormCustomer(customer: User, isNotChangePhone?: boolean): void {
         if (isNotChangePhone) {
             this.validateCustomerForm.patchValue({
@@ -168,8 +183,13 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
         })
     }
 
-    handleChangePackage(id: any): void {
-        this.totalPrice = this.productSelect?.packages?.find(p => p.id === id)?.price!;
+    handleChangePackage(): void {
+        if (this.productSelect?.code == CONFIG.CS_ZALO_EXPAND.value) {
+            this.totalPrice = (parseInt(this.productSelect?.packages?.find(p => p.id === this.validateOrderForm.get("packageId")?.value)?.price!) * this.phonesArrayForm.length).toString();
+        } else {
+            this.totalPrice = this.productSelect?.packages?.find(p => p.id === this.validateOrderForm.get("packageId")?.value)?.price!;
+        }
+
     }
 
     async handleSubmit(): Promise<void> {
@@ -268,7 +288,11 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     insertOrUpdateOrder(dataOrder: OrderService): Promise<OrderService> {
         return new Promise(rs => {
             dataOrder.status = STATUS_ORDER.IN_PROCESS.value;
-            console.log(dataOrder);
+            // Nếu Insert gói thêm số điện thoại zalo thì add sdt vao attribute
+            if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.RENEW_PACKAGE && this.productSelect?.code === CONFIG.CS_ZALO_EXPAND.value) {
+                // dataOrder.type = TYPE_ORDER_SERVICE.RENEW_PACKAGE;
+                dataOrder.attributes = JSON.stringify({data: {phones: this.phonesArrayForm.value}})
+            }
             if (dataOrder.id) {
                 // update order
                 this.api.update<OrderService>(dataOrder.id, dataOrder, URL.API_ORDER_SERVICE).subscribe((data) => {
@@ -335,6 +359,4 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
         })
 
     }
-
-    protected readonly Constant = Constant;
 }
