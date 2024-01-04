@@ -80,6 +80,9 @@ export const CONFIG_SPA_FORM = {
 export const CONFIG_CS_ZALO_FORM = {
     phone: [null, [Validators.required, Validators.minLength(10)]],
 }
+export const CONFIG_CS_ZALO_TIME_EXTENSION_FORM = {
+    phones: [null, [Validators.required]],
+}
 export const CONFIG_ADMIN_ONLINE_SHOP_FORM = {
     name: [null, [Validators.required]],
     customDomain: [null],

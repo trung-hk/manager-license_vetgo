@@ -10,7 +10,7 @@
               </div>
               <div class="pricing-padding" style="padding-bottom: unset">
                 <div class="pricing-price">
-                  <div>Giá{{data.code == CONFIG.CS_ZALO_EXPAND.value ? ' / 1TK' : ''}}</div>
+                  <div>Giá{{data.code == CONFIG.CS_ZALO_EXPAND.value ? ' / TK' : ''}}</div>
                   <div>{{dt.price! | mask: 'separator' : Constant.FORMAT_MONEY}}</div>
                 </div>
               </div>
@@ -19,29 +19,6 @@
               </div>
             </div>
           </div>
-          <nz-modal
-              [(nzVisible)]="isOpenModalChooseTypePayment"
-              nzTitle="Phương thức thanh toán"
-              nzCentered
-              [nzFooter]="footerModal"
-              [nzBodyStyle]="{'padding': '0px 10px'}"
-              nzWidth="300px"
-              (nzOnCancel)="handleCancelChoosePayment()"
-          >
-            <ng-container *nzModalContent>
-              <nz-list nzSize="small">
-                <nz-list-item>
-                  <a href="javascript:void(0);" (click)="payment(dt.id!, PAYMENTS_METHOD.MOMO)">MoMo</a>
-                </nz-list-item>
-                <nz-list-item>
-                  <a href="javascript:void(0);" (click)="payment(dt.id!, PAYMENTS_METHOD.BANK_TRANSFER)">Chuyển khoản</a>
-                </nz-list-item>
-              </nz-list>
-            </ng-container>
-          </nz-modal>
-          <ng-template #footerModal>
-            <button nz-button nzType="default" (click)="handleCancelChoosePayment()">Hủy</button>
-          </ng-template>
         </ng-container>
       </div>
     </nz-card>

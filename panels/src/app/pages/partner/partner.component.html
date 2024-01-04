@@ -36,7 +36,7 @@
               <td>{{dt.code}}</td>
               <td>{{dt.name}}</td>
               <td>{{dt.email}}</td>
-              <td>{{dt.phone! | mask: Constant.FORMAT_PHONE_INPUT}}</td>
+              <td>{{dt.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}</td>
               <td>
                 <div class="text-break custom-scrollbar" [innerHtml]="dt.address! | lineBreak"></div>
               </td>

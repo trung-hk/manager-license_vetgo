@@ -4,10 +4,10 @@ import {IModalData} from "../../models/ModalData";
 import {FormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {
     CONFIG_ADMIN_ONLINE_SHOP_FORM,
-    CONFIG_CS_ZALO_FORM,
+    CONFIG_CS_ZALO_FORM, CONFIG_CS_ZALO_TIME_EXTENSION_FORM,
     CONFIG_POS_FORM,
     CONFIG_SPA_FORM, CONFIG_VET_APP_FORM, CONFIG_WIFI_MARKETING_FORM,
-    ORDER_SERVICE_FORM, PACKAGE_PRODUCT_SERVICE_FORM,
+    ORDER_SERVICE_FORM,
     USER_FORM
 } from "../../Constants/Form";
 import {User} from "../../models/User";
@@ -15,7 +15,7 @@ import {Item} from "../../models/Item";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {
     CONFIG, Constant,
-    MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
+    MODE_OPEN_MODAL_FORM_ORDER_SERVICE, MODE_ORDER,
     STATUS_CUSTOMER,
     STATUS_ORDER, TYPE_ORDER_SERVICE,
     USER_TYPE
@@ -26,6 +26,9 @@ import {ApiCommonService} from "../../services/api-common.service";
 import {ResponseError} from "../../models/ResponseError";
 import {OrderService} from "../../models/OrderService";
 import {AttributeOrderProductService} from "../../models/AttributeOrderProductService";
+import {AttributesModalFormOrderService} from "../../models/AttributesModalFormOrderService";
+import {DataService} from "../../services/data.service";
+import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
 @Component({
     selector: 'app-form-order-service-modal',
     templateUrl: './form-order-service-modal.component.html',
@@ -35,6 +38,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     protected readonly CONFIG = CONFIG;
     protected readonly CONFIG_ADMIN_ONLINE_SHOP_FORM = CONFIG_ADMIN_ONLINE_SHOP_FORM;
     protected readonly Constant = Constant;
+    protected readonly MODE_ORDER = MODE_ORDER;
     validateCustomerForm!: UntypedFormGroup;
     validateOrderForm!: UntypedFormGroup;
     validateConfigForm!: UntypedFormGroup;
@@ -43,19 +47,16 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
 
     constructor(private fb: UntypedFormBuilder,
                 public scriptFC: ScriptCommonService,
-                private api: ApiCommonService,) {
+                private api: ApiCommonService,
+                private dataService: DataService,) {
     }
 
     readonly #modal = inject(NzModalRef);
     readonly nzModalData: IModalData = inject(NZ_MODAL_DATA);
-    customerId!: string | null;
-    products!: Item[];
-    productSelect!: Item | null | undefined;
-    order!: OrderService | null | undefined;
+    productSelect!: Item;
     totalPrice: string = "0";
-    mode!: string;
     attributeOrder!: AttributeOrderProductService;
-    packageId!: string
+    attributes!: AttributesModalFormOrderService;
 
     destroyModal(): void {
         this.#modal.destroy({data: 'this the result data'});
@@ -67,14 +68,11 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.validateCustomerForm = this.fb.group(USER_FORM);
         this.validateOrderForm = this.fb.group(ORDER_SERVICE_FORM);
-        this.customerId = this.nzModalData.userId;
-        this.products = this.nzModalData.productInfo;
-        this.order = this.nzModalData.order;
-        this.mode = this.nzModalData.mode;
-        this.productSelect = this.products.find(p => p.id === this.nzModalData.idProductSelect);
-        if (!this.productSelect) this.productSelect = this.products[0]
-        if (this.customerId) {
-            this.api.getById<User>(this.customerId, URL.API_USER).subscribe((data) => {
+        this.attributes = this.nzModalData.attributes;
+        this.productSelect = this.attributes.productInfo.find(p => p.id === this.attributes.idProductSelect)!;
+        if (!this.productSelect) this.productSelect = this.attributes.productInfo[0];
+        if (this.attributes.customerId) {
+            this.api.getById<User>(this.attributes.customerId, URL.API_USER).subscribe((data) => {
                 this.setValueFormCustomer(data);
             })
         } else {
@@ -82,15 +80,15 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
                 status: STATUS_CUSTOMER.ACTIVATED.value
             })
         }
-        if (this.order) {
-            this.attributeOrder = this.scriptFC.getAttributeOrderProductService(this.order.attributes);
-            this.setValueFormOrderService(this.order);
+        if (this.attributes.order) {
+            this.attributeOrder = this.scriptFC.getAttributeOrderProductService(this.attributes.order.attributes);
+            this.setValueFormOrderService(this.attributes.order);
         } else {
             this.validateOrderForm.patchValue({
                 itemId: this.productSelect.id?.toString()
             })
         }
-        if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG) {
+        if (this.attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG) {
             switch (this.attributeOrder.usingConfig) {
                 case CONFIG.VET_APP.value:
                     this.validateConfigForm = this.fb.group(CONFIG_VET_APP_FORM);
@@ -116,15 +114,22 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             }
 
         }
-        if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.RENEW_PACKAGE) {
+        if (this.attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.CUSTOMER_ORDER) {
             this.validateOrderForm.patchValue({
-                itemId: this.nzModalData.idProductSelect?.toString(),
-                packageId: this.nzModalData.packageId,
-            })
-            if (this.productSelect?.code == CONFIG.CS_ZALO_EXPAND.value) {
-                this.validateConfigForm = this.fb.group({phones: this.fb.array([])});
-                this.phonesArrayForm = this.validateConfigForm.get(this.attributePhoneFormArray) as FormArray;
-                this.phonesArrayForm.push(this.fb.group(CONFIG_CS_ZALO_FORM));
+                itemId: this.productSelect.id?.toString(),
+                packageId: this.attributes.packageId,
+            });
+            switch (this.attributes.fromOrderMode) {
+                case MODE_ORDER.FROM_CUSTOMER_CS_ZALO_EXPAND:
+                    this.validateConfigForm = this.fb.group({phones: this.fb.array([])});
+                    this.phonesArrayForm = this.validateConfigForm.get(this.attributePhoneFormArray) as FormArray;
+                    this.phonesArrayForm.push(this.fb.group(CONFIG_CS_ZALO_FORM));
+                    break;
+                case MODE_ORDER.FROM_CUSTOMER_CS_ZALO:
+                    this.validateConfigForm = this.fb.group(CONFIG_CS_ZALO_TIME_EXTENSION_FORM);
+                    this.validateConfigForm.patchValue({phones: this.attributes.phoneSelect});
+                    break;
+                default: break;
             }
             this.handleChangePackage();
         }
@@ -168,33 +173,39 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
         this.validateOrderForm.setValue({
             id: order.id,
             code: order.code,
-            customerId: this.customerId,
+            customerId: this.attributes.customerId,
             itemId: order.itemId?.toString(),
             packageId: order.packageId
         })
-        if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE) this.validateOrderForm.get("itemId")?.disable();
+        if (this.attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE) this.validateOrderForm.get("itemId")?.disable();
         this.totalPrice = order.totalAmount!;
     }
 
     handleChangeProduct(e: any): void {
-        this.productSelect = this.products.find(p => p.id == e);
+        this.productSelect = this.attributes.productInfo.find(p => p.id == e)!;
         this.validateOrderForm.patchValue({
             packageId: ""
         })
     }
 
     handleChangePackage(): void {
-        if (this.productSelect?.code == CONFIG.CS_ZALO_EXPAND.value) {
-            this.totalPrice = (parseInt(this.productSelect?.packages?.find(p => p.id === this.validateOrderForm.get("packageId")?.value)?.price!) * this.phonesArrayForm.length).toString();
-        } else {
-            this.totalPrice = this.productSelect?.packages?.find(p => p.id === this.validateOrderForm.get("packageId")?.value)?.price!;
+        switch (this.attributes.fromOrderMode) {
+            case MODE_ORDER.FROM_CUSTOMER_CS_ZALO_EXPAND:
+                this.totalPrice = (parseInt(this.productSelect?.packages?.find(p => p.id === this.validateOrderForm.get("packageId")?.value)?.price!) * this.phonesArrayForm.length).toString();
+                break;
+            case MODE_ORDER.FROM_CUSTOMER_CS_ZALO:
+                 const valueForm:{phones: string[]} = this.validateConfigForm.value;
+                 this.totalPrice = (parseInt(this.productSelect?.packages?.find(p => p.id === this.validateOrderForm.get("packageId")?.value)?.price!) * valueForm.phones.length).toString();
+                break;
+            default:
+                this.totalPrice = this.productSelect?.packages?.find(p => p.id === this.validateOrderForm.get("packageId")?.value)?.price!;
+                break;
         }
-
     }
 
     async handleSubmit(): Promise<void> {
         // validate form customer
-        if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT && this.validateCustomerForm.invalid) {
+        if (this.attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT && this.validateCustomerForm.invalid) {
             this.scriptFC.alertShowMessageError(Message.MESSAGE_REGISTER_CUSTOMER_PRODUCT_SERVICE_FAILED);
             Object.values(this.validateCustomerForm.controls).forEach(control => {
                 if (control.invalid) {
@@ -218,7 +229,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
         }
         let dataOrder: OrderService = this.validateOrderForm.value;
         // trường hợp update Order thì ko xử lý update thông tin customer
-        if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT) {
+        if (this.attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT) {
             // xử lý insertOrUpdate customer
             let dataCustomer: User = this.validateCustomerForm.value;
             dataCustomer.type = USER_TYPE.CUSTOMER;
@@ -227,9 +238,9 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             dataOrder.customerId = dataCustomer.id;
         }
         // Trường hợp insert hoặc update order
-        if (this.mode !== MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG) {
+        if (this.attributes.modeOpen !== MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG) {
             // Trường hợp update Order thì không cho thay đổi sản phẩm
-            if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE && this.order?.itemId != dataOrder.itemId) {
+            if (this.attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE && this.attributes.order?.itemId != dataOrder.itemId) {
                 this.scriptFC.alertShowMessageError(Message.MESSAGE_ERROR_UPDATE_ORDER);
                 return;
             }
@@ -288,12 +299,23 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     insertOrUpdateOrder(dataOrder: OrderService): Promise<OrderService> {
         return new Promise(rs => {
             dataOrder.status = STATUS_ORDER.IN_PROCESS.value;
-            // Nếu Insert gói thêm số điện thoại zalo thì add sdt vao attribute
-            if (this.mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.RENEW_PACKAGE && this.productSelect?.code === CONFIG.CS_ZALO_EXPAND.value) {
-                // dataOrder.type = TYPE_ORDER_SERVICE.RENEW_PACKAGE;
-                dataOrder.attributes = JSON.stringify({data: {phones: this.phonesArrayForm.value}})
+            if (this.attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.CUSTOMER_ORDER) {
+                switch (this.attributes.fromOrderMode) {
+                    case MODE_ORDER.FROM_CUSTOMER_CS_ZALO_EXPAND:
+                        dataOrder.type = TYPE_ORDER_SERVICE.CUSTOMER_ORDER;
+                        dataOrder.attributes = JSON.stringify({data: {phones: this.phonesArrayForm.value}});
+                        break;
+                    case MODE_ORDER.FROM_CUSTOMER_CS_ZALO:
+                        dataOrder.type = TYPE_ORDER_SERVICE.RENEW_PACKAGE;
+                        const data: {phones: string[]} = this.validateConfigForm.value;
+                        dataOrder.attributes = JSON.stringify({data: {phones: data.phones.map(phone => {return {phone}})}});
+                        break;
+                    default:
+                        dataOrder.type = TYPE_ORDER_SERVICE.RENEW_PACKAGE;
+                        break;
+                }
             }
-            if (dataOrder.id) {
+             if (dataOrder.id) {
                 // update order
                 this.api.update<OrderService>(dataOrder.id, dataOrder, URL.API_ORDER_SERVICE).subscribe((data) => {
                     if (this.scriptFC.validateResponseAPI(data.status)) {
@@ -319,6 +341,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
                         this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
                         this.destroyModal();
                         rs(data);
+                        this.scriptFC.payment(data, PAYMENTS_METHOD.VIET_QR, "/package-purchased");
                     }
                 }, error => {
                     console.log(error);
@@ -330,9 +353,9 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     }
     updateConfigOrder(): Promise<void> {
         return new Promise(rs => {
-            const data = {id: this.order?.id, data: this.validateConfigForm.value};
+            const data = {id: this.attributes.order?.id, data: this.validateConfigForm.value};
             console.log(data);
-            this.api.update(this.order?.id, data, URL.API_UPDATE_CONFIG_ORDER).subscribe((data) => {
+            this.api.update(this.attributes.order?.id, data, URL.API_UPDATE_CONFIG_ORDER).subscribe((data) => {
                 data = data as ResponseError;
                 if (this.scriptFC.validateResponseAPI(data.status)) {
                     this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);

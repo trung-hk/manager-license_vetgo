@@ -12,7 +12,12 @@ import {AttributeObjectProductService} from "../models/AttributeObjectProductSer
 import {
     ProductServiceDetailsModalComponent
 } from "../pages/product-service-details-modal/product-service-details-modal.component";
-import {ERROR_LIST, MODE_OPEN_MODAL_FORM_ORDER_SERVICE, STATUS_ORDER, STATUS_PAYMENT} from "../Constants/vg-constant";
+import {
+    ERROR_LIST,
+    MODE_OPEN_MODAL_FORM_ORDER_SERVICE, MODE_ORDER,
+    STATUS_ORDER,
+    STATUS_PAYMENT
+} from "../Constants/vg-constant";
 import {AttributeOrderProductService} from "../models/AttributeOrderProductService";
 import {NgxPermissionsService} from "ngx-permissions";
 import {CustomerDetailsModalComponent} from "../pages/customer-details-modal/customer-details-modal.component";
@@ -23,6 +28,8 @@ import {ResponsePaymentMoMo} from "../models/ResponesePayment";
 import {PAYMENTS_METHOD, PAYMENTS_URL} from "../Constants/payment-urls";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ApiCommonService} from "./api-common.service";
+import {AttributesModalFormOrderService} from "../models/AttributesModalFormOrderService";
+import {DataService} from "./data.service";
 
 @Injectable({
     providedIn: 'root'
@@ -31,7 +38,7 @@ export class ScriptCommonService {
     constructor(private communicationService: CommunicationService,
                 private modal: NzModalService,
                 private permissionsService: NgxPermissionsService,
-                private router: Router,
+                private dataService: DataService,
                 private api: ApiCommonService,
                 private activatedRoute: ActivatedRoute,) {
     }
@@ -96,19 +103,14 @@ export class ScriptCommonService {
     }
     displayContentTextArea = (value: string): string => value ? value.replaceAll("\n", `<br>`) : "";
 
-    createComponentModalFormOrderService(idProductSelect: string | null,
-                                         dataProductList: Item[],
-                                         userId: string | null,
-                                         order: OrderService | null | undefined,
-                                         viewContainerRef: ViewContainerRef,
-                                         modeOpen: string,
-                                         callBack?: ModalFormOrderServiceCallback,
-                                         packageId?: string): void {
+    createComponentModalFormOrderService(viewContainerRef: ViewContainerRef,
+                                         attributes: AttributesModalFormOrderService,
+                                         callBack?: ModalFormOrderServiceCallback,): void {
         let titleModal;
         let buttonText;
-        switch (modeOpen) {
+        switch (attributes.modeOpen) {
             case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT:
-            case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.RENEW_PACKAGE:
+            case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.CUSTOMER_ORDER:
                 titleModal = "Đặt đơn hàng";
                 buttonText = "Thêm đơn hàng";
                 break;
@@ -127,12 +129,7 @@ export class ScriptCommonService {
             nzWidth: "800px",
             nzViewContainerRef: viewContainerRef,
             nzData: {
-                userId: userId,
-                productInfo: dataProductList,
-                idProductSelect: idProductSelect,
-                order: order,
-                mode: modeOpen,
-                packageId: packageId!
+                attributes: attributes
             },
             nzOkType:"primary",
             nzOkText: buttonText,
@@ -147,33 +144,46 @@ export class ScriptCommonService {
         });
         const instance = modal.getContentComponent();
         modal.afterOpen.subscribe(() => {
-            switch (modeOpen) {
+            switch (attributes.modeOpen) {
                 case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT:
                 case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE:
                     modal.getConfig().nzOkDisabled = instance.validateCustomerForm.invalid || instance.validateOrderForm.invalid;
                     // Lắng nghe sự kiện statusChanges của form để cập nhật trạng thái của button disabled
                     instance.validateCustomerForm.statusChanges.subscribe(status => {
                         modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateOrderForm.invalid;
-                    })
+                    });
                     instance.validateOrderForm.statusChanges.subscribe(status => {
                         modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateCustomerForm.invalid;
-                    })
+                    });
                     break;
                 case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG:
                     modal.getConfig().nzOkDisabled = instance.validateConfigForm.invalid;
                     instance.validateConfigForm.statusChanges.subscribe(status => {
                         modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateConfigForm.invalid;
-                    })
+                    });
                     break;
-                case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.RENEW_PACKAGE:
-                    modal.getConfig().nzOkDisabled = instance.validateConfigForm.invalid || instance.validateOrderForm.invalid;
-                    // Lắng nghe sự kiện statusChanges của form để cập nhật trạng thái của button disabled
-                    instance.validateConfigForm.statusChanges.subscribe(status => {
-                        modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateOrderForm.invalid;
-                    })
-                    instance.validateOrderForm.statusChanges.subscribe(status => {
-                        modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateConfigForm.invalid;
-                    })
+                case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.CUSTOMER_ORDER:
+                    switch (attributes.fromOrderMode) {
+                        case MODE_ORDER.FROM_CUSTOMER_CS_ZALO:
+                        case MODE_ORDER.FROM_CUSTOMER_CS_ZALO_EXPAND:
+                            modal.getConfig().nzOkDisabled = instance.validateConfigForm.invalid || instance.validateOrderForm.invalid;
+                            // Lắng nghe sự kiện statusChanges của form để cập nhật trạng thái của button disabled
+                            instance.validateConfigForm.statusChanges.subscribe(status => {
+                                modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateOrderForm.invalid;
+                            })
+                            instance.validateOrderForm.statusChanges.subscribe(status => {
+                                modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateConfigForm.invalid;
+                            });
+                            break;
+                        default:
+                            modal.getConfig().nzOkDisabled = instance.validateOrderForm.invalid;
+                            instance.validateOrderForm.statusChanges.subscribe(status => {
+                                modal.getConfig().nzOkDisabled = status === 'INVALID';
+                            });
+                            break;
+
+                    }
+
                     break;
             }
         });
@@ -249,7 +259,7 @@ export class ScriptCommonService {
     getDayDiff(startDate: any, endDate: any): number {
         return Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
     }
-    payment(order: OrderService, method: string): void {
+    payment(order: OrderService, method: string, backUrl: string): void {
         if (order.paymentStatus !== STATUS_PAYMENT.UN_PAID.value) {
             this.alertShowMessageError(Message.MESSAGE_CHECK_PAYMENT);
             return;
@@ -278,7 +288,8 @@ export class ScriptCommonService {
                 break;
             case PAYMENTS_METHOD.BANK_TRANSFER:
             case PAYMENTS_METHOD.VIET_QR:
-                this.router.navigate(['/payment-bank-transfer', order.id]);
+                this.dataService.setData({backUrl: backUrl});
+                this.dataService.navigateToPage(`/payment-bank-transfer/${order.id}`);
                 break;
             default:
                 break;

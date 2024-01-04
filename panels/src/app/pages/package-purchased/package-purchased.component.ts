@@ -9,6 +9,7 @@ import {ConfigPhoneCsZalo, PackagePurchased} from "../../models/PackagePurchased
 import {format} from "date-fns";
 import {CONFIG, Constant} from "../../Constants/vg-constant";
 import {Item} from "../../models/Item";
+import {DataService} from "../../services/data.service";
 
 @Component({
   selector: 'app-package-purchased',
@@ -16,17 +17,18 @@ import {Item} from "../../models/Item";
 })
 export class PackagePurchasedComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly CONFIG = CONFIG;
+  protected readonly Constant = Constant;
   listScript = [];
   loading: boolean = false;
   dataList: PackagePurchased[] = []
   item_CS_ZALO_EXPAND: Item = {}
-  item_CS_ZALO_TIME_EXTENSION: Item = {}
   dataPhoneList_CS_ZALO: ConfigPhoneCsZalo[] = []
 
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
               private renderer: Renderer2,
-              private scriptFC: ScriptCommonService,) {
+              private scriptFC: ScriptCommonService,
+              private dataService: DataService) {
   }
   ngAfterViewInit(): void {
     this.loadScript.addListScript(this.listScript).then(() => {
@@ -49,7 +51,6 @@ export class PackagePurchasedComponent implements OnInit, AfterViewInit, OnDestr
     this.loading = true;
     let loading_success_1 = false;
     let loading_success_2 = false;
-    let loading_success_3 = false;
     this.api.getAll<ResponseDataGetAll<PackagePurchased>>(URL.API_PACKAGE_PURCHASED).subscribe((data) => {
       loading_success_1 = true;
       this.dataList = data.content.map(d => {
@@ -78,7 +79,7 @@ export class PackagePurchasedComponent implements OnInit, AfterViewInit, OnDestr
         }
         return d;
       });
-      this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
+      this.loading = !(loading_success_1 && loading_success_2);
     }, error => {
       console.log(error);
       this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
@@ -87,22 +88,16 @@ export class PackagePurchasedComponent implements OnInit, AfterViewInit, OnDestr
     this.api.getByCode<Item>(CONFIG.CS_ZALO_EXPAND.value, URL.API_ITEM_BY_CODE).subscribe((data) => {
       loading_success_2 = true;
       this.item_CS_ZALO_EXPAND = data;
-      this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
-    }, error => {
-      console.log(error);
-      this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-      this.loading = false;
-    });
-    this.api.getByCode<Item>(CONFIG.CS_ZALO_TIME_EXTENSION.value, URL.API_ITEM_BY_CODE).subscribe((data) => {
-      loading_success_3 = true;
-      this.item_CS_ZALO_TIME_EXTENSION = data;
-      this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
+      this.loading = !(loading_success_1 && loading_success_2);
     }, error => {
       console.log(error);
       this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
       this.loading = false;
     });
   }
+nextPage(phoneSelect: string, id: string) {
+  this.dataService.setData({phones: this.dataPhoneList_CS_ZALO.map(dt => dt.phone), phoneSelect: phoneSelect});
+  this.dataService.navigateToPage(`/package-renewal/${id}`);
+}
 
-  protected readonly Constant = Constant;
 }

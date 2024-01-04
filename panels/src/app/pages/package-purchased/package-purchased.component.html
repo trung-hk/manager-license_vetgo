@@ -75,7 +75,7 @@
                       <div class="pricing-details">
                         <div class="pricing-item">
                           <div class="pricing-item-icon"><i class="fas fa-check"></i></div>
-                          <div class="pricing-item-label">TK: {{phone.phone! | mask: Constant.FORMAT_PHONE_INPUT}}</div>
+                          <div class="pricing-item-label">TK: {{phone.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}</div>
                         </div>
                         <div class="pricing-item">
                           <div class="pricing-item-icon bg-yellow"><i class="far fa-clock"></i></div>
@@ -84,7 +84,7 @@
                       </div>
                     </div>
                     <div class="pricing-cta">
-                      <a *ngIf="item_CS_ZALO_TIME_EXTENSION.id" [routerLink]="['/package-renewal', item_CS_ZALO_TIME_EXTENSION.id]" [queryParams]="{phone: phone.phone}" >Gia hạn gói <i class="fas fa-arrow-right"></i></a>
+                      <a href="javascript:void(0);" (click)="nextPage(phone.phone, dt.itemId!)">Gia hạn gói <i class="fas fa-arrow-right"></i></a>
                     </div>
                   </div>
                 </div>

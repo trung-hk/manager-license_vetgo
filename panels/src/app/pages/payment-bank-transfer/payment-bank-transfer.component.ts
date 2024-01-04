@@ -9,6 +9,7 @@ import {ActivatedRoute} from "@angular/router";
 import {ResponsePaymentVietQR} from "../../models/ResponesePayment";
 import {Message} from "../../Constants/message-constant";
 import {OrderService} from "../../models/OrderService";
+import {DataService} from "../../services/data.service";
 
 @Component({
   selector: 'app-payment-bank-transfer',
@@ -24,10 +25,12 @@ export class PaymentBankTransferComponent implements OnInit, AfterViewInit, OnDe
   loading: boolean = true;
   data: ResponsePaymentVietQR = {};
   orderInfo: OrderService = {};
+  backUrl!: string;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
               private route: ActivatedRoute,
-              public scriptFC: ScriptCommonService,) {
+              public scriptFC: ScriptCommonService,
+              private dataService: DataService) {
   }
   ngAfterViewInit(): void {
     this.loadScript.addListScript([]).then(() => {
@@ -38,6 +41,8 @@ export class PaymentBankTransferComponent implements OnInit, AfterViewInit, OnDe
 
   ngOnInit(): void {
     this.init();
+    const dataRedirect: {backUrl: string} = this.dataService.getData();
+    this.backUrl = dataRedirect.backUrl;
   }
   init(): void {
     this.loadDataFromServer();

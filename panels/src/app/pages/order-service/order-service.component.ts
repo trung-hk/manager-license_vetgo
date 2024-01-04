@@ -13,6 +13,7 @@ import {
 } from "../../Constants/vg-constant";
 import {URL} from "../../Constants/api-urls";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
+import {AttributesModalFormOrderService} from "../../models/AttributesModalFormOrderService";
 
 @Component({
     selector: 'app-order-service',
@@ -79,7 +80,12 @@ export class OrderServiceComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     createComponentModal(idSelect: string): void {
-        this.scriptFC.createComponentModalFormOrderService(idSelect, this.dataProductList, null, null, this.viewContainerRef, MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT)
+        const attributesInsert: AttributesModalFormOrderService = {
+            modeOpen: MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT,
+            productInfo: this.dataProductList,
+            idProductSelect: idSelect,
+        }
+        this.scriptFC.createComponentModalFormOrderService(this.viewContainerRef, attributesInsert)
     }
 
     createComponentModalView(product: Item) {

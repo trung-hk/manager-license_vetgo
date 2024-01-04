@@ -18,8 +18,9 @@ export enum USER_TYPE {
 
 export class Constant {
     static readonly API_CONFIG_SYSTEM_LIST: string[] = ["TIME_ACTIVE", "CONFIG_BROWSER"];
-    static readonly FORMAT_PHONE_INPUT: string = "(000) 000-0000";
     static readonly FORMAT_MONEY = {thousandSeparator:',', suffix: ' VNĐ'};
+    static readonly FORMAT_DEFAULT = {suffix: ''};
+    static readonly FORMAT_PHONE_INPUT: string = "(000) 000-0000";
     static readonly EXTENSION_DOMAIN_PRO = 'phanmemvet.vn';
     static readonly EXTENSION_DOMAIN_DEV = 'moonpet.vn';
 }
@@ -104,7 +105,6 @@ export class CONFIG {
     static readonly POS: Enum = {text: "POS", value: "POS"};
     static readonly SPA: Enum = {text: "SPA", value: "SPA"};
     static readonly CS_ZALO_EXPAND: Enum = {text: "Thêm tài khoản ZALO", value: "CS_ZALO_EXPAND"};
-    static readonly CS_ZALO_TIME_EXTENSION: Enum = {text: "Gia hạn tài khoản ZALO", value: "CS_ZALO_TIME_EXTENSION"};
     static readonly CONFIG_LIST: Enum[] = [
         this.NOT_USING,
         this.VET_APP,
@@ -114,12 +114,15 @@ export class CONFIG {
         this.POS,
         this.SPA,
         this.CS_ZALO_EXPAND,
-        this.CS_ZALO_TIME_EXTENSION
     ];
     static readonly CONFIG_LIST_DIRECT_SALES: string[] = [
         this.CS_ZALO_EXPAND.value,
-        this.CS_ZALO_TIME_EXTENSION.value
     ]
+}
+export enum MODE_ORDER {
+    FROM_CUSTOMER = "FROM_CUSTOMER",
+    FROM_CUSTOMER_CS_ZALO = "FROM_CUSTOMER_CS_ZALO",
+    FROM_CUSTOMER_CS_ZALO_EXPAND = "FROM_CUSTOMER_CS_ZALO_EXPAND",
 }
 export class TYPE_COMMISSION {
     static readonly DEFAULT: Enum = {text: "Cố định", value: "DEFAULT"};
@@ -138,7 +141,7 @@ export enum MODE_OPEN_MODAL_FORM_ORDER_SERVICE {
     INSERT = "INSERT",
     UPDATE = "UPDATE",
     ADD_CONFIG = "ADD_CONFIG",
-    RENEW_PACKAGE = "RENEW_PACKAGE"
+    CUSTOMER_ORDER = "CUSTOMER_ORDER"
 }
 export class TYPE_LICENSE {
     static readonly TRIAL: Enum = {text: "Bản dùng thử", value: "Trial"};
@@ -164,4 +167,5 @@ export const REALM = (): string => {
 }
 export class TYPE_ORDER_SERVICE {
     static readonly RENEW_PACKAGE: string = "RENEW_PACKAGE";
+    static readonly CUSTOMER_ORDER: string = "CUSTOMER_ORDER";
 }

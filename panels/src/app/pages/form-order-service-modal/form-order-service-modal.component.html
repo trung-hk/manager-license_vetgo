@@ -1,5 +1,5 @@
 <nz-tabset>
-  <nz-tab *ngIf="mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT" nzTitle="Khách hàng">
+  <nz-tab *ngIf="attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT" nzTitle="Khách hàng">
     <form nz-form [formGroup]="validateCustomerForm">
       <input type="hidden" formControlName="id">
       <input type="hidden" formControlName="status">
@@ -37,14 +37,14 @@
       </nz-form-item>
     </form>
   </nz-tab>
-  <nz-tab nzTitle="Sản phẩm" *ngIf="mode !== MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG">
+  <nz-tab nzTitle="Sản phẩm" *ngIf="attributes.modeOpen !== MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG">
     <form nz-form [formGroup]="validateOrderForm">
       <input type="hidden" formControlName="id">
       <nz-form-item>
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn sản phẩm</nz-form-label>
         <nz-form-control [nzSm]="18">
           <nz-select formControlName="itemId" (ngModelChange)="handleChangeProduct($event)">
-            <nz-option *ngFor="let product of products" nzValue="{{product.id}}"
+            <nz-option *ngFor="let product of attributes.productInfo" nzValue="{{product.id}}"
                        nzLabel="{{product.name}}"></nz-option>
           </nz-select>
         </nz-form-control>
@@ -58,41 +58,53 @@
           </nz-select>
         </nz-form-control>
       </nz-form-item>
-      <ng-container *ngIf="mode == MODE_OPEN_MODAL_FORM_ORDER_SERVICE.RENEW_PACKAGE && productSelect?.code == CONFIG.CS_ZALO_EXPAND.value">
-        <form nz-form [formGroup]="validateConfigForm">
-          <div [formArrayName]="attributePhoneFormArray">
-            <nz-form-item *ngFor="let item of phonesArrayForm.controls; let i = index" [formGroupName]="i">
-              <ng-container *ngIf="i == 0">
-                <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
-                <nz-form-control [nzSm]="18">
-                  <nz-input-group nzAddOnBefore="+84">
-                    <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
-                  </nz-input-group>
+      <ng-container *ngIf="attributes.modeOpen == MODE_OPEN_MODAL_FORM_ORDER_SERVICE.CUSTOMER_ORDER">
+        <ng-container [ngSwitch]="attributes.fromOrderMode">
+          <form *ngSwitchCase="MODE_ORDER.FROM_CUSTOMER_CS_ZALO_EXPAND" nz-form [formGroup]="validateConfigForm">
+            <div [formArrayName]="attributePhoneFormArray">
+              <nz-form-item *ngFor="let item of phonesArrayForm.controls; let i = index" [formGroupName]="i">
+                <ng-container *ngIf="i == 0">
+                  <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
+                  <nz-form-control [nzSm]="18">
+                    <nz-input-group nzAddOnBefore="+84">
+                      <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+                    </nz-input-group>
+                  </nz-form-control>
+                </ng-container>
+                <ng-container *ngIf="i != 0">
+                  <nz-form-label nzNoColon="true" nzLabelAlign="right" [nzSm]="5"></nz-form-label>
+                  <nz-form-control [nzSm]="17">
+                    <nz-input-group nzAddOnBefore="+84">
+                      <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+                    </nz-input-group>
+                  </nz-form-control>
+                  <div nz-col [nzSm]="1" class="text-center">
+                    <span nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removePhone(i, $event)"></span>
+                  </div>
+                </ng-container>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control [nzSm]="5"></nz-form-control>
+                <nz-form-control [nzSm]="18" class="align-center">
+                  <button nz-button nzBlock nzType="dashed" class="add-button" (click)="addPhone()">
+                    <span nz-icon nzType="plus" style="vertical-align:text-top;"></span>
+                    Thêm tài khoản
+                  </button>
                 </nz-form-control>
-              </ng-container>
-              <ng-container *ngIf="i != 0">
-                <nz-form-label nzNoColon="true" nzLabelAlign="right" [nzSm]="5"></nz-form-label>
-                <nz-form-control [nzSm]="17">
-                  <nz-input-group nzAddOnBefore="+84">
-                    <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
-                  </nz-input-group>
-                </nz-form-control>
-                <div nz-col [nzSm]="1" class="text-center">
-                  <span nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removePhone(i, $event)"></span>
-                </div>
-              </ng-container>
-            </nz-form-item>
+              </nz-form-item>
+            </div>
+          </form>
+          <form *ngSwitchCase="MODE_ORDER.FROM_CUSTOMER_CS_ZALO" nz-form [formGroup]="validateConfigForm">
             <nz-form-item>
-              <nz-form-control [nzSm]="5"></nz-form-control>
-              <nz-form-control [nzSm]="18" class="align-center">
-                <button nz-button nzBlock nzType="dashed" class="add-button" (click)="addPhone()">
-                  <span nz-icon nzType="plus" style="vertical-align:text-top;"></span>
-                  Thêm tài khoản
-                </button>
+              <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn TK gia hạn</nz-form-label>
+              <nz-form-control [nzSm]="18">
+                <nz-select formControlName="phones" nzMode="tags" (ngModelChange)="handleChangePackage()" nzPlaceHolder="Chọn tài khoản">
+                  <nz-option *ngFor="let dt of attributes.phoneList" [nzLabel]="dt! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT" [nzValue]="dt"></nz-option>
+                </nz-select>
               </nz-form-control>
             </nz-form-item>
-          </div>
-        </form>
+          </form>
+        </ng-container>
       </ng-container>
       <hr>
       <div nz-row>
@@ -106,7 +118,7 @@
     </form>
   </nz-tab>
   <nz-tab
-      *ngIf="mode === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG
+      *ngIf="attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG
                     && attributeOrder.usingConfig !== CONFIG.NOT_USING.value && !attributeOrder.data"
       nzTitle="Cài đặt">
     <form nz-form [formGroup]="validateConfigForm">

@@ -1,15 +1,9 @@
 import {Item} from "./Item";
-import {PackageProduct} from "./PackageProduct";
-import {OrderService} from "./OrderService";
 import {User} from "./User";
+import {AttributesModalFormOrderService} from "./AttributesModalFormOrderService";
 
 export interface IModalData {
-    userId: string | null;
-    productInfo: Item[];
-    idProductSelect: string | null;
-    order: OrderService | null | undefined;
-    mode: string;
-    packageId: string;
+    attributes: AttributesModalFormOrderService;
 }
 
 export interface IModalViewProductServiceData {

@@ -23,7 +23,7 @@
                 <nz-descriptions-item nzSpan="3" nzTitle="Nội dung">{{data.requestJsonObject?.addInfo}}</nz-descriptions-item>
               </nz-descriptions>
               <div class="text-center" style="margin-top: 10px;">
-                <button type="button" class="btn btn-outline-secondary note-btn" routerLink="/orders">Quay lại</button>
+                <button type="button" class="btn btn-outline-secondary note-btn" [routerLink]="backUrl">Quay lại</button>
               </div>
             </div>
           </div>

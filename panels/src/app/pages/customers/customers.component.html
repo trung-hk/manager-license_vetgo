@@ -32,7 +32,7 @@
                     [nzDescription]="dt.name!"
                 >
                   <nz-list-item-meta-title>
-                    {{dt.phone! | mask: Constant.FORMAT_PHONE_INPUT}}
+                    {{dt.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}
                   </nz-list-item-meta-title>
                 </nz-list-item-meta>
                 <ng-template #avatar>
@@ -83,7 +83,7 @@
                   <div nz-row>
                     <div nz-col nzSpan="16">
                       <span>{{dt.name}}</span><br>
-                      <span>{{dt.phone! | mask: Constant.FORMAT_PHONE_INPUT}}</span>
+                      <span>{{dt.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}</span>
                     </div>
                     <div nz-col nzSpan="8" class="icon-center-row">
                       <div class="action">
@@ -157,11 +157,11 @@
                   (ngModelChange)="filterOrder($event)"
               >
                 <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]; else option">
-                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone! | mask: Constant.FORMAT_PHONE_INPUT)"
+                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT)"
                              [nzValue]="user.code"></nz-option>
                 </ng-container>
                 <ng-template #option>
-                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone! | mask: Constant.FORMAT_PHONE_INPUT)"
+                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT)"
                              [nzValue]="user.id"></nz-option>
                 </ng-template>
               </nz-select>

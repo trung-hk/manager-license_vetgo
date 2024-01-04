@@ -22,6 +22,7 @@ import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 import {User} from "../../models/User";
 import {BehaviorSubject, debounceTime, distinctUntilChanged} from "rxjs";
+import {AttributesModalFormOrderService} from "../../models/AttributesModalFormOrderService";
 
 @Component({
     selector: 'app-orders',
@@ -220,19 +221,38 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         };
         switch (modeOpen) {
             case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT:
-                this.scriptFC.createComponentModalFormOrderService(null, this.productList, order?.customerId!, null, this.viewContainerRef, MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT, callback);
+                const attributesInsert: AttributesModalFormOrderService = {
+                    modeOpen: MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT,
+                    productInfo: this.productList,
+                    customerId: order?.customerId!,
+                }
+                this.scriptFC.createComponentModalFormOrderService(this.viewContainerRef, attributesInsert, callback);
                 break;
             case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE:
-                this.scriptFC.createComponentModalFormOrderService(order?.itemId!, this.productList, order?.customerId!, order, this.viewContainerRef, MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE, callback);
+                const attributesUpdate: AttributesModalFormOrderService = {
+                    modeOpen: MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE,
+                    productInfo: this.productList,
+                    idProductSelect: order?.itemId!,
+                    customerId: order?.customerId!,
+                    order: order,
+                }
+                this.scriptFC.createComponentModalFormOrderService(this.viewContainerRef, attributesUpdate, callback);
                 break;
             case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG:
-                this.scriptFC.createComponentModalFormOrderService(order?.itemId!, this.productList, order?.customerId!, order, this.viewContainerRef, MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG, callback);
+                const attributesAddConfig: AttributesModalFormOrderService = {
+                    modeOpen: MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG,
+                    productInfo: this.productList,
+                    idProductSelect: order?.itemId!,
+                    customerId: order?.customerId!,
+                    order: order,
+                }
+                this.scriptFC.createComponentModalFormOrderService(this.viewContainerRef, attributesAddConfig, callback);
                 break;
         }
     }
 
     payment(order: OrderService, method: string): void {
-        this.scriptFC.payment(order, method);
+        this.scriptFC.payment(order, method, "/orders");
     }
     onSearch(searchText: string): void {
         // Gọi hàm tìm kiếm của bạn ở đây

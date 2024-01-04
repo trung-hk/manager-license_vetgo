@@ -8,13 +8,15 @@ import {ActivatedRoute} from "@angular/router";
 import {
   CONFIG,
   Constant,
-  MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
+  MODE_OPEN_MODAL_FORM_ORDER_SERVICE, MODE_ORDER,
   STATUS_ORDER,
   STATUS_PAYMENT,
   TYPE_PAYMENT_PACKAGE
 } from "../../Constants/vg-constant";
 import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
 import {OrderService} from "../../models/OrderService";
+import {AttributesModalFormOrderService} from "../../models/AttributesModalFormOrderService";
+import {DataService} from "../../services/data.service";
 
 @Component({
   selector: 'app-package-renewal',
@@ -33,7 +35,8 @@ export class PackageRenewalComponent implements OnInit, AfterViewInit, OnDestroy
               private renderer: Renderer2,
               private scriptFC: ScriptCommonService,
               private activatedRoute: ActivatedRoute,
-              private viewContainerRef: ViewContainerRef,) {
+              private viewContainerRef: ViewContainerRef,
+              private dataService: DataService,) {
   }
   ngAfterViewInit(): void {
     this.loadScript.addListScript(this.listScript).then(() => {
@@ -55,7 +58,9 @@ export class PackageRenewalComponent implements OnInit, AfterViewInit, OnDestroy
     this.api.getById<Item>(this.scriptFC.getParamUrl("id", this.activatedRoute), URL.API_ITEM).subscribe((data) => {
       console.log(data)
       this.data = data;
-      this.data.packages = this.scriptFC.getPackageService(this.data.attributes).filter(pk => pk.typePackage != TYPE_PAYMENT_PACKAGE.FREE.value);
+      const attributeObject = this.scriptFC.getAttributeProductService(this.data.attributes);
+      this.data.packages = attributeObject.packages?.filter(pk => pk.typePackage != TYPE_PAYMENT_PACKAGE.FREE.value);
+      this.data.usingConfig = attributeObject.usingConfig;
       this.loading = false;
     })
   }
@@ -66,15 +71,37 @@ export class PackageRenewalComponent implements OnInit, AfterViewInit, OnDestroy
     this.isOpenModalChooseTypePayment = false;
   }
 
-  payment(idPackage: string, method: string): void {
-    const order: OrderService = {
-      id: "1",
-      status: STATUS_ORDER.IN_PROCESS.value,
-      paymentStatus: STATUS_PAYMENT.UN_PAID.value,
-    };
-    this.scriptFC.payment(order, method);
-  }
   createComponentModal(packageId: string): void {
-    this.scriptFC.createComponentModalFormOrderService(this.data.id!, [this.data], null, null, this.viewContainerRef, MODE_OPEN_MODAL_FORM_ORDER_SERVICE.RENEW_PACKAGE, undefined, packageId)
+    const attributes: AttributesModalFormOrderService = {
+      modeOpen: MODE_OPEN_MODAL_FORM_ORDER_SERVICE.CUSTOMER_ORDER,
+      productInfo: [this.data],
+      idProductSelect: this.data.id!,
+      packageId: packageId
+    }
+    switch (this.data.usingConfig) {
+      case CONFIG.VET_APP.value:
+      case CONFIG.ADMIN_ONLINE_SHOP.value:
+      case CONFIG.WIFI_MARKETING.value:
+      case CONFIG.POS.value:
+      case CONFIG.SPA.value:
+        attributes.fromOrderMode = MODE_ORDER.FROM_CUSTOMER;
+        break;
+      case CONFIG.CS_ZALO_EXPAND.value:
+        attributes.fromOrderMode = MODE_ORDER.FROM_CUSTOMER_CS_ZALO_EXPAND;
+      break;
+      case CONFIG.CS_ZALO.value:
+        const data: {phones: string[], phoneSelect: string} = this.dataService.getData();
+        attributes.phoneSelect = [data.phoneSelect];
+        attributes.phoneList = data.phones;
+        attributes.fromOrderMode = MODE_ORDER.FROM_CUSTOMER_CS_ZALO;
+        // attributes.phoneSelect = ["01472583690"];
+        // attributes.phoneList = ["01472583690", "01472583691", "01472583692"];
+        break;
+      default:
+        attributes.fromOrderMode = MODE_ORDER.FROM_CUSTOMER;
+        break;
+    }
+    this.scriptFC.createComponentModalFormOrderService(this.viewContainerRef, attributes);
+
   }
 }
