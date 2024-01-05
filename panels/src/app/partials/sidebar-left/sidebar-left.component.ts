@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {ROLES} from "../../Constants/vg-constant";
+import {RouteURL} from "../../Constants/route-url";
 
 @Component({
   selector: 'app-sidebar-left',
@@ -8,4 +9,5 @@ import {ROLES} from "../../Constants/vg-constant";
 export class SidebarLeftComponent {
   protected readonly ROLES = ROLES;
   protected readonly Object = Object;
+    protected readonly RouteURL = RouteURL;
 }

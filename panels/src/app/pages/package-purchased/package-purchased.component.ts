@@ -10,6 +10,7 @@ import {format} from "date-fns";
 import {CONFIG, Constant} from "../../Constants/vg-constant";
 import {Item} from "../../models/Item";
 import {DataService} from "../../services/data.service";
+import {RouteURL} from "../../Constants/route-url";
 
 @Component({
   selector: 'app-package-purchased',
@@ -97,7 +98,8 @@ export class PackagePurchasedComponent implements OnInit, AfterViewInit, OnDestr
   }
 nextPage(phoneSelect: string, id: string) {
   this.dataService.setData({phones: this.dataPhoneList_CS_ZALO.map(dt => dt.phone), phoneSelect: phoneSelect});
-  this.dataService.navigateToPage(`/package-renewal/${id}`);
+  this.dataService.navigateToPage(RouteURL.nextToPageWithId(RouteURL.PAGE_PACKAGE_RENEWAL, id));
 }
 
+    protected readonly RouteURL = RouteURL;
 }

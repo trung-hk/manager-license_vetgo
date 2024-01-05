@@ -7,6 +7,7 @@ import {URL} from "../../Constants/api-urls";
 import {PackageProduct} from "../../models/PackageProduct";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {Constant} from "../../Constants/vg-constant";
+import {RouteURL} from "../../Constants/route-url";
 
 @Component({
   selector: 'app-payment-complete-details',
@@ -39,4 +40,5 @@ export class PaymentCompleteDetailsComponent implements OnInit, AfterViewInit, O
   }
 
     protected readonly Constant = Constant;
+    protected readonly RouteURL = RouteURL;
 }

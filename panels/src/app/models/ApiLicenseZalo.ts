@@ -1,4 +1,3 @@
-import {CallScriptObject} from "./CallScriptObject";
 
 export class ApiLicenseZalo {
     id?: string | null;

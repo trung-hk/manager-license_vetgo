@@ -1,6 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {KeycloakEventType, KeycloakService} from 'keycloak-angular';
 import {from, Observable} from 'rxjs';
+import {RouteURL} from "../Constants/route-url";
 
 export interface AuthConfig {
   redirectUrlLogin: string;
@@ -38,7 +39,7 @@ export class AuthService {
   }
 
   login() {
-    this.keycloak.login({redirectUri: window.location.origin + "/dashboard"}).then();
+    this.keycloak.login({redirectUri: window.location.origin + RouteURL.nextToPage(RouteURL.PAGE_DASHBOARD)}).then();
   }
 
 

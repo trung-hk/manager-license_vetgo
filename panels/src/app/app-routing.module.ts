@@ -22,6 +22,7 @@ import {CustomersComponent} from "./pages/customers/customers.component";
 import {LicenseZaloConfigComponent} from "./pages/license-zalo-config/license-zalo-config.component";
 import {PackagePurchasedComponent} from "./pages/package-purchased/package-purchased.component";
 import {PackageRenewalComponent} from "./pages/package-renewal/package-renewal.component";
+import {RouteURL} from "./Constants/route-url";
 
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
@@ -29,7 +30,7 @@ const isAuthenticated: CanActivateFn = (route, state) => {
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: RouteURL.PAGE_DASHBOARD,
     pathMatch: 'full',
   },
   {
@@ -37,172 +38,172 @@ const routes: Routes = [
     component: PortalLayoutComponent,
     children: [
       {
-        path: 'dashboard',
+        path: RouteURL.PAGE_DASHBOARD,
         component:  DashboardComponent
       },
       {
-        path: 'agents',
+        path: RouteURL.PAGE_AGENTS,
         component: AgentComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.ADMIN],
-            redirectTo: '/error/403'
+            redirectTo: RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'agent-product',
+        path: RouteURL.PAGE_AGENT_PRODUCT,
         component: AgentProductComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.ADMIN, ROLES.AGENT],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'manager-config-app',
+        path: RouteURL.PAGE_MANAGER_CONFIG_APP,
         component: ConfigAppComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.ADMIN],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'product',
+        path: RouteURL.PAGE_PRODUCT,
         component: ProductComponent
       },
       {
-        path: 'profile',
+        path: RouteURL.PAGE_PROFILE,
         component: ProfileComponent
       },
       {
-        path: 'product-service',
+        path: RouteURL.PAGE_PRODUCT_SERVICE,
         component: ProductServiceComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.ADMIN],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'distributors',
+        path: RouteURL.PAGE_DISTRIBUTORS,
         component: DistributorComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.AGENT],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'partners',
+        path: RouteURL.PAGE_PARTNERS,
         component: PartnerComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.DISTRIBUTOR],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'order-service',
+        path: RouteURL.PAGE_ORDER_SERVICE,
         component: OrderServiceComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.PARTNER],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'orders',
+        path: RouteURL.PAGE_ORDERS,
         component: OrdersComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
-            only: [ROLES.ADMIN, ROLES.AGENT, ROLES.PARTNER, ROLES.DISTRIBUTOR],
-            redirectTo: '/error/403'
+            only: [ROLES.ADMIN, ROLES.AGENT, ROLES.PARTNER, ROLES.DISTRIBUTOR, ROLES.CUSTOMER],
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'commissions',
+        path: RouteURL.PAGE_COMMISSIONS,
         component: CommissionsComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'payment-bank-transfer/:id',
+        path: RouteURL.PAGE_PAYMENT_BANK_TRANSFER,
         component: PaymentBankTransferComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.PARTNER, ROLES.CUSTOMER],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'customers',
+        path: RouteURL.PAGE_CUSTOMERS,
         component: CustomersComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'payment-complete-details/:id',
+        path: RouteURL.PAGE_PAYMENT_COMPLETE_DETAILS,
         component: PaymentCompleteDetailsComponent,
       },
       {
-        path: 'license-zalo',
+        path: RouteURL.PAGE_LICENSE_ZALO,
         component: LicenseZaloConfigComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.ADMIN],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'package-purchased',
+        path: RouteURL.PAGE_PACKAGE_PURCHASED,
         component: PackagePurchasedComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.CUSTOMER],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
       {
-        path: 'package-renewal/:id',
+        path: RouteURL.PAGE_PACKAGE_RENEWAL,
         component: PackageRenewalComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
             only: [ROLES.CUSTOMER],
-            redirectTo: '/error/403'
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
       },
@@ -214,12 +215,12 @@ const routes: Routes = [
     loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule)
   },
   {
-    path: 'error',
+    path: RouteURL.PAGE_ERROR,
     loadChildren: () => import('./error/error.module').then(m => m.ErrorModule)
   },
   {
     path: '**',
-    redirectTo: '/error/404'
+    redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_404)
   },
 ];
 

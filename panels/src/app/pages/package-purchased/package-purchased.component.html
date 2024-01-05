@@ -29,7 +29,7 @@
                     </div>
                   </div>
                   <div class="pricing-cta">
-                    <a [routerLink]="['/package-renewal', dt.itemId]">Gia hạn gói <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="RouteURL.nextToPageWithId(RouteURL.PAGE_PACKAGE_RENEWAL, dt.itemId!)">Gia hạn gói <i class="fas fa-arrow-right"></i></a>
                   </div>
                 </div>
               </div>
@@ -57,7 +57,7 @@
                     </div>
                   </div>
                   <div class="pricing-cta">
-                    <a [routerLink]="['/package-renewal', item_CS_ZALO_EXPAND.id]">Thêm tài khoản ZALO <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="RouteURL.nextToPageWithId(RouteURL.PAGE_PACKAGE_RENEWAL, item_CS_ZALO_EXPAND.id!)">Thêm tài khoản ZALO <i class="fas fa-arrow-right"></i></a>
                   </div>
                 </div>
               </div>

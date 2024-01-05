@@ -29,6 +29,7 @@ import {AttributeOrderProductService} from "../../models/AttributeOrderProductSe
 import {AttributesModalFormOrderService} from "../../models/AttributesModalFormOrderService";
 import {DataService} from "../../services/data.service";
 import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
+import {RouteURL} from "../../Constants/route-url";
 @Component({
     selector: 'app-form-order-service-modal',
     templateUrl: './form-order-service-modal.component.html',
@@ -341,7 +342,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
                         this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
                         this.destroyModal();
                         rs(data);
-                        this.scriptFC.payment(data, PAYMENTS_METHOD.VIET_QR, "/package-purchased");
+                        this.scriptFC.payment(data, PAYMENTS_METHOD.VIET_QR, RouteURL.PAGE_PACKAGE_PURCHASED);
                     }
                 }, error => {
                     console.log(error);

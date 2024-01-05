@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {Constant, ROLES, STATUS_AGENT, STATUS_ORDER, STATUS_PAYMENT} from "../../Constants/vg-constant";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
@@ -10,6 +10,7 @@ import {ResponsePaymentVietQR} from "../../models/ResponesePayment";
 import {Message} from "../../Constants/message-constant";
 import {OrderService} from "../../models/OrderService";
 import {DataService} from "../../services/data.service";
+import {RouteURL} from "../../Constants/route-url";
 
 @Component({
   selector: 'app-payment-bank-transfer',
@@ -53,7 +54,7 @@ export class PaymentBankTransferComponent implements OnInit, AfterViewInit, OnDe
     let loading_success_2 = false;
     const idOrder = this.route.snapshot.paramMap.get('id');
     const api = this.scriptFC.formatString(URL.API_PAYMENT_CONFIRM, [idOrder!, PAYMENTS_METHOD.VIET_QR]);
-    const returnURL = `${window.location.origin}/payment-complete-details/${idOrder}`
+    const returnURL = window.location.origin + RouteURL.nextToPageWithId(RouteURL.PAGE_PAYMENT_COMPLETE_DETAILS, idOrder!);
     this.api.payment<ResponsePaymentVietQR>(api, returnURL).subscribe((data) => {
       if (this.scriptFC.validateResponseAPI(data.status)){
         this.scriptFC.alertShowMessageError(`${Message.MESSAGE_LOAD_DATA_FAILED}`);
@@ -79,4 +80,6 @@ export class PaymentBankTransferComponent implements OnInit, AfterViewInit, OnDe
     });
 
   }
+
+  protected readonly RouteURL = RouteURL;
 }

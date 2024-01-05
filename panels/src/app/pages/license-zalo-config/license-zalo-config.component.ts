@@ -47,7 +47,6 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
   attributeArrayFormAPI: string = "api";
   executingIdList: string[] = [];
   constructor(private loadScript: LazyLoadScriptService,
-              private api: ApiCommonService,
               private renderer: Renderer2,
               private scriptFC: ScriptCommonService,
               private fb: UntypedFormBuilder,

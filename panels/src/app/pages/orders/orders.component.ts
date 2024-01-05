@@ -23,6 +23,7 @@ import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 import {User} from "../../models/User";
 import {BehaviorSubject, debounceTime, distinctUntilChanged} from "rxjs";
 import {AttributesModalFormOrderService} from "../../models/AttributesModalFormOrderService";
+import {RouteURL} from "../../Constants/route-url";
 
 @Component({
     selector: 'app-orders',
@@ -36,6 +37,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly PAYMENTS_METHOD = PAYMENTS_METHOD;
     protected readonly MODE_OPEN_MODAL_FORM_ORDER_SERVICE = MODE_OPEN_MODAL_FORM_ORDER_SERVICE;
     protected readonly CONFIG = CONFIG;
+    protected readonly Constant = Constant;
     listScript = [];
     dataList: OrderService[] = [];
     productList: Item[] = [];
@@ -48,8 +50,10 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     changeFirst: boolean = true;
     isVisible: boolean = false;
     isVisibleDelete = false;
+    isRePayment = false;
     isConfirmLoadingDelete = false;
     orderDelete: OrderService | null | undefined = null;
+    orderRepayment: OrderService | null | undefined = null;
     filter: Array<{ key: string; value: string[] }> = [];
     selectUser: string = "";
     private searchSubject = new BehaviorSubject<string>('');
@@ -252,7 +256,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     payment(order: OrderService, method: string): void {
-        this.scriptFC.payment(order, method, "/orders");
+        this.scriptFC.payment(order, method, RouteURL.PAGE_ORDERS);
     }
     onSearch(searchText: string): void {
         // Gọi hàm tìm kiếm của bạn ở đây
@@ -329,6 +333,18 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             })
         })
     }
+    showRePaymentModal(order: OrderService) {
+        this.isRePayment = true;
+        this.orderRepayment = order;
+    }
+    rePayment() {
+        this.isRePayment = false;
+        this.payment(this.orderRepayment!, PAYMENTS_METHOD.VIET_QR);
+    }
+    handleCancelRePaymentModalPopup() {
+        this.isRePayment = false;
+        this.orderRepayment = null;
+    }
 
-    protected readonly Constant = Constant;
+    protected readonly RouteURL = RouteURL;
 }

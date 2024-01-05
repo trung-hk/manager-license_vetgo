@@ -260,7 +260,7 @@ export class ScriptCommonService {
         return Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
     }
     payment(order: OrderService, method: string, backUrl: string): void {
-        if (order.paymentStatus !== STATUS_PAYMENT.UN_PAID.value) {
+        if (order.paymentStatus === STATUS_PAYMENT.PAID.value) {
             this.alertShowMessageError(Message.MESSAGE_CHECK_PAYMENT);
             return;
         }

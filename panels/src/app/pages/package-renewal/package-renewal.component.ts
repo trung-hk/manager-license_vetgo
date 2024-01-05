@@ -9,12 +9,9 @@ import {
   CONFIG,
   Constant,
   MODE_OPEN_MODAL_FORM_ORDER_SERVICE, MODE_ORDER,
-  STATUS_ORDER,
-  STATUS_PAYMENT,
   TYPE_PAYMENT_PACKAGE
 } from "../../Constants/vg-constant";
 import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
-import {OrderService} from "../../models/OrderService";
 import {AttributesModalFormOrderService} from "../../models/AttributesModalFormOrderService";
 import {DataService} from "../../services/data.service";
 
