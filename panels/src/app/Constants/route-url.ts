@@ -17,6 +17,8 @@ export class RouteURL {
     static readonly PAGE_LICENSE_ZALO: string = "license-zalo";
     static readonly PAGE_PACKAGE_PURCHASED: string = "package-purchased";
     static readonly PAGE_PACKAGE_RENEWAL: string = "package-renewal/:id";
+    static readonly PAGE_APPROVE_MANUAL_PAYMENT: string = "approve-manual-payment";
+    //Page error
     static readonly PAGE_ERROR: string = "error";
     static readonly PAGE_ERROR_403: string = this.PAGE_ERROR +"/403";
     static readonly PAGE_ERROR_404: string = this.PAGE_ERROR +"/404";

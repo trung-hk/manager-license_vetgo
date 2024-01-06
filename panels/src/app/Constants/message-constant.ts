@@ -1,6 +1,3 @@
-// export class Message {
-//
-// }
 export class Message {
     static readonly MESSAGE_SAVE_SUCCESS = "Lưu thành công";
     static readonly MESSAGE_SAVE_FAILED = "Lưu thất bại";

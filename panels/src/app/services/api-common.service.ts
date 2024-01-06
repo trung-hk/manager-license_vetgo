@@ -6,6 +6,7 @@ import {URL} from "../Constants/api-urls";
 import {User} from "../models/User";
 import {ObjectSelectAll} from "../models/ObjectSelectAll";
 import {Constant} from "../Constants/vg-constant";
+import {PayloadApprovePayment} from "../models/PayloadApprovePayment";
 
 @Injectable({
     providedIn: 'root'
@@ -71,5 +72,8 @@ export class ApiCommonService {
         if (returnURL) params = params.append("returnURL", returnURL);
         if (prod) params = params.append("prod", prod);
         return this.httpClient.post<T | ResponseError>(`${this.url}/${api}`, null, {params});
+    }
+    approvePayment<T>(api: string, payload: PayloadApprovePayment): Observable<T | ResponseError> {
+        return this.httpClient.post<T | ResponseError>(`${this.url}/${api}`, payload);
     }
 }

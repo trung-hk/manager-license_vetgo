@@ -10,7 +10,7 @@ import {
     MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
     ROLES,
     STATUS_ORDER,
-    STATUS_PAYMENT, USER_TYPE
+    STATUS_PAYMENT, TYPE_ORDER_SERVICE, USER_TYPE
 } from "../../Constants/vg-constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {Message} from "../../Constants/message-constant";
@@ -106,10 +106,10 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     init(): void {
-        this.loadDataFromServer();
+        this.loadDataFromServer().then();
     }
 
-    loadDataFromServer(keyWork?: string): void {
+    async loadDataFromServer(keyWork?: string): Promise<void> {
         this.loading = true;
         let loading_success_1 = false;
         let loading_success_2 = false;
@@ -173,7 +173,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
             this.sort = `${sortField},${sortOrder}`;
         }
-        this.loadDataFromServer();
+        this.loadDataFromServer().then();
     }
     handleCancel(): void {
         this.isVisible = false;
@@ -198,7 +198,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_FAILED);
                     this.isConfirmLoadingDelete = false;
                 } else {
-                    this.loadDataFromServer();
+                    this.loadDataFromServer().then();
                     this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_SUCCESS);
                     this.isConfirmLoadingDelete = false;
                 }
@@ -212,7 +212,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     search(event: any): void {
-        this.loadDataFromServer(event.target.value);
+        this.loadDataFromServer(event.target.value).then();
         event.target.value = "";
     }
 
@@ -220,7 +220,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         const callback: ModalFormOrderServiceCallback = {
             reloadData: () => {
                 // Gọi phương thức từ class đã định nghĩa ở đây
-                this.loadDataFromServer();
+                this.loadDataFromServer().then();
             }
         };
         switch (modeOpen) {
@@ -302,7 +302,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     filterOrder(e: string) {
         this.setFilter(e).then(() => {
-            this.loadDataFromServer();
+            this.loadDataFromServer().then();
         })
     }
     setFilter(value: string): Promise<void> {

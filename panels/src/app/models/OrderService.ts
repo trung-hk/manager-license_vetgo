@@ -24,5 +24,6 @@ export class OrderService {
     itemId?: string | null;
     expiredDate?: string | null;
     attributesObject?: AttributeOrderProductService | null;
+    paymentCode?: string | null;
 }
 

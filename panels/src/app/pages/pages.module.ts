@@ -24,6 +24,7 @@ import { LicenseZaloConfigComponent } from './license-zalo-config/license-zalo-c
 import { PackagePurchasedComponent } from './package-purchased/package-purchased.component';
 import { PackageRenewalComponent } from './package-renewal/package-renewal.component';
 import {NgxMaskDirective, NgxMaskPipe} from "ngx-mask";
+import { ApproveManualPaymentComponent } from './approve-manual-payment/approve-manual-payment.component';
 
 const routes: Routes =
     [
@@ -53,7 +54,8 @@ const routes: Routes =
         CustomerDetailsModalComponent,
         LicenseZaloConfigComponent,
         PackagePurchasedComponent,
-        PackageRenewalComponent],
+        PackageRenewalComponent,
+        ApproveManualPaymentComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),

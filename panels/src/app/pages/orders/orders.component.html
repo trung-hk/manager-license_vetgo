@@ -67,16 +67,23 @@
               <td class="align-center">
                 <ng-container [ngSwitch]="dt.paymentStatus">
                   <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value">
-                    <nz-space>
-                      <!--                      <img *nzSpaceItem class="payment-icon"-->
-                      <!--                           (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px" height="50px"-->
-                      <!--                           src="/assets/img/payment-momo.png" title="Thanh toán momo"-->
-                      <!--                           alt="Thanh toán momo"/>-->
-                      <img *nzSpaceItem class="payment-icon"
-                           (click)="payment(dt!, PAYMENTS_METHOD.BANK_TRANSFER)" width="64px"
-                           height="50px" src="/assets/img/payment-bank-transfer.png"
-                           title="Thanh toán chuyển khoản" alt="Thanh toán chuyển khoản"/>
-                    </nz-space>
+                    <ng-container *ngxPermissionsOnly="[ROLES.PARTNER, ROLES.CUSTOMER]">
+                      <nz-space>
+                        <!--                      <img *nzSpaceItem class="payment-icon"-->
+                        <!--                           (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px" height="50px"-->
+                        <!--                           src="/assets/img/payment-momo.png" title="Thanh toán momo"-->
+                        <!--                           alt="Thanh toán momo"/>-->
+                        <img *nzSpaceItem class="payment-icon"
+                             (click)="payment(dt!, PAYMENTS_METHOD.BANK_TRANSFER)" width="64px"
+                             height="50px" src="/assets/img/payment-bank-transfer.png"
+                             title="Thanh toán chuyển khoản" alt="Thanh toán chuyển khoản"/>
+                      </nz-space>
+                    </ng-container>
+                    <ng-container *ngxPermissionsExcept="[ROLES.PARTNER, ROLES.CUSTOMER]">
+                      <div class="badge badge-shadow badge-warning">
+                        {{STATUS_PAYMENT.UN_PAID.text}}
+                      </div>
+                    </ng-container>
                   </div>
                   <div *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value" class="badge badge-shadow badge-info">
                     {{STATUS_PAYMENT.IN_PAYMENT.text}}
@@ -106,13 +113,15 @@
               </td>
               <td class="align-center action">
                 <nz-space>
-                  <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.IN_PAYMENT.value">
-                    <span *nzSpaceItem
-                          nz-icon nzType="transaction"
-                          nzTheme="outline"
-                          (click)="showRePaymentModal(dt)"
-                          title="Thanh toán Lại">
-                    </span>
+                  <ng-container *ngxPermissionsOnly="[ROLES.PARTNER, ROLES.CUSTOMER]">
+                    <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.IN_PAYMENT.value">
+                            <span *nzSpaceItem
+                                  nz-icon nzType="transaction"
+                                  nzTheme="outline"
+                                  (click)="showRePaymentModal(dt)"
+                                  title="Thanh toán Lại">
+                            </span>
+                    </ng-container>
                   </ng-container>
                   <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.PAID.value">
                     <span *nzSpaceItem
@@ -181,13 +190,15 @@
                     <div nz-col nzSpan="8" class="icon-center-row">
                       <div class="action">
                         <nz-space>
-                          <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.IN_PAYMENT.value">
+                          <ng-container *ngxPermissionsOnly="[ROLES.PARTNER, ROLES.CUSTOMER]">
+                            <ng-container *ngIf="dt.paymentStatus === STATUS_PAYMENT.IN_PAYMENT.value">
                             <span *nzSpaceItem
                                   nz-icon nzType="transaction"
                                   nzTheme="outline"
                                   (click)="showRePaymentModal(dt)"
                                   title="Thanh toán Lại">
                             </span>
+                            </ng-container>
                           </ng-container>
                           <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
                             <span *nzSpaceItem nz-icon nzType="diff"
@@ -235,16 +246,23 @@
                   <nz-descriptions-item nzSpan="3" nzTitle="Thanh toán">
                     <ng-container [ngSwitch]="dt.paymentStatus">
                       <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value">
-                        <nz-space>
-                          <!--                          <img *nzSpaceItem class="payment-icon"-->
-                          <!--                               (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px"-->
-                          <!--                               height="50px" src="/assets/img/payment-momo.png"-->
-                          <!--                               alt="Thanh toán momo"/>-->
-                          <img *nzSpaceItem class="payment-icon"
-                               (click)="payment(dt!, PAYMENTS_METHOD.VIET_QR)"
-                               width="64px" height="50px"
-                               src="/assets/img/payment-bank-transfer.png" alt=""/>
-                        </nz-space>
+                        <ng-container *ngxPermissionsOnly="[ROLES.PARTNER, ROLES.CUSTOMER]">
+                          <nz-space>
+                            <!--                          <img *nzSpaceItem class="payment-icon"-->
+                            <!--                               (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px"-->
+                            <!--                               height="50px" src="/assets/img/payment-momo.png"-->
+                            <!--                               alt="Thanh toán momo"/>-->
+                            <img *nzSpaceItem class="payment-icon"
+                                 (click)="payment(dt!, PAYMENTS_METHOD.VIET_QR)"
+                                 width="64px" height="50px"
+                                 src="/assets/img/payment-bank-transfer.png" alt=""/>
+                          </nz-space>
+                        </ng-container>
+                        <ng-container *ngxPermissionsExcept="[ROLES.PARTNER, ROLES.CUSTOMER]">
+                          <div class="badge badge-shadow badge-warning">
+                            {{STATUS_PAYMENT.UN_PAID.text}}
+                          </div>
+                        </ng-container>
                       </div>
                       <div *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value" class="badge badge-shadow badge-info">
                         {{STATUS_PAYMENT.IN_PAYMENT.text}}

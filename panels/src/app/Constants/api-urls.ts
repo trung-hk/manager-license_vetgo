@@ -10,6 +10,7 @@ export class URL {
     static readonly API_ORDER_SERVICE: string = "vg-order-service";
     static readonly API_COMMISSION: string = "commissions";
     static readonly API_PAYMENT: string = "payment-service";
+    static readonly API_APPROVE_MANUAL_PAYMENT: string = "payment-service/callback/approve-manual";
     static readonly API_PAYMENT_CONFIRM: string = `${this.API_PAYMENT}/confirm/order-service/{0}/method/{1}`;
     static readonly API_UPDATE_CONFIG_ORDER: string = `vg-order-service/config-order`;
     static readonly API_PACKAGE_PURCHASED: string = `user-packages`;
