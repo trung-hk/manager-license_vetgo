@@ -1,5 +1,12 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {Constant, ROLES, STATUS_AGENT, STATUS_ORDER, STATUS_PAYMENT} from "../../Constants/vg-constant";
+import {
+  Constant,
+  ROLES,
+  STATUS_AGENT,
+  STATUS_CODE_ERROR,
+  STATUS_ORDER,
+  STATUS_PAYMENT
+} from "../../Constants/vg-constant";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
@@ -43,7 +50,7 @@ export class PaymentBankTransferComponent implements OnInit, AfterViewInit, OnDe
   ngOnInit(): void {
     this.init();
     const dataRedirect: {backUrl: string} = this.dataService.getData();
-    this.backUrl = dataRedirect.backUrl;
+    this.backUrl = dataRedirect?.backUrl;
   }
   init(): void {
     this.loadDataFromServer();
@@ -57,6 +64,10 @@ export class PaymentBankTransferComponent implements OnInit, AfterViewInit, OnDe
     const returnURL = window.location.origin + RouteURL.nextToPageWithId(RouteURL.PAGE_PAYMENT_COMPLETE_DETAILS, idOrder!);
     this.api.payment<ResponsePaymentVietQR>(api, returnURL).subscribe((data) => {
       if (this.scriptFC.validateResponseAPI(data.status)){
+        console.log(data.status)
+        if (data.status == STATUS_CODE_ERROR.ERROR_400) {
+          this.dataService.navigateToPage(RouteURL.PAGE_ERROR_404);
+        }
         this.scriptFC.alertShowMessageError(`${Message.MESSAGE_LOAD_DATA_FAILED}`);
       } else {
         this.data  = data as ResponsePaymentVietQR;
