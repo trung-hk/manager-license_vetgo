@@ -1,15 +1,16 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {AbstractControl, FormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
-import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {
+  CONFIG_LICENSE_ZALO_ACCOUNT_FORM,
   CONFIG_LICENSE_ZALO_FORM,
   CONFIG_LICENSE_ZALO_SYSTEM_FORM,
 } from "../../Constants/Form";
 import {Message} from "../../Constants/message-constant";
-import {LicenseZalo} from "../../models/LicenseZalo";
+import {AccountInfo, LicenseZalo} from "../../models/LicenseZalo";
 import {
+  CONFIG,
   Constant,
   TYPE_LICENSE,
 } from "../../Constants/vg-constant";
@@ -43,8 +44,10 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
   isShowModalSystem = false;
   formConfigSystem!: FormArray;
   formApi!: FormArray;
+  formPhone!: FormArray;
   attributeArrayForm: string = "configSystem";
   attributeArrayFormAPI: string = "api";
+  attributeArrayFormPhones: string = "phones";
   executingIdList: string[] = [];
   constructor(private loadScript: LazyLoadScriptService,
               private renderer: Renderer2,
@@ -58,10 +61,12 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
     this.validateForm = this.fb.group(CONFIG_LICENSE_ZALO_FORM);
     this.validateFormConfigSystem = this.fb.group({
       configSystem: this.fb.array([]),
-      api: this.fb.array([])
+      api: this.fb.array([]),
+      phones: this.fb.array([])
     });
     this.formConfigSystem = this.validateFormConfigSystem.get(this.attributeArrayForm) as FormArray;
     this.formApi = this.validateFormConfigSystem.get(this.attributeArrayFormAPI) as FormArray;
+    this.formPhone = this.validateFormConfigSystem.get(this.attributeArrayFormPhones) as FormArray;
     this.i18n.setLocale(en_US);
   }
 
@@ -83,7 +88,7 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
     this.loadDataFromServer();
   }
 
-  loadDataFromServer(keyWork?: string): void {
+  loadDataFromServer(): void {
     this.loading = true;
     let isSuccess1 = false;
     let isSuccess2 = false;
@@ -92,7 +97,10 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
       table: "MANAGER_SHEET",
     }
     this.callScript.callAPI<LicenseZalo[]>(dataManagerSheet).subscribe((data) => {
-      this.dataList = data.filter(d => d.deleted == "false");
+      this.dataList = data.filter(d => d.deleted == "false").map(d => {
+        d.accountList = this.scriptFC.getAccountZaloListFromJson(d.phone!);
+        return d;
+      });
       this.total = this.dataList.length;
       isSuccess1 = true;
       this.loading = !(isSuccess1 && isSuccess2);
@@ -123,15 +131,20 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
     this.isShowModalSystem = false;
     this.formConfigSystem.clear();
     this.formApi.clear();
+    this.formPhone.clear();
     this.dataApiDeleteList = [];
     if (licenseZalo) {
       this.validateForm.setValue({
         name: licenseZalo.name,
         id: licenseZalo.id,
-        phone: licenseZalo.phone,
         email: licenseZalo.email,
-        expiryDate: licenseZalo?.expiryDate ? this.scriptFC.formatDate_DD_MM_YYYY(licenseZalo?.expiryDate) : null,
         license: licenseZalo.license,
+      });
+      licenseZalo.accountList?.forEach(account => {
+        this.formPhone.push(this.fb.group({
+          phone: account.phone,
+          expiredDate: account?.expiredDate ? this.scriptFC.formatDate_YYYY_MM_DD(account?.expiredDate) : null
+        }))
       });
       if (ApiScriptCommonService.URL.includes(licenseZalo.id!)) {
         this.isShowModalSystem = true;
@@ -150,6 +163,9 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
       }
     } else {
       this.validateForm.reset();
+      this.validateForm.patchValue({
+        license: TYPE_LICENSE.PRO.value,
+      })
     }
     this.idShowModal = this.validateForm.get("id")?.value;
   }
@@ -159,7 +175,14 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
       if (this.validateForm.valid) {
         this.isConfirmLoading = true;
         const data: LicenseZalo = this.validateForm.value;
-        data.expiryDate = this.scriptFC.parseFormatDateToString(data.expiryDate);
+        const accountList: {phones: AccountInfo[]} = {phones: this.validateFormConfigSystem.get(this.attributeArrayFormPhones)?.getRawValue()}
+        accountList.phones = accountList.phones.map(account => {
+          let expiredDate = new Date(account.expiredDate);
+          expiredDate.setUTCHours(0,0,0,0);
+          account.expiredDate = expiredDate.toISOString();
+          return account;
+        })
+        data.phone = JSON.stringify(accountList);
         const dataUpdate: CallScriptObject = {
           actionType: 'POST',
           table: 'MANAGER_SHEET',
@@ -329,4 +352,12 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
       this.executingIdList = this.executingIdList.filter(e => e != idExecute);
     }
   }
+  addAccount() {
+    this.formPhone.push(this.fb.group(CONFIG_LICENSE_ZALO_ACCOUNT_FORM));
+  }
+  removeFieldAddAccount(index: number, e: MouseEvent) {
+    e.preventDefault();
+    this.formPhone.removeAt(index);
+  }
+  protected readonly Constant = Constant;
 }

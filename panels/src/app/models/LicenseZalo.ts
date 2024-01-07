@@ -4,7 +4,6 @@ export class LicenseZalo {
     name?: string | null;
     phone?: string | null;
     email?: string | null;
-    expiryDate?: string | null;
     license?: string | null;
     status?: string | null;
     createdBy?: string | null;
@@ -13,5 +12,10 @@ export class LicenseZalo {
     lastModifiedDate?: string | null;
     seqNo?: string | null;
     deleted?: string | null;
+    accountList?: AccountInfo[];
+}
+export interface AccountInfo {
+    phone: string,
+    expiredDate: string,
 }
 

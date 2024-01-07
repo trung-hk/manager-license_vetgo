@@ -30,6 +30,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ApiCommonService} from "./api-common.service";
 import {AttributesModalFormOrderService} from "../models/AttributesModalFormOrderService";
 import {DataService} from "./data.service";
+import {AccountInfo} from "../models/LicenseZalo";
 
 @Injectable({
     providedIn: 'root'
@@ -247,7 +248,7 @@ export class ScriptCommonService {
     hasPermission(role: string | string[]): Promise<boolean> {
         return this.permissionsService.hasPermission(role);
     }
-    formatDate_DD_MM_YYYY = (date: string): Date => new Date(date.split('/').reverse().join('/'));
+    formatDate_YYYY_MM_DD = (date: string): Date => new Date(date.split('-').join('-'));
     parseFormatDateToString(date?: string | null): string | null {
         if (!date) return null;
         const stringToDate = new Date(date);
@@ -295,5 +296,12 @@ export class ScriptCommonService {
                 break;
         }
 
+    }
+    getAccountZaloListFromJson(value: string): AccountInfo[] {
+        try {
+            return JSON.parse(value).phones;
+        } catch (error) {
+            return [];
+        }
     }
 }

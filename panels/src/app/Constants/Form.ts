@@ -99,12 +99,14 @@ export const CONFIG_WIFI_MARKETING_FORM = {
 export const CONFIG_LICENSE_ZALO_FORM = {
     name: [null],
     id: [null, [Validators.required]],
-    phone: [null],
     email: [null, [Validators.minLength(5), Validators.maxLength(255), Validators.email]],
-    expiryDate: [null],
     license: [null],
 }
 export const CONFIG_LICENSE_ZALO_SYSTEM_FORM = {
     id: [null],
     data: [null],
+}
+export const CONFIG_LICENSE_ZALO_ACCOUNT_FORM = {
+    phone: [null],
+    expiredDate: [null],
 }
