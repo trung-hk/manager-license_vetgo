@@ -97,7 +97,7 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
       table: "MANAGER_SHEET",
     }
     this.callScript.callAPI<LicenseZalo[]>(dataManagerSheet).subscribe((data) => {
-      this.dataList = data.filter(d => d.deleted == "false").map(d => {
+      this.dataList = data.map(d => {
         d.accountList = this.scriptFC.getAccountZaloListFromJson(d.phone!);
         return d;
       });
@@ -117,7 +117,6 @@ export class LicenseZaloConfigComponent implements OnInit, AfterViewInit, OnDest
       data = data.filter(d => d.deleted == "false");
       this.dataConfigSystemApiList = data.filter(d => Constant.API_CONFIG_SYSTEM_LIST.includes(d.id!));
       this.dataApiList = data.filter(d => !Constant.API_CONFIG_SYSTEM_LIST.includes(d.id!));
-      console.log(this.dataApiList)
       isSuccess2 = true;
       this.loading = !(isSuccess1 && isSuccess2);
     }, error => {

@@ -46,14 +46,16 @@
                 <td>{{dt.license}}</td>
                 <td class="align-center action">
                   <nz-space>
-                  <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline"
-                        (click)="showModal(dt)"
-                        title="Chỉnh sửa">
-                  </span>
-                    <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline"
-                          (click)="showDeleteModal(dt.id)"
-                          title="Xóa">
-                  </span>
+                    <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline"
+                          (click)="showModal(dt)"
+                          title="Chỉnh sửa">
+                    </span>
+                    <ng-container *ngIf="dt.deleted == 'false'">
+                      <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline"
+                            (click)="showDeleteModal(dt.id)"
+                            title="Xóa">
+                      </span>
+                    </ng-container>
                   </nz-space>
                 </td>
               </tr>
