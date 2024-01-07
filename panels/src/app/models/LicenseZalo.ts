@@ -1,3 +1,4 @@
+import {AbstractModel} from "./AbstractModel";
 
 export class LicenseZalo {
     id?: string | null;

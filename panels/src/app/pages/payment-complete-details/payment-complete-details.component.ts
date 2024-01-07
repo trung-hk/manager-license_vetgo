@@ -6,7 +6,7 @@ import {ApiCommonService} from "../../services/api-common.service";
 import {URL} from "../../Constants/api-urls";
 import {PackageProduct} from "../../models/PackageProduct";
 import {ScriptCommonService} from "../../services/script-common.service";
-import {Constant} from "../../Constants/vg-constant";
+import {Constant, STATUS_PAYMENT} from "../../Constants/vg-constant";
 import {RouteURL} from "../../Constants/route-url";
 
 @Component({
@@ -35,10 +35,12 @@ export class PaymentCompleteDetailsComponent implements OnInit, AfterViewInit, O
       console.log(data)
       this.orderService = data;
       this.loading = false;
-      this.packageOrder = this.scriptFC.getPackageService(data.attributes).find(d => d.id === data.packageId)!;
+      this.orderService.attributesObject = this.scriptFC.getAttributeOrderProductService(data.attributes);
+      this.packageOrder = this.orderService.attributesObject.packagesMap?.get(this.orderService.packageId!)!;
     })
   }
 
     protected readonly Constant = Constant;
     protected readonly RouteURL = RouteURL;
+  protected readonly STATUS_PAYMENT = STATUS_PAYMENT;
 }

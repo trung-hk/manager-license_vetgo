@@ -13,18 +13,23 @@
             E-mail: {{orderService?.customerAddress}}
             <nz-divider></nz-divider>
             <nz-descriptions nzSize="small" nzBordered>
-              <nz-descriptions-item nzTitle="Sản phẩm">VETGO3232323232</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Sản phẩm">{{orderService?.attributesObject?.itemName}}</nz-descriptions-item>
               <nz-descriptions-item nzTitle="Gói">{{packageOrder?.name}}</nz-descriptions-item>
               <nz-descriptions-item nzTitle="Giá">{{orderService?.totalAmount! | mask: 'separator' : Constant.FORMAT_MONEY}}</nz-descriptions-item>
             </nz-descriptions>
             <nz-divider></nz-divider>
             <b>Thông tin thanh toán</b>
             <br>
-            Phương thức thanh toán: MOMO
+            Phương thức thanh toán: {{orderService?.paymentMethod}}
             <br>
             Số tiền thanh toán: {{orderService?.totalAmount! | mask: 'separator' : Constant.FORMAT_MONEY}}
             <br>
-            Trạng thái: Chuyển thành công
+            <ng-container [ngSwitch]="orderService?.paymentStatus">
+              <span>Trạng thái:</span>
+              <span *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value">Chưa thanh toán</span>
+              <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value">Chờ xác nhân</span>
+              <span *ngSwitchCase="STATUS_PAYMENT.PAID.value">Thanh toán thành công</span>
+            </ng-container>
             <div class="text-center" style="margin-top: 10px;">
               <button type="button" class="btn btn-outline-secondary note-btn" [routerLink]="RouteURL.nextToPage(RouteURL.PAGE_ORDERS)">Quay lại</button>
             </div>

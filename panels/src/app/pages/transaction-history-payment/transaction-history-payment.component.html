@@ -1,0 +1,89 @@
+<section class="section">
+  <div class="section-body">
+    <div class="row">
+      <div class="col-12">
+        <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
+          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <nz-table
+              nzShowSizeChanger
+              [nzData]="dataList"
+              [nzLoading]="loading"
+              [nzTotal]="total"
+              [nzPageSize]="pageSize"
+              [nzPageIndex]="pageIndex"
+              (nzQueryParams)="onQueryParamsChange($event)"
+              [nzScroll]="{ x: '500px' }"
+          >
+            <thead>
+            <tr>
+              <th nzWidth="12em" nzColumnKey="code" >Nội dung thanh toán</th>
+              <th nzWidth="10em">Phương thức</th>
+              <th nzWidth="10em">ID đơn hàng</th>
+              <th nzWidth="20em">Loại đơn hàng TT</th>
+              <th nzWidth="20em">Ghi chú</th>
+              <th nzWidth="13em">Tổng tiền</th>
+              <th nzWidth="10em">Trạng thái</th>
+              <th nzWidth="10em">Người tạo</th>
+              <th nzWidth="15em">Ngày tạo</th>
+              <th nzWidth="10em">Người cập nhật</th>
+              <th nzWidth="15em">Ngày cập nhật</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dt of dataList">
+              <td>{{dt.code}}</td>
+              <td>{{dt.method}}</td>
+              <td>
+                <ng-container [ngSwitch]="dt.referenceType">
+                  <a *ngSwitchCase="TYPE_REFERENCE_PAYMENT.PAYMENT_ORDER_SERVICE" href="javascript:void(0);" (click)="createComponentOrderServiceDetailsModal(dt.referenceId!)">{{dt.referenceId}}</a>
+                  <a *ngSwitchCase="TYPE_REFERENCE_PAYMENT.REFUND_COMMISSION_APPROVE" href="javascript:void(0);">{{dt.referenceId}}</a>
+                </ng-container>
+                
+              </td>
+              <td>{{dt.referenceType}}</td>
+              <td>{{dt.note}}</td>
+              <td>{{dt.totalAmount! | mask:'separator': Constant.FORMAT_MONEY}}</td>
+              <td>
+                <ng-container [ngSwitch]="dt.status">
+                  <span *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value"><nz-tag [nzColor]="'yellow'">{{STATUS_PAYMENT.UN_PAID.text}}</nz-tag></span>
+                  <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value"><nz-tag [nzColor]="'blue'">{{STATUS_PAYMENT.IN_PAYMENT.text}}</nz-tag></span>
+                  <span *ngSwitchCase="STATUS_PAYMENT.PAID.value"><nz-tag [nzColor]="'green'">{{STATUS_PAYMENT.PAID.text}}</nz-tag></span>
+                </ng-container>
+              </td>
+              <td>{{dt.createdBy}}</td>
+              <td>{{dt.createdDate | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+              <td>{{dt.lastModifiedBy}}</td>
+              <td>{{dt.lastModifiedDate | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </nz-card>
+        <ng-template #titleLeft>
+          Lịch sử giao dịch
+          <nz-tag [nzColor]="'#33CCFF'">
+            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
+          </nz-tag>
+        </ng-template>
+        <ng-template #titleAction>
+          <div nz-row [ngStyle]="{'margin-top': '15px'}">
+            <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
+                 [nzXl]="{ span: 8, offset: 16 }"
+                 [nzLg]="{ span: 10, offset: 14 }"
+                 [nzMd]="{ span: 12, offset: 12 }"
+                 [nzSm]="24"
+                 [nzXs]="24">
+              <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
+                <input nzSize="large" type="text" nz-input placeholder="Mã đơn hàng"
+                       (keyup.enter)="search($event)"/>
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search"></span>
+              </ng-template>
+            </div>
+          </div>
+          <nz-divider></nz-divider>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</section>

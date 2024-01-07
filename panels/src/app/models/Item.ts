@@ -1,6 +1,7 @@
 import {PackageProduct} from "./PackageProduct";
+import {AbstractModel} from "./AbstractModel";
 
-export class Item{
+export class Item extends AbstractModel{
     id?: string | null ;
     name?: string | null;
     code?: string | null;
@@ -11,14 +12,6 @@ export class Item{
     orgPrice?: string | null;
     sellingPrice?: string | null;
     type?: string | null;
-    status?: string | null;
-    createBy?: string | null;
-    createDate?: string | null;
-    lastModifiedBy?: string | null;
-    lastModifiedDate?: string | null;
-    seqNo?: string | null;
-    deleted?: boolean | null;
-    storeId?: string | null;
     usingConfig?: string | null;
     packages?: PackageProduct[] | [];
     typeProductService?: string | null;

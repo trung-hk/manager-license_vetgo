@@ -1,6 +1,7 @@
 import {AttributeOrderProductService} from "./AttributeOrderProductService";
+import {AbstractModel} from "./AbstractModel";
 
-export class OrderService {
+export class OrderService extends AbstractModel{
     id?: string | null;
     code?: string | null;
     partnerId?: string | null;
@@ -13,17 +14,11 @@ export class OrderService {
     totalAmount?: string | null;
     paymentStatus?: string | null;
     toreId?: string | null;
-    status?: string | null;
     type?: string | null;
-    realm?: string | null;
-    createdDate?: string | null;
-    lastModifiedBy?: string | null;
-    lastModifiedDate?: string | null;
-    seqNo?: string | null;
-    deleted?: boolean | null;
     itemId?: string | null;
     expiredDate?: string | null;
     attributesObject?: AttributeOrderProductService | null;
     paymentCode?: string | null;
+    paymentMethod?: string | null;
 }
 

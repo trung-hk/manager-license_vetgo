@@ -24,6 +24,9 @@ import {PackagePurchasedComponent} from "./pages/package-purchased/package-purch
 import {PackageRenewalComponent} from "./pages/package-renewal/package-renewal.component";
 import {RouteURL} from "./Constants/route-url";
 import {ApproveManualPaymentComponent} from "./pages/approve-manual-payment/approve-manual-payment.component";
+import {
+  TransactionHistoryPaymentComponent
+} from "./pages/transaction-history-payment/transaction-history-payment.component";
 
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
@@ -211,6 +214,17 @@ const routes: Routes = [
       {
         path: RouteURL.PAGE_APPROVE_MANUAL_PAYMENT,
         component: ApproveManualPaymentComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.ADMIN],
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
+          }
+        }
+      },
+      {
+        path: RouteURL.PAGE_TRANSACTION_HISTORY_PAYMENT,
+        component: TransactionHistoryPaymentComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {

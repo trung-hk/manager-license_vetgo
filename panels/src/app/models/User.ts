@@ -1,4 +1,6 @@
-export class User {
+import {AbstractModel} from "./AbstractModel";
+
+export class User extends AbstractModel{
     id?: string | null;
     name?: string | null;
     email?: string | null;
@@ -9,14 +11,6 @@ export class User {
     type?: string | null;
     keycloakId?: string | null;
     parentId?: string | null;
-    realm?: string | null;
-    status?: string | null;
-    createdBy?: string | null;
-    createdDate?: string | null;
-    lastModifiedBy?: string | null;
-    lastModifiedDate?: string | null;
-    seqNo?: string | null;
-    deleted?: boolean | null;
     commissionId?: string | null;
 }
 

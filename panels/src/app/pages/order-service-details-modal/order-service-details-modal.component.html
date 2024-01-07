@@ -1,0 +1,35 @@
+<nz-card style="width: 100%" [nzTitle]="orderService.code!" [nzBordered]="true">
+  <div nz-row>
+    <div nz-col nzSpan="12">
+      <b>Thông tin khách hàng</b>
+      <br>
+      Tên: {{orderService.customerName}}
+      <br>
+      Số điện thoại: {{orderService.customerPhone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}
+      <br>
+      E-mail: {{orderService.customerAddress}}
+    </div>
+    <div nz-col nzSpan="12">
+      <b>Thông tin thanh toán</b>
+      <br>
+      Phương thức: {{orderService.paymentMethod}}
+      <br>
+      số tiền: {{orderService.totalAmount! | mask: 'separator' : Constant.FORMAT_MONEY}}
+      <br>
+      <ng-container [ngSwitch]="orderService.paymentStatus">
+        <span>Trạng thái: </span>
+        <span *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value"><nz-tag [nzColor]="'yellow'">Chưa thanh toán</nz-tag></span>
+        <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value"><nz-tag [nzColor]="'blue'">Chờ xác nhân</nz-tag></span>
+        <span *ngSwitchCase="STATUS_PAYMENT.PAID.value"><nz-tag [nzColor]="'green'">Thanh toán thành công</nz-tag></span>
+      </ng-container>
+      <br>
+    </div>
+  </div>
+  <nz-divider></nz-divider>
+  <b>Thông tin đơn hàng</b>
+  <nz-descriptions nzSize="small" nzBordered>
+    <nz-descriptions-item nzSpan="3" nzTitle="Sản phẩm">{{orderService.attributesObject?.itemName}}</nz-descriptions-item>
+    <nz-descriptions-item nzSpan="3" nzTitle="Gói">{{packageOrder.name}}</nz-descriptions-item>
+    <nz-descriptions-item nzSpan="3" nzTitle="Giá">{{orderService.totalAmount! | mask: 'separator' : Constant.FORMAT_MONEY}}</nz-descriptions-item>
+  </nz-descriptions>
+</nz-card>

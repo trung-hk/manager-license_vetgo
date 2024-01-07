@@ -25,6 +25,8 @@ import { PackagePurchasedComponent } from './package-purchased/package-purchased
 import { PackageRenewalComponent } from './package-renewal/package-renewal.component';
 import {NgxMaskDirective, NgxMaskPipe} from "ngx-mask";
 import { ApproveManualPaymentComponent } from './approve-manual-payment/approve-manual-payment.component';
+import { TransactionHistoryPaymentComponent } from './transaction-history-payment/transaction-history-payment.component';
+import { OrderServiceDetailsModalComponent } from './order-service-details-modal/order-service-details-modal.component';
 
 const routes: Routes =
     [
@@ -55,7 +57,9 @@ const routes: Routes =
         LicenseZaloConfigComponent,
         PackagePurchasedComponent,
         PackageRenewalComponent,
-        ApproveManualPaymentComponent],
+        ApproveManualPaymentComponent,
+        TransactionHistoryPaymentComponent,
+        OrderServiceDetailsModalComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),

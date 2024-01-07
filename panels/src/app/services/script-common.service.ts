@@ -2,7 +2,12 @@ import {Injectable, ViewContainerRef} from '@angular/core';
 import {CommunicationService} from "./communication.service";
 import {PackageProduct} from "../models/PackageProduct";
 import {FormOrderServiceModalComponent} from "../pages/form-order-service-modal/form-order-service-modal.component";
-import {IModalData, IModalViewCustomerData, IModalViewProductServiceData} from "../models/ModalData";
+import {
+    IModalData,
+    IModalViewCustomerData,
+    IModalViewOrderServiceData,
+    IModalViewProductServiceData
+} from "../models/ModalData";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Item} from "../models/Item";
 import {User} from "../models/User";
@@ -31,6 +36,9 @@ import {ApiCommonService} from "./api-common.service";
 import {AttributesModalFormOrderService} from "../models/AttributesModalFormOrderService";
 import {DataService} from "./data.service";
 import {AccountInfo} from "../models/LicenseZalo";
+import {
+    OrderServiceDetailsModalComponent
+} from "../pages/order-service-details-modal/order-service-details-modal.component";
 
 @Injectable({
     providedIn: 'root'
@@ -218,6 +226,26 @@ export class ScriptCommonService {
             nzViewContainerRef: viewContainerRef,
             nzData: {
                 customer: customer,
+            },
+            nzFooter: [
+                {
+                    type: "default",
+                    label: "Hủy",
+                    onClick: () => {
+                        modal.destroy();
+                    }
+                }
+            ]
+        });
+    }
+    createComponentOrderServiceDetailsModal(orderService: OrderService, viewContainerRef: ViewContainerRef): void {
+        const modal = this.modal.create<OrderServiceDetailsModalComponent, IModalViewOrderServiceData>({
+            nzTitle: "Thông tin chi tiết",
+            nzContent: OrderServiceDetailsModalComponent,
+            nzWidth: "800px",
+            nzViewContainerRef: viewContainerRef,
+            nzData: {
+                order: orderService,
             },
             nzFooter: [
                 {

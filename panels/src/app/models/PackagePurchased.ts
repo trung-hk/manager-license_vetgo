@@ -1,4 +1,5 @@
 import {PackageProduct} from "./PackageProduct";
+import {AbstractModel} from "./AbstractModel";
 
 export class DataConfig {
     codeApp?: string;
@@ -24,7 +25,7 @@ export class AttributePackagePurchased {
     packagesMap?: Map<string, PackageProduct>| null;
     data?: DataConfig
 }
-export class PackagePurchased {
+export class PackagePurchased extends AbstractModel{
     id?: string | null ;
     customerId?: string | null;
     itemId?: string | null;
@@ -32,14 +33,6 @@ export class PackagePurchased {
     packageId?: string | null;
     attributes?: string | null;
     expiredDate?: string | null;
-    storeId?: string | null;
-    status?: string | null;
-    createdBy?: string | null;
-    createdDate?: string | null;
-    lastModifiedBy?: string | null;
-    lastModifiedDate?: string | null;
-    seqNo?: string | null;
-    deleted?: boolean | null;
     attributeObject?: AttributePackagePurchased;
     quantityDateUsing?: number;
     quantityRegisterPhone?: number;

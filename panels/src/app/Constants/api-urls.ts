@@ -14,4 +14,5 @@ export class URL {
     static readonly API_PAYMENT_CONFIRM: string = `${this.API_PAYMENT}/confirm/order-service/{0}/method/{1}`;
     static readonly API_UPDATE_CONFIG_ORDER: string = `vg-order-service/config-order`;
     static readonly API_PACKAGE_PURCHASED: string = `user-packages`;
+    static readonly API_TRANSACTION_HISTORY_PAYMENT: string = `transaction-log-payments`;
 }

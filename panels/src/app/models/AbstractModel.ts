@@ -7,5 +7,6 @@ export class AbstractModel{
     seqNo?: string | null;
     deleted?: boolean | null;
     storeId?: string | null;
+    realm?: string | null;
 }
 
