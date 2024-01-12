@@ -19,6 +19,7 @@ export class RouteURL {
     static readonly PAGE_PACKAGE_RENEWAL: string = "package-renewal/:id";
     static readonly PAGE_APPROVE_MANUAL_PAYMENT: string = "approve-manual-payment";
     static readonly PAGE_TRANSACTION_HISTORY_PAYMENT: string = "transaction-history-payment";
+    static readonly PAGE_SETTING_BANKING: string = "setting-banking";
     //Page error
     static readonly PAGE_ERROR: string = "error";
     static readonly PAGE_ERROR_403: string = this.PAGE_ERROR +"/403";

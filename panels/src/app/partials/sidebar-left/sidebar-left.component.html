@@ -9,9 +9,6 @@
       <li class="dropdown index">
         <a [routerLink]="RouteURL.PAGE_DASHBOARD" class="nav-link"><i nz-icon nzType="dashboard" nzTheme="outline"></i><span>Tổng quan</span></a>
       </li>
-      <li class="dropdown orders">
-        <a [routerLink]="RouteURL.PAGE_ORDERS" class="nav-link"><i nz-icon nzType="shopping-cart" nzTheme="outline"></i><span>Đơn hàng</span></a>
-      </li>
       <li class="dropdown config" *ngxPermissionsOnly="[ROLES.ADMIN]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
             nz-icon nzType="api" nzTheme="outline"></i><span>Cấu hình</span></a>
@@ -20,20 +17,24 @@
           <li class="license-zalo"><a class="nav-link" [routerLink]="RouteURL.PAGE_LICENSE_ZALO">License zalo</a></li>
         </ul>
       </li>
-      <li class="dropdown product" *ngxPermissionsOnly="[ROLES.ADMIN]">
+      <li class="dropdown transactions" *ngxPermissionsOnly="[ROLES.ADMIN]">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-            nz-icon nzType="appstore" nzTheme="outline"></i><span>Sản phẩm</span></a>
+            nz-icon nzType="transaction" nzTheme="outline"></i><span>Giao dịch</span></a>
         <ul class="dropdown-menu">
-          <li  class="product-service"><a class="nav-link" [routerLink]="RouteURL.PAGE_PRODUCT_SERVICE">Sản phẩm dịch vụ</a></li>
+          <li  class="order-await-approve-list"><a class="nav-link" [routerLink]="RouteURL.PAGE_APPROVE_MANUAL_PAYMENT">Đơn hàng chờ xác nhận</a></li>
+          <li  class="history-transactions"><a class="nav-link" [routerLink]="RouteURL.PAGE_TRANSACTION_HISTORY_PAYMENT">Lịch sử giao dịch</a></li>
         </ul>
       </li>
+      <li class="dropdown product-service" *ngxPermissionsOnly="[ROLES.ADMIN]">
+        <a class="nav-link" [routerLink]="RouteURL.PAGE_PRODUCT_SERVICE"><i
+            nz-icon nzType="appstore" nzTheme="outline"></i><span>Sản phẩm</span></a>
+      </li>
+      <li class="dropdown orders">
+        <a [routerLink]="RouteURL.PAGE_ORDERS" class="nav-link"><i nz-icon nzType="shopping-cart" nzTheme="outline"></i><span>Đơn hàng</span></a>
+      </li>
       <li class="dropdown agent" *ngxPermissionsOnly="[ROLES.ADMIN]">
-        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+        <a class="nav-link" [routerLink]="RouteURL.PAGE_AGENTS"><i
             nz-icon nzType="apartment" nzTheme="outline"></i><span>Đại lý</span></a>
-        <ul class="dropdown-menu">
-          <li class="agent-list"><a class="nav-link" [routerLink]="RouteURL.PAGE_AGENTS">Danh sách</a></li>
-          <li class="agent-user"><a class="nav-link" href="#">User</a></li>
-        </ul>
       </li>
       <li class="dropdown agent-product" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">
         <a class="nav-link" [routerLink]="RouteURL.PAGE_AGENT_PRODUCT"><i nz-icon nzType="appstore-add" nzTheme="outline"></i><span>Sản phẩm đăng ký</span></a>
@@ -42,18 +43,12 @@
         <a class="nav-link" [routerLink]="RouteURL.PAGE_COMMISSIONS"><i nz-icon nzType="percentage" nzTheme="outline"></i><span>Chiết khấu</span></a>
       </li>
       <li class="dropdown agent-distributor" *ngxPermissionsOnly="[ROLES.AGENT]">
-        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+        <a class="nav-link" [routerLink]="RouteURL.PAGE_DISTRIBUTORS"><i
             nz-icon nzType="cluster" nzTheme="outline"></i><span>Nhà phân phối</span></a>
-        <ul class="dropdown-menu">
-          <li  class="distributor-list"><a class="nav-link" [routerLink]="RouteURL.PAGE_DISTRIBUTORS">Danh sách</a></li>
-        </ul>
       </li>
       <li class="dropdown distributor" *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">
-        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+        <a class="nav-link" [routerLink]="RouteURL.PAGE_PARTNERS"><i
             nz-icon nzType="team" nzTheme="outline"></i><span>Cộng tác viên</span></a>
-        <ul class="dropdown-menu">
-          <li  class="partner-list"><a class="nav-link" [routerLink]="RouteURL.PAGE_PARTNERS">Danh sách</a></li>
-        </ul>
       </li>
       <li class="dropdown partner" *ngxPermissionsOnly="[ROLES.PARTNER]">
         <a [routerLink]="RouteURL.PAGE_ORDER_SERVICE" class="nav-link"><i nz-icon nzType="unordered-list" nzTheme="outline"></i><span>Danh sách SP</span></a>
@@ -64,14 +59,10 @@
       <li class="dropdown package-purchased" *ngxPermissionsOnly="[ROLES.CUSTOMER]">
         <a [routerLink]="RouteURL.PAGE_PACKAGE_PURCHASED" class="nav-link"><i nz-icon nzType="cloud-server" nzTheme="outline"></i><span>Dịch vụ đã mua</span></a>
       </li>
-      <li class="dropdown transactions" *ngxPermissionsOnly="[ROLES.ADMIN]">
-        <a href="#" class="menu-toggle nav-link has-dropdown"><i
-            nz-icon nzType="transaction" nzTheme="outline"></i><span>Giao dịch</span></a>
-        <ul class="dropdown-menu">
-          <li  class="order-await-approve-list"><a class="nav-link" [routerLink]="RouteURL.PAGE_APPROVE_MANUAL_PAYMENT">Đơn hàng chờ xác nhận</a></li>
-          <li  class="history-transactions"><a class="nav-link" [routerLink]="RouteURL.PAGE_TRANSACTION_HISTORY_PAYMENT">Lịch sử giao dịch</a></li>
-        </ul>
+      <li class="dropdown banking-info" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR]">
+        <a [routerLink]="RouteURL.PAGE_SETTING_BANKING" class="nav-link"><i nz-icon nzType="bank" nzTheme="outline"></i><span>Cài đặt ngân hàng</span></a>
       </li>
     </ul>
   </aside>
 </div>
+

@@ -54,15 +54,11 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
   ngAfterViewInit(): void {
     this.loadScript.addListScript(this.listScript).then(() => {
       this.renderer.addClass(document.querySelector('.agent-distributor'), "active");
-      this.renderer.addClass(document.querySelector('.agent-distributor a'), "toggled");
-      this.renderer.addClass(document.querySelector('.distributor-list'), "active");
-      this.renderer.addClass(document.querySelector('.distributor-list a'), "toggled");
     });
   }
 
   ngOnDestroy(): void {
     this.renderer.removeClass(document.querySelector('.agent-distributor'), "active");
-    this.renderer.removeClass(document.querySelector('.distributor-list'), "active");
   }
 
   init(): void {

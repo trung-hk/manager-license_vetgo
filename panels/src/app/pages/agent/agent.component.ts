@@ -55,15 +55,11 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     ngAfterViewInit(): void {
         this.loadScript.addListScript(this.listScript).then(() => {
             this.renderer.addClass(document.querySelector('.agent'), "active");
-            this.renderer.addClass(document.querySelector('.agent a'), "toggled");
-            this.renderer.addClass(document.querySelector('.agent-list'), "active");
-            this.renderer.addClass(document.querySelector('.agent-list a'), "toggled");
         });
     }
 
     ngOnDestroy(): void {
         this.renderer.removeClass(document.querySelector('.agent'), "active");
-        this.renderer.removeClass(document.querySelector('.agent-list'), "active");
     }
 
     init(): void {

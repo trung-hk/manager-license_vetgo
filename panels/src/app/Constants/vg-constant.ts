@@ -52,7 +52,6 @@ export enum ROLES {
     PARTNER = "PARTNER",
     CUSTOMER = "CUSTOMER"
 }
-
 export class STATUS_PRODUCT_SERVICE {
     static readonly UN_DEPLOYED: Enum = {text: "Chưa triển khai", value: "UN_DEPLOYED"};
     static readonly DEPLOYED: Enum = {text: "Đã triển khai", value: "DEPLOYED"};
@@ -166,10 +165,20 @@ export const REALM = (): string => {
     return realm;
 }
 export class TYPE_ORDER_SERVICE {
+    static readonly PARTNER_ORDER: string = "PARTNER_ORDER";
     static readonly RENEW_PACKAGE: string = "RENEW_PACKAGE";
     static readonly CUSTOMER_ORDER: string = "CUSTOMER_ORDER";
 }
 export enum TYPE_REFERENCE_PAYMENT {
     PAYMENT_ORDER_SERVICE = "PAYMENT_ORDER_SERVICE",
     REFUND_COMMISSION_APPROVE = "REFUND_COMMISSION_APPROVE",
+}
+export class STATUS_SETTING_BANKING_INFO {
+    static readonly IN_ACTIVE: Enum = {text: "Ngừng hoạt động", value: "IN_ACTIVE"};
+    static readonly ACTIVATED: Enum = {text: "Đang hoạt động", value: "ACTIVATED"};
+    static readonly LIST: Enum[] = [this.IN_ACTIVE, this.ACTIVATED];
+}
+
+export enum TEMPLATE_VIET_QR {
+    TEMPLATE_1 = 'fkGutv8',
 }

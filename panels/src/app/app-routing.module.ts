@@ -27,6 +27,7 @@ import {ApproveManualPaymentComponent} from "./pages/approve-manual-payment/appr
 import {
   TransactionHistoryPaymentComponent
 } from "./pages/transaction-history-payment/transaction-history-payment.component";
+import {SettingBankingComponent} from "./pages/setting-banking/setting-banking.component";
 
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
@@ -229,6 +230,17 @@ const routes: Routes = [
         data: {
           permissions: {
             only: [ROLES.ADMIN],
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
+          }
+        }
+      },
+      {
+        path: RouteURL.PAGE_SETTING_BANKING,
+        component: SettingBankingComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR],
             redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }

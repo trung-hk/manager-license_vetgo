@@ -332,4 +332,10 @@ export class ScriptCommonService {
             return [];
         }
     }
+    inputTransformFn = (value: unknown): string =>
+        typeof value === 'string' ? value.toUpperCase() : String(value);
+
+    outputTransformFn = (value: string | number | null | undefined): string => {
+        return value ? String(value).toUpperCase() : ''
+    };
 }

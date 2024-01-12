@@ -8,6 +8,5 @@ import {RouteURL} from "../../Constants/route-url";
 })
 export class SidebarLeftComponent {
   protected readonly ROLES = ROLES;
-  protected readonly Object = Object;
-    protected readonly RouteURL = RouteURL;
+  protected readonly RouteURL = RouteURL;
 }

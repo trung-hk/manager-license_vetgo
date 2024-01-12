@@ -15,4 +15,6 @@ export class URL {
     static readonly API_UPDATE_CONFIG_ORDER: string = `vg-order-service/config-order`;
     static readonly API_PACKAGE_PURCHASED: string = `user-packages`;
     static readonly API_TRANSACTION_HISTORY_PAYMENT: string = `transaction-log-payments`;
+    static readonly API_SETTING_BANK_INFO: string = `setting-bank-info`;
+    static readonly API_BANK_INFO: string = `bank-infos`;
 }

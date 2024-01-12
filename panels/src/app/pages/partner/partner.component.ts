@@ -54,15 +54,11 @@ export class PartnerComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.loadScript.addListScript(this.listScript).then(() => {
       this.renderer.addClass(document.querySelector('.distributor'), "active");
-      this.renderer.addClass(document.querySelector('.distributor a'), "toggled");
-      this.renderer.addClass(document.querySelector('.partner-list'), "active");
-      this.renderer.addClass(document.querySelector('.partner-list a'), "toggled");
     });
   }
 
   ngOnDestroy(): void {
     this.renderer.removeClass(document.querySelector('.distributor'), "active");
-    this.renderer.removeClass(document.querySelector('.partner-list'), "active");
   }
 
   init(): void {

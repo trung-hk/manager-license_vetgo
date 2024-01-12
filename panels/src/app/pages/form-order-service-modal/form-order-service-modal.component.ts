@@ -300,6 +300,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     insertOrUpdateOrder(dataOrder: OrderService): Promise<OrderService> {
         return new Promise(rs => {
             dataOrder.status = STATUS_ORDER.IN_PROCESS.value;
+            dataOrder.type = TYPE_ORDER_SERVICE.PARTNER_ORDER;
             if (this.attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.CUSTOMER_ORDER) {
                 switch (this.attributes.fromOrderMode) {
                     case MODE_ORDER.FROM_CUSTOMER_CS_ZALO_EXPAND:
@@ -331,25 +332,25 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
                     }
                 })
             } else {
-                // insert order
-                this.api.insert<OrderService>(dataOrder, URL.API_ORDER_SERVICE).subscribe((data) => {
-                    if (this.scriptFC.validateResponseAPI(data.status)) {
-                        data = data as ResponseError;
-                        this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
-                        rs(dataOrder);
-                    } else {
-                        data = data as OrderService;
-                        this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
-                        this.destroyModal();
-                        rs(data);
-                        this.scriptFC.payment(data, PAYMENTS_METHOD.VIET_QR, RouteURL.PAGE_PACKAGE_PURCHASED);
-                    }
-                }, error => {
-                    console.log(error);
-                    this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
-                    rs(dataOrder);
-                })
-            }
+                 // insert order
+                 this.api.insert<OrderService>(dataOrder, URL.API_ORDER_SERVICE).subscribe((data) => {
+                     if (this.scriptFC.validateResponseAPI(data.status)) {
+                         data = data as ResponseError;
+                         this.scriptFC.alertShowMessageError(`${Message.MESSAGE_SAVE_FAILED} ${data.message}`);
+                         rs(dataOrder);
+                     } else {
+                         data = data as OrderService;
+                         this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
+                         this.destroyModal();
+                         rs(data);
+                         this.scriptFC.payment(data, PAYMENTS_METHOD.VIET_QR, RouteURL.PAGE_PACKAGE_PURCHASED);
+                     }
+                 }, error => {
+                     console.log(error);
+                     this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
+                     rs(dataOrder);
+                 })
+             }
         })
     }
     updateConfigOrder(): Promise<void> {

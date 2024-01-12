@@ -110,3 +110,12 @@ export const CONFIG_LICENSE_ZALO_ACCOUNT_FORM = {
     phone: [null],
     expiredDate: [null],
 }
+
+export const SETTING_BANKING_INFO_FORM = {
+    id: [null],
+    userId: [[null], [Validators.required]],
+    acqId: [[null], [Validators.required]],
+    accountNo: [null, [Validators.required, Validators.maxLength(255)]],
+    accountName: [null, [Validators.required, Validators.maxLength(255)]],
+    status: [null, [Validators.required]],
+}

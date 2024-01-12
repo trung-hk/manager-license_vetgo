@@ -1,0 +1,166 @@
+<section class="section">
+  <div class="section-body">
+    <div class="row">
+      <div class="col-12">
+        <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
+          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <nz-table
+              nzShowSizeChanger
+              [nzData]="dataList"
+              [nzLoading]="loading"
+              [nzTotal]="total"
+              [nzPageSize]="pageSize"
+              [nzPageIndex]="pageIndex"
+              (nzQueryParams)="onQueryParamsChange($event)"
+              [nzScroll]="{ x: '500px' }"
+          >
+            <thead>
+            <tr>
+              <th nzWidth="12em">Đại lý</th>
+              <th nzWidth="10em">Tên tài khoản</th>
+              <th nzWidth="8em">Số tài khoản</th>
+              <th nzWidth="25em">Ngân hàng</th>
+              <th nzWidth="5em">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dt of dataList">
+              <td>
+                {{userMap.get(dt?.userId!)?.code}} - {{userMap.get(dt?.userId!)?.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}
+              </td>
+              <td>{{dt.accountName}}</td>
+              <td>{{dt.accountNo}}</td>
+              <td>
+                <nz-list nzItemLayout="horizontal" >
+                  <nz-list-item>
+                    <nz-list-item-meta
+                        [nzAvatar]="avatarBanking"
+                        [nzDescription]="bankingInfoMap.get(dt.acqId!)?.name!"
+                    >
+                      <nz-list-item-meta-title>
+                        {{ bankingInfoMap.get(dt.acqId!)?.code }}
+                      </nz-list-item-meta-title>
+                    </nz-list-item-meta>
+                  </nz-list-item>
+                </nz-list>
+                <ng-template #avatarBanking>
+                  <img
+                      [nzSrc]="bankingInfoMap.get(dt.acqId!)?.logo!"
+                      alt=""
+                      width="100px"
+                      height="37px"
+                      nz-image
+                  />
+                </ng-template>
+              </td>
+              <td class="action">
+                <nz-space>
+                  <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline" (click)="showModal(dt)" title="Chỉnh sửa"> </span>
+                  <span *nzSpaceItem nz-icon nzType="delete" nzTheme="outline" (click)="showDeleteModal(dt.id!)" title="Xóa"></span>
+                </nz-space>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </nz-card>
+        <ng-template #titleLeft>
+          Thông tin ngân hàng
+          <nz-tag [nzColor]="'#33CCFF'">
+            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
+          </nz-tag>
+        </ng-template>
+        <ng-template #titleAction>
+          <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
+            <div nz-col [nzXXl]="8" [nzXl]="8" [nzLg]="8" [nzMd]="8" [nzSm]="10" [nzXs]="10">
+              <button type="button" (click)="showModal()" class="btn btn-success">
+                <i class="fas fa-plus"></i> Thêm mới
+              </button>
+            </div>
+            <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
+                 [nzXl]="{ span: 6, offset: 10 }"
+                 [nzLg]="{ span: 6, offset: 10 }"
+                 [nzMd]="{ span: 6, offset: 10 }"
+                 [nzSm]="{ span: 6, offset: 8 }"
+                 [nzXs]="{ span: 6, offset: 8 }">
+              <nz-input-group [nzSuffix]="suffixIconSearch">
+                <input nzSize="large" type="search" nz-input placeholder="Tên tài khoản"
+                       (keyup.enter)="search($event)"/>
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search"></span>
+              </ng-template>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Create/Update Form -->
+<nz-modal [(nzVisible)]="isShowForm"
+          nzTitle="Cài đặt thông tin ngân hàng"
+          [nzContent]="modalContent"
+          [nzFooter]="modalFooter"
+          nzWidth="800px"
+          (nzOnCancel)="handleCancel()">
+  
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="validateForm">
+      <input type="hidden" formControlName="id">
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn Đại lý</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <nz-select formControlName="userId" nzShowSearch nzAllowClear>
+            <nz-option *ngFor="let user of userList" nzValue="{{user.id}}" nzLabel="{{user.code}} - {{user.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số tài khoản</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <input formControlName="accountNo" nz-input mask="s*"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Tên tài khoản</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <input formControlName="accountName" nz-input [inputTransformFn]="this.scriptFC.inputTransformFn"
+                 [outputTransformFn]="this.scriptFC.outputTransformFn"
+                 mask/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn ngân hàng</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <nz-select formControlName="acqId" nzShowSearch nzAllowClear>
+            <nz-option *ngFor="let banking of bankingInfo" nzValue="{{banking.bin}}" nzLabel="{{banking.code}} - {{banking.name}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Trạng thái</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <nz-select formControlName="status">
+            <nz-option *ngFor="let status of STATUS_SETTING_BANKING_INFO.LIST" nzValue="{{status.value}}" nzLabel="{{status.text}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
+    <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
+            [nzLoading]="isConfirmLoading">Cài đặt
+    </button>
+  </ng-template>
+</nz-modal>
+
+<!-- Delete Confirmation -->
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận xóa cài đặt" nzOkText="Đồng ý" nzOkDanger="true"
+          nzCancelText="Hủy" (nzOnOk)="handleToDelete()"
+          [nzOkLoading]="isConfirmLoadingDelete"
+          (nzOnCancel)="handleCancelDeletePopup()">
+  <ng-container *nzModalContent>
+    Xác nhận xóa cài đặt ngân hàng này?
+  </ng-container>
+</nz-modal>

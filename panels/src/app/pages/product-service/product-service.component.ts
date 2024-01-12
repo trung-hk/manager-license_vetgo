@@ -69,15 +69,11 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
 
     ngAfterViewInit(): void {
         this.loadScript.addListScript(this.listScript).then(() => {
-            this.renderer.addClass(document.querySelector('.product'), "active");
-            this.renderer.addClass(document.querySelector('.product a'), "toggled");
             this.renderer.addClass(document.querySelector('.product-service'), "active");
-            this.renderer.addClass(document.querySelector('.product-service a'), "toggled");
         });
     }
 
     ngOnDestroy(): void {
-        this.renderer.removeClass(document.querySelector('.product'), "active");
         this.renderer.removeClass(document.querySelector('.product-service'), "active");
     }
 
