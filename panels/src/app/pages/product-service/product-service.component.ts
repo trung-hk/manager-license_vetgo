@@ -10,7 +10,7 @@ import {URL} from "../../Constants/api-urls";
 import {
     STATUS_PRODUCT_SERVICE,
     TYPE_PACKAGE,
-    TYPE_PRODUCT, CONFIG, Enum, TYPE_PAYMENT_PACKAGE,
+    TYPE_PRODUCT, CONFIG, Enum, TYPE_PAYMENT_PACKAGE, Constant,
 } from "../../Constants/vg-constant";
 import {PACKAGE_PRODUCT_SERVICE_FORM, PRODUCT_SERVICE_FORM} from "../../Constants/Form";
 import {PackageProduct} from "../../models/PackageProduct";
@@ -330,4 +330,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         }
         this.formPackage.controls[i].patchValue({name})
     }
+
+    protected readonly Constant = Constant;
 }

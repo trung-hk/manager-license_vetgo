@@ -1,0 +1,109 @@
+<section class="section">
+  <div class="section-body">
+    <div class="row">
+      <div class="col-12">
+        <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
+          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <nz-table
+              nzShowSizeChanger
+              [nzData]="dataList"
+              [nzLoading]="loading"
+              [nzTotal]="total"
+              [nzPageSize]="pageSize"
+              [nzPageIndex]="pageIndex"
+              (nzQueryParams)="onQueryParamsChange($event)"
+              [nzScroll]="{ x: '500px' }"
+          >
+            <thead>
+            <tr>
+              <th nzWidth="12em">
+                <span *ngxPermissionsOnly="[ROLES.ADMIN]">Đại lý</span>
+                <span *ngxPermissionsOnly="[ROLES.AGENT]">Nhà phân phối</span>
+                <span *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">Cộng tác viên</span>
+              </th>
+              <th nzWidth="5em">Tổng đơn</th>
+              <th nzWidth="10em">Tổng tiền</th>
+              <th nzWidth="5em">Chiết khấu</th>
+              <th nzWidth="10em">Tổng tiền chiết khấu</th>
+              <th nzWidth="5em">Chi tiết</th>
+              <th nzWidth="5em">Trạng thái</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dt of dataList">
+              <td>
+                {{dt.userName}}
+              </td>
+              <td>{{dt.totalOrder}}</td>
+              <td>{{dt.totalOrderAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR: Constant.FORMAT_MONEY_CONFIG}}</td>
+              <td>
+                <nz-statistic [nzValue]="(dt.commissionRate | number: '1.0-2')!"
+                              [nzSuffix]="'%'"
+                              [nzValueStyle]="{ color: '#3F8600', 'font-size': '14px' }">
+                </nz-statistic>
+              </td>
+              <td>{{dt.totalCommissionAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR: Constant.FORMAT_MONEY_CONFIG}}</td>
+              <td>
+                <a href="{{dt.urlView}}" target="_blank">Xem chi tiết</a>
+                <br>
+                <a href="{{dt.urlDownload}}" target="_blank">Tải xuống</a>
+              </td>
+              <td class="align-center">
+                <ng-container [ngSwitch]="dt.status">
+                  <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value">
+                    <nz-space>
+                      <!--                      <img *nzSpaceItem class="payment-icon"-->
+                      <!--                           (click)="payment(dt!, PAYMENTS_METHOD.MOMO)" width="64px" height="50px"-->
+                      <!--                           src="/assets/img/payment-momo.png" title="Thanh toán momo"-->
+                      <!--                           alt="Thanh toán momo"/>-->
+                      <img *nzSpaceItem class="payment-icon"
+                           (click)="payment(dt!, PAYMENTS_METHOD.BANK_TRANSFER)" width="64px"
+                           height="50px" src="/assets/img/payment-bank-transfer.png"
+                           title="Thanh toán chuyển khoản" alt="Thanh toán chuyển khoản"/>
+                    </nz-space>
+                  </div>
+                  <div *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value" class="badge badge-shadow badge-info">
+                    {{STATUS_PAYMENT.IN_PAYMENT.text}}
+                  </div>
+                  <div *ngSwitchDefault
+                       class="badge badge-shadow badge-success">
+                    {{STATUS_PAYMENT.PAID.text}}
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </nz-card>
+        <ng-template #titleLeft>
+          Danh sách chiết khấu đã duyệt
+          <nz-tag [nzColor]="'#33CCFF'">
+            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
+          </nz-tag>
+        </ng-template>
+        <ng-template #titleAction>
+          <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
+            <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
+                 [nzXl]="{ span: 8, offset: 16 }"
+                 [nzLg]="{ span: 10, offset: 14 }"
+                 [nzMd]="{ span: 12, offset: 12 }"
+                 [nzSm]="24"
+                 [nzXs]="24">
+              <nz-input-group [nzSuffix]="suffixIconSearch">
+                <input *ngxPermissionsOnly="[ROLES.ADMIN]" nzSize="large" type="search" nz-input placeholder="Nhập tên đại lý"
+                       (keyup.enter)="search($event)"/>
+                <input *ngxPermissionsOnly="[ROLES.AGENT]" nzSize="large" type="search" nz-input placeholder="Nhập tên nhà phân phối"
+                       (keyup.enter)="search($event)"/>
+                <input *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]" nzSize="large" type="search" nz-input placeholder="Nhập tên cộng tác viên"
+                       (keyup.enter)="search($event)"/>
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search"></span>
+              </ng-template>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</section>

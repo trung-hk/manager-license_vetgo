@@ -31,7 +31,7 @@
                   <ng-container *ngFor="let account of dt.accountList; let i = index">
                     <nz-list-item-meta
                         [nzAvatar]="avatar"
-                        nzDescription="{{account.phone | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}"
+                        nzDescription="{{account.phone |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}"
                     >
                       <ng-template #avatar>
                         <nz-avatar style="background-color: #f56a00" nzText="TK {{i + 1}}"></nz-avatar>
@@ -76,7 +76,7 @@
                             <ng-container *ngFor="let account of dt.accountList">
                               <button *nzSpaceItem nz-button nzType="primary" (click)="executeApi(api, dt, account.phone)"
                                       [nzLoading]="executingIdList.includes(api.id! | replaceParam: '{phone}': account.phone)">
-                                Execute-{{account.phone | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}
+                                Execute-{{account.phone |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
                               </button>
                             </ng-container>
                           </nz-space>
@@ -165,7 +165,7 @@
                 <nz-form-control [nzSm]="18">
                   <div nz-row [nzGutter]="16">
                     <div nz-col nzSpan="11">
-                      <input formControlName="phone" nz-input placeholder="(012) 123-4567" [mask]="Constant.FORMAT_PHONE_INPUT" />
+                      <input formControlName="phone" nz-input placeholder="(012) 123-4567" [mask]="Constant.FORMAT_PHONE" />
                     </div>
                     <div nz-col nzSpan="11">
                       <nz-date-picker style="width: 100%" nzPlaceHolder="Ngày hết hạn" formControlName="expiredDate" nzFormat="yyyy-MM-dd"></nz-date-picker>

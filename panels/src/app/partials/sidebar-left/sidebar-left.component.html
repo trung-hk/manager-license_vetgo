@@ -25,6 +25,15 @@
           <li  class="history-transactions"><a class="nav-link" [routerLink]="RouteURL.PAGE_TRANSACTION_HISTORY_PAYMENT">Lịch sử giao dịch</a></li>
         </ul>
       </li>
+      <li class="dropdown commissions" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR]">
+        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+            nz-icon nzType="percentage" nzTheme="outline"></i><span>Chiết khấu</span></a>
+        <ul class="dropdown-menu">
+          <li  class="commission-list"><a class="nav-link" [routerLink]="RouteURL.PAGE_COMMISSIONS">Danh sách chiết khấu</a></li>
+          <li  class="commission-approve-pending-list"><a class="nav-link" [routerLink]="RouteURL.PAGE_COMMISSION_APPROVE_PENDING">Xét duyệt chiết khấu</a></li>
+          <li  class="commission-approved-list"><a class="nav-link" [routerLink]="RouteURL.PAGE_COMMISSION_APPROVE">Chiết khấu đã duyệt</a></li>
+        </ul>
+      </li>
       <li class="dropdown product-service" *ngxPermissionsOnly="[ROLES.ADMIN]">
         <a class="nav-link" [routerLink]="RouteURL.PAGE_PRODUCT_SERVICE"><i
             nz-icon nzType="appstore" nzTheme="outline"></i><span>Sản phẩm</span></a>
@@ -39,9 +48,9 @@
       <li class="dropdown agent-product" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">
         <a class="nav-link" [routerLink]="RouteURL.PAGE_AGENT_PRODUCT"><i nz-icon nzType="appstore-add" nzTheme="outline"></i><span>Sản phẩm đăng ký</span></a>
       </li>
-      <li class="dropdown commission-list" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR]">
-        <a class="nav-link" [routerLink]="RouteURL.PAGE_COMMISSIONS"><i nz-icon nzType="percentage" nzTheme="outline"></i><span>Chiết khấu</span></a>
-      </li>
+<!--      <li class="dropdown commission-list" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR]">-->
+<!--        <a class="nav-link" [routerLink]="RouteURL.PAGE_COMMISSIONS"><i nz-icon nzType="percentage" nzTheme="outline"></i><span>Chiết khấu</span></a>-->
+<!--      </li>-->
       <li class="dropdown agent-distributor" *ngxPermissionsOnly="[ROLES.AGENT]">
         <a class="nav-link" [routerLink]="RouteURL.PAGE_DISTRIBUTORS"><i
             nz-icon nzType="cluster" nzTheme="outline"></i><span>Nhà phân phối</span></a>

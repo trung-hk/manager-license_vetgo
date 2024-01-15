@@ -36,7 +36,7 @@
               <td>{{dt.code}}</td>
               <td>{{dt.name}}</td>
               <td>{{dt.email}}</td>
-              <td>{{dt.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}</td>
+              <td>{{dt.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}</td>
               <td>
                 <div class="text-break custom-scrollbar" [innerHtml]="dt.address! | lineBreak"></div>
               </td>
@@ -120,7 +120,7 @@
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
         <nz-form-control [nzSm]="18">
           <nz-input-group nzAddOnBefore="+84">
-            <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+            <input [mask]="Constant.FORMAT_PHONE" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>

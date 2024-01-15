@@ -42,7 +42,7 @@
               </td>
               <td>
                 <div>
-                  <label>Số điện thoại: <span>{{dt.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}</span></label>
+                  <label>Số điện thoại: <span>{{dt.phone! | mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}</span></label>
                 </div>
                 <div>
                   <label>E-mail: <span>{{dt.email}}</span></label>
@@ -144,7 +144,7 @@
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
         <nz-form-control [nzSm]="18">
           <nz-input-group nzAddOnBefore="+84">
-            <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+            <input [mask]="Constant.FORMAT_PHONE" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>

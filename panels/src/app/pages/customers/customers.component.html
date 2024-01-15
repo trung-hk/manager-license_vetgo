@@ -32,7 +32,7 @@
                     [nzDescription]="dt.name!"
                 >
                   <nz-list-item-meta-title>
-                    {{dt.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}
+                    {{dt.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
                   </nz-list-item-meta-title>
                 </nz-list-item-meta>
                 <ng-template #avatar>
@@ -83,7 +83,7 @@
                   <div nz-row>
                     <div nz-col nzSpan="16">
                       <span>{{dt.name}}</span><br>
-                      <span>{{dt.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}</span>
+                      <span>{{dt.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}</span>
                     </div>
                     <div nz-col nzSpan="8" class="icon-center-row">
                       <div class="action">
@@ -157,11 +157,11 @@
                   (ngModelChange)="filterOrder($event)"
               >
                 <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]; else option">
-                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT)"
+                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
                              [nzValue]="user.code"></nz-option>
                 </ng-container>
                 <ng-template #option>
-                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT)"
+                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
                              [nzValue]="user.id"></nz-option>
                 </ng-template>
               </nz-select>
@@ -203,7 +203,7 @@
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
         <nz-form-control [nzSm]="18">
           <nz-input-group nzAddOnBefore="+84">
-            <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+            <input [mask]="Constant.FORMAT_PHONE" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>

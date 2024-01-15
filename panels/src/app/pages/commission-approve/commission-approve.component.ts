@@ -1,29 +1,44 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {SettingBankingInfo} from "../../models/SettingBankingInfo";
+import {User} from "../../models/User";
+import {BankingInfo} from "../../models/BankingInfo";
+import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
+import {SETTING_BANKING_INFO_FORM} from "../../Constants/Form";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {Message} from "../../Constants/message-constant";
-import {User} from "../../models/User";
-import {SettingBankingInfo} from "../../models/SettingBankingInfo";
-import {Constant, ROLES, STATUS_SETTING_BANKING_INFO, TEMPLATE_VIET_QR, USER_TYPE} from "../../Constants/vg-constant";
+import {
+  Constant,
+  ROLES,
+  STATUS_PAYMENT,
+  STATUS_SETTING_BANKING_INFO,
+  TEMPLATE_VIET_QR,
+  USER_TYPE
+} from "../../Constants/vg-constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
-import {BankingInfo} from "../../models/BankingInfo";
-import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
-import {SETTING_BANKING_INFO_FORM} from "../../Constants/Form";
 import {ResponseError} from "../../models/ResponseError";
+import {CommissionApproved} from "../../models/CommissionApproved";
+import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
+import {OrderService} from "../../models/OrderService";
+import {RouteURL} from "../../Constants/route-url";
+
+interface ObjectByRole {
+  userType: string,
+}
 
 @Component({
-  selector: 'app-setting-banking',
-  templateUrl: './setting-banking.component.html',
+  selector: 'app-commission-approve',
+  templateUrl: './commission-approve.component.html',
 })
-export class SettingBankingComponent implements OnInit, AfterViewInit, OnDestroy{
+export class CommissionApproveComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly Constant = Constant;
   protected readonly STATUS_SETTING_BANKING_INFO = STATUS_SETTING_BANKING_INFO;
   listScript = [];
-  dataList: SettingBankingInfo[] = [];
+  dataList: CommissionApproved[] = [];
   userList: User[] = [];
   userMap: Map<string, User> = new Map<string, User>();
   bankingInfo: BankingInfo[] = [];
@@ -44,6 +59,10 @@ export class SettingBankingComponent implements OnInit, AfterViewInit, OnDestroy
   idDelete: string | null = null;
   isLoadFirstData: boolean = true;
 
+  objectByRole!: ObjectByRole;
+
+  selectUser: string | null = null;
+
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
               private renderer: Renderer2,
@@ -58,74 +77,79 @@ export class SettingBankingComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngAfterViewInit(): void {
     this.loadScript.addListScript(this.listScript).then(() => {
-      this.renderer.addClass(document.querySelector('.banking-info'), "active");
+      this.renderer.addClass(document.querySelector('.commissions'), "active");
+      this.renderer.addClass(document.querySelector('.commissions a'), "toggled");
+      this.renderer.addClass(document.querySelector('.commission-approved-list'), "active");
     });
   }
 
   ngOnDestroy(): void {
-    this.renderer.removeClass(document.querySelector('.banking-info'), "active");
+    this.renderer.removeClass(document.querySelector('.commissions'), "active");
+    this.renderer.removeClass(document.querySelector('.commission-approved-list'), "active");
   }
   init(): void {
     this.loadDataFromServer().then();
   }
   async loadDataFromServer(keyWork?: string): Promise<void> {
     this.loading = true;
+    if (!this.objectByRole) this.objectByRole = await this.getObjectByRoles();
     let loading_success_1 = false;
     let loading_success_2 = false;
     let loading_success_3 = false;
     const objectSelect: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
-    this.api.getAll<ResponseDataGetAll<SettingBankingInfo>>(URL.API_SETTING_BANK_INFO, objectSelect).subscribe(data => {
+    this.api.getAll<ResponseDataGetAll<CommissionApproved>>(URL.API_COMMISSION_APPROVED, objectSelect).subscribe(data => {
       this.dataList = data.content;
       this.total = data.totalElements;
       loading_success_1 = true;
       this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
+      this.loading = false;
+
     }, error => {
       console.log(error);
       this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
       this.loading = false;
     });
-    if (this.isLoadFirstData) {
-      const userType = await this.getUserType();
-      this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, userType).subscribe((data) => {
-        console.log(data)
-        this.userList = data.content;
-        this.userMap = new Map<string, User>(this.userList.map(user => [user.id!, user]));
-        loading_success_2 = true;
-        this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
-      }, error => {
-        console.log(error);
-        this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-        this.loading = false;
-      });
-      this.api.getAll<ResponseDataGetAll<BankingInfo>>(URL.API_BANK_INFO).subscribe((data) => {
-        console.log(data)
-        this.bankingInfo = data.content;
-        this.bankingInfoMap = new Map<string, BankingInfo>(this.bankingInfo.map(banking => [banking.bin!, banking]));
-        loading_success_3 = true;
-        this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
-      }, error => {
-        console.log(error);
-        this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-        this.loading = false;
-      });
-      this.isLoadFirstData = false;
-    } else {
-      loading_success_2 = true;
-      loading_success_3 = true;
-      this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
-    }
+    // if (this.isLoadFirstData) {
+    //   this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, this.objectByRole.userType).subscribe((data) => {
+    //     console.log(data)
+    //     this.userList = data.content;
+    //     this.userMap = new Map<string, User>(this.userList.map(user => [user.id!, user]));
+    //     loading_success_2 = true;
+    //     this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
+    //   }, error => {
+    //     console.log(error);
+    //     this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
+    //     this.loading = false;
+    //   });
+    //   this.api.getAll<ResponseDataGetAll<BankingInfo>>(URL.API_BANK_INFO).subscribe((data) => {
+    //     console.log(data)
+    //     this.bankingInfo = data.content;
+    //     this.bankingInfoMap = new Map<string, BankingInfo>(this.bankingInfo.map(banking => [banking.bin!, banking]));
+    //     loading_success_3 = true;
+    //     this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
+    //   }, error => {
+    //     console.log(error);
+    //     this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
+    //     this.loading = false;
+    //   });
+    //   this.isLoadFirstData = false;
+    // } else {
+    //   loading_success_2 = true;
+    //   loading_success_3 = true;
+    //   this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
+    // }
 
   }
-  getUserType(): Promise<string> {
+  getObjectByRoles(): Promise<ObjectByRole> {
     return new Promise((rs) => {
       this.scriptFC.hasPermission(ROLES.ADMIN).then(result => {
-        if (result) rs(USER_TYPE.AGENT);
+        if (result) rs({userType:USER_TYPE.AGENT});
       });
       this.scriptFC.hasPermission(ROLES.AGENT).then(result => {
-        if (result) rs(USER_TYPE.DISTRIBUTOR);
+        if (result) rs({userType:USER_TYPE.DISTRIBUTOR});
       });
       this.scriptFC.hasPermission(ROLES.DISTRIBUTOR).then(result => {
-        if (result) rs(USER_TYPE.PARTNER);
+        if (result) rs({userType:USER_TYPE.PARTNER});
       });
     });
   }
@@ -255,4 +279,9 @@ export class SettingBankingComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   protected readonly ROLES = ROLES;
+  protected readonly PAYMENTS_METHOD = PAYMENTS_METHOD;
+  protected readonly STATUS_PAYMENT = STATUS_PAYMENT;
+  payment(commissionApproved: CommissionApproved, method: string): void {
+    this.scriptFC.paymentForCommission(commissionApproved, method, RouteURL.PAGE_COMMISSION_APPROVE);
+  }
 }

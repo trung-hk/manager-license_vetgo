@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import {NavigationExtras, Router} from "@angular/router";
-
+export interface PaymentBankTransferData {
+  backUrl: string,
+  typePayment: string
+}
 @Injectable({
   providedIn: 'root'
 })

@@ -42,7 +42,7 @@
               </td>
               <td>{{dt.referenceType}}</td>
               <td>{{dt.note}}</td>
-              <td>{{dt.totalAmount! | mask:'separator': Constant.FORMAT_MONEY}}</td>
+              <td>{{dt.totalAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}</td>
               <td>
                 <ng-container [ngSwitch]="dt.status">
                   <span *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value"><nz-tag [nzColor]="'yellow'">{{STATUS_PAYMENT.UN_PAID.text}}</nz-tag></span>

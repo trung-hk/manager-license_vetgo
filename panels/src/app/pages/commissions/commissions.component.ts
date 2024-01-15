@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import {TYPE_COMMISSION} from "../../Constants/vg-constant";
+import {Constant, TYPE_COMMISSION} from "../../Constants/vg-constant";
 import {FormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
@@ -60,11 +60,14 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.loadScript.addListScript(this.listScript).then(() => {
+      this.renderer.addClass(document.querySelector('.commissions'), "active");
+      this.renderer.addClass(document.querySelector('.commissions a'), "toggled");
       this.renderer.addClass(document.querySelector('.commission-list'), "active");
     });
   }
 
   ngOnDestroy(): void {
+    this.renderer.removeClass(document.querySelector('.commissions'), "active");
     this.renderer.removeClass(document.querySelector('.commission-list'), "active");
   }
 
@@ -277,4 +280,6 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.validateCommissionForm.controls["rate"].updateValueAndValidity({onlySelf: false});
     }
   }
+
+  protected readonly Constant = Constant;
 }

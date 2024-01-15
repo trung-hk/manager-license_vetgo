@@ -6,5 +6,6 @@ export class ObjectSelectAll{
     filter?: Array<{ key: string; value: string[]}> | null;
     keyword?: string | null;
     type?: string
+    userId? : string | null
 }
 

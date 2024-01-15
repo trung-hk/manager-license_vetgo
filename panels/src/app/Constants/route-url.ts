@@ -20,6 +20,8 @@ export class RouteURL {
     static readonly PAGE_APPROVE_MANUAL_PAYMENT: string = "approve-manual-payment";
     static readonly PAGE_TRANSACTION_HISTORY_PAYMENT: string = "transaction-history-payment";
     static readonly PAGE_SETTING_BANKING: string = "setting-banking";
+    static readonly PAGE_COMMISSION_APPROVE: string = "commission-approve";
+    static readonly PAGE_COMMISSION_APPROVE_PENDING: string = "commission-approve-pending";
     //Page error
     static readonly PAGE_ERROR: string = "error";
     static readonly PAGE_ERROR_403: string = this.PAGE_ERROR +"/403";

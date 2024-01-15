@@ -42,7 +42,7 @@
                     [nzDescription]="dt.customerName!"
                 >
                   <nz-list-item-meta-title>
-                    {{dt.customerPhone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}
+                    {{dt.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
                   </nz-list-item-meta-title>
                 </nz-list-item-meta>
                 <ng-template #avatar>
@@ -183,7 +183,7 @@
                   <div nz-row>
                     <div nz-col nzSpan="16">
                       <span>{{dt.code}}</span><br>
-                      <span>{{dt.customerPhone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}</span><br>
+                      <span>{{dt.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}</span><br>
                       <span>{{dt.customerName}}</span><br>
                     
                     </div>
@@ -236,13 +236,13 @@
                 <nz-descriptions nzBordered nzSize="small">
                   <nz-descriptions-item nzSpan="3" nzTitle="Tên">{{dt.customerName}}</nz-descriptions-item>
                   <nz-descriptions-item nzSpan="3"
-                                        nzTitle="Số điên thoại">{{dt.customerPhone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}</nz-descriptions-item>
+                                        nzTitle="Số điên thoại">{{dt.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}</nz-descriptions-item>
                   <nz-descriptions-item nzSpan="3"
                                         nzTitle="Tên sản phẩm">{{dt.attributesObject?.itemName}}</nz-descriptions-item>
                   <nz-descriptions-item nzSpan="3"
                                         nzTitle="Gói đã mua">{{dt.attributesObject?.packagesMap?.get(dt.packageId!)?.name}}</nz-descriptions-item>
                   <nz-descriptions-item nzSpan="3"
-                                        nzTitle="Giá">{{dt.totalAmount! | mask: 'separator' : Constant.FORMAT_MONEY}}</nz-descriptions-item>
+                                        nzTitle="Giá">{{dt.totalAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}</nz-descriptions-item>
                   <nz-descriptions-item nzSpan="3" nzTitle="Thanh toán">
                     <ng-container [ngSwitch]="dt.paymentStatus">
                       <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value">
@@ -364,12 +364,12 @@
               >
                 <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]; else option">
                   <nz-option *ngFor="let user of userList"
-                             [nzLabel]="user?.code! + ' - ' + (user?.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT)"
+                             [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
                              [nzValue]="user.code"></nz-option>
                 </ng-container>
                 <ng-template #option>
                   <nz-option *ngFor="let user of userList"
-                             [nzLabel]="user?.code! + ' - ' + (user?.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT)"
+                             [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
                              [nzValue]="user.id"></nz-option>
                 </ng-template>
               </nz-select>

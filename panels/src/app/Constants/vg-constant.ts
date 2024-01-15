@@ -18,9 +18,10 @@ export enum USER_TYPE {
 
 export class Constant {
     static readonly API_CONFIG_SYSTEM_LIST: string[] = ["TIME_ACTIVE", "CONFIG_BROWSER"];
-    static readonly FORMAT_MONEY = {thousandSeparator:',', suffix: ' VNĐ'};
-    static readonly FORMAT_DEFAULT = {suffix: ''};
-    static readonly FORMAT_PHONE_INPUT: string = "(000) 000-0000";
+    static readonly FORMAT_MONEY_SEPARATOR = "separator";
+    static readonly FORMAT_MONEY_CONFIG = {thousandSeparator:',', suffix: ' VNĐ'};
+    static readonly FORMAT_DEFAULT_CONFIG = {suffix: ''};
+    static readonly FORMAT_PHONE: string = "(000) 000-0000";
     static readonly EXTENSION_DOMAIN_PRO = 'phanmemvet.vn';
     static readonly EXTENSION_DOMAIN_DEV = 'moonpet.vn';
 }
@@ -164,10 +165,10 @@ export const REALM = (): string => {
     }
     return realm;
 }
-export class TYPE_ORDER_SERVICE {
-    static readonly PARTNER_ORDER: string = "PARTNER_ORDER";
-    static readonly RENEW_PACKAGE: string = "RENEW_PACKAGE";
-    static readonly CUSTOMER_ORDER: string = "CUSTOMER_ORDER";
+export enum TYPE_ORDER_SERVICE {
+    PARTNER_ORDER = "PARTNER_ORDER",
+    RENEW_PACKAGE = "RENEW_PACKAGE",
+    CUSTOMER_ORDER = "CUSTOMER_ORDER",
 }
 export enum TYPE_REFERENCE_PAYMENT {
     PAYMENT_ORDER_SERVICE = "PAYMENT_ORDER_SERVICE",
@@ -178,7 +179,15 @@ export class STATUS_SETTING_BANKING_INFO {
     static readonly ACTIVATED: Enum = {text: "Đang hoạt động", value: "ACTIVATED"};
     static readonly LIST: Enum[] = [this.IN_ACTIVE, this.ACTIVATED];
 }
-
 export enum TEMPLATE_VIET_QR {
     TEMPLATE_1 = 'fkGutv8',
+}
+export class STATUS_COMMISSION_APPROVE_PENDING {
+    static readonly PENDING: Enum = {text: "Chờ duyệt", value: "PENDING"};
+    static readonly APPROVE: Enum = {text: "Đã duyệt", value: "APPROVE"};
+    static readonly LIST: Enum[] = [this.PENDING, this.APPROVE];
+}
+export enum TYPE_PAYMENT {
+    ORDER_SERVICE = "ORDER_SERVICE",
+    COMMISSION = "COMMISSION",
 }

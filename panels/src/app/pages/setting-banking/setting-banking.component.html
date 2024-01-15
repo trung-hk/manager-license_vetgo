@@ -16,7 +16,11 @@
           >
             <thead>
             <tr>
-              <th nzWidth="12em">Đại lý</th>
+              <th nzWidth="12em">
+                <span *ngxPermissionsOnly="[ROLES.ADMIN]">Đại lý</span>
+                <span *ngxPermissionsOnly="[ROLES.AGENT]">Nhà phân phối</span>
+                <span *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">Cộng tác viên</span>
+              </th>
               <th nzWidth="10em">Tên tài khoản</th>
               <th nzWidth="8em">Số tài khoản</th>
               <th nzWidth="25em">Ngân hàng</th>
@@ -26,7 +30,7 @@
             <tbody>
             <tr *ngFor="let dt of dataList">
               <td>
-                {{userMap.get(dt?.userId!)?.code}} - {{userMap.get(dt?.userId!)?.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}
+                {{userMap.get(dt?.userId!)?.code}} - {{userMap.get(dt?.userId!)?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
               </td>
               <td>{{dt.accountName}}</td>
               <td>{{dt.accountNo}}</td>
@@ -108,10 +112,12 @@
     <form nz-form [formGroup]="validateForm">
       <input type="hidden" formControlName="id">
       <nz-form-item>
-        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn Đại lý</nz-form-label>
+        <nz-form-label *ngxPermissionsOnly="[ROLES.ADMIN]" nzRequired nzLabelAlign="right" [nzSm]="5">Chọn Đại lý</nz-form-label>
+        <nz-form-label *ngxPermissionsOnly="[ROLES.AGENT]" nzRequired nzLabelAlign="right" [nzSm]="5">Nhà phân phối</nz-form-label>
+        <nz-form-label *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]" nzRequired nzLabelAlign="right" [nzSm]="5">Cộng tác viên</nz-form-label>
         <nz-form-control [nzSm]="18">
           <nz-select formControlName="userId" nzShowSearch nzAllowClear>
-            <nz-option *ngFor="let user of userList" nzValue="{{user.id}}" nzLabel="{{user.code}} - {{user.phone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}"></nz-option>
+            <nz-option *ngFor="let user of userList" nzValue="{{user.id}}" nzLabel="{{user.code}} - {{user.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}"></nz-option>
           </nz-select>
         </nz-form-control>
       </nz-form-item>

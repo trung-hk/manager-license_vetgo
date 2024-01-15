@@ -35,7 +35,7 @@
                     [nzDescription]="dt.customerName!"
                 >
                   <nz-list-item-meta-title>
-                    {{dt.customerPhone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}
+                    {{dt.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
                   </nz-list-item-meta-title>
                 </nz-list-item-meta>
                 <ng-template #avatar>

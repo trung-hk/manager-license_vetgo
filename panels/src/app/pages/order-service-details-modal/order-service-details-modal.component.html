@@ -5,7 +5,7 @@
       <br>
       Tên: {{orderService.customerName}}
       <br>
-      Số điện thoại: {{orderService.customerPhone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}
+      Số điện thoại: {{orderService.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
       <br>
       E-mail: {{orderService.customerAddress}}
     </div>
@@ -14,7 +14,7 @@
       <br>
       Phương thức: {{orderService.paymentMethod}}
       <br>
-      số tiền: {{orderService.totalAmount! | mask: 'separator' : Constant.FORMAT_MONEY}}
+      số tiền: {{orderService.totalAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}
       <br>
       <ng-container [ngSwitch]="orderService.paymentStatus">
         <span>Trạng thái: </span>
@@ -30,6 +30,6 @@
   <nz-descriptions nzSize="small" nzBordered>
     <nz-descriptions-item nzSpan="3" nzTitle="Sản phẩm">{{orderService.attributesObject?.itemName}}</nz-descriptions-item>
     <nz-descriptions-item nzSpan="3" nzTitle="Gói">{{packageOrder.name}}</nz-descriptions-item>
-    <nz-descriptions-item nzSpan="3" nzTitle="Giá">{{orderService.totalAmount! | mask: 'separator' : Constant.FORMAT_MONEY}}</nz-descriptions-item>
+    <nz-descriptions-item nzSpan="3" nzTitle="Giá">{{orderService.totalAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}</nz-descriptions-item>
   </nz-descriptions>
 </nz-card>

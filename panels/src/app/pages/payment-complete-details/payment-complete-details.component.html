@@ -8,21 +8,21 @@
             <br>
             Tên: {{orderService?.customerName}}
             <br>
-            Số điện thoại: {{orderService?.customerPhone! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT}}
+            Số điện thoại: {{orderService?.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
             <br>
             E-mail: {{orderService?.customerAddress}}
             <nz-divider></nz-divider>
             <nz-descriptions nzSize="small" nzBordered>
               <nz-descriptions-item nzTitle="Sản phẩm">{{orderService?.attributesObject?.itemName}}</nz-descriptions-item>
               <nz-descriptions-item nzTitle="Gói">{{packageOrder?.name}}</nz-descriptions-item>
-              <nz-descriptions-item nzTitle="Giá">{{orderService?.totalAmount! | mask: 'separator' : Constant.FORMAT_MONEY}}</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Giá">{{orderService?.totalAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}</nz-descriptions-item>
             </nz-descriptions>
             <nz-divider></nz-divider>
             <b>Thông tin thanh toán</b>
             <br>
             Phương thức thanh toán: {{orderService?.paymentMethod}}
             <br>
-            Số tiền thanh toán: {{orderService?.totalAmount! | mask: 'separator' : Constant.FORMAT_MONEY}}
+            Số tiền thanh toán: {{orderService?.totalAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}
             <br>
             <ng-container [ngSwitch]="orderService?.paymentStatus">
               <span>Trạng thái:</span>

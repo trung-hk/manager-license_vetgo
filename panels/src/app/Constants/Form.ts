@@ -119,3 +119,8 @@ export const SETTING_BANKING_INFO_FORM = {
     accountName: [null, [Validators.required, Validators.maxLength(255)]],
     status: [null, [Validators.required]],
 }
+export const COMMISSION_APPROVE_PENDING_FORM = {
+    userId: [null],
+    userType: [[null], [Validators.required]],
+    note: [[null], [Validators.required, Validators.maxLength(255)]],
+}

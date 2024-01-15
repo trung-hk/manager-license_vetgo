@@ -7,7 +7,7 @@
         <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoai</nz-form-label>
         <nz-form-control [nzSm]="18" nzErrorTip="Hãy nhập số điện thoại">
           <nz-input-group nzAddOnBefore="+84">
-            <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567" (ngModelChange)="onSearch($event)"/>
+            <input [mask]="Constant.FORMAT_PHONE" formControlName="phone" nz-input placeholder="(090) 123-4567" (ngModelChange)="onSearch($event)"/>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
@@ -67,7 +67,7 @@
                   <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
                   <nz-form-control [nzSm]="18">
                     <nz-input-group nzAddOnBefore="+84">
-                      <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+                      <input [mask]="Constant.FORMAT_PHONE" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
                     </nz-input-group>
                   </nz-form-control>
                 </ng-container>
@@ -75,7 +75,7 @@
                   <nz-form-label nzNoColon="true" nzLabelAlign="right" [nzSm]="5"></nz-form-label>
                   <nz-form-control [nzSm]="17">
                     <nz-input-group nzAddOnBefore="+84">
-                      <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+                      <input [mask]="Constant.FORMAT_PHONE" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
                     </nz-input-group>
                   </nz-form-control>
                   <div nz-col [nzSm]="1" class="text-center">
@@ -99,7 +99,7 @@
               <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Chọn TK gia hạn</nz-form-label>
               <nz-form-control [nzSm]="18">
                 <nz-select formControlName="phones" nzMode="tags" (ngModelChange)="handleChangePackage()" nzPlaceHolder="Chọn tài khoản">
-                  <nz-option *ngFor="let dt of attributes.phoneList" [nzLabel]="dt! | mask: Constant.FORMAT_PHONE_INPUT: Constant.FORMAT_DEFAULT" [nzValue]="dt"></nz-option>
+                  <nz-option *ngFor="let dt of attributes.phoneList" [nzLabel]="dt! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG" [nzValue]="dt"></nz-option>
                 </nz-select>
               </nz-form-control>
             </nz-form-item>
@@ -112,7 +112,7 @@
           <h5>Tổng tiền</h5>
         </div>
         <div nz-col nzSpan="11" class="text-right">
-          <h5>{{totalPrice! | mask: 'separator' : Constant.FORMAT_MONEY }}</h5>
+          <h5>{{totalPrice! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG }}</h5>
         </div>
       </div>
     </form>
@@ -172,7 +172,7 @@
             <nz-form-label *ngIf="i == 0" nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
             <nz-form-control [nzSm]="18">
               <nz-input-group nzAddOnBefore="+84">
-                <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+                <input [mask]="Constant.FORMAT_PHONE" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
               </nz-input-group>
             </nz-form-control>
           </nz-form-item>
@@ -215,7 +215,7 @@
           <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Số điện thoại</nz-form-label>
           <nz-form-control [nzSm]="18">
             <nz-input-group nzAddOnBefore="+84">
-              <input [mask]="Constant.FORMAT_PHONE_INPUT" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
+              <input [mask]="Constant.FORMAT_PHONE" formControlName="phone" nz-input placeholder="(090) 123-4567"/>
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>

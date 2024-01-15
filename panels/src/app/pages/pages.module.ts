@@ -28,6 +28,8 @@ import { ApproveManualPaymentComponent } from './approve-manual-payment/approve-
 import { TransactionHistoryPaymentComponent } from './transaction-history-payment/transaction-history-payment.component';
 import { OrderServiceDetailsModalComponent } from './order-service-details-modal/order-service-details-modal.component';
 import { SettingBankingComponent } from './setting-banking/setting-banking.component';
+import { CommissionApproveComponent } from './commission-approve/commission-approve.component';
+import { CommissionApprovePendingComponent } from './commission-approve-pending/commission-approve-pending.component';
 
 const routes: Routes =
     [
@@ -61,7 +63,9 @@ const routes: Routes =
         ApproveManualPaymentComponent,
         TransactionHistoryPaymentComponent,
         OrderServiceDetailsModalComponent,
-        SettingBankingComponent],
+        SettingBankingComponent,
+        CommissionApproveComponent,
+        CommissionApprovePendingComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),

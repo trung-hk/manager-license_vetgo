@@ -1,0 +1,151 @@
+<section class="section">
+  <div class="section-body">
+    <div class="row">
+      <div class="col-12">
+        <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
+          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <nz-table
+              nzShowSizeChanger
+              [nzData]="dataList"
+              [nzLoading]="loading"
+              [nzTotal]="total"
+              [nzPageSize]="pageSize"
+              [nzPageIndex]="pageIndex"
+              (nzQueryParams)="onQueryParamsChange($event)"
+              [nzScroll]="{ x: '500px' }"
+          >
+            <thead>
+            <tr>
+              <th nzWidth="12em">
+                <span *ngxPermissionsOnly="[ROLES.ADMIN]">Đại lý</span>
+                <span *ngxPermissionsOnly="[ROLES.AGENT]">Nhà phân phối</span>
+                <span *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">Cộng tác viên</span>
+              </th>
+              <th nzWidth="12em">Mã đơn hàng</th>
+              <th nzWidth="8em">Tiền đơn hàng</th>
+              <th nzWidth="5em">Chiết khấu</th>
+              <th nzWidth="5em">Tiền hoa hồng</th>
+              <th nzWidth="5em">Trạng thái</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dt of dataList">
+              <td>{{dt.userCode}}</td>
+              <td>{{dt.code}}</td>
+              <td>{{dt.totalAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR: Constant.FORMAT_MONEY_CONFIG}}</td>
+              <td>
+                <nz-statistic [nzValue]="(dt.rate | number: '1.0-2')!"
+                              [nzSuffix]="'%'"
+                              [nzValueStyle]="{ color: '#3F8600', 'font-size': '14px' }">
+                </nz-statistic>
+              </td>
+              <td>{{dt.commissionAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR: Constant.FORMAT_MONEY_CONFIG}}</td>
+              <td>
+                <ng-container [ngSwitch]="dt.status">
+                  <div *ngSwitchCase="STATUS_COMMISSION_APPROVE_PENDING.PENDING.value"
+                       class="badge badge-shadow badge-info">
+                    {{STATUS_COMMISSION_APPROVE_PENDING.PENDING.text}}
+                  </div>
+                  <div *ngSwitchCase="STATUS_COMMISSION_APPROVE_PENDING.APPROVE.value"
+                       class="badge badge-shadow badge-success">
+                    {{STATUS_COMMISSION_APPROVE_PENDING.APPROVE.text}}
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </nz-card>
+        <ng-template #titleLeft>
+          Danh sách đơn chiết khấu
+          <nz-tag [nzColor]="'#33CCFF'">
+            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
+          </nz-tag>
+        </ng-template>
+        <ng-template #titleAction>
+          <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
+            <div nz-col [nzXXl]="8" [nzXl]="8" [nzLg]="8" [nzMd]="8" [nzSm]="10" [nzXs]="10">
+              <button type="button" (click)="showModal()" class="btn btn-success" *ngIf="canApprove">
+                <i class="fas fa-plus"></i> Duyệt chiết khấu
+              </button>
+            </div>
+            <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
+                 [nzXl]="{ span: 6, offset: 10 }"
+                 [nzLg]="{ span: 6, offset: 10 }"
+                 [nzMd]="{ span: 6, offset: 10 }"
+                 [nzSm]="{ span: 6, offset: 8 }"
+                 [nzXs]="{ span: 6, offset: 8 }">
+              <nz-input-group [nzSuffix]="suffixIconSearch">
+                <input nzSize="large" type="search"  nz-input placeholder="Nhập mã đơn hàng"
+                       (keyup.enter)="search($event)"/>
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search"></span>
+              </ng-template>
+            </div>
+          </div>
+          <div nz-row [ngStyle]="{'margin-top': '15px'}" *ngxPermissionsExcept="[ROLES.PARTNER]">
+            <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
+                 [nzXl]="{ span: 8, offset: 16 }"
+                 [nzLg]="{ span: 10, offset: 14 }"
+                 [nzMd]="{ span: 12, offset: 12 }"
+                 [nzSm]="{ span: 12, offset: 12 }"
+                 [nzXs]="24">
+              <nz-select
+                  style="width: 100%"
+                  nzShowSearch
+                  nzServerSearch
+                  nzAllowClear
+                  [nzPlaceHolder]="placeHolder"
+                  [(ngModel)]="selectUser"
+                  [nzShowArrow]="false"
+                  [nzFilterOption]="nzFilterOption"
+                  (nzOnSearch)="handleInputChange($event)"
+                  (ngModelChange)="filterOrder($event)"
+              >
+                <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]; else option">
+                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
+                             [nzValue]="user.id"></nz-option>
+                </ng-container>
+                <ng-template #option>
+                  <nz-option *ngFor="let user of userList" [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
+                             [nzValue]="user.id"></nz-option>
+                </ng-template>
+              </nz-select>
+              <ng-template #placeHolder>
+                <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]">Đại lý</ng-container>
+                <ng-container *ngxPermissionsOnly="[ROLES.AGENT]">Nhà phân phối</ng-container>
+                <ng-container *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">Tạo bởi cộng tác viên</ng-container>
+              </ng-template>
+            </div>
+          </div>
+          <nz-divider></nz-divider>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Create/Update Form -->
+<nz-modal [(nzVisible)]="isShowForm"
+          nzTitle="Xác nhận duyệt đơn"
+          [nzContent]="modalContent"
+          [nzFooter]="modalFooter"
+          (nzOnCancel)="handleCancel()">
+  
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="validateForm">
+      <nz-form-item>
+        <nz-form-label nzRequired nzLabelAlign="right" [nzSm]="5">Ghi chú</nz-form-label>
+        <nz-form-control [nzSm]="18">
+          <textarea formControlName="note" nz-input rows="4"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
+    <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="approveCommission()"
+            [nzLoading]="isConfirmLoading">Duyệt đơn
+    </button>
+  </ng-template>
+</nz-modal>

@@ -21,7 +21,7 @@ import {
     ERROR_LIST,
     MODE_OPEN_MODAL_FORM_ORDER_SERVICE, MODE_ORDER,
     STATUS_ORDER,
-    STATUS_PAYMENT
+    STATUS_PAYMENT, TYPE_PAYMENT
 } from "../Constants/vg-constant";
 import {AttributeOrderProductService} from "../models/AttributeOrderProductService";
 import {NgxPermissionsService} from "ngx-permissions";
@@ -34,11 +34,13 @@ import {PAYMENTS_METHOD, PAYMENTS_URL} from "../Constants/payment-urls";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ApiCommonService} from "./api-common.service";
 import {AttributesModalFormOrderService} from "../models/AttributesModalFormOrderService";
-import {DataService} from "./data.service";
+import {DataService, PaymentBankTransferData} from "./data.service";
 import {AccountInfo} from "../models/LicenseZalo";
 import {
     OrderServiceDetailsModalComponent
 } from "../pages/order-service-details-modal/order-service-details-modal.component";
+import {RouteURL} from "../Constants/route-url";
+import {CommissionApproved} from "../models/CommissionApproved";
 
 @Injectable({
     providedIn: 'root'
@@ -299,7 +301,7 @@ export class ScriptCommonService {
         }
         switch (method) {
             case PAYMENTS_METHOD.MOMO:
-                const api = this.formatString(URL.API_PAYMENT_CONFIRM, [order.id!, PAYMENTS_METHOD.MOMO]);
+                const api = this.formatString(URL.API_PAYMENT_CONFIRM_ORDER_SERVICE, [order.id!, PAYMENTS_METHOD.MOMO]);
                 this.api.payment<ResponsePaymentMoMo>(api, PAYMENTS_URL.MOMO).subscribe((data) => {
                     // Lấy thông tin thanh toán lỗi
                     if (this.validateResponseAPI(data.status)) {
@@ -317,8 +319,43 @@ export class ScriptCommonService {
                 break;
             case PAYMENTS_METHOD.BANK_TRANSFER:
             case PAYMENTS_METHOD.VIET_QR:
-                this.dataService.setData({backUrl: backUrl});
-                this.dataService.navigateToPage(`/payment-bank-transfer/${order.id}`);
+                const data : PaymentBankTransferData = {backUrl: backUrl, typePayment: TYPE_PAYMENT.ORDER_SERVICE}
+                this.dataService.setData(data);
+                this.dataService.navigateToPage(RouteURL.nextToPageWithId(RouteURL.PAGE_PAYMENT_BANK_TRANSFER, order.id!));
+                break;
+            default:
+                break;
+        }
+
+    }
+    paymentForCommission(commissionApproved: CommissionApproved, method: string, backUrl: string): void {
+        if (commissionApproved.status === STATUS_PAYMENT.PAID.value) {
+            this.alertShowMessageError(Message.MESSAGE_CHECK_PAYMENT);
+            return;
+        }
+        switch (method) {
+            case PAYMENTS_METHOD.MOMO:
+                const api = this.formatString(URL.API_PAYMENT_COMMISSION_APPROVED, [commissionApproved.id!, PAYMENTS_METHOD.MOMO]);
+                this.api.payment<ResponsePaymentMoMo>(api, PAYMENTS_URL.MOMO).subscribe((data) => {
+                    // Lấy thông tin thanh toán lỗi
+                    if (this.validateResponseAPI(data.status)) {
+                        this.alertShowMessageError(Message.MESSAGE_PAYMENT_FAILED);
+                        // lấy thông tin thanh toán thành công
+                    } else {
+                        data = data as ResponsePaymentMoMo;
+                        window.open(data.url!)
+                    }
+
+                }, error => {
+                    console.log(error);
+                    this.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
+                })
+                break;
+            case PAYMENTS_METHOD.BANK_TRANSFER:
+            case PAYMENTS_METHOD.VIET_QR:
+                const data : PaymentBankTransferData = {backUrl: backUrl, typePayment: TYPE_PAYMENT.COMMISSION}
+                this.dataService.setData(data);
+                this.dataService.navigateToPage(RouteURL.nextToPageWithId(RouteURL.PAGE_PAYMENT_BANK_TRANSFER, commissionApproved.id!));
                 break;
             default:
                 break;

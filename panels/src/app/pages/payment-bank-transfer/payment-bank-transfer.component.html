@@ -2,7 +2,8 @@
   <div class="section-body">
     <div nz-row>
       <div nz-col nzSpan="24">
-        <nz-card style="width: 100%" nzTitle="Đơn hàng {{orderInfo.code}}" [nzBordered]="false" [nzLoading]="loading"
+        <!--Hiển thị thông tin cho đơn hàng-->
+        <nz-card *ngIf="dataRedirect.typePayment == TYPE_PAYMENT.ORDER_SERVICE" style="width: 100%" nzTitle="Đơn hàng {{orderInfo.code}}" [nzBordered]="false" [nzLoading]="loading"
                  [nzBodyStyle]="{'padding': 'unset', 'padding-top': '10px' }">
           <div nz-row>
             <div nz-col [nzXs]="24" [nzSm]="24" [nzXXl]="{span: 12, offset: 6}" [nzXl]="{span: 12, offset: 6}"
@@ -19,11 +20,38 @@
               <nz-descriptions [nzTitle]="titleBanking" nzBordered nzSize="small" class="table-th-right">
                 <nz-descriptions-item nzSpan="3" nzTitle="Tên tài khoản">{{data.requestJsonObject?.accountName}}</nz-descriptions-item>
                 <nz-descriptions-item nzSpan="3" nzTitle="Số tài khoản">{{data.requestJsonObject?.accountNo}}</nz-descriptions-item>
-                <nz-descriptions-item nzSpan="3" nzTitle="Số tiền">{{data.requestJsonObject?.amount! | mask: 'separator' : Constant.FORMAT_MONEY}}</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Số tiền">{{data.requestJsonObject?.amount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}</nz-descriptions-item>
                 <nz-descriptions-item nzSpan="3" nzTitle="Nội dung">{{data.requestJsonObject?.addInfo}}</nz-descriptions-item>
               </nz-descriptions>
               <div class="text-center" style="margin-top: 10px;">
-                <button type="button" class="btn btn-outline-secondary note-btn" [routerLink]='RouteURL.nextToPage(backUrl)'>Quay lại</button>
+                <button type="button" class="btn btn-outline-secondary note-btn" [routerLink]='RouteURL.nextToPage(dataRedirect.backUrl)'>Quay lại</button>
+              </div>
+            </div>
+          </div>
+        </nz-card>
+        <!--Hiển thị thông tin cho chiết khấu-->
+        <nz-card *ngIf="dataRedirect.typePayment == TYPE_PAYMENT.COMMISSION" style="width: 100%" nzTitle="{{commissionInfo.userName}}" [nzBordered]="false" [nzLoading]="loading"
+                 [nzBodyStyle]="{'padding': 'unset', 'padding-top': '10px' }">
+          <div nz-row>
+            <div nz-col [nzXs]="24" [nzSm]="24" [nzXXl]="{span: 12, offset: 6}" [nzXl]="{span: 12, offset: 6}"
+                 [nzLg]="{span: 12, offset: 6}" [nzMd]="{span: 12, offset: 6}">
+              <div class="text-center">
+                <img nz-image [nzSrc]="data.url ? data.url : ''"  width="350px"  height="350px"/>
+              </div>
+              <div class="text-center">
+                <nz-alert nzType="warning" [nzMessage]="cautionContentTransfer"></nz-alert>
+              </div>
+              <ng-template #cautionContentTransfer>
+                <span>Vui lòng nhập nội dung </span><b>{{data.requestJsonObject?.addInfo}}</b><span> để xác nhận thanh toán </span>
+              </ng-template>
+              <nz-descriptions [nzTitle]="titleBanking" nzBordered nzSize="small" class="table-th-right">
+                <nz-descriptions-item nzSpan="3" nzTitle="Tên tài khoản">{{data.requestJsonObject?.accountName}}</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Số tài khoản">{{data.requestJsonObject?.accountNo}}</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Số tiền">{{data.requestJsonObject?.amount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Nội dung">{{data.requestJsonObject?.addInfo}}</nz-descriptions-item>
+              </nz-descriptions>
+              <div class="text-center" style="margin-top: 10px;">
+                <button type="button" class="btn btn-outline-secondary note-btn" [routerLink]='RouteURL.nextToPage(dataRedirect.backUrl)'>Quay lại</button>
               </div>
             </div>
           </div>

@@ -118,7 +118,7 @@
                 <div nz-row [nzGutter]="16">
                   <div nz-col nzSpan="13">
                     <nz-input-group nzAddOnBefore="Doanh thu từ " nzAddOnAfter="VNĐ">
-                      <input nz-input formControlName="revenueFrom" placeholder="1,000,000" mask="separator" thousandSeparator=",">
+                      <input nz-input formControlName="revenueFrom" placeholder="1,000,000" [mask]="Constant.FORMAT_MONEY_SEPARATOR" thousandSeparator=",">
                     </nz-input-group>
                   </div>
                   <div nz-col nzSpan="9">

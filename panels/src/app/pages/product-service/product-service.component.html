@@ -158,7 +158,7 @@
                     <input formControlName="name" nz-input placeholder="1 năm"/>
                   </nz-input-group>
                   <nz-input-group nzAddOnBefore="Giá " nzAddOnAfter="VNĐ">
-                    <input nz-input formControlName="price" placeholder="1,000,000" mask="separator" thousandSeparator=",">
+                    <input nz-input formControlName="price" placeholder="1,000,000" [mask]="Constant.FORMAT_MONEY_SEPARATOR" thousandSeparator=",">
                   </nz-input-group>
                 </div>
                 <div nz-col nzSpan="2" style="top:1em;">

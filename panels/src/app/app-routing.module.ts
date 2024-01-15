@@ -28,6 +28,10 @@ import {
   TransactionHistoryPaymentComponent
 } from "./pages/transaction-history-payment/transaction-history-payment.component";
 import {SettingBankingComponent} from "./pages/setting-banking/setting-banking.component";
+import {CommissionApproveComponent} from "./pages/commission-approve/commission-approve.component";
+import {
+  CommissionApprovePendingComponent
+} from "./pages/commission-approve-pending/commission-approve-pending.component";
 
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
@@ -159,7 +163,7 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
-            only: [ROLES.PARTNER, ROLES.CUSTOMER],
+            only: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER, ROLES.CUSTOMER],
             redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
@@ -237,6 +241,28 @@ const routes: Routes = [
       {
         path: RouteURL.PAGE_SETTING_BANKING,
         component: SettingBankingComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR],
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
+          }
+        }
+      },
+      {
+        path: RouteURL.PAGE_COMMISSION_APPROVE,
+        component: CommissionApproveComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR],
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
+          }
+        }
+      },
+      {
+        path: RouteURL.PAGE_COMMISSION_APPROVE_PENDING,
+        component: CommissionApprovePendingComponent,
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
