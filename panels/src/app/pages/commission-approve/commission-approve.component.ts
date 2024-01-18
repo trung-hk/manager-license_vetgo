@@ -13,10 +13,10 @@ import {URL} from "../../Constants/api-urls";
 import {Message} from "../../Constants/message-constant";
 import {
   Constant,
-  ROLES,
+  ROLES, STATUS_CODE_ERROR,
   STATUS_PAYMENT,
   STATUS_SETTING_BANKING_INFO,
-  TEMPLATE_VIET_QR,
+  TEMPLATE_VIET_QR, TYPE_PAYMENT,
   USER_TYPE
 } from "../../Constants/vg-constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
@@ -25,6 +25,7 @@ import {CommissionApproved} from "../../models/CommissionApproved";
 import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
 import {OrderService} from "../../models/OrderService";
 import {RouteURL} from "../../Constants/route-url";
+import {CommissionApprovePending} from "../../models/CommissionApprovePending";
 
 interface ObjectByRole {
   userType: string,
@@ -62,6 +63,9 @@ export class CommissionApproveComponent implements OnInit, AfterViewInit, OnDest
   objectByRole!: ObjectByRole;
 
   selectUser: string | null = null;
+
+  isRePayment = false;
+  repaymentObject!: CommissionApproved | null;
 
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
@@ -282,6 +286,31 @@ export class CommissionApproveComponent implements OnInit, AfterViewInit, OnDest
   protected readonly PAYMENTS_METHOD = PAYMENTS_METHOD;
   protected readonly STATUS_PAYMENT = STATUS_PAYMENT;
   payment(commissionApproved: CommissionApproved, method: string): void {
-    this.scriptFC.paymentForCommission(commissionApproved, method, RouteURL.PAGE_COMMISSION_APPROVE);
+    this.api.getById<SettingBankingInfo>(commissionApproved.userId!, URL.API_GET_SETTING_BANK_INFO_BY_USER_ID).subscribe(data => {
+      console.log(data)
+      if (this.scriptFC.validateResponseAPI(data.status) && data.status == STATUS_CODE_ERROR.ERROR_404) {
+        this.scriptFC.alertShowMessageError(Message.MESSAGE_NOT_SETTING_BANKING_INFO);
+      } else {
+        this.scriptFC.paymentForCommission(commissionApproved, method, RouteURL.PAGE_COMMISSION_APPROVE);
+      }
+    }, error => {
+      console.log(error);
+      this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
+    })
   }
+
+  showRePaymentModal(commissionApproved: CommissionApproved) {
+    this.isRePayment = true;
+    this.repaymentObject = commissionApproved;
+  }
+  rePayment() {
+    this.isRePayment = false;
+    this.payment(this.repaymentObject!, PAYMENTS_METHOD.VIET_QR);
+  }
+  handleCancelRePaymentModalPopup() {
+    this.isRePayment = false;
+    this.repaymentObject = null;
+  }
+
+  protected readonly TYPE_PAYMENT = TYPE_PAYMENT;
 }

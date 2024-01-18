@@ -3,35 +3,69 @@
     <div nz-row>
       <div nz-col [nzXs]="24" [nzSm]="24" [nzXXl]="12" [nzXl]="12" [nzLg]="12" [nzMd]="12">
         <nz-skeleton [nzLoading]="loading">
-          <nz-card style="width: 100%" [nzTitle]="'Hóa đơn ' + orderService?.code" [nzBordered]="true">
+          <!--Payment order-->
+          <nz-card *ngIf="orderService" style="width: 100%" [nzTitle]="'Hóa đơn ' + orderService.code" [nzBordered]="true">
             <b>Thông tin khách hàng</b>
             <br>
-            Tên: {{orderService?.customerName}}
+            Tên: {{orderService.customerName}}
             <br>
-            Số điện thoại: {{orderService?.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
+            Số điện thoại: {{orderService.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
             <br>
-            E-mail: {{orderService?.customerAddress}}
+            E-mail: {{orderService.customerAddress}}
             <nz-divider></nz-divider>
             <nz-descriptions nzSize="small" nzBordered>
-              <nz-descriptions-item nzTitle="Sản phẩm">{{orderService?.attributesObject?.itemName}}</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Sản phẩm">{{orderService.attributesObject?.itemName}}</nz-descriptions-item>
               <nz-descriptions-item nzTitle="Gói">{{packageOrder?.name}}</nz-descriptions-item>
-              <nz-descriptions-item nzTitle="Giá">{{orderService?.totalAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Giá"><vet-money [content]="orderService.totalAmount"></vet-money></nz-descriptions-item>
             </nz-descriptions>
             <nz-divider></nz-divider>
             <b>Thông tin thanh toán</b>
             <br>
-            Phương thức thanh toán: {{orderService?.paymentMethod}}
+            Phương thức thanh toán: {{orderService.paymentMethod}}
             <br>
-            Số tiền thanh toán: {{orderService?.totalAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}
+            Số tiền thanh toán: <vet-money [content]="orderService.totalAmount"></vet-money>
             <br>
-            <ng-container [ngSwitch]="orderService?.paymentStatus">
+            <ng-container [ngSwitch]="orderService.paymentStatus">
               <span>Trạng thái:</span>
-              <span *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value">Chưa thanh toán</span>
-              <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value">Chờ xác nhân</span>
-              <span *ngSwitchCase="STATUS_PAYMENT.PAID.value">Thanh toán thành công</span>
+              <span *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value"><vet-status-warning content="Chưa thanh toán"></vet-status-warning></span>
+              <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value"><vet-status-info content="Chờ xác nhận"></vet-status-info></span>
+              <span *ngSwitchCase="STATUS_PAYMENT.PAID.value"><vet-status-success content="Thanh toán thành công"></vet-status-success></span>
             </ng-container>
             <div class="text-center" style="margin-top: 10px;">
               <button type="button" class="btn btn-outline-secondary note-btn" [routerLink]="RouteURL.nextToPage(RouteURL.PAGE_ORDERS)">Quay lại</button>
+            </div>
+          </nz-card>
+          <!--Payment Commission-->
+          <nz-card *ngIf="commissionApproved" style="width: 100%" [nzTitle]="'Hoàn tiền chiết khấu'" [nzBordered]="true">
+            <b>Người nhận: </b> {{commissionApproved.userName}}
+            <nz-divider></nz-divider>
+            <b>Thông tin chiết khấu: </b>
+            <nz-descriptions nzSize="small" nzBordered>
+              <nz-descriptions-item nzTitle="Tổng đơn">{{commissionApproved.totalOrder}}</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Tổng tiền"><vet-money [content]="commissionApproved.totalOrderAmount"></vet-money></nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Chiết khấu">
+                <nz-statistic [nzValue]="(commissionApproved.commissionRate | number: '1.0-2')!"
+                              [nzSuffix]="'%'"
+                              [nzValueStyle]="{ color: '#3F8600', 'font-size': '14px' }"
+                ></nz-statistic>
+              </nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Tiền chiết khấu"><vet-money [content]="commissionApproved.totalCommissionAmount"></vet-money></nz-descriptions-item>
+            </nz-descriptions>
+            <nz-divider></nz-divider>
+            <b>Thông tin thanh toán</b>
+            <br>
+            Phương thức thanh toán: chưa biet
+            <br>
+            Số tiền thanh toán: <vet-money [content]="commissionApproved.totalCommissionAmount"></vet-money>
+            <br>
+            <ng-container [ngSwitch]="commissionApproved.status">
+              <span>Trạng thái:</span>
+              <span *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value"><vet-status-warning content="Chưa thanh toán"></vet-status-warning></span>
+              <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value"><vet-status-info content="Chờ xác nhận"></vet-status-info></span>
+              <span *ngSwitchCase="STATUS_PAYMENT.PAID.value"><vet-status-success content="Thanh toán thành công"></vet-status-success></span>
+            </ng-container>
+            <div class="text-center" style="margin-top: 10px;">
+              <button type="button" class="btn btn-outline-secondary note-btn" [routerLink]="RouteURL.nextToPage(dataRedirect.backUrl)">Quay lại</button>
             </div>
           </nz-card>
         </nz-skeleton>

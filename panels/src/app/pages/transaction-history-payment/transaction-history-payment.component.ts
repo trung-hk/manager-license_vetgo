@@ -2,10 +2,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2, ViewContainerRef
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
-import {FormArray, UntypedFormBuilder} from "@angular/forms";
-import {PRODUCT_SERVICE_FORM} from "../../Constants/Form";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
-import {Item} from "../../models/Item";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {Transaction} from "../../models/Transaction";
 import {URL} from "../../Constants/api-urls";
@@ -13,6 +10,8 @@ import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 import {Message} from "../../Constants/message-constant";
 import {Constant, STATUS_PAYMENT, TYPE_REFERENCE_PAYMENT} from "../../Constants/vg-constant";
 import {OrderService} from "../../models/OrderService";
+import {CommissionApproved} from "../../models/CommissionApproved";
+import {IModalViewPaymentData} from "../../models/ModalData";
 
 @Component({
   selector: 'app-transaction-history-payment',
@@ -95,11 +94,31 @@ export class TransactionHistoryPaymentComponent implements OnInit, AfterViewInit
     this.loadDataFromServer(event.target.value);
     event.target.value = "";
   }
-  createComponentOrderServiceDetailsModal(idOrder: string): void {
-    this.api.getById<OrderService>(idOrder, URL.API_ORDER_SERVICE).subscribe(data => {
-      data.attributesObject = this.scriptFC.getAttributeOrderProductService(data.attributes);
-      this.scriptFC.createComponentOrderServiceDetailsModal(data, this.viewContainerRef);
-    })
+  createComponentPaymentDetailsModal(id: string, typePayment: string) {
+    let paymentData: IModalViewPaymentData = {};
+    switch (typePayment) {
+      case TYPE_REFERENCE_PAYMENT.PAYMENT_ORDER_SERVICE.value:
+        this.api.getById<OrderService>(id, URL.API_ORDER_SERVICE).subscribe(data => {
+          if (this.scriptFC.validateResponseAPI(data.status)) {
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
+          } else {
+            paymentData.order = data;
+            this.scriptFC.createComponentPaymentDetailsModal(paymentData, this.viewContainerRef);
+          }
+        });
+        break;
+      case TYPE_REFERENCE_PAYMENT.REFUND_COMMISSION_APPROVE.value:
+        this.api.getById<CommissionApproved>(id, URL.API_COMMISSION_APPROVED).subscribe(data => {
+          if (this.scriptFC.validateResponseAPI(data.status)) {
+            this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
+          } else {
+            paymentData.commissionApproved = data;
+            this.scriptFC.createComponentPaymentDetailsModal(paymentData, this.viewContainerRef);
+          }
+        });
+        break;
+    }
+
   }
 
   protected readonly TYPE_REFERENCE_PAYMENT = TYPE_REFERENCE_PAYMENT;

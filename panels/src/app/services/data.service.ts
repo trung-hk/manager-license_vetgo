@@ -4,6 +4,10 @@ export interface PaymentBankTransferData {
   backUrl: string,
   typePayment: string
 }
+export interface PaymentCompleteDetailsData {
+  backUrl: string,
+  typePayment: string
+}
 @Injectable({
   providedIn: 'root'
 })

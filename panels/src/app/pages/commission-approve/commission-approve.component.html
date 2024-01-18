@@ -27,6 +27,7 @@
               <th nzWidth="10em">Tổng tiền chiết khấu</th>
               <th nzWidth="5em">Chi tiết</th>
               <th nzWidth="5em">Trạng thái</th>
+              <th nzWidth="5em">Thao tác</th>
             </tr>
             </thead>
             <tbody>
@@ -69,6 +70,22 @@
                        class="badge badge-shadow badge-success">
                     {{STATUS_PAYMENT.PAID.text}}
                   </div>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container [ngSwitch]="dt.status">
+                  <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value"
+                      nz-icon nzType="transaction"
+                      nzTheme="outline"
+                      (click)="showRePaymentModal(dt)"
+                      title="Thanh toán Lại">
+                  </span>
+                  <span *ngSwitchCase="STATUS_PAYMENT.PAID.value"
+                        nz-icon nzType="credit-card"
+                        nzTheme="outline"
+                        (click)="scriptFC.nextPagePaymentCompleteDetails(dt.id!, TYPE_PAYMENT.COMMISSION)"
+                        title="Chi tiết thanh toán">
+                  </span>
                 </ng-container>
               </td>
             </tr>

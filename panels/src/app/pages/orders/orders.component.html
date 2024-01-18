@@ -127,7 +127,7 @@
                     <span *nzSpaceItem
                           nz-icon nzType="credit-card"
                           nzTheme="outline"
-                          [routerLink]="RouteURL.nextToPageWithId(RouteURL.PAGE_PAYMENT_COMPLETE_DETAILS, dt.id!)"
+                          (click)="scriptFC.nextPagePaymentCompleteDetails(dt.id!, TYPE_PAYMENT.ORDER_SERVICE)"
                           title="Chi tiết thanh toán">
                     </span>
                     <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">

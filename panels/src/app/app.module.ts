@@ -25,7 +25,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NgZorroAntdModule} from "./ng-zorro-antd.module";
 import {ShareModule} from "./pipe/share/share.module";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
-import {Constant, REALM} from "./Constants/vg-constant";
+import {isEnvironmentPro, REALM} from "./Constants/vg-constant";
+import {ComponentCommonModule} from "./component-common/component-common.module";
 registerLocaleData(vi);
 
 // for production
@@ -36,7 +37,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
         keycloak.init({
             config: {
-                url: window.location.origin.endsWith(Constant.EXTENSION_DOMAIN_PRO) ? URL_KEY_CLOAK_PRO : URL_KEY_CLOAK_DEV,
+                url: isEnvironmentPro() ? URL_KEY_CLOAK_PRO : URL_KEY_CLOAK_DEV,
                 realm: realm,
                 clientId: 'vetgo-fe'
             },
@@ -76,6 +77,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         ShareModule,
         NgxMaskPipe,
         NgxMaskDirective,
+        ComponentCommonModule
     ],
   providers: [
     {

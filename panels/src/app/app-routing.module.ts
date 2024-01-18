@@ -32,6 +32,9 @@ import {CommissionApproveComponent} from "./pages/commission-approve/commission-
 import {
   CommissionApprovePendingComponent
 } from "./pages/commission-approve-pending/commission-approve-pending.component";
+import {
+  ApproveManualPaymentCommissionComponent
+} from "./pages/approve-manual-payment-commission/approve-manual-payment-commission.component";
 
 const isAuthenticated: CanActivateFn = (route, state) => {
   return inject(AuthGuard).isAccessAllowed(route, state);
@@ -233,7 +236,7 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
-            only: [ROLES.ADMIN],
+            only: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER, ROLES.CUSTOMER],
             redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }
@@ -267,6 +270,17 @@ const routes: Routes = [
         data: {
           permissions: {
             only: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR],
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
+          }
+        }
+      },
+      {
+        path: RouteURL.PAGE_APPROVE_MANUAL_PAYMENT_COMMISSION,
+        component: ApproveManualPaymentCommissionComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER],
             redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }

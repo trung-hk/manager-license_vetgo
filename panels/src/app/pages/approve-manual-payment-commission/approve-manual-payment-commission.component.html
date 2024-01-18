@@ -1,0 +1,120 @@
+<section class="section">
+  <div class="section-body">
+    <div class="row">
+      <div class="col-12">
+        <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
+          <!--<ng-container [ngTemplateOutlet]="titleAction"></ng-container>-->
+          <nz-table
+              nzShowSizeChanger
+              [nzData]="dataCommissionApprovedList"
+              [nzLoading]="loading"
+              [nzTotal]="total"
+              [nzPageSize]="pageSize"
+              [nzPageIndex]="pageIndex"
+              (nzQueryParams)="onQueryParamsChange($event)"
+              [nzScroll]="{ x: '500px' }"
+          >
+            <thead>
+            <tr>
+              <th nzWidth="5em">ID</th>
+              <th nzWidth="5em">Tổng đơn</th>
+              <th nzWidth="8em">Tổng tiền</th>
+              <th nzWidth="5em">Chiết khấu</th>
+              <th nzWidth="8em">Tổng tiền chiết khấu</th>
+              <th nzWidth="5em">Chi tiết</th>
+              <th nzWidth="8em">Ngày chuyển khoản</th>
+              <th nzWidth="10em">Nội dung thanh toán</th>
+              <th class="text-center" nzWidth="7em">Trạng thái</th>
+              <th class="text-center" nzWidth="5em">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dt of dataCommissionApprovedList">
+              <td>{{dt.commissionResultIds}}</td>
+              <td>
+                {{dt.totalOrder}}
+              </td>
+              <td>
+                <vet-money [content]="dt.totalOrderAmount"></vet-money>
+              </td>
+              <td>
+                <nz-statistic [nzValue]="(dt.commissionRate | number: '1.0-2')!"
+                              [nzSuffix]="'%'"
+                              [nzValueStyle]="{ color: '#3F8600', 'font-size': '14px' }">
+                </nz-statistic>
+              </td>
+              <td>
+                <vet-money [content]="dt.totalCommissionAmount"></vet-money>
+              </td>
+              <td>
+                <a href="{{dt.urlView}}" target="_blank">Xem chi tiết</a>
+                <br>
+                <a href="{{dt.urlDownload}}" target="_blank">Tải xuống</a>
+              </td>
+              <td>
+                {{dt.createdDate | date: "yyyy/MM/dd"}}
+              </td>
+              <td>
+                PS-12323213123123123
+              </td>
+              <td class="align-center">
+                <ng-container [ngSwitch]="dt.status">
+                  <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value">
+                    <vet-status-info [content]="STATUS_PAYMENT.IN_PAYMENT.text"></vet-status-info>
+                  </span>
+                  <span *ngSwitchCase="STATUS_PAYMENT.PAID.value">
+                    <vet-status-success [content]="STATUS_PAYMENT.PAID.text"></vet-status-success>
+                  </span>
+                </ng-container>
+              </td>
+              <td class="align-center action">
+                <ng-container>
+                  <span *ngIf="dt.status == STATUS_PAYMENT.IN_PAYMENT.value"
+                        nz-icon nzType="transaction"
+                        nzTheme="outline"
+                        (click)="showApproveModal(dt)"
+                        title="Xác nhận thanh toán">
+                  </span>
+                </ng-container>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </nz-card>
+        <ng-template #titleLeft>
+          Danh sách hoàn chiết khấu
+          <nz-tag [nzColor]="'#33CCFF'">
+            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
+          </nz-tag>
+        </ng-template>
+        <ng-template #titleAction>
+          <div nz-row [ngStyle]="{'margin-top': '15px'}">
+            <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
+                 [nzXl]="{ span: 8, offset: 16 }"
+                 [nzLg]="{ span: 10, offset: 14 }"
+                 [nzMd]="{ span: 12, offset: 12 }"
+                 [nzSm]="24"
+                 [nzXs]="24">
+              <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
+                <input nzSize="large" type="text" nz-input placeholder="Mã đơn hàng"
+                       (keyup.enter)="search($event)"/>
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search"></span>
+              </ng-template>
+            </div>
+          </div>
+          <nz-divider></nz-divider>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</section>
+<nz-modal [(nzVisible)]="idShowModal" nzTitle="Xác nhận thanh toán" nzOkText="Đồng ý"
+          nzCancelText="Hủy" (nzOnOk)="approvePayment()"
+          [nzOkLoading]="isAwaitApprove"
+          (nzOnCancel)="handleCancelApprovePopup()">
+  <ng-container *nzModalContent>
+    Xác nhận đã nhận tiền từ phiếu chiết khấu này?
+  </ng-container>
+</nz-modal>

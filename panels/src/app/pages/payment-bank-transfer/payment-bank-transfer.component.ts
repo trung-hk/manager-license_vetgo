@@ -58,7 +58,6 @@ export class PaymentBankTransferComponent implements OnInit, AfterViewInit, OnDe
     this.loadDataFromServer();
   }
   loadDataFromServer(): void {
-    debugger;
     this.loading = true;
     let loading_success_1 = false;
     let loading_success_2 = false;
@@ -68,11 +67,8 @@ export class PaymentBankTransferComponent implements OnInit, AfterViewInit, OnDe
     this.api.payment<ResponsePaymentVietQR>(api, returnURL).subscribe((data) => {
       if (this.scriptFC.validateResponseAPI(data.status)){
         console.log(data.status)
-        if (data.status == STATUS_CODE_ERROR.ERROR_400) {
-          console.log(data)
-          //this.dataService.navigateToPage(RouteURL.PAGE_ERROR_404);
-        }
-        this.scriptFC.alertShowMessageError(`${Message.MESSAGE_LOAD_DATA_FAILED}`);
+       // this.dataService.navigateToPage(RouteURL.PAGE_ERROR_404);
+        this.scriptFC.alertShowMessageError(`${Message.MESSAGE_LOAD_PAYMENT_DATA_VIETQR_FAILED}`);
       } else {
         this.data  = data as ResponsePaymentVietQR;
         this.data.requestJsonObject = JSON.parse(this.data.requestJson!);

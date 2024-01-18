@@ -17,6 +17,7 @@ export class URL {
     static readonly API_PACKAGE_PURCHASED: string = `user-packages`;
     static readonly API_TRANSACTION_HISTORY_PAYMENT: string = `transaction-log-payments`;
     static readonly API_SETTING_BANK_INFO: string = `setting-bank-info`;
+    static readonly API_GET_SETTING_BANK_INFO_BY_USER_ID: string = `setting-bank-info/user`;
     static readonly API_BANK_INFO: string = `bank-infos`;
     static readonly API_COMMISSION_APPROVE_PENDING_BY_ADMIN: string = `commission-result-for-agent`;
     static readonly API_COMMISSION_APPROVE_PENDING_BY_AGENT: string = `commission-result-for-distributor`;

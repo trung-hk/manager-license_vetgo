@@ -10,7 +10,7 @@ import {
     MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
     ROLES,
     STATUS_ORDER,
-    STATUS_PAYMENT, TYPE_ORDER_SERVICE, USER_TYPE
+    STATUS_PAYMENT, TYPE_PAYMENT, USER_TYPE
 } from "../../Constants/vg-constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {Message} from "../../Constants/message-constant";
@@ -38,6 +38,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly MODE_OPEN_MODAL_FORM_ORDER_SERVICE = MODE_OPEN_MODAL_FORM_ORDER_SERVICE;
     protected readonly CONFIG = CONFIG;
     protected readonly Constant = Constant;
+    protected readonly RouteURL = RouteURL;
     listScript = [];
     dataList: OrderService[] = [];
     productList: Item[] = [];
@@ -65,7 +66,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
                 private renderer: Renderer2,
-                private scriptFC: ScriptCommonService,
+                public scriptFC: ScriptCommonService,
                 private viewContainerRef: ViewContainerRef,
                 private elRef: ElementRef,) {
     }
@@ -194,7 +195,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isConfirmLoadingDelete = true;
             this.orderDelete.status = STATUS_ORDER.CANCEL_ORDER.value;
             this.api.update(this.orderDelete.id, this.orderDelete, URL.API_ORDER_SERVICE).subscribe((data) => {
-                if (data.status === 400 || data.status === 409) {
+                if (this.scriptFC.validateResponseAPI(data.status)) {
                     this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_DELETE_FAILED);
                     this.isConfirmLoadingDelete = false;
                 } else {
@@ -346,5 +347,6 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.orderRepayment = null;
     }
 
-    protected readonly RouteURL = RouteURL;
+
+    protected readonly TYPE_PAYMENT = TYPE_PAYMENT;
 }

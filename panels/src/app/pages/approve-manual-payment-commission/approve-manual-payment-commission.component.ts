@@ -1,30 +1,32 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {CommissionApproved} from "../../models/CommissionApproved";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
-import {NzTableQueryParams} from "ng-zorro-antd/table";
-import {
-  Constant,
-  STATUS_PAYMENT,
-} from "../../Constants/vg-constant";
+import {ObjectSelectAll} from "../../models/ObjectSelectAll";
+import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {Message} from "../../Constants/message-constant";
-import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
-import {ObjectSelectAll} from "../../models/ObjectSelectAll";
-import {OrderService} from "../../models/OrderService";
+import {
+  Constant,
+  ROLES,
+  STATUS_PAYMENT,
+} from "../../Constants/vg-constant";
+import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {RouteURL} from "../../Constants/route-url";
 import {PayloadApprovePayment} from "../../models/PayloadApprovePayment";
+import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
 
 @Component({
-  selector: 'app-approve-manual-payment',
-  templateUrl: './approve-manual-payment.component.html'
+  selector: 'app-approve-manual-payment-commission',
+  templateUrl: './approve-manual-payment-commission.component.html',
 })
-export class ApproveManualPaymentComponent implements OnInit, AfterViewInit, OnDestroy{
+export class ApproveManualPaymentCommissionComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly Constant = Constant;
   protected readonly STATUS_PAYMENT = STATUS_PAYMENT;
   protected readonly RouteURL = RouteURL;
   listScript = [];
-  dataOrderList: OrderService[] = [];
+  dataCommissionApprovedList: CommissionApproved[] = [];
   total: number = 1;
   loading: boolean = true;
   pageSize: number = 10;
@@ -33,7 +35,7 @@ export class ApproveManualPaymentComponent implements OnInit, AfterViewInit, OnD
   changeFirst: boolean = true;
   idShowModal: boolean = false;
   filter: Array<{ key: string; value: string[] }> | null = [];
-  orderApprove!: OrderService | null;
+  commissionApproved!: CommissionApproved | null;
   isAwaitApprove: boolean = false;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
@@ -48,14 +50,14 @@ export class ApproveManualPaymentComponent implements OnInit, AfterViewInit, OnD
     this.loadScript.addListScript(this.listScript).then(() => {
       this.renderer.addClass(document.querySelector('.transactions'), "active");
       this.renderer.addClass(document.querySelector('.transactions a'), "toggled");
-      this.renderer.addClass(document.querySelector('.order-await-approve-list'), "active");
-      this.renderer.addClass(document.querySelector('.order-await-approve-list a'), "toggled");
+      this.renderer.addClass(document.querySelector('.commission-await-approve-list'), "active");
+      this.renderer.addClass(document.querySelector('.commission-await-approve-list a'), "toggled");
     });
   }
 
   ngOnDestroy(): void {
     this.renderer.removeClass(document.querySelector('.transactions'), "active");
-    this.renderer.removeClass(document.querySelector('.order-await-approve-list'), "active");
+    this.renderer.removeClass(document.querySelector('.commission-await-approve-list'), "active");
   }
 
   init(): void {
@@ -63,14 +65,11 @@ export class ApproveManualPaymentComponent implements OnInit, AfterViewInit, OnD
   }
   loadDataFromServer(keyWork?: string) {
     this.loading = true;
-    this.filter?.push({key: "ods.payment_status", value: [this.STATUS_PAYMENT.IN_PAYMENT.value]});
-    console.log(this.filter)
+    //this.filter?.push({key: "ods.payment_status", value: [this.STATUS_PAYMENT.IN_PAYMENT.value]});
+    //console.log(this.filter)
     const objectGetAll: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
-    this.api.getAll<ResponseDataGetAll<OrderService>>(URL.API_ORDER_SERVICE, objectGetAll).subscribe(data => {
-      this.dataOrderList = data.content.map(d => {
-        d.attributesObject = this.scriptFC.getAttributeOrderProductService(d.attributes);
-        return d;
-      });
+    this.api.getAll<ResponseDataGetAll<CommissionApproved>>(URL.API_COMMISSION_APPROVED, objectGetAll).subscribe(data => {
+      this.dataCommissionApprovedList = data.content;
       this.total = data.totalElements;
       this.loading = false;
     }, error => {
@@ -105,13 +104,13 @@ export class ApproveManualPaymentComponent implements OnInit, AfterViewInit, OnD
     this.loadDataFromServer(event.target.value);
     event.target.value = "";
   }
-  showApproveModal(order: OrderService) {
+  showApproveModal(commissionApproved: CommissionApproved) {
     this.idShowModal = true;
-    this.orderApprove = order;
+    this.commissionApproved = commissionApproved;
   }
   approvePayment() {
     this.isAwaitApprove = true;
-    const payload: PayloadApprovePayment = {code: this.orderApprove?.paymentCode, amount: this.orderApprove?.totalAmount, resultCode: 0}
+    const payload: PayloadApprovePayment = {code: "P8-REF-1705418505641", amount: this.commissionApproved?.totalCommissionAmount, resultCode: 0}
     this.api.approvePayment(URL.API_APPROVE_MANUAL_PAYMENT, payload).subscribe(data => {
       this.loadDataFromServer();
       this.isAwaitApprove = false;
@@ -126,7 +125,10 @@ export class ApproveManualPaymentComponent implements OnInit, AfterViewInit, OnD
   }
   handleCancelApprovePopup() {
     this.idShowModal = false;
-    this.orderApprove = null;
+    this.commissionApproved = null;
     this.isAwaitApprove = false;
   }
+
+  protected readonly ROLES = ROLES;
+  protected readonly PAYMENTS_METHOD = PAYMENTS_METHOD;
 }

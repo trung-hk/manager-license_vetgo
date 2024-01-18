@@ -5,7 +5,7 @@ import {ResponseError} from "../models/ResponseError";
 import {URL} from "../Constants/api-urls";
 import {User} from "../models/User";
 import {ObjectSelectAll} from "../models/ObjectSelectAll";
-import {Constant} from "../Constants/vg-constant";
+import {isEnvironmentPro} from "../Constants/vg-constant";
 import {PayloadApprovePayment} from "../models/PayloadApprovePayment";
 import {ConfirmCommissionApproveRequest} from "../models/ConfirmCommissionApproveRequest";
 
@@ -16,7 +16,7 @@ import {ConfirmCommissionApproveRequest} from "../models/ConfirmCommissionApprov
 export class ApiCommonService {
     URL_DEV: string = "https://api.moonpet.vn/api";
     URL_PRO: string = "https://api.phanmemvet.vn/api";
-    url: string = window.location.origin.endsWith(Constant.EXTENSION_DOMAIN_PRO) ? this.URL_PRO: this.URL_DEV;
+    url: string = isEnvironmentPro() ? this.URL_PRO: this.URL_DEV;
     regex = /^(?!\s*$).+/;
     constructor(private httpClient: HttpClient) {
     }

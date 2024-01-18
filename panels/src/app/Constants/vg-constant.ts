@@ -170,9 +170,10 @@ export enum TYPE_ORDER_SERVICE {
     RENEW_PACKAGE = "RENEW_PACKAGE",
     CUSTOMER_ORDER = "CUSTOMER_ORDER",
 }
-export enum TYPE_REFERENCE_PAYMENT {
-    PAYMENT_ORDER_SERVICE = "PAYMENT_ORDER_SERVICE",
-    REFUND_COMMISSION_APPROVE = "REFUND_COMMISSION_APPROVE",
+export class TYPE_REFERENCE_PAYMENT {
+    static readonly PAYMENT_ORDER_SERVICE: Enum = {text: "Thanh toán dịch vụ", value: "PAYMENT_ORDER_SERVICE"};
+    static readonly REFUND_COMMISSION_APPROVE: Enum = {text: "Hoàn tiền chiết khấu", value: "REFUND_COMMISSION_APPROVE"};
+    static readonly LIST: Enum[] = [this.PAYMENT_ORDER_SERVICE, this.REFUND_COMMISSION_APPROVE];
 }
 export class STATUS_SETTING_BANKING_INFO {
     static readonly IN_ACTIVE: Enum = {text: "Ngừng hoạt động", value: "IN_ACTIVE"};
@@ -190,4 +191,10 @@ export class STATUS_COMMISSION_APPROVE_PENDING {
 export enum TYPE_PAYMENT {
     ORDER_SERVICE = "ORDER_SERVICE",
     COMMISSION = "COMMISSION",
+}
+export const isEnvironmentPro = (): boolean => {
+    return window.location.origin.endsWith(Constant.EXTENSION_DOMAIN_PRO);
+}
+export const isEnvironmentDev = (): boolean => {
+    return !isEnvironmentPro();
 }

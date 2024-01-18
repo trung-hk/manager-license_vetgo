@@ -1,7 +1,7 @@
 export class Message {
     static readonly MESSAGE_SAVE_SUCCESS = "Lưu thành công";
     static readonly MESSAGE_SAVE_FAILED = "Lưu thất bại";
-    static readonly MESSAGE_CONNECT_FAILED = "Lưu thất bại, kiểm tra lại đường truyền";
+    static readonly MESSAGE_CONNECT_FAILED = "Lỗi hệ thống, kiểm tra lại đường truyền";
     static readonly MESSAGE_DELETE_SUCCESS = "Xóa thành công";
     static readonly MESSAGE_DELETE_FAILED = "Xóa thất bại";
     static readonly MESSAGE_REGISTER_SUCCESS = "Đăng ký thành công";
@@ -16,4 +16,6 @@ export class Message {
     static readonly MESSAGE_PAYMENT_FAILED = "Thanh toán thất bại, vui long kiểm tra lại";
     static readonly MESSAGE_EXECUTE_API_SUCCESS = "Thực thi Api thành công";
     static readonly MESSAGE_EXECUTE_API_FAILED = "Thực thi Api Thất bại";
+    static readonly MESSAGE_NOT_SETTING_BANKING_INFO = "Tài khoản chưa cập nhật thông tin ngân hàng, không thể thanh toán";
+    static readonly MESSAGE_LOAD_PAYMENT_DATA_VIETQR_FAILED = "Load dữ liệu VietQR thất bại, kiểm tra lại thông tin ngân hàng";
 }

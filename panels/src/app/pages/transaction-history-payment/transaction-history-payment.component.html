@@ -16,10 +16,10 @@
           >
             <thead>
             <tr>
-              <th nzWidth="12em" nzColumnKey="code" >Nội dung thanh toán</th>
+              <th nzWidth="15em" nzColumnKey="code" >Nội dung thanh toán</th>
               <th nzWidth="10em">Phương thức</th>
-              <th nzWidth="10em">ID đơn hàng</th>
-              <th nzWidth="20em">Loại đơn hàng TT</th>
+              <th nzWidth="10em">ID</th>
+              <th nzWidth="20em">Loại giao dịch</th>
               <th nzWidth="20em">Ghi chú</th>
               <th nzWidth="13em">Tổng tiền</th>
               <th nzWidth="10em">Trạng thái</th>
@@ -33,21 +33,20 @@
             <tr *ngFor="let dt of dataList">
               <td>{{dt.code}}</td>
               <td>{{dt.method}}</td>
+              <td> <a href="javascript:void(0);" (click)="createComponentPaymentDetailsModal(dt.referenceId!, dt.referenceType!)">{{dt.referenceId}}</a></td>
               <td>
                 <ng-container [ngSwitch]="dt.referenceType">
-                  <a *ngSwitchCase="TYPE_REFERENCE_PAYMENT.PAYMENT_ORDER_SERVICE" href="javascript:void(0);" (click)="createComponentOrderServiceDetailsModal(dt.referenceId!)">{{dt.referenceId}}</a>
-                  <a *ngSwitchCase="TYPE_REFERENCE_PAYMENT.REFUND_COMMISSION_APPROVE" href="javascript:void(0);">{{dt.referenceId}}</a>
+                  <span *ngSwitchCase="TYPE_REFERENCE_PAYMENT.PAYMENT_ORDER_SERVICE.value">{{TYPE_REFERENCE_PAYMENT.PAYMENT_ORDER_SERVICE.text}}</span>
+                  <span *ngSwitchCase="TYPE_REFERENCE_PAYMENT.REFUND_COMMISSION_APPROVE.value">{{TYPE_REFERENCE_PAYMENT.REFUND_COMMISSION_APPROVE.text}}</span>
                 </ng-container>
-                
               </td>
-              <td>{{dt.referenceType}}</td>
               <td>{{dt.note}}</td>
-              <td>{{dt.totalAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}</td>
+              <td><vet-money [content]="dt.totalAmount"></vet-money></td>
               <td>
                 <ng-container [ngSwitch]="dt.status">
-                  <span *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value"><nz-tag [nzColor]="'yellow'">{{STATUS_PAYMENT.UN_PAID.text}}</nz-tag></span>
-                  <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value"><nz-tag [nzColor]="'blue'">{{STATUS_PAYMENT.IN_PAYMENT.text}}</nz-tag></span>
-                  <span *ngSwitchCase="STATUS_PAYMENT.PAID.value"><nz-tag [nzColor]="'green'">{{STATUS_PAYMENT.PAID.text}}</nz-tag></span>
+                  <span *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value"><vet-status-warning [content]="STATUS_PAYMENT.UN_PAID.text"></vet-status-warning></span>
+                  <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value"><vet-status-info [content]="STATUS_PAYMENT.IN_PAYMENT.text"></vet-status-info></span>
+                  <span *ngSwitchCase="STATUS_PAYMENT.PAID.value"><vet-status-success [content]="STATUS_PAYMENT.PAID.text"></vet-status-success></span>
                 </ng-container>
               </td>
               <td>{{dt.createdBy}}</td>
@@ -59,7 +58,7 @@
           </nz-table>
         </nz-card>
         <ng-template #titleLeft>
-          Lịch sử giao dịch
+          Danh sách giao dịch
           <nz-tag [nzColor]="'#33CCFF'">
             <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
           </nz-tag>
@@ -73,7 +72,7 @@
                  [nzSm]="24"
                  [nzXs]="24">
               <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
-                <input nzSize="large" type="text" nz-input placeholder="Mã đơn hàng"
+                <input nzSize="large" type="text" nz-input placeholder="Nhập nội dung thanh toán"
                        (keyup.enter)="search($event)"/>
               </nz-input-group>
               <ng-template #suffixIconSearch>

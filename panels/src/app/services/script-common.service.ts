@@ -5,7 +5,7 @@ import {FormOrderServiceModalComponent} from "../pages/form-order-service-modal/
 import {
     IModalData,
     IModalViewCustomerData,
-    IModalViewOrderServiceData,
+    IModalViewPaymentData,
     IModalViewProductServiceData
 } from "../models/ModalData";
 import {NzModalService} from "ng-zorro-antd/modal";
@@ -31,16 +31,14 @@ import {Message} from "../Constants/message-constant";
 import {URL} from "../Constants/api-urls";
 import {ResponsePaymentMoMo} from "../models/ResponesePayment";
 import {PAYMENTS_METHOD, PAYMENTS_URL} from "../Constants/payment-urls";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {ApiCommonService} from "./api-common.service";
 import {AttributesModalFormOrderService} from "../models/AttributesModalFormOrderService";
-import {DataService, PaymentBankTransferData} from "./data.service";
+import {DataService, PaymentBankTransferData, PaymentCompleteDetailsData} from "./data.service";
 import {AccountInfo} from "../models/LicenseZalo";
-import {
-    OrderServiceDetailsModalComponent
-} from "../pages/order-service-details-modal/order-service-details-modal.component";
 import {RouteURL} from "../Constants/route-url";
 import {CommissionApproved} from "../models/CommissionApproved";
+import {PaymentDetailsModalComponent} from "../pages/payment-details-modal/payment-details-modal.component";
 
 @Injectable({
     providedIn: 'root'
@@ -240,14 +238,15 @@ export class ScriptCommonService {
             ]
         });
     }
-    createComponentOrderServiceDetailsModal(orderService: OrderService, viewContainerRef: ViewContainerRef): void {
-        const modal = this.modal.create<OrderServiceDetailsModalComponent, IModalViewOrderServiceData>({
+    createComponentPaymentDetailsModal(paymentData: IModalViewPaymentData, viewContainerRef: ViewContainerRef): void {
+        const modal = this.modal.create<PaymentDetailsModalComponent, IModalViewPaymentData>({
             nzTitle: "Thông tin chi tiết",
-            nzContent: OrderServiceDetailsModalComponent,
+            nzContent: PaymentDetailsModalComponent,
             nzWidth: "800px",
             nzViewContainerRef: viewContainerRef,
             nzData: {
-                order: orderService,
+                order: paymentData.order,
+                commissionApproved: paymentData.commissionApproved,
             },
             nzFooter: [
                 {
@@ -375,4 +374,17 @@ export class ScriptCommonService {
     outputTransformFn = (value: string | number | null | undefined): string => {
         return value ? String(value).toUpperCase() : ''
     };
+    nextPagePaymentCompleteDetails(id: string, typePayment: string) {
+        const dataRedirect: PaymentCompleteDetailsData = {backUrl: "", typePayment: typePayment};
+        switch (typePayment) {
+            case TYPE_PAYMENT.ORDER_SERVICE:
+                dataRedirect.backUrl = RouteURL.PAGE_ORDERS;
+                break;
+            case TYPE_PAYMENT.COMMISSION:
+                dataRedirect.backUrl = RouteURL.PAGE_COMMISSION_APPROVE;
+                break;
+        }
+        this.dataService.setData(dataRedirect);
+        this.dataService.navigateToPage(RouteURL.nextToPageWithId(RouteURL.PAGE_PAYMENT_COMPLETE_DETAILS, id!));
+    }
 }

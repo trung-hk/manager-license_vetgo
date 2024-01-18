@@ -6,7 +6,7 @@ import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
-import {Constant, STATUS_AGENT, USER_TYPE} from "../../Constants/vg-constant";
+import {Constant, isEnvironmentPro, STATUS_AGENT, USER_TYPE} from "../../Constants/vg-constant";
 import {User} from "../../models/User";
 import {USER_FORM_FOR_AGENT} from "../../Constants/Form";
 import {ResponseError} from "../../models/ResponseError";
@@ -39,7 +39,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     idDelete: number | string | null | undefined = -1;
     idShowModal: number | string | null | undefined = null;
     filter: Array<{ key: string; value: string[] }> | null = null;
-    extensionDomain = window.location.origin.endsWith(Constant.EXTENSION_DOMAIN_PRO) ? Constant.EXTENSION_DOMAIN_PRO : Constant.EXTENSION_DOMAIN_DEV;
+    extensionDomain = isEnvironmentPro() ? Constant.EXTENSION_DOMAIN_PRO : Constant.EXTENSION_DOMAIN_DEV;
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
                 private renderer: Renderer2,

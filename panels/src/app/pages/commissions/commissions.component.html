@@ -61,11 +61,7 @@
           </nz-table>
         </nz-card>
         <ng-template #titleLeft>
-          Danh sách chiết khấu
-          <nz-tag [nzColor]="'#33CCFF'">
-            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}"
-                          [nzValue]="(total | number)!"></nz-statistic>
-          </nz-tag>
+          <vet-title-content-left title="Danh sách chiết khấu" [quantity]="total"></vet-title-content-left>
         </ng-template>
       </div>
     </div>

@@ -26,10 +26,12 @@ import { PackageRenewalComponent } from './package-renewal/package-renewal.compo
 import {NgxMaskDirective, NgxMaskPipe} from "ngx-mask";
 import { ApproveManualPaymentComponent } from './approve-manual-payment/approve-manual-payment.component';
 import { TransactionHistoryPaymentComponent } from './transaction-history-payment/transaction-history-payment.component';
-import { OrderServiceDetailsModalComponent } from './order-service-details-modal/order-service-details-modal.component';
 import { SettingBankingComponent } from './setting-banking/setting-banking.component';
 import { CommissionApproveComponent } from './commission-approve/commission-approve.component';
 import { CommissionApprovePendingComponent } from './commission-approve-pending/commission-approve-pending.component';
+import { ApproveManualPaymentCommissionComponent } from './approve-manual-payment-commission/approve-manual-payment-commission.component';
+import {ComponentCommonModule} from "../component-common/component-common.module";
+import {PaymentDetailsModalComponent} from "./payment-details-modal/payment-details-modal.component";
 
 const routes: Routes =
     [
@@ -62,10 +64,11 @@ const routes: Routes =
         PackageRenewalComponent,
         ApproveManualPaymentComponent,
         TransactionHistoryPaymentComponent,
-        OrderServiceDetailsModalComponent,
         SettingBankingComponent,
         CommissionApproveComponent,
-        CommissionApprovePendingComponent],
+        CommissionApprovePendingComponent,
+        ApproveManualPaymentCommissionComponent,
+        PaymentDetailsModalComponent],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),
@@ -77,7 +80,8 @@ const routes: Routes =
         ShareModule,
         FormsModule,
         NgxMaskDirective,
-        NgxMaskPipe
+        NgxMaskPipe,
+        ComponentCommonModule
     ]
 })
 export class PagesModule {

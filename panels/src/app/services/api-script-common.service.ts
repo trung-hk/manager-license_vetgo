@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {mergeMap, Observable, retryWhen, throwError, timer} from "rxjs";
 import {CallScriptObject} from "../models/CallScriptObject";
+import {isEnvironmentPro} from "../Constants/vg-constant";
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +11,7 @@ import {CallScriptObject} from "../models/CallScriptObject";
 export class ApiScriptCommonService {
     static readonly URL_PRODUCTION: string = "https://script.google.com/macros/s/AKfycbxB-8oQowVVDen9WhD44QEja8cm_lFtQc3Sc_0dCEHkNhCFzo8hTlNVUCkagA6ms5cGKg/exec";
     static readonly  URL_DEV: string = "https://script.google.com/macros/s/AKfycbzC9sSxdtHmTpbzOBMNcOwBV8D36PUOEehuM4XlKe2_B9eNhmrJOf8LRWIv-nYN2LG4/exec";
-    static readonly URL: string = window.location.origin.startsWith("http://localhost") ? ApiScriptCommonService.URL_DEV : ApiScriptCommonService.URL_PRODUCTION;
+    static readonly URL: string = isEnvironmentPro() ? ApiScriptCommonService.URL_PRODUCTION : ApiScriptCommonService.URL_DEV;
     regex = /^(?!\s*$).+/;
     headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
     constructor(private httpClient: HttpClient) {
