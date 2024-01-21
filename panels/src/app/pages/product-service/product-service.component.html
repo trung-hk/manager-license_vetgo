@@ -1,9 +1,13 @@
 <section class="section">
   <div class="section-body">
-    <div class="row">
-      <div class="col-12">
+    <div nz-row>
+      <div nz-col nzSpan="24">
         <nz-card style="width: 100%" [nzTitle]="titleLeft"  [nzBordered]="false">
-          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <vet-title-action [action]="{name: 'Thêm mới'}"
+                            (actionClick)="showModal()"
+                            [search]="{placeholder: 'Tìm kiếm'}"
+                            (keyEnterSearch)="search($event)">
+          </vet-title-action>
           <nz-table
               nzShowSizeChanger
               [nzData]="dataList"
@@ -13,11 +17,12 @@
               [nzPageSize]="pageSize"
               [nzPageIndex]="pageIndex"
               (nzQueryParams)="onQueryParamsChange($event)"
+              [nzScroll]="{ x: '500px' }"
           >
             <thead>
             <tr>
-              <th nzColumnKey="code" [nzSortFn]="true">Mã sản phẩm</th>
-              <th nzColumnKey="name" [nzSortFn]="true">Sản phẩm</th>
+              <th nzWidth="16em" nzColumnKey="code" [nzSortFn]="true">Mã sản phẩm</th>
+              <th nzWidth="16em" nzColumnKey="name" [nzSortFn]="true">Sản phẩm</th>
               <th nzWidth="16em" nzColumnKey="description">Thông tin sản phẩm</th>
               <th nzWidth="16em">Thông tin Gói</th>
               <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
@@ -42,12 +47,7 @@
                     <nz-skeleton *ngIf="!p" [nzAvatar]="true"
                                  [nzParagraph]="{ rows: 1 }"></nz-skeleton>
                     <nz-list-item-meta nzAvatar="/assets/img/service-packages.png" [nzDescription]="p.name ? p.name : ''">
-                      <nz-list-item-meta-title>
-                        <nz-statistic
-                            [nzValueStyle]="{'font-size': 'unset'}"
-                            [nzValue]="(p.price | number)!"
-                            [nzSuffix]="'VNĐ'">
-                        </nz-statistic>
+                      <nz-list-item-meta-title><vet-money [content]="p.price"></vet-money>
                       </nz-list-item-meta-title>
                     </nz-list-item-meta>
                   </nz-list-item>
@@ -56,14 +56,12 @@
               <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
               <td class="align-center">
                 <ng-container [ngSwitch]="dt.status">
-                  <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.UN_DEPLOYED.value"
-                       class="badge badge-shadow badge-danger">
-                    {{STATUS_PRODUCT_SERVICE.UN_DEPLOYED.text}}
-                  </div>
-                  <div *ngSwitchCase="STATUS_PRODUCT_SERVICE.DEPLOYED.value"
-                       class="badge badge-shadow badge-success">
-                    {{STATUS_PRODUCT_SERVICE.DEPLOYED.text}}
-                  </div>
+                  <span *ngSwitchCase="STATUS_PRODUCT_SERVICE.UN_DEPLOYED.value">
+                    <vet-status-danger [content]="STATUS_PRODUCT_SERVICE.UN_DEPLOYED.text"></vet-status-danger>
+                  </span>
+                  <span *ngSwitchCase="STATUS_PRODUCT_SERVICE.DEPLOYED.value">
+                    <vet-status-success [content]="STATUS_PRODUCT_SERVICE.DEPLOYED.text"></vet-status-success>
+                  </span>
                 </ng-container>
               </td>
               <td class="align-center action">
@@ -76,23 +74,19 @@
             </tbody>
           </nz-table>
         </nz-card>
-        <ng-template #titleLeft>
-          Danh sách Sản phẩm
-          <nz-tag [nzColor]="'#33CCFF'">
-            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
-          </nz-tag>
-        </ng-template>
       </div>
     </div>
   </div>
 </section>
+<ng-template #titleLeft>
+  <vet-title-content-left [quantity]="total">Danh sách Sản phẩm</vet-title-content-left>
+</ng-template>
 <!-- Create/Update Form -->
 <nz-modal [(nzVisible)]="isVisible"
-          [nzTitle]="modalTitle"
+          [nzTitle]="idShowModal ? 'Cập nhật sản phẩm' : 'Thêm mới sản phẩm'"
           [nzContent]="modalContent"
-          [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
+          [nzFooter]="modalFooter"
           (nzOnCancel)="handleCancel()" [nzStyle]="{'width': '800px', 'max-height': '750px', 'overflow-y': 'auto'}">
-  <ng-template #modalTitle> {{idShowModal ? 'Cập nhật sản phẩm' : 'Thêm mới sản phẩm'}}</ng-template>
   
   <ng-template #modalContent>
     <form nz-form [formGroup]="validateProductForm">
@@ -185,22 +179,16 @@
       </form>
     </form>
   </ng-template>
-  <ng-template #modalFooterAdd>
+  <ng-template #modalFooter>
     <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
     <button nz-button nzType="primary" [disabled]="validateProductForm.invalid" (click)="handleOk()"
-            [nzLoading]="isConfirmLoading">Thêm mới
-    </button>
-  </ng-template>
-  <ng-template #modalFooterUpdate>
-    <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
-    <button nz-button nzType="primary" [disabled]="validateProductForm.invalid" (click)="handleOk()"
-            [nzLoading]="isConfirmLoading">Câp nhật
+            [nzLoading]="isConfirmLoading">
+      {{idShowModal ? 'Câp nhật' : 'Thêm mới'}}
     </button>
   </ng-template>
 </nz-modal>
-
 <!-- Delete Confirmation -->
-<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận xoá sản phẩm" nzOkText="Ok" nzOkDanger="true"
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận xoá sản phẩm" nzOkText="Đồng ý" nzOkDanger="true"
           nzCancelText="Hủy" (nzOnOk)="handleConfirmToDelete()"
           [nzOkLoading]="isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">
@@ -208,27 +196,3 @@
     Xóa data đã chọn ?
   </ng-container>
 </nz-modal>
-
-<ng-template #titleAction>
-  <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
-    <div nz-col [nzXXl]="8" [nzXl]="8" [nzLg]="8" [nzMd]="8" [nzSm]="10" [nzXs]="10">
-      <button type="button" (click)="showModal()" class="btn btn-success">
-        <i class="fas fa-plus"></i> Thêm mới
-      </button>
-    </div>
-    <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
-         [nzXl]="{ span: 6, offset: 10 }"
-         [nzLg]="{ span: 6, offset: 10 }"
-         [nzMd]="{ span: 6, offset: 10 }"
-         [nzSm]="{ span: 6, offset: 8 }"
-         [nzXs]="{ span: 6, offset: 8 }">
-      <nz-input-group [nzSuffix]="suffixIconSearch">
-        <input nzSize="large" type="search" nz-input placeholder="input search text"
-               (keyup.enter)="search($event)"/>
-      </nz-input-group>
-      <ng-template #suffixIconSearch>
-        <span nz-icon nzType="search"></span>
-      </ng-template>
-    </div>
-  </div>
-</ng-template>

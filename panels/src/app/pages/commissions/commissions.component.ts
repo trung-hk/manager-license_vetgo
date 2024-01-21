@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import {Constant, TYPE_COMMISSION} from "../../Constants/vg-constant";
+import {Constant, ROLES, TYPE_COMMISSION} from "../../Constants/vg-constant";
 import {FormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
@@ -282,4 +282,5 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   protected readonly Constant = Constant;
+    protected readonly ROLES = ROLES;
 }

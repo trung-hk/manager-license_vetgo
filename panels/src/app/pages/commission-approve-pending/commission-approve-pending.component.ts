@@ -209,6 +209,7 @@ export class CommissionApprovePendingComponent {
     }
   }
   filterOrder(e: string) {
+    this.selectUser = e;
     this.loadDataFromServer().then();
   }
   handleInputChange(searchText: any): void {

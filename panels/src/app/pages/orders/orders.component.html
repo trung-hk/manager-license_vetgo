@@ -4,7 +4,14 @@
       <div class="col-12">
         <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false"
                  [nzBodyStyle]="{'padding': 'unset' }">
-          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <vet-title-action [action]="{name: 'Thêm mới', roles: [ROLES.PARTNER]}"
+                            (actionClick)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT)"
+                            [search]="{placeholder: 'Mã đơn hàng'}"
+                            (keyEnterSearch)="search($event)"
+                            [selectSearchByUser]="{placeholder: placeHolder, roles: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER], value: selectUser, userList: userList}"
+                            (onChangeByUser)="filterOrder($event)">
+          
+          </vet-title-action>
           <nz-table *ngIf="modeView === MODE_DISPLAY.PC" [nzScroll]="{ x: '500px' }"
                     nzShowSizeChanger
                     [nzData]="dataList"
@@ -42,7 +49,7 @@
                     [nzDescription]="dt.customerName!"
                 >
                   <nz-list-item-meta-title>
-                    {{dt.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
+                    <vet-phone [content]="dt.customerPhone"></vet-phone>
                   </nz-list-item-meta-title>
                 </nz-list-item-meta>
                 <ng-template #avatar>
@@ -56,11 +63,7 @@
                     [nzDescription]="dt.attributesObject?.itemName! + ' - ' + dt.attributesObject?.packagesMap?.get(dt.packageId!)?.name"
                 >
                   <nz-list-item-meta-title>
-                    <nz-statistic
-                        [nzValueStyle]="{'font-size': 'unset'}"
-                        [nzValue]="(dt.totalAmount | number)!"
-                        [nzSuffix]="'VNĐ'">
-                    </nz-statistic>
+                    <vet-money [content]="dt.totalAmount"></vet-money>
                   </nz-list-item-meta-title>
                 </nz-list-item-meta>
               </td>
@@ -80,35 +83,31 @@
                       </nz-space>
                     </ng-container>
                     <ng-container *ngxPermissionsExcept="[ROLES.PARTNER, ROLES.CUSTOMER]">
-                      <div class="badge badge-shadow badge-warning">
-                        {{STATUS_PAYMENT.UN_PAID.text}}
-                      </div>
+                      <span>
+                        <vet-status-warning [content]="STATUS_PAYMENT.UN_PAID.text"></vet-status-warning>
+                      </span>
                     </ng-container>
                   </div>
-                  <div *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value" class="badge badge-shadow badge-info">
-                    {{STATUS_PAYMENT.IN_PAYMENT.text}}
-                  </div>
-                  <div *ngSwitchDefault
-                       class="badge badge-shadow badge-success">
-                    {{STATUS_PAYMENT.PAID.text}}
-                  </div>
+                  <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value">
+                    <vet-status-info [content]="STATUS_PAYMENT.IN_PAYMENT.text"></vet-status-info>
+                  </span>
+                  <span *ngSwitchDefault>
+                    <vet-status-success [content]="STATUS_PAYMENT.PAID.text"></vet-status-success>
+                  </span>
                 </ng-container>
               </td>
               <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
               <td class="align-center">
                 <ng-container [ngSwitch]="dt.status">
-                  <div *ngSwitchCase="STATUS_ORDER.IN_PROCESS.value"
-                       class="badge badge-shadow badge-primary">
-                    {{STATUS_ORDER.IN_PROCESS.text}}
-                  </div>
-                  <div *ngSwitchCase="STATUS_ORDER.CANCEL_ORDER.value"
-                       class="badge badge-shadow badge-danger">
-                    {{STATUS_ORDER.CANCEL_ORDER.text}}
-                  </div>
-                  <div *ngSwitchDefault
-                       class="badge badge-shadow badge-success">
-                    {{STATUS_ORDER.FINISHED.value}}
-                  </div>
+                  <span *ngSwitchCase="STATUS_ORDER.IN_PROCESS.value">
+                    <vet-status-info [content]="STATUS_ORDER.IN_PROCESS.text"></vet-status-info>
+                  </span>
+                  <span *ngSwitchCase="STATUS_ORDER.CANCEL_ORDER.value">
+                    <vet-status-danger [content]="STATUS_ORDER.CANCEL_ORDER.text"></vet-status-danger>
+                  </span>
+                  <span *ngSwitchDefault>
+                    <vet-status-success [content]="STATUS_ORDER.FINISHED.text"></vet-status-success>
+                  </span>
                 </ng-container>
               </td>
               <td class="align-center action">
@@ -183,7 +182,7 @@
                   <div nz-row>
                     <div nz-col nzSpan="16">
                       <span>{{dt.code}}</span><br>
-                      <span>{{dt.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}</span><br>
+                      <span><vet-phone [content]="dt.customerPhone"></vet-phone></span><br>
                       <span>{{dt.customerName}}</span><br>
                     
                     </div>
@@ -236,13 +235,13 @@
                 <nz-descriptions nzBordered nzSize="small">
                   <nz-descriptions-item nzSpan="3" nzTitle="Tên">{{dt.customerName}}</nz-descriptions-item>
                   <nz-descriptions-item nzSpan="3"
-                                        nzTitle="Số điên thoại">{{dt.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}</nz-descriptions-item>
+                                        nzTitle="Số điên thoại"><vet-phone [content]="dt.customerPhone"></vet-phone></nz-descriptions-item>
                   <nz-descriptions-item nzSpan="3"
                                         nzTitle="Tên sản phẩm">{{dt.attributesObject?.itemName}}</nz-descriptions-item>
                   <nz-descriptions-item nzSpan="3"
                                         nzTitle="Gói đã mua">{{dt.attributesObject?.packagesMap?.get(dt.packageId!)?.name}}</nz-descriptions-item>
                   <nz-descriptions-item nzSpan="3"
-                                        nzTitle="Giá">{{dt.totalAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}</nz-descriptions-item>
+                                        nzTitle="Giá"><vet-money [content]="dt.totalAmount"></vet-money></nz-descriptions-item>
                   <nz-descriptions-item nzSpan="3" nzTitle="Thanh toán">
                     <ng-container [ngSwitch]="dt.paymentStatus">
                       <div *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value">
@@ -259,34 +258,31 @@
                           </nz-space>
                         </ng-container>
                         <ng-container *ngxPermissionsExcept="[ROLES.PARTNER, ROLES.CUSTOMER]">
-                          <div class="badge badge-shadow badge-warning">
-                            {{STATUS_PAYMENT.UN_PAID.text}}
-                          </div>
+                          <span>
+                            <vet-status-warning [content]="STATUS_PAYMENT.UN_PAID.text"></vet-status-warning>
+                          </span>
                         </ng-container>
                       </div>
-                      <div *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value" class="badge badge-shadow badge-info">
-                        {{STATUS_PAYMENT.IN_PAYMENT.text}}
-                      </div>
-                      <div *ngSwitchDefault
+                      <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value">
+                        <vet-status-info [content]="STATUS_PAYMENT.IN_PAYMENT.text"></vet-status-info>
+                      </span>
+                      <span *ngSwitchDefault
                            class="badge badge-shadow badge-success">
-                        {{STATUS_PAYMENT.PAID.text}}
-                      </div>
+                        <vet-status-success [content]="STATUS_PAYMENT.PAID.text"></vet-status-success>
+                      </span>
                     </ng-container>
                   </nz-descriptions-item>
                   <nz-descriptions-item nzSpan="3" nzTitle="Trạng thái">
                     <ng-container [ngSwitch]="dt.status">
-                      <div *ngSwitchCase="STATUS_ORDER.IN_PROCESS.value"
-                           class="badge badge-shadow badge-primary">
-                        {{STATUS_ORDER.IN_PROCESS.text}}
-                      </div>
-                      <div *ngSwitchCase="STATUS_ORDER.CANCEL_ORDER.value"
-                           class="badge badge-shadow badge-danger">
-                        {{STATUS_ORDER.CANCEL_ORDER.text}}
-                      </div>
-                      <div *ngSwitchDefault
-                           class="badge badge-shadow badge-success">
-                        {{STATUS_ORDER.FINISHED.value}}
-                      </div>
+                      <span *ngSwitchCase="STATUS_ORDER.IN_PROCESS.value">
+                        <vet-status-info [content]="STATUS_ORDER.IN_PROCESS.text"></vet-status-info>
+                      </span>
+                      <span *ngSwitchCase="STATUS_ORDER.CANCEL_ORDER.value">
+                        <vet-status-danger [content]="STATUS_ORDER.CANCEL_ORDER.text"></vet-status-danger>
+                      </span>
+                      <span *ngSwitchDefault>
+                        <vet-status-success [content]="STATUS_ORDER.FINISHED.text"></vet-status-success>
+                      </span>
                     </ng-container>
                   </nz-descriptions-item>
                 </nz-descriptions>
@@ -312,83 +308,19 @@
           </nz-table>
         </nz-card>
         <ng-template #titleLeft>
-          Danh sách đơn hàng
-          <nz-tag [nzColor]="'#33CCFF'">
-            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}"
-                          [nzValue]="(total | number)!"></nz-statistic>
-          </nz-tag>
-        </ng-template>
-        <ng-template #titleAction>
-          <div nz-row [ngStyle]="{'margin-top': '15px'}">
-            <div nz-col [nzXXl]="8" [nzXl]="10" [nzLg]="10" [nzMd]="8" [nzSm]="10" [nzXs]="8">
-              <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
-                <button type="button" (click)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT)"
-                        class="btn btn-success">
-                  <i class="fas fa-plus"></i> Thêm mới
-                </button>
-              </ng-container>
-            </div>
-            <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
-                 [nzXl]="{ span: 8, offset: 6 }"
-                 [nzLg]="{ span: 10, offset: 4 }"
-                 [nzMd]="{ span: 12, offset: 4 }"
-                 [nzSm]="{ span: 12, offset: 2 }"
-                 [nzXs]="16">
-              <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
-                <input nzSize="large" type="text" nz-input placeholder="Mã đơn hàng"
-                       (keyup.enter)="search($event)"/>
-              </nz-input-group>
-              <ng-template #suffixIconSearch>
-                <span nz-icon nzType="search"></span>
-              </ng-template>
-            </div>
-          </div>
-          <div nz-row [ngStyle]="{'margin-top': '15px'}" *ngxPermissionsExcept="ROLES.CUSTOMER">
-            <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
-                 [nzXl]="{ span: 8, offset: 16 }"
-                 [nzLg]="{ span: 10, offset: 14 }"
-                 [nzMd]="{ span: 12, offset: 12 }"
-                 [nzSm]="{ span: 12, offset: 12 }"
-                 [nzXs]="24">
-              <nz-select
-                  style="width: 100%"
-                  nzShowSearch
-                  nzServerSearch
-                  nzAllowClear
-                  [nzPlaceHolder]="placeHolder"
-                  [(ngModel)]="selectUser"
-                  [nzShowArrow]="false"
-                  [nzFilterOption]="nzFilterOption"
-                  (nzOnSearch)="handleInputChange($event)"
-                  (ngModelChange)="filterOrder($event)"
-              >
-                <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]; else option">
-                  <nz-option *ngFor="let user of userList"
-                             [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
-                             [nzValue]="user.code"></nz-option>
-                </ng-container>
-                <ng-template #option>
-                  <nz-option *ngFor="let user of userList"
-                             [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
-                             [nzValue]="user.id"></nz-option>
-                </ng-template>
-              </nz-select>
-              <ng-template #placeHolder>
-                Chọn
-                <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]">Đại lý</ng-container>
-                <ng-container *ngxPermissionsOnly="[ROLES.AGENT]">Nhà phân phối</ng-container>
-                <ng-container *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">Cộng tác viên</ng-container>
-                <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">Khách hàng</ng-container>
-              </ng-template>
-            </div>
-          </div>
-          <nz-divider></nz-divider>
+          <vet-title-content-left [quantity]="total">Danh sách đơn hàng</vet-title-content-left>
         </ng-template>
       </div>
     </div>
   </div>
 </section>
-
+<ng-template #placeHolder>
+  Chọn
+  <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]">Đại lý</ng-container>
+  <ng-container *ngxPermissionsOnly="[ROLES.AGENT]">Nhà phân phối</ng-container>
+  <ng-container *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">Cộng tác viên</ng-container>
+  <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">Khách hàng</ng-container>
+</ng-template>
 <!-- Delete Confirmation -->
 <nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận hủy đơn hàng" nzOkText="Đồng ý" nzOkDanger="true"
           nzCancelText="Hủy bỏ" (nzOnOk)="handleConfirmToDelete()"

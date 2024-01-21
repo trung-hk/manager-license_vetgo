@@ -6,7 +6,13 @@ import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
-import {Constant, isEnvironmentPro, STATUS_AGENT, USER_TYPE} from "../../Constants/vg-constant";
+import {
+    Constant,
+    isEnvironmentPro,
+    MODE_OPEN_MODAL_FORM_ORDER_SERVICE, ROLES,
+    STATUS_AGENT,
+    USER_TYPE
+} from "../../Constants/vg-constant";
 import {User} from "../../models/User";
 import {USER_FORM_FOR_AGENT} from "../../Constants/Form";
 import {ResponseError} from "../../models/ResponseError";
@@ -223,11 +229,11 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             });
         }
     }
-
     search(event: any): void {
         this.loadDataFromServer(event.target.value);
-        event.target.value = "";
     }
 
     protected readonly Constant = Constant;
+    protected readonly MODE_OPEN_MODAL_FORM_ORDER_SERVICE = MODE_OPEN_MODAL_FORM_ORDER_SERVICE;
+    protected readonly ROLES = ROLES;
 }

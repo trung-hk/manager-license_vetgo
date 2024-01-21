@@ -1,10 +1,12 @@
 <nz-spin [nzSpinning]="loading" nzTip="Đang cập nhật dữ liệu...">
   <section class="section">
     <div class="section-body">
-      <div class="row">
-        <div class="col-12">
+      <div nz-row>
+        <div nz-col nzSpan="24">
           <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
-            <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+            <vet-title-action [search]="{placeholder: 'Tìm kiếm'}"
+                              (keyEnterSearch)="search($event)">
+            </vet-title-action>
             <nz-list nzGrid>
               <div nz-row [nzGutter]="16">
                 <div nz-col [nzSpan]="6" *ngFor="let dt of dataProductList">
@@ -37,11 +39,7 @@
                             [nzDescription]="item.name ? item.name : ''"
                         >
                           <nz-list-item-meta-title>
-                            <nz-statistic
-                                [nzValueStyle]="{'font-size': 'unset'}"
-                                [nzValue]="(item.price | number)!"
-                                [nzSuffix]="'VNĐ'">
-                            </nz-statistic>
+                            <vet-money [content]="item.price"></vet-money>
                           </nz-list-item-meta-title>
                         </nz-list-item-meta>
                       </nz-list-item>
@@ -80,32 +78,17 @@
               </div>
             </nz-list>
           </nz-card>
-          <ng-template #titleLeft>
-            Danh sách Sản phẩm
-            <nz-tag [nzColor]="'#04ab0c'"> Đã đăng ký {{totalRegisterProduct}}</nz-tag>
-            <nz-tag [nzColor]="'#F1091DFF'"> Chưa đăng ký {{totalProduct - totalRegisterProduct}}
-            </nz-tag>
-          </ng-template>
-          <ng-template #titleAction>
-            <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
-              <div nz-col nzSpan="6" nzOffset="18">
-                <nz-input-group [nzSuffix]="suffixIconSearch">
-                  <input nzSize="large" type="search" nz-input placeholder="input search text"
-                         (keyup.enter)="search($event)"/>
-                </nz-input-group>
-                <ng-template #suffixIconSearch>
-                  <span nz-icon nzType="search"></span>
-                </ng-template>
-              </div>
-            </div>
-          </ng-template>
+          
         </div>
       </div>
     </div>
   </section>
 </nz-spin>
+<ng-template #titleLeft>
+  <vet-title-content-left>Danh sách Sản phẩm</vet-title-content-left>
+</ng-template>
 <!-- Delete Confirmation -->
-<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận hủy đăng ký sản phẩm" nzOkText="Ok" nzOkDanger="true"
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận hủy đăng ký sản phẩm" nzOkText="Đồng ý" nzOkDanger="true"
           nzCancelText="Hủy" (nzOnOk)="handleConfirmToDelete()"
           [nzOkLoading]="isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">

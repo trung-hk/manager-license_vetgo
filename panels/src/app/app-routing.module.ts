@@ -280,7 +280,7 @@ const routes: Routes = [
         canActivate: [NgxPermissionsGuard],
         data: {
           permissions: {
-            only: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER],
+            only: [ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER],
             redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
           }
         }

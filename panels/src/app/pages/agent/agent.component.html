@@ -1,9 +1,13 @@
 <section class="section">
   <div class="section-body">
-    <div class="row">
-      <div class="col-12">
+    <div nz-row>
+      <div nz-col nzSpan="24">
         <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
-          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <vet-title-action [action]="{name: 'Thêm mới'}"
+                            (actionClick)="showModal()"
+                            [search]="{placeholder: 'Tìm kiếm'}"
+                            (keyEnterSearch)="search($event)">
+          </vet-title-action>
           <nz-table
               nzShowSizeChanger
               [nzData]="dataList"
@@ -13,7 +17,7 @@
               [nzPageSize]="pageSize"
               [nzPageIndex]="pageIndex"
               (nzQueryParams)="onQueryParamsChange($event)"
-          >
+              [nzScroll]="{ x: '500px' }">
             <thead>
             <tr>
               <th nzWidth="20em">Thông tin đại lý</th>
@@ -42,27 +46,19 @@
               </td>
               <td>
                 <div>
-                  <label>Số điện thoại: <span>{{dt.phone! | mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}</span></label>
+                  <label>Số điện thoại: <vet-phone [content]="dt.phone"></vet-phone></label>
                 </div>
                 <div>
                   <label>E-mail: <span>{{dt.email}}</span></label>
                 </div>
               </td>
               <td><a href="https://{{dt.realm}}.{{extensionDomain}}">https://{{dt.realm}}.{{extensionDomain}}</a></td>
-              <td>
-                {{dataCommissionMap.get(dt.commissionId!)?.name}}
-              </td>
+              <td>{{dataCommissionMap.get(dt.commissionId!)?.name}}</td>
               <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
               <td class="align-center">
                 <ng-container [ngSwitch]="dt.status">
-                  <div *ngSwitchCase="STATUS_AGENT.IN_ACTIVE.value"
-                       class="badge badge-shadow badge-danger">
-                    {{STATUS_AGENT.IN_ACTIVE.text}}
-                  </div>
-                  <div *ngSwitchCase="STATUS_AGENT.ACTIVATED.value"
-                       class="badge badge-shadow badge-success">
-                    {{STATUS_AGENT.ACTIVATED.text}}
-                  </div>
+                  <span *ngSwitchCase="STATUS_AGENT.IN_ACTIVE.value"><vet-status-danger [content]="STATUS_AGENT.IN_ACTIVE.text"></vet-status-danger></span>
+                  <span *ngSwitchCase="STATUS_AGENT.IN_ACTIVE.value"><vet-status-success [content]="STATUS_AGENT.ACTIVATED.text"></vet-status-success></span>
                 </ng-container>
               </td>
               <td class="align-center action">
@@ -81,42 +77,19 @@
             </tbody>
           </nz-table>
         </nz-card>
-        <ng-template #titleLeft>
-          Danh sách đại lý
-          <nz-tag [nzColor]="'#33CCFF'">
-            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
-          </nz-tag>
-        </ng-template>
-        <ng-template #titleAction>
-          <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
-            <div nz-col nzSpan="8">
-              <button type="button" (click)="showModal()" class="btn btn-success">
-                <i class="fas fa-plus"></i> Thêm mới
-              </button>
-            </div>
-            <div nz-col nzSpan="6" nzOffset="10">
-              <nz-input-group [nzSuffix]="suffixIconSearch">
-                <input nzSize="large" type="search" nz-input placeholder="input search text"
-                       (keyup.enter)="search($event)"/>
-              </nz-input-group>
-              <ng-template #suffixIconSearch>
-                <span nz-icon nzType="search"></span>
-              </ng-template>
-            </div>
-          </div>
-        </ng-template>
       </div>
     </div>
   </div>
 </section>
+<ng-template #titleLeft>
+  <vet-title-content-left [quantity]="total">Danh sách đại lý</vet-title-content-left>
+</ng-template>
 <!-- Create/Update Form -->
 <nz-modal [(nzVisible)]="isVisible"
-          [nzTitle]="modalTitle"
+          [nzTitle]="idShowModal ? 'Cập nhật đại lý' : 'Thêm mới đại lý'"
           [nzContent]="modalContent"
-          [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
+          [nzFooter]="modalFooter"
           (nzOnCancel)="handleCancel()" nzWidth="800px">
-  <ng-template #modalTitle> {{idShowModal ? 'Cập nhật đại lý' : 'Thêm mới đại lý'}}</ng-template>
-  
   <ng-template #modalContent>
     <form nz-form [formGroup]="validateForm">
       <input type="hidden" formControlName="id">
@@ -181,23 +154,17 @@
       </nz-form-item>
     </form>
   </ng-template>
-  
-  <ng-template #modalFooterAdd>
+  <ng-template #modalFooter>
     <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
     <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
-            [nzLoading]="isConfirmLoading">Thêm mới
-    </button>
-  </ng-template>
-  <ng-template #modalFooterUpdate>
-    <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
-    <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
-            [nzLoading]="isConfirmLoading">Câp nhật
+            [nzLoading]="isConfirmLoading">
+      {{idShowModal ? 'Cập nhật' : 'Thêm mới'}}
     </button>
   </ng-template>
 </nz-modal>
 
 <!-- Delete Confirmation -->
-<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Delete Confirmation" nzOkText="Ok" nzOkDanger="true"
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận xóa dữ liệu" nzOkText="Đồng ý" nzOkDanger="true"
           nzCancelText="Hủy" (nzOnOk)="handleConfirmToDelete()"
           [nzOkLoading]="isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">

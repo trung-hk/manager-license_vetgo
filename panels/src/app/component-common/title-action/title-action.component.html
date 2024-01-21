@@ -1,0 +1,77 @@
+<div *ngIf="action || search" nz-row [ngStyle]=" selectSearchByUser && search ? {'margin-top': '15px'} : {}">
+  <ng-container *ngIf="action && search">
+    <div nz-col [nzXXl]="8" [nzXl]="10" [nzLg]="10" [nzMd]="8" [nzSm]="10" [nzXs]="8">
+      <ng-container *ngxPermissionsOnly="action.roles!">
+        <button *ngIf="action.isShow" type="button" (click)="actionClick.emit()"
+                class="btn btn-success">
+          <i class="fas fa-plus"></i> {{action.name}}
+        </button>
+      </ng-container>
+    </div>
+    <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
+         [nzXl]="{ span: 8, offset: 6 }"
+         [nzLg]="{ span: 10, offset: 4 }"
+         [nzMd]="{ span: 12, offset: 4 }"
+         [nzSm]="{ span: 12, offset: 2 }"
+         [nzXs]="16">
+      <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
+        <input nzSize="large" type="text" nz-input [placeholder]="search.placeholder"
+               (keyup.enter)="keyEnterSearch.emit($event)"/>
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!action && search">
+    <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
+         [nzXl]="{ span: 8, offset: 16 }"
+         [nzLg]="{ span: 10, offset: 14 }"
+         [nzMd]="{ span: 12, offset: 12 }"
+         [nzSm]="24"
+         [nzXs]="24">
+      <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
+        <input nzSize="large" type="text" nz-input [placeholder]="search.placeholder"
+               (keyup.enter)="keyEnterSearch.emit($event)"/>
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+    </div>
+  </ng-container>
+</div>
+<ng-container *ngIf="selectSearchByUser">
+  <div *ngxPermissionsOnly="selectSearchByUser.roles!" nz-row [ngStyle]="{'margin-top': '15px'}" >
+    <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
+         [nzXl]="{ span: 8, offset: 16 }"
+         [nzLg]="{ span: 10, offset: 14 }"
+         [nzMd]="{ span: 12, offset: 12 }"
+         [nzSm]="{ span: 12, offset: 12 }"
+         [nzXs]="24">
+      <nz-select
+          style="width: 100%"
+          nzShowSearch
+          nzServerSearch
+          nzAllowClear
+          [nzPlaceHolder]="selectSearchByUser.placeholder!"
+          [(ngModel)]="selectSearchByUser.value"
+          [nzShowArrow]="false"
+          [nzFilterOption]="nzFilterOption"
+          (nzOnSearch)="handleInputChange($event)"
+          (ngModelChange)="onChangeByUser.emit($event)"
+      >
+        <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]; else option">
+          <nz-option *ngFor="let user of selectSearchByUser.userList"
+                     [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
+                     [nzValue]="user.code"></nz-option>
+        </ng-container>
+        <ng-template #option>
+          <nz-option *ngFor="let user of selectSearchByUser.userList"
+                     [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
+                     [nzValue]="user.id"></nz-option>
+        </ng-template>
+      </nz-select>
+    </div>
+  </div>
+</ng-container>
+<nz-divider></nz-divider>

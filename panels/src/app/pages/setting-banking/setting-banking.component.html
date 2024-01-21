@@ -1,9 +1,13 @@
 <section class="section">
   <div class="section-body">
-    <div class="row">
-      <div class="col-12">
+    <div nz-row>
+      <div nz-col nzSpan="24">
         <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
-          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <vet-title-action [action]="{name: 'Thêm mới'}"
+                            (actionClick)="showModal()"
+                            [search]="{placeholder: 'Tên tài khoản'}"
+                            (keyEnterSearch)="search($event)">
+          </vet-title-action>
           <nz-table
               nzShowSizeChanger
               [nzData]="dataList"
@@ -30,7 +34,7 @@
             <tbody>
             <tr *ngFor="let dt of dataList">
               <td>
-                {{userMap.get(dt?.userId!)?.code}} - {{userMap.get(dt?.userId!)?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
+                {{userMap.get(dt?.userId!)?.code}} - <vet-phone [content]="userMap.get(dt?.userId!)?.phone"></vet-phone>
               </td>
               <td>{{dt.accountName}}</td>
               <td>{{dt.accountNo}}</td>
@@ -67,39 +71,13 @@
             </tbody>
           </nz-table>
         </nz-card>
-        <ng-template #titleLeft>
-          Thông tin ngân hàng
-          <nz-tag [nzColor]="'#33CCFF'">
-            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
-          </nz-tag>
-        </ng-template>
-        <ng-template #titleAction>
-          <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
-            <div nz-col [nzXXl]="8" [nzXl]="8" [nzLg]="8" [nzMd]="8" [nzSm]="10" [nzXs]="10">
-              <button type="button" (click)="showModal()" class="btn btn-success">
-                <i class="fas fa-plus"></i> Thêm mới
-              </button>
-            </div>
-            <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
-                 [nzXl]="{ span: 6, offset: 10 }"
-                 [nzLg]="{ span: 6, offset: 10 }"
-                 [nzMd]="{ span: 6, offset: 10 }"
-                 [nzSm]="{ span: 6, offset: 8 }"
-                 [nzXs]="{ span: 6, offset: 8 }">
-              <nz-input-group [nzSuffix]="suffixIconSearch">
-                <input nzSize="large" type="search" nz-input placeholder="Tên tài khoản"
-                       (keyup.enter)="search($event)"/>
-              </nz-input-group>
-              <ng-template #suffixIconSearch>
-                <span nz-icon nzType="search"></span>
-              </ng-template>
-            </div>
-          </div>
-        </ng-template>
       </div>
     </div>
   </div>
 </section>
+<ng-template #titleLeft>
+  <vet-title-content-left [quantity]="total">Thông tin ngân hàng</vet-title-content-left>
+</ng-template>
 <!-- Create/Update Form -->
 <nz-modal [(nzVisible)]="isShowForm"
           nzTitle="Cài đặt thông tin ngân hàng"

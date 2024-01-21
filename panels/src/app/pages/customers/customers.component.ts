@@ -259,11 +259,6 @@ export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     })
   }
-
-  handleInputChange(searchText: any): void {
-    // Cập nhật giá trị BehaviorSubject khi có sự thay đổi
-    this.searchSubject.next(searchText);
-  }
   filterOrder(e: string) {
     this.setFilter(e).then(() => {
       this.loadDataFromServer();

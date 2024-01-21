@@ -1,9 +1,11 @@
 <section class="section">
   <div class="section-body">
-    <div class="row">
-      <div class="col-12">
+    <div nz-row>
+      <div nz-col nzSpan="24">
         <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
-          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <vet-title-action [search]="{placeholder: 'Tìm kiếm'}"
+                            (keyEnterSearch)="search($event)">
+          </vet-title-action>
           <nz-table
               nzShowSizeChanger
               [nzData]="dataList"
@@ -36,14 +38,9 @@
                 {{dt.userName}}
               </td>
               <td>{{dt.totalOrder}}</td>
-              <td>{{dt.totalOrderAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR: Constant.FORMAT_MONEY_CONFIG}}</td>
-              <td>
-                <nz-statistic [nzValue]="(dt.commissionRate | number: '1.0-2')!"
-                              [nzSuffix]="'%'"
-                              [nzValueStyle]="{ color: '#3F8600', 'font-size': '14px' }">
-                </nz-statistic>
-              </td>
-              <td>{{dt.totalCommissionAmount! | mask: Constant.FORMAT_MONEY_SEPARATOR: Constant.FORMAT_MONEY_CONFIG}}</td>
+              <td><vet-money [content]="dt.totalOrderAmount"></vet-money></td>
+              <td><vet-percent [content]="dt.commissionRate"></vet-percent></td>
+              <td><vet-money [content]="dt.totalCommissionAmount"></vet-money></td>
               <td>
                 <a href="{{dt.urlView}}" target="_blank">Xem chi tiết</a>
                 <br>
@@ -63,16 +60,11 @@
                            title="Thanh toán chuyển khoản" alt="Thanh toán chuyển khoản"/>
                     </nz-space>
                   </div>
-                  <div *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value" class="badge badge-shadow badge-info">
-                    {{STATUS_PAYMENT.IN_PAYMENT.text}}
-                  </div>
-                  <div *ngSwitchDefault
-                       class="badge badge-shadow badge-success">
-                    {{STATUS_PAYMENT.PAID.text}}
-                  </div>
+                  <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value"><vet-status-info [content]="STATUS_PAYMENT.IN_PAYMENT.text"></vet-status-info></span>
+                  <span *ngSwitchCase="STATUS_PAYMENT.PAID.value"><vet-status-success [content]="STATUS_PAYMENT.PAID.text"></vet-status-success></span>
                 </ng-container>
               </td>
-              <td>
+              <td class="align-center action">
                 <ng-container [ngSwitch]="dt.status">
                   <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value"
                       nz-icon nzType="transaction"
@@ -92,35 +84,10 @@
             </tbody>
           </nz-table>
         </nz-card>
-        <ng-template #titleLeft>
-          Danh sách chiết khấu đã duyệt
-          <nz-tag [nzColor]="'#33CCFF'">
-            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
-          </nz-tag>
-        </ng-template>
-        <ng-template #titleAction>
-          <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
-            <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
-                 [nzXl]="{ span: 8, offset: 16 }"
-                 [nzLg]="{ span: 10, offset: 14 }"
-                 [nzMd]="{ span: 12, offset: 12 }"
-                 [nzSm]="24"
-                 [nzXs]="24">
-              <nz-input-group [nzSuffix]="suffixIconSearch">
-                <input *ngxPermissionsOnly="[ROLES.ADMIN]" nzSize="large" type="search" nz-input placeholder="Nhập tên đại lý"
-                       (keyup.enter)="search($event)"/>
-                <input *ngxPermissionsOnly="[ROLES.AGENT]" nzSize="large" type="search" nz-input placeholder="Nhập tên nhà phân phối"
-                       (keyup.enter)="search($event)"/>
-                <input *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]" nzSize="large" type="search" nz-input placeholder="Nhập tên cộng tác viên"
-                       (keyup.enter)="search($event)"/>
-              </nz-input-group>
-              <ng-template #suffixIconSearch>
-                <span nz-icon nzType="search"></span>
-              </ng-template>
-            </div>
-          </div>
-        </ng-template>
       </div>
     </div>
   </div>
 </section>
+<ng-template #titleLeft>
+  <vet-title-content-left [quantity]="total">Danh sách chiết khấu đã duyệt</vet-title-content-left>
+</ng-template>

@@ -20,7 +20,7 @@
               <nz-descriptions [nzTitle]="titleBanking" nzBordered nzSize="small" class="table-th-right">
                 <nz-descriptions-item nzSpan="3" nzTitle="Tên tài khoản">{{data.requestJsonObject?.accountName}}</nz-descriptions-item>
                 <nz-descriptions-item nzSpan="3" nzTitle="Số tài khoản">{{data.requestJsonObject?.accountNo}}</nz-descriptions-item>
-                <nz-descriptions-item nzSpan="3" nzTitle="Số tiền">{{data.requestJsonObject?.amount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Số tiền"><vet-money [content]="data.requestJsonObject?.amount"></vet-money></nz-descriptions-item>
                 <nz-descriptions-item nzSpan="3" nzTitle="Nội dung">{{data.requestJsonObject?.addInfo}}</nz-descriptions-item>
               </nz-descriptions>
               <div class="text-center" style="margin-top: 10px;">
@@ -47,7 +47,7 @@
               <nz-descriptions [nzTitle]="titleBanking" nzBordered nzSize="small" class="table-th-right">
                 <nz-descriptions-item nzSpan="3" nzTitle="Tên tài khoản">{{data.requestJsonObject?.accountName}}</nz-descriptions-item>
                 <nz-descriptions-item nzSpan="3" nzTitle="Số tài khoản">{{data.requestJsonObject?.accountNo}}</nz-descriptions-item>
-                <nz-descriptions-item nzSpan="3" nzTitle="Số tiền">{{data.requestJsonObject?.amount! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG}}</nz-descriptions-item>
+                <nz-descriptions-item nzSpan="3" nzTitle="Số tiền"><vet-money [content]="data.requestJsonObject?.amount"></vet-money></nz-descriptions-item>
                 <nz-descriptions-item nzSpan="3" nzTitle="Nội dung">{{data.requestJsonObject?.addInfo}}</nz-descriptions-item>
               </nz-descriptions>
               <div class="text-center" style="margin-top: 10px;">

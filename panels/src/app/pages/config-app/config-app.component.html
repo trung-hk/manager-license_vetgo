@@ -1,9 +1,13 @@
 <section class="section">
   <div class="section-body">
-    <div class="row">
-      <div class="col-12">
+    <div nz-row>
+      <div nz-col nzSpan="24">
         <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
-          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <vet-title-action [action]="{name: 'Thêm mới'}"
+                            (actionClick)="showModal()"
+                            [search]="{placeholder: 'Tìm kiếm'}"
+                            (keyEnterSearch)="search($event)">
+          </vet-title-action>
           <nz-table
               nzShowSizeChanger
               [nzData]="dataList"
@@ -14,6 +18,7 @@
               [nzPageIndex]="pageIndex"
               (nzQueryParams)="onQueryParamsChange($event)"
               nzTableLayout="fixed"
+              [nzScroll]="{ x: '500px' }"
           >
             <thead>
             <tr>
@@ -53,18 +58,15 @@
               <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
               <td class="align-center">
                 <ng-container [ngSwitch]="dt.status">
-                  <div *ngSwitchCase="STATUS_CONFIG.IN_ACTIVE.value"
-                       class="badge badge-shadow badge-danger">
-                    {{STATUS_CONFIG.IN_ACTIVE.text}}
-                  </div>
-                  <div *ngSwitchCase="STATUS_CONFIG.PENDING_ACTIVE.value"
-                       class="badge badge-shadow badge-primary">
-                    {{STATUS_CONFIG.PENDING_ACTIVE.text}}
-                  </div>
-                  <div *ngSwitchCase="STATUS_CONFIG.ACTIVATED.value"
-                       class="badge badge-shadow badge-success">
-                    {{STATUS_CONFIG.ACTIVATED.text}}
-                  </div>
+                  <span *ngSwitchCase="STATUS_CONFIG.IN_ACTIVE.value">
+                    <vet-status-danger [content]="STATUS_CONFIG.IN_ACTIVE.text"></vet-status-danger>
+                  </span>
+                  <span *ngSwitchCase="STATUS_CONFIG.PENDING_ACTIVE.value">
+                    <vet-status-info [content]="STATUS_CONFIG.PENDING_ACTIVE.text"></vet-status-info>
+                  </span>
+                  <span *ngSwitchCase="STATUS_CONFIG.ACTIVATED.value">
+                    <vet-status-success [content]="STATUS_CONFIG.ACTIVATED.text"></vet-status-success>
+                  </span>
                 </ng-container>
               </td>
               <td class="align-center action">
@@ -83,41 +85,19 @@
             </tbody>
           </nz-table>
         </nz-card>
-        <ng-template #titleLeft>
-          Danh sách config
-          <nz-tag [nzColor]="'#33CCFF'">
-            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
-          </nz-tag>
-        </ng-template>
-        <ng-template #titleAction>
-          <div nz-row [ngStyle]="{'margin-bottom': '10px'}">
-            <div nz-col nzSpan="8">
-              <button type="button" (click)="showModal()" class="btn btn-success">
-                <i class="fas fa-plus"></i> Thêm mới
-              </button>
-            </div>
-            <div nz-col nzSpan="6" nzOffset="10">
-              <nz-input-group [nzSuffix]="suffixIconSearch">
-                <input nzSize="large" type="search" nz-input placeholder="input search text"
-                       (keyup.enter)="search($event)"/>
-              </nz-input-group>
-              <ng-template #suffixIconSearch>
-                <span nz-icon nzType="search"></span>
-              </ng-template>
-            </div>
-          </div>
-        </ng-template>
       </div>
     </div>
   </div>
 </section>
+<ng-template #titleLeft>
+  <vet-title-content-left [quantity]="total">Danh sách config</vet-title-content-left>
+</ng-template>
 <!-- Create/Update Form -->
 <nz-modal [(nzVisible)]="isVisible"
-          [nzTitle]="modalTitle"
+          [nzTitle]="idShowModal ? 'Cập nhật Config' : 'Thêm mới Config'"
           [nzContent]="modalContent"
-          [nzFooter]="idShowModal ? modalFooterUpdate : modalFooterAdd"
+          [nzFooter]="modalFooter"
           (nzOnCancel)="handleCancel()" nzWidth="800px">
-  <ng-template #modalTitle> {{idShowModal ? 'Cập nhật Config' : 'Thêm mới Config'}}</ng-template>
   <ng-template #modalContent>
     <form nz-form [formGroup]="validateForm">
       <input type="hidden" formControlName="id">
@@ -161,23 +141,17 @@
       </nz-form-item>
     </form>
   </ng-template>
-  
-  <ng-template #modalFooterAdd>
+  <ng-template #modalFooter>
     <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
     <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
-            [nzLoading]="isConfirmLoading">Thêm mới
-    </button>
-  </ng-template>
-  <ng-template #modalFooterUpdate>
-    <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
-    <button nz-button nzType="primary" [disabled]="validateForm.invalid" (click)="handleOk()"
-            [nzLoading]="isConfirmLoading">Câp nhật
+            [nzLoading]="isConfirmLoading">
+      {{idShowModal ? 'Cập nhật' : 'Thêm mới'}}
     </button>
   </ng-template>
 </nz-modal>
 
 <!-- Delete Confirmation -->
-<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận xóa config" nzOkText="Ok" nzOkDanger="true"
+<nz-modal [(nzVisible)]="isVisibleDelete" nzTitle="Xác nhận xóa config" nzOkText="Đồng ký" nzOkDanger="true"
           nzCancelText="Hủy" (nzOnOk)="handleConfirmToDelete()"
           [nzOkLoading]="isConfirmLoadingDelete"
           (nzOnCancel)="handleCancelDeletePopup()">

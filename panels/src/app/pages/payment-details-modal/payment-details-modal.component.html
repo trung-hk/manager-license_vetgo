@@ -5,7 +5,7 @@
     <br>
     Tên: {{orderService.customerName}}
     <br>
-    Số điện thoại: {{orderService.customerPhone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG}}
+    Số điện thoại: <vet-phone [content]="orderService.customerPhone"></vet-phone>
     <br>
     E-mail: {{orderService.customerAddress}}
     <nz-divider></nz-divider>
@@ -39,11 +39,7 @@
     <nz-descriptions nzSize="small" nzBordered>
       <nz-descriptions-item nzSpan="3" nzTitle="Tổng đơn">{{commissionApproved.totalOrder}}</nz-descriptions-item>
       <nz-descriptions-item nzSpan="3" nzTitle="Tổng tiền"><vet-money [content]="commissionApproved.totalOrderAmount"></vet-money></nz-descriptions-item>
-      <nz-descriptions-item nzSpan="3" nzTitle="Chiết khấu">
-        <nz-statistic [nzValue]="(commissionApproved.commissionRate | number: '1.0-2')!"
-                      [nzSuffix]="'%'"
-                      [nzValueStyle]="{ color: '#3F8600', 'font-size': '14px' }"
-        ></nz-statistic>
+      <nz-descriptions-item nzSpan="3" nzTitle="Chiết khấu"><vet-percent [content]="commissionApproved.commissionRate"></vet-percent>
       </nz-descriptions-item>
       <nz-descriptions-item nzSpan="3" nzTitle="Tiền chiết khấu"><vet-money [content]="commissionApproved.totalCommissionAmount"></vet-money></nz-descriptions-item>
     </nz-descriptions>

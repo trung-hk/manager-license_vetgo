@@ -22,7 +22,7 @@
             nz-icon nzType="transaction" nzTheme="outline"></i><span>Giao dịch</span></a>
         <ul class="dropdown-menu">
           <li *ngxPermissionsOnly="[ROLES.ADMIN]" class="order-await-approve-list"><a class="nav-link" [routerLink]="RouteURL.PAGE_APPROVE_MANUAL_PAYMENT">Đơn hàng chờ xác nhận</a></li>
-          <li *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER]" class="commission-await-approve-list"><a class="nav-link" [routerLink]="RouteURL.PAGE_APPROVE_MANUAL_PAYMENT_COMMISSION">Chiết khấu chờ xác nhận</a></li>
+          <li *ngxPermissionsOnly="[ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER]" class="commission-await-approve-list"><a class="nav-link" [routerLink]="RouteURL.PAGE_APPROVE_MANUAL_PAYMENT_COMMISSION">Chiết khấu chờ xác nhận</a></li>
           <li class="history-transactions"><a class="nav-link" [routerLink]="RouteURL.PAGE_TRANSACTION_HISTORY_PAYMENT">Lịch sử giao dịch</a></li>
         </ul>
       </li>

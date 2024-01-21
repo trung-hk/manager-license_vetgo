@@ -7,7 +7,7 @@ import {ScriptCommonService} from "../../services/script-common.service";
 import {USER_FORM} from "../../Constants/Form";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
-import {Constant, STATUS_DISTRIBUTOR, USER_TYPE} from "../../Constants/vg-constant";
+import {Constant, ROLES, STATUS_DISTRIBUTOR, USER_TYPE} from "../../Constants/vg-constant";
 import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {ResponseError} from "../../models/ResponseError";
 import {Message} from "../../Constants/message-constant";
@@ -223,4 +223,5 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
     event.target.value = "";
   }
     protected readonly Constant = Constant;
+    protected readonly ROLES = ROLES;
 }

@@ -1,9 +1,11 @@
 <section class="section">
   <div class="section-body">
-    <div class="row">
-      <div class="col-12">
+    <div nz-row>
+      <div nz-col nzSpan="24">
         <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
-          <ng-container [ngTemplateOutlet]="titleAction"></ng-container>
+          <vet-title-action [search]="{placeholder: 'Nhập nội dung thanh toán'}"
+                            (keyEnterSearch)="search($event)">
+          </vet-title-action>
           <nz-table
               nzShowSizeChanger
               [nzData]="dataList"
@@ -57,32 +59,10 @@
             </tbody>
           </nz-table>
         </nz-card>
-        <ng-template #titleLeft>
-          Danh sách giao dịch
-          <nz-tag [nzColor]="'#33CCFF'">
-            <nz-statistic [nzValueStyle]="{'font-size': 'unset'}" [nzValue]="(total | number)!"></nz-statistic>
-          </nz-tag>
-        </ng-template>
-        <ng-template #titleAction>
-          <div nz-row [ngStyle]="{'margin-top': '15px'}">
-            <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
-                 [nzXl]="{ span: 8, offset: 16 }"
-                 [nzLg]="{ span: 10, offset: 14 }"
-                 [nzMd]="{ span: 12, offset: 12 }"
-                 [nzSm]="24"
-                 [nzXs]="24">
-              <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
-                <input nzSize="large" type="text" nz-input placeholder="Nhập nội dung thanh toán"
-                       (keyup.enter)="search($event)"/>
-              </nz-input-group>
-              <ng-template #suffixIconSearch>
-                <span nz-icon nzType="search"></span>
-              </ng-template>
-            </div>
-          </div>
-          <nz-divider></nz-divider>
-        </ng-template>
       </div>
     </div>
   </div>
 </section>
+<ng-template #titleLeft>
+  <vet-title-content-left [quantity]="total">Danh sách giao dịch</vet-title-content-left>
+</ng-template>

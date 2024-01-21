@@ -112,7 +112,7 @@
           <h5>Tổng tiền</h5>
         </div>
         <div nz-col nzSpan="11" class="text-right">
-          <h5>{{totalPrice! | mask: Constant.FORMAT_MONEY_SEPARATOR : Constant.FORMAT_MONEY_CONFIG }}</h5>
+          <h5><vet-money [content]="totalPrice"></vet-money></h5>
         </div>
       </div>
     </form>
