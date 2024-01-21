@@ -2,7 +2,7 @@
   <ng-container *ngIf="action && search">
     <div nz-col [nzXXl]="8" [nzXl]="10" [nzLg]="10" [nzMd]="8" [nzSm]="10" [nzXs]="8">
       <ng-container *ngxPermissionsOnly="action.roles!">
-        <button *ngIf="action.isShow" type="button" (click)="actionClick.emit()"
+        <button *ngIf="!action.isShow" type="button" (click)="actionClick.emit()"
                 class="btn btn-success">
           <i class="fas fa-plus"></i> {{action.name}}
         </button>
@@ -37,6 +37,16 @@
       <ng-template #suffixIconSearch>
         <span nz-icon nzType="search"></span>
       </ng-template>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="action && !search">
+    <div nz-col [nzXXl]="8" [nzXl]="10" [nzLg]="10" [nzMd]="8" [nzSm]="10" [nzXs]="8">
+      <ng-container *ngxPermissionsOnly="action.roles!">
+        <button *ngIf="action.isShow" type="button" (click)="actionClick.emit()"
+                class="btn btn-success">
+          <i class="fas fa-plus"></i> {{action.name}}
+        </button>
+      </ng-container>
     </div>
   </ng-container>
 </div>
