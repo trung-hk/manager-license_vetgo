@@ -13,6 +13,8 @@ export class CommissionApproved extends AbstractModel {
     urlDownload?: string | null;
     urlView?: string | null;
     commissionResultIds?: string | null;
+    paymentCode?: string | null;
+    paymentMethod?: string | null;
 
 }
 

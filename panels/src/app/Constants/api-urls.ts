@@ -24,4 +24,5 @@ export class URL {
     static readonly API_COMMISSION_APPROVE_PENDING_BY_DISTRIBUTOR: string = `commission-result-for-partner`;
     static readonly API_CONFIRM_COMMISSION_APPROVE: string = `commission-approves/confirm`;
     static readonly API_COMMISSION_APPROVED: string = `commission-approves`;
+    static readonly API_COMMISSION_APPROVED_BY_TYPE: string = `/commission-approves/type/{0}`;
 }

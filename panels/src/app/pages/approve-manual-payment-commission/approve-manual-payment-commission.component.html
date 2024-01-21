@@ -52,8 +52,7 @@
               <td>
                 {{dt.createdDate | date: "yyyy/MM/dd"}}
               </td>
-              <td>
-                PS-12323213123123123
+              <td>{{dt.paymentCode}}
               </td>
               <td class="align-center">
                 <ng-container [ngSwitch]="dt.status">
