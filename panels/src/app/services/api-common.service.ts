@@ -8,6 +8,7 @@ import {ObjectSelectAll} from "../models/ObjectSelectAll";
 import {isEnvironmentPro} from "../Constants/vg-constant";
 import {PayloadApprovePayment} from "../models/PayloadApprovePayment";
 import {ConfirmCommissionApproveRequest} from "../models/ConfirmCommissionApproveRequest";
+import {ObjectSelectReport} from "../models/ObjectSelectReport";
 
 @Injectable({
     providedIn: 'root'
@@ -79,5 +80,11 @@ export class ApiCommonService {
     }
     confirmCommissionApprove<T>(api: string, payload: ConfirmCommissionApproveRequest): Observable<T | ResponseError> {
         return this.httpClient.post<T | ResponseError>(`${this.url}/${api}`, payload);
+    }
+    getDataReport<T>(api: string, typeReport: string, objectData: ObjectSelectReport): Observable<T | ResponseError> {
+        let params = new HttpParams();
+        if (objectData.from) params = params.append("from", objectData.from);
+        if (objectData.to) params = params.append("to", objectData.to);
+        return this.httpClient.get<T | ResponseError>(`${this.url}/${api}/${typeReport}`, {params});
     }
 }

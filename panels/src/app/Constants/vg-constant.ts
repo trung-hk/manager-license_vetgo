@@ -198,3 +198,9 @@ export const isEnvironmentPro = (): boolean => {
 export const isEnvironmentDev = (): boolean => {
     return !isEnvironmentPro();
 }
+
+export enum TYPE_REPORT {
+    CUSTOMER = "CUSTOMER",
+    ORDER_PAID = "ORDER_PAID",
+    REFUND = "REFUND",
+}
