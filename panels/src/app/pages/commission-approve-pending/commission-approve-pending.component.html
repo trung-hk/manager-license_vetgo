@@ -3,11 +3,11 @@
     <div nz-row>
       <div nz-col nzSpan="24">
         <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
-          <vet-title-action [action]="{name: 'Duyệt chiết khấu', isShow: canApprove}"
+          <vet-title-action [action]="{name: 'Duyệt chiết khấu', isShow: !canApprove}"
                             (actionClick)="showModal()"
                             [search]="{placeholder: 'Tìm kiếm'}"
                             (keyEnterSearch)="search($event)"
-                            [selectSearchByUser]="{placeholder: placeHolder, roles: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR], value: selectUser, userList: userList}"
+                            [selectSearchByUser]="{placeholder: placeHolder, roles: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR], value: selectUser, userList: userList, isOnlySelectUserId: true}"
                             (onChangeByUser)="filterOrder($event)">
           </vet-title-action>
           <nz-table

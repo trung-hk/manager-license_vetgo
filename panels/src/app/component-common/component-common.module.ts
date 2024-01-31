@@ -13,6 +13,7 @@ import {FormsModule} from "@angular/forms";
 import { PhoneComponent } from './phone/phone.component';
 import {DangerComponent} from "./status-tag/danger.component";
 import { PercentComponent } from './percent/percent.component';
+import { FilterDateActionComponent } from './filter-date-action/filter-date-action.component';
 
 
 
@@ -26,7 +27,8 @@ import { PercentComponent } from './percent/percent.component';
     TitleContentLeftComponent,
     TitleActionComponent,
     PhoneComponent,
-    PercentComponent
+    PercentComponent,
+    FilterDateActionComponent
   ],
     exports: [
         SuccessComponent,

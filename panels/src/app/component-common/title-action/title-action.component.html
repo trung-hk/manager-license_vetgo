@@ -70,16 +70,26 @@
           (nzOnSearch)="handleInputChange($event)"
           (ngModelChange)="onChangeByUser.emit($event)"
       >
-        <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]; else option">
+        <ng-container *ngIf="selectSearchByUser.isOnlySelectUserId">
           <nz-option *ngFor="let user of selectSearchByUser.userList"
                      [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
-                     [nzValue]="user.code"></nz-option>
+                     [nzValue]="user.id">
+          </nz-option>
         </ng-container>
-        <ng-template #option>
-          <nz-option *ngFor="let user of selectSearchByUser.userList"
-                     [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
-                     [nzValue]="user.id"></nz-option>
-        </ng-template>
+        <ng-container *ngIf="!selectSearchByUser.isOnlySelectUserId">
+          <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]; else option">
+            <nz-option *ngFor="let user of selectSearchByUser.userList"
+                       [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
+                       [nzValue]="user.code"></nz-option>
+          </ng-container>
+          <ng-template #option>
+            <nz-option *ngFor="let user of selectSearchByUser.userList"
+                       [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
+                       [nzValue]="user.id">
+            </nz-option>
+          </ng-template>
+        </ng-container>
+        
       </nz-select>
     </div>
   </div>

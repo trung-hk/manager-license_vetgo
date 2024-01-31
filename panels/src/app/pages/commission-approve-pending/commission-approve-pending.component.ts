@@ -100,7 +100,14 @@ export class CommissionApprovePendingComponent {
       this.total = data.totalElements;
       loading_success_1 = true;
       this.loading = !(loading_success_1 && loading_success_2);
-      this.dataList.forEach(dt => {if (dt.status == STATUS_COMMISSION_APPROVE_PENDING.PENDING.value && this.selectUser) this.canApprove = true;})
+      console.log(this.selectUser)
+      if (this.selectUser) {
+        this.dataList.forEach(dt => {
+          if (dt.status == STATUS_COMMISSION_APPROVE_PENDING.PENDING.value)
+            this.canApprove = true;
+        })
+      }
+
     }, error => {
       console.log(error);
       this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);

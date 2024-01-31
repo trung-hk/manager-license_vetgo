@@ -13,7 +13,7 @@ export class TitleActionComponent implements OnInit{
   @Output() actionClick: EventEmitter<any> = new EventEmitter();
   @Input() search?: {placeholder?: string};
   @Output() keyEnterSearch: EventEmitter<any> = new EventEmitter();
-  @Input() selectSearchByUser?: {placeholder?: string | TemplateRef<NzSafeAny> | null, roles?: string[], value: string | null, userList: User[]};
+  @Input() selectSearchByUser?: {placeholder?: string | TemplateRef<NzSafeAny> | null, roles?: string[], value: string | null, userList: User[], isOnlySelectUserId?: boolean};
   @Output() onChangeByUser: EventEmitter<any> = new EventEmitter();
   protected readonly ROLES = ROLES;
   protected readonly Constant = Constant;
