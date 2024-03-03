@@ -9,7 +9,6 @@ import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {Message} from "../../Constants/message-constant";
-import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {
     Constant,
     MODE_DISPLAY,
@@ -18,30 +17,24 @@ import {
 } from "../../Constants/vg-constant";
 import {USER_FORM} from "../../Constants/Form";
 import {ResponseError} from "../../models/ResponseError";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 @Component({
   selector: 'app-customers',
   templateUrl: './customers.component.html',
 })
-export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CustomersComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly ROLES = ROLES;
   protected readonly MODE_DISPLAY = MODE_DISPLAY;
   protected readonly STATUS_CUSTOMER = STATUS_CUSTOMER;
   listScript = [];
   dataList: User[] = [];
   userList: User[] = [];
-  total: number = 1;
-  loading: boolean = true;
-  pageSize: number = 10;
-  pageIndex: number = 1;
-  sort: string | null = "last_modified_date,desc";
-  changeFirst: boolean = true;
   isVisible: boolean = false;
   isVisibleDelete = false;
   isConfirmLoadingDelete = false;
   isConfirmLoading = false;
   userDelete: User | null | undefined = null;
-  filter: Array<{ key: string; value: string[] }> = [];
   selectUser: string = "";
   private searchSubject = new BehaviorSubject<string>('');
   search$ = this.searchSubject.asObservable();
@@ -55,6 +48,7 @@ export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
               private fb: UntypedFormBuilder,
               private viewContainerRef: ViewContainerRef,
               private elRef: ElementRef,) {
+    super()
   }
   expandSet = new Set<string>();
   onExpandChange(id: string, checked: boolean): void {
@@ -97,7 +91,7 @@ export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
     this.validateForm = this.fb.group(USER_FORM);
   }
 
-  loadDataFromServer(keyWork?: string): void {
+  loadDataFromServer(from?: string, to?: string, keyWork?: string): void {
     this.loading = true;
     const objectSelectUser: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
     this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.CUSTOMER, objectSelectUser).subscribe((data) => {
@@ -163,26 +157,6 @@ export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.validateForm.get("code")?.disable();
   }
-  onQueryParamsChange(params: NzTableQueryParams): void {
-    if (this.changeFirst) {
-      this.changeFirst = false;
-      return;
-    }
-    console.log(params)
-    const {pageSize, pageIndex, sort, filter} = params;
-    const currentSort = sort.find(item => item.value !== null);
-    const sortField = (currentSort && currentSort.key) || null;
-    this.pageIndex = pageIndex;
-    this.pageSize = pageSize;
-    if (!sortField) {
-      this.sort = "last_modified_date,desc";
-    } else {
-      let sortOrder = (currentSort && currentSort.value) || null;
-      sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-      this.sort = `${sortField},${sortOrder}`;
-    }
-    this.loadDataFromServer();
-  }
   handleCancel(): void {
     this.isVisible = false;
   }
@@ -216,11 +190,6 @@ export class CustomersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isConfirmLoadingDelete = false;
       });
     }
-  }
-
-  search(event: any): void {
-    this.loadDataFromServer(event.target.value);
-    event.target.value = "";
   }
   onSearch(searchText: string): void {
     // Gọi hàm tìm kiếm của bạn ở đây

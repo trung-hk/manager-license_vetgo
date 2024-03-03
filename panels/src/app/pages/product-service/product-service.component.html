@@ -6,7 +6,7 @@
           <vet-title-action [action]="{name: 'Thêm mới'}"
                             (actionClick)="showModal()"
                             [search]="{placeholder: 'Tìm kiếm'}"
-                            (keyEnterSearch)="search($event)">
+                            [filterReload]="callbackReloadData">
           </vet-title-action>
           <nz-table
               nzShowSizeChanger

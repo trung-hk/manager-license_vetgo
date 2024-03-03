@@ -1,5 +1,4 @@
 import {Component, OnInit, AfterViewInit, OnDestroy, Renderer2} from '@angular/core';
-import {NzTableQueryParams} from 'ng-zorro-antd/table';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {ApiCommonService} from 'src/app/services/api-common.service';
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
@@ -19,23 +18,21 @@ import {ResponseError} from "../../models/ResponseError";
 import {Message} from "../../Constants/message-constant";
 import {Commission} from "../../models/Commission";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 @Component({
     selector: 'app-agent',
     templateUrl: './agent.component.html'
 })
-export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AgentComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly STATUS_AGENT = STATUS_AGENT;
+    protected readonly Constant = Constant;
+    protected readonly MODE_OPEN_MODAL_FORM_ORDER_SERVICE = MODE_OPEN_MODAL_FORM_ORDER_SERVICE;
+    protected readonly ROLES = ROLES;
     listScript = [];
     dataList: User[] = [];
     dataCommission: Commission[] = [];
     dataCommissionMap: Map<string, Commission> = new Map<string, Commission>();
-    total: number = 1;
-    loading: boolean = true;
-    pageSize: number = 10;
-    pageIndex: number = 1;
-    sort: string | null = "last_modified_date,desc";
-    changeFirst: boolean = true;
     isVisible: boolean = false;
     isVisibleDelete = false;
     isConfirmLoadingDelete = false;
@@ -44,13 +41,13 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
     validateForm!: UntypedFormGroup;
     idDelete: number | string | null | undefined = -1;
     idShowModal: number | string | null | undefined = null;
-    filter: Array<{ key: string; value: string[] }> | null = null;
     extensionDomain = isEnvironmentPro() ? Constant.EXTENSION_DOMAIN_PRO : Constant.EXTENSION_DOMAIN_DEV;
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
                 private renderer: Renderer2,
                 public scriptFC: ScriptCommonService,
                 private fb: UntypedFormBuilder) {
+        super()
     }
 
     ngOnInit() {
@@ -72,7 +69,7 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadDataFromServer();
     }
 
-    loadDataFromServer(keyWork?: string): void {
+    loadDataFromServer(from?: string, to?: string, keyWork?: string): void {
         this.loading = true;
         let loading_success_1 = false;
         let loading_success_2 = false;
@@ -93,29 +90,6 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             this.loading = !(loading_success_1 && loading_success_2);
         });
     }
-
-    onQueryParamsChange(params: NzTableQueryParams): void {
-        if (this.changeFirst) {
-            this.changeFirst = false;
-            return;
-        }
-        console.log(params)
-        const {pageSize, pageIndex, sort, filter} = params;
-        const currentSort = sort.find(item => item.value !== null);
-        const sortField = (currentSort && currentSort.key) || null;
-        this.pageIndex = pageIndex;
-        this.pageSize = pageSize;
-        this.filter = filter;
-        if (!sortField) {
-            this.sort = "last_modified_date,desc";
-        } else {
-            let sortOrder = (currentSort && currentSort.value) || null;
-            sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-            this.sort = `${sortField},${sortOrder}`;
-        }
-        this.loadDataFromServer();
-    }
-
     showModal(agent?: User): void {
         this.isVisible = true;
         this.validateForm.clearValidators();
@@ -229,11 +203,4 @@ export class AgentComponent implements OnInit, AfterViewInit, OnDestroy {
             });
         }
     }
-    search(event: any): void {
-        this.loadDataFromServer(event.target.value);
-    }
-
-    protected readonly Constant = Constant;
-    protected readonly MODE_OPEN_MODAL_FORM_ORDER_SERVICE = MODE_OPEN_MODAL_FORM_ORDER_SERVICE;
-    protected readonly ROLES = ROLES;
 }

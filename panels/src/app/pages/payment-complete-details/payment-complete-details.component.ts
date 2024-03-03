@@ -64,7 +64,4 @@ export class PaymentCompleteDetailsComponent implements OnInit, AfterViewInit, O
         break;
     }
   }
-  loadDataTransactionLog(id: string) {
-
-  }
 }

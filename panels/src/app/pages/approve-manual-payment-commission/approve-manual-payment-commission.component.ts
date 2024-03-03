@@ -12,10 +12,10 @@ import {
   ROLES,
   STATUS_PAYMENT, USER_TYPE,
 } from "../../Constants/vg-constant";
-import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {RouteURL} from "../../Constants/route-url";
 import {PayloadApprovePayment} from "../../models/PayloadApprovePayment";
 import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 interface ObjectByRole {
   userType: string,
@@ -25,20 +25,13 @@ interface ObjectByRole {
   selector: 'app-approve-manual-payment-commission',
   templateUrl: './approve-manual-payment-commission.component.html',
 })
-export class ApproveManualPaymentCommissionComponent implements OnInit, AfterViewInit, OnDestroy{
+export class ApproveManualPaymentCommissionComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly Constant = Constant;
   protected readonly STATUS_PAYMENT = STATUS_PAYMENT;
   protected readonly RouteURL = RouteURL;
   listScript = [];
   dataCommissionApprovedList: CommissionApproved[] = [];
-  total: number = 1;
-  loading: boolean = true;
-  pageSize: number = 10;
-  pageIndex: number = 1;
-  sort: string | null = "last_modified_date,desc";
-  changeFirst: boolean = true;
   idShowModal: boolean = false;
-  filter: Array<{ key: string; value: string[] }> | null = [];
   commissionApproved!: CommissionApproved | null;
   isAwaitApprove: boolean = false;
 
@@ -47,6 +40,7 @@ export class ApproveManualPaymentCommissionComponent implements OnInit, AfterVie
               private api: ApiCommonService,
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,) {
+    super()
   }
   ngOnInit() {
     this.init();
@@ -69,7 +63,7 @@ export class ApproveManualPaymentCommissionComponent implements OnInit, AfterVie
   init(): void {
     this.loadDataFromServer().then();
   }
-  async loadDataFromServer(keyWork?: string) {
+  async loadDataFromServer(from?: string, to?: string, keyWork?: string) {
     this.loading = true;
     if (!this.objectByRole) this.objectByRole = await this.getObjectByRoles();
     //this.filter?.push({key: "ods.payment_status", value: [this.STATUS_PAYMENT.IN_PAYMENT.value]});
@@ -98,32 +92,6 @@ export class ApproveManualPaymentCommissionComponent implements OnInit, AfterVie
         if (result) rs({userType:USER_TYPE.PARTNER});
       });
     });
-  }
-  onQueryParamsChange(params: NzTableQueryParams): void {
-    if (this.changeFirst) {
-      this.changeFirst = false;
-      return;
-    }
-    console.log(params)
-    const {pageSize, pageIndex, sort, filter} = params;
-    const currentSort = sort.find(item => item.value !== null);
-    const sortField = (currentSort && currentSort.key) || null;
-    this.pageIndex = pageIndex;
-    this.pageSize = pageSize;
-    this.filter = filter;
-    if (!sortField) {
-      this.sort = "last_modified_date,desc";
-    } else {
-      let sortOrder = (currentSort && currentSort.value) || null;
-      sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-      this.sort = `${sortField},${sortOrder}`;
-    }
-    this.loadDataFromServer().then();
-  }
-
-  search(event: any): void {
-    this.loadDataFromServer(event.target.value).then();
-    event.target.value = "";
   }
   showApproveModal(commissionApproved: CommissionApproved) {
     this.idShowModal = true;

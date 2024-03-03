@@ -4,28 +4,22 @@ import {ApiCommonService} from "../../services/api-common.service";
 import {ConfigApp} from "../../models/ConfigApp";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
-import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {URL} from "../../Constants/api-urls";
 import {CONFIG_APP_FORM} from "../../Constants/Form";
 import {Message} from "../../Constants/message-constant";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 import {STATUS_CONFIG} from "../../Constants/vg-constant";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 @Component({
     selector: 'app-config-app',
     templateUrl: './config-app.component.html',
 })
-export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ConfigAppComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly STATUS_CONFIG = STATUS_CONFIG;
     listScript = [];
     dataList: ConfigApp[] = [];
-    total: number = 1;
-    loading: boolean = true;
-    pageSize: number = 10;
-    pageIndex: number = 1;
-    sort: string | null = "last_modified_date,desc";
-    changeFirst: boolean = true;
     isVisible: boolean = false;
     isVisibleDelete = false;
     isConfirmLoadingDelete = false;
@@ -35,12 +29,12 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
     idDelete: number | string | null | undefined = -1;
     idShowModal: number | string | null | undefined = null;
     customerShowModal: { id: string | null | undefined, name: string | null | undefined } | null = null;
-    filter: Array<{ key: string; value: string[] }> | null = null;
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
                 private renderer: Renderer2,
                 private scriptFC: ScriptCommonService,
                 private fb: UntypedFormBuilder) {
+        super();
     }
 
     ngOnInit() {
@@ -66,7 +60,7 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadDataFromServer();
     }
 
-    loadDataFromServer(keyWork?: string): void {
+    loadDataFromServer(from?: string, to?: string, keyWork?: string): void {
         this.loading = true;
         const objectSelectConfigApp: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
         this.api.getAll<ResponseDataGetAll<ConfigApp>>(URL.API_CONFIG_APP, objectSelectConfigApp).subscribe((data) => {
@@ -76,29 +70,6 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
             this.dataList = data.content;
         });
     }
-
-    onQueryParamsChange(params: NzTableQueryParams): void {
-        if (this.changeFirst) {
-            this.changeFirst = false;
-            return;
-        }
-        console.log(params)
-        const {pageSize, pageIndex, sort, filter} = params;
-        const currentSort = sort.find(item => item.value !== null);
-        const sortField = (currentSort && currentSort.key) || null;
-        this.pageIndex = pageIndex;
-        this.pageSize = pageSize;
-        this.filter = filter;
-        if (!sortField) {
-            this.sort = "last_modified_date,desc";
-        } else {
-            let sortOrder = (currentSort && currentSort.value) || null;
-            sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-            this.sort = `${sortField},${sortOrder}`;
-        }
-        this.loadDataFromServer();
-    }
-
     showModal(configApp?: ConfigApp): void {
         this.isVisible = true;
         if (configApp) {
@@ -169,8 +140,6 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log(error)
             this.scriptFC.alertShowMessageError(Message.MESSAGE_CONNECT_FAILED);
         }
-
-
     }
 
     handleCancel(): void {
@@ -201,10 +170,5 @@ export class ConfigAppComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.isConfirmLoadingDelete = false;
             });
         }
-    }
-    search(event: any): void {
-        console.log(event);
-        this.loadDataFromServer(event.target.value);
-        event.target.value = "";
     }
 }

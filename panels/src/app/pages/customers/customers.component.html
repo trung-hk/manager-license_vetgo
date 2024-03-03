@@ -5,7 +5,7 @@
         <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false"
                  [nzBodyStyle]="{'padding': 'unset' }">
           <vet-title-action [search]="{placeholder: 'Tìm kiếm'}"
-                            (keyEnterSearch)="search($event)"
+                            [filterReload]="callbackReloadData"
                             [selectSearchByUser]="{placeholder: placeHolder, roles: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR], value: selectUser, userList: userList}"
                             (onChangeByUser)="filterOrder($event)">
           </vet-title-action>

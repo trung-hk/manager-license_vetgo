@@ -8,28 +8,22 @@ import {USER_FORM} from "../../Constants/Form";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {URL} from "../../Constants/api-urls";
 import {Constant, ROLES, STATUS_DISTRIBUTOR, USER_TYPE} from "../../Constants/vg-constant";
-import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {ResponseError} from "../../models/ResponseError";
 import {Message} from "../../Constants/message-constant";
 import {Commission} from "../../models/Commission";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 @Component({
   selector: 'app-distributor',
   templateUrl: './distributor.component.html',
 })
-export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
+export class DistributorComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly STATUS_DATA = STATUS_DISTRIBUTOR;
   listScript = [];
   dataList: User[] = [];
   dataCommission: Commission[] = [];
   dataCommissionMap: Map<string, Commission> = new Map<string, Commission>();
-  total: number = 1;
-  loading: boolean = true;
-  pageSize: number = 10;
-  pageIndex: number = 1;
-  sort: string | null = "last_modified_date,desc";
-  changeFirst: boolean = true;
   isVisible: boolean = false;
   isVisibleDelete = false;
   isConfirmLoadingDelete = false;
@@ -38,12 +32,12 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
   validateForm!: UntypedFormGroup;
   idDelete: number | string | null | undefined = -1;
   idShowModal: number | string | null | undefined = null;
-  filter: Array<{ key: string; value: string[] }> | null = null;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,
               private fb: UntypedFormBuilder) {
+    super()
   }
 
   ngOnInit() {
@@ -65,7 +59,7 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
     this.loadDataFromServer();
   }
 
-  loadDataFromServer(keyWork?: string): void {
+  loadDataFromServer(from?: string, to?: string, keyWork?: string): void {
     this.loading = true;
     let loading_success_1 = false;
     let loading_success_2 = false;
@@ -85,28 +79,6 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
       this.dataCommissionMap = new Map<string, Commission>(data.content.map(d => [d.id!, d]));
       this.loading = !(loading_success_1 && loading_success_2);
     });
-  }
-
-  onQueryParamsChange(params: NzTableQueryParams): void {
-    if (this.changeFirst) {
-      this.changeFirst = false;
-      return;
-    }
-    console.log(params)
-    const {pageSize, pageIndex, sort, filter} = params;
-    const currentSort = sort.find(item => item.value !== null);
-    const sortField = (currentSort && currentSort.key) || null;
-    this.pageIndex = pageIndex;
-    this.pageSize = pageSize;
-    this.filter = filter;
-    if (!sortField) {
-      this.sort = "last_modified_date,desc";
-    } else {
-      let sortOrder = (currentSort && currentSort.value) || null;
-      sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-      this.sort = `${sortField},${sortOrder}`;
-    }
-    this.loadDataFromServer();
   }
 
   showModal(distributor?: User): void {
@@ -217,10 +189,6 @@ export class DistributorComponent implements OnInit, AfterViewInit, OnDestroy{
         this.isConfirmLoadingDelete = false;
       });
     }
-  }
-  search(event: any): void {
-    this.loadDataFromServer(event.target.value);
-    event.target.value = "";
   }
     protected readonly Constant = Constant;
     protected readonly ROLES = ROLES;

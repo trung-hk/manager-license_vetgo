@@ -9,17 +9,17 @@ import {Message} from "../../Constants/message-constant";
 import {User} from "../../models/User";
 import {SettingBankingInfo} from "../../models/SettingBankingInfo";
 import {Constant, ROLES, STATUS_SETTING_BANKING_INFO, TEMPLATE_VIET_QR, USER_TYPE} from "../../Constants/vg-constant";
-import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {BankingInfo} from "../../models/BankingInfo";
 import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {SETTING_BANKING_INFO_FORM} from "../../Constants/Form";
 import {ResponseError} from "../../models/ResponseError";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 @Component({
   selector: 'app-setting-banking',
   templateUrl: './setting-banking.component.html',
 })
-export class SettingBankingComponent implements OnInit, AfterViewInit, OnDestroy{
+export class SettingBankingComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly Constant = Constant;
   protected readonly STATUS_SETTING_BANKING_INFO = STATUS_SETTING_BANKING_INFO;
   listScript = [];
@@ -29,13 +29,6 @@ export class SettingBankingComponent implements OnInit, AfterViewInit, OnDestroy
   bankingInfo: BankingInfo[] = [];
   bankingInfoMap: Map<string, BankingInfo> = new Map<string, BankingInfo>();
 
-  total: number = 1;
-  loading: boolean = true;
-  pageSize: number = 10;
-  pageIndex: number = 1;
-  sort: string | null = "last_modified_date,desc";
-  changeFirst: boolean = true;
-  filter: Array<{ key: string; value: string[] }> | null = null;
   isShowForm: boolean = false;
   validateForm!: UntypedFormGroup;
   isConfirmLoading: boolean = false;
@@ -49,6 +42,7 @@ export class SettingBankingComponent implements OnInit, AfterViewInit, OnDestroy
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,
               private fb: UntypedFormBuilder) {
+    super()
   }
 
   ngOnInit() {
@@ -68,7 +62,7 @@ export class SettingBankingComponent implements OnInit, AfterViewInit, OnDestroy
   init(): void {
     this.loadDataFromServer().then();
   }
-  async loadDataFromServer(keyWork?: string): Promise<void> {
+  async loadDataFromServer(from?: string, to?: string, keyWork?: string): Promise<void> {
     this.loading = true;
     let loading_success_1 = false;
     let loading_success_2 = false;
@@ -128,31 +122,6 @@ export class SettingBankingComponent implements OnInit, AfterViewInit, OnDestroy
         if (result) rs(USER_TYPE.PARTNER);
       });
     });
-  }
-  onQueryParamsChange(params: NzTableQueryParams): void {
-    if (this.changeFirst) {
-      this.changeFirst = false;
-      return;
-    }
-    console.log(params)
-    const {pageSize, pageIndex, sort, filter} = params;
-    const currentSort = sort.find(item => item.value !== null);
-    const sortField = (currentSort && currentSort.key) || null;
-    this.pageIndex = pageIndex;
-    this.pageSize = pageSize;
-    this.filter = filter;
-    if (!sortField) {
-      this.sort = "last_modified_date,desc";
-    } else {
-      let sortOrder = (currentSort && currentSort.value) || null;
-      sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-      this.sort = `${sortField},${sortOrder}`;
-    }
-    this.loadDataFromServer();
-  }
-  search(event: any): void {
-    this.loadDataFromServer(event.target.value);
-    event.target.value = "";
   }
   showModal(settingBankingInfo?: SettingBankingInfo) {
     this.isShowForm = true;

@@ -4,7 +4,7 @@
       <div nz-col nzSpan="24">
         <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
           <vet-title-action [search]="{placeholder: 'Mã đơn hàng'}"
-                            (keyEnterSearch)="search($event)">
+                            [filterReload]="callbackReloadData">
           </vet-title-action>
           <nz-table
               nzShowSizeChanger

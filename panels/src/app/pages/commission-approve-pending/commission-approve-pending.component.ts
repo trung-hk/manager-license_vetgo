@@ -1,4 +1,4 @@
-import {Component, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {User} from "../../models/User";
 import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
@@ -14,14 +14,11 @@ import {
   ROLES, STATUS_COMMISSION_APPROVE_PENDING,
   USER_TYPE
 } from "../../Constants/vg-constant";
-import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {ResponseError} from "../../models/ResponseError";
 import {CommissionApprovePending} from "../../models/CommissionApprovePending";
 import {BehaviorSubject} from "rxjs";
 import {ConfirmCommissionApproveRequest} from "../../models/ConfirmCommissionApproveRequest";
-import {OrderService} from "../../models/OrderService";
-import {CommissionApproved} from "../../models/CommissionApproved";
-import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 interface ObjectByRole {
   userType: string,
@@ -33,7 +30,7 @@ interface ObjectByRole {
   templateUrl: './commission-approve-pending.component.html',
 })
 
-export class CommissionApprovePendingComponent {
+export class CommissionApprovePendingComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly Constant = Constant;
   protected readonly ROLES = ROLES;
   protected readonly STATUS_COMMISSION_APPROVE_PENDING = STATUS_COMMISSION_APPROVE_PENDING;
@@ -42,13 +39,6 @@ export class CommissionApprovePendingComponent {
   userList: User[] = [];
   userMap: Map<string, User> = new Map<string, User>();
 
-  total: number = 1;
-  loading: boolean = true;
-  pageSize: number = 10;
-  pageIndex: number = 1;
-  sort: string | null = "last_modified_date,desc";
-  changeFirst: boolean = true;
-  filter: Array<{ key: string; value: string[] }> | null = null;
   isShowForm: boolean = false;
   validateForm!: UntypedFormGroup;
   isConfirmLoading: boolean = false;
@@ -66,6 +56,7 @@ export class CommissionApprovePendingComponent {
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,
               private fb: UntypedFormBuilder) {
+    super()
   }
 
   ngOnInit() {
@@ -88,13 +79,13 @@ export class CommissionApprovePendingComponent {
   init(): void {
     this.loadDataFromServer().then();
   }
-  async loadDataFromServer(keyWork?: string): Promise<void> {
+  async loadDataFromServer(from?: string, to?: string, keyWork?: string): Promise<void> {
     this.canApprove = false;
     if (!this.objectByRole) this.objectByRole = await this.getObjectByRoles();
     this.loading = true;
     let loading_success_1 = false;
     let loading_success_2 = false;
-    const objectSelect: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork, userId: this.selectUser}
+    const objectSelect: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork, userId: this.selectUser, fromCreatedDate: from, toCreatedDate: to}
     this.api.getAll<ResponseDataGetAll<CommissionApprovePending>>(this.objectByRole.apiUrl, objectSelect).subscribe(data => {
       this.dataList = data.content;
       this.total = data.totalElements;
@@ -144,30 +135,6 @@ export class CommissionApprovePendingComponent {
         if (result) rs({userType:USER_TYPE.PARTNER, apiUrl: URL.API_COMMISSION_APPROVE_PENDING_BY_DISTRIBUTOR});
       });
     });
-  }
-  onQueryParamsChange(params: NzTableQueryParams): void {
-    if (this.changeFirst) {
-      this.changeFirst = false;
-      return;
-    }
-    console.log(params)
-    const {pageSize, pageIndex, sort, filter} = params;
-    const currentSort = sort.find(item => item.value !== null);
-    const sortField = (currentSort && currentSort.key) || null;
-    this.pageIndex = pageIndex;
-    this.pageSize = pageSize;
-    this.filter = filter;
-    if (!sortField) {
-      this.sort = "last_modified_date,desc";
-    } else {
-      let sortOrder = (currentSort && currentSort.value) || null;
-      sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-      this.sort = `${sortField},${sortOrder}`;
-    }
-    this.loadDataFromServer().then();
-  }
-  search(event: any): void {
-    this.loadDataFromServer(event.target.value).then();
   }
   showModal() {
     this.isShowForm = true;

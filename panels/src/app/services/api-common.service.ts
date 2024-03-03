@@ -23,6 +23,7 @@ export class ApiCommonService {
     }
 
     getAll<T>(api: string, objectSelect?: ObjectSelectAll): Observable<T> {
+        console.log(objectSelect)
         let params = new HttpParams();
         if (objectSelect) {
             Object.keys(objectSelect).forEach(key => {

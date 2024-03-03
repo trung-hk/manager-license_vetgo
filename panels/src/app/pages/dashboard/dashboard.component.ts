@@ -35,8 +35,8 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     reportCustomer: ReportData = {currData: 0, prevData: 0};
 
     listScript = [
-        'assets/bundles/apexcharts/apexcharts.min.js',
-        'assets/js/page/index.js'
+        // 'assets/bundles/apexcharts/apexcharts.min.js',
+        // 'assets/js/page/index.js'
     ];
 
     constructor(private loadScript: LazyLoadScriptService,

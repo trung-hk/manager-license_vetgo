@@ -3,7 +3,6 @@ import {
   Constant,
   ROLES,
   STATUS_AGENT,
-  STATUS_CODE_ERROR,
   STATUS_ORDER,
   STATUS_PAYMENT, TYPE_PAYMENT
 } from "../../Constants/vg-constant";

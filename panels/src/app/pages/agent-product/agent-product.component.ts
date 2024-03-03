@@ -9,21 +9,19 @@ import {CONFIG, ROLES, STATUS_AGENT_PRODUCT, STATUS_PRODUCT_SERVICE} from "../..
 import {AgentProduct} from "../../models/AgentProduct";
 import {Message} from "../../Constants/message-constant";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 @Component({
     selector: 'app-agent-product',
     templateUrl: './agent-product.component.html',
 })
-export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
+export class AgentProductComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy{
     protected readonly STATUS_AGENT_PRODUCT = STATUS_AGENT_PRODUCT;
     protected readonly STATUS_PRODUCT_SERVICE = STATUS_PRODUCT_SERVICE;
     protected readonly ROLES = ROLES;
     listScript = [];
     dataProductList: Item[] = [];
     dataProductRegisterMap: Map<string, AgentProduct> = new Map<string, AgentProduct>();
-    totalProduct: number = 0;
-    totalRegisterProduct: number = 0;
-    loading: boolean = true;
     isVisibleDelete = false;
     isConfirmLoadingDelete = false;
     idDelete: number | string | null | undefined = -1;
@@ -32,6 +30,7 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
                 private renderer: Renderer2,
                 public scriptFC: ScriptCommonService,
                 private viewContainerRef: ViewContainerRef) {
+        super()
     }
 
     ngOnInit() {
@@ -52,7 +51,7 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
         this.loadDataFromServer().then();
     }
 
-    loadDataFromServer(keyWork?: string): Promise<void> {
+    loadDataFromServer(from?: string, to?: string, keyWork?: string): Promise<void> {
         return new Promise(async rs => {
             this.loading = true;
             let isSuccessLoadDataProduct = false;
@@ -61,7 +60,6 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
              this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, objectSelectItem)
                 .subscribe((data) => {
                     console.log(data)
-                    this.totalProduct = data.totalElements;
                     this.dataProductList = data.content;
                     this.dataProductList = this.dataProductList.filter(d => {
                         return !CONFIG.CONFIG_LIST_DIRECT_SALES.includes(this.scriptFC.getAttributeProductService(d.attributes)?.usingConfig!);
@@ -78,7 +76,6 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
              this.api.getAll<ResponseDataGetAll<AgentProduct>>(URL.API_AGENT_PRODUCT)
                 .subscribe((data) => {
                     console.log(data)
-                    this.totalRegisterProduct = data.totalElements;
                     this.dataProductRegisterMap = new Map<string, AgentProduct>(data.content.map(ap => [ap.itemId!, ap]));
                     isSuccessLoadDataProductRegister = true;
                     if (!(isSuccessLoadDataProduct && isSuccessLoadDataProductRegister)) {
@@ -132,10 +129,6 @@ export class AgentProductComponent implements OnInit, AfterViewInit, OnDestroy{
         }
     }
 
-    search(event: any): void {
-        this.loadDataFromServer(event.target.value).then();
-        event.target.value = "";
-    }
     createComponentModalView(product: Item) {
         this.scriptFC.createComponentModalViewProductDetails(product, this.viewContainerRef);
     }

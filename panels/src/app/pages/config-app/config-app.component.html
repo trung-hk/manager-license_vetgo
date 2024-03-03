@@ -6,7 +6,7 @@
           <vet-title-action [action]="{name: 'Thêm mới'}"
                             (actionClick)="showModal()"
                             [search]="{placeholder: 'Tìm kiếm'}"
-                            (keyEnterSearch)="search($event)">
+                            [filterReload]="callbackReloadData">
           </vet-title-action>
           <nz-table
               nzShowSizeChanger
@@ -22,18 +22,18 @@
           >
             <thead>
             <tr>
-              <th nzColumnKey="sheetName" [nzSortFn]="true">Tên Sheet</th>
-              <th>Thông tin Sheet Id</th>
-              <th>Thông tin Firebase</th>
-              <th nzColumnKey="codeAppVetgo" [nzSortFn]="true">Code App</th>
-              <th class="align-center" nzWidth="8em" nzColumnKey="customer_id">Khách hàng</th>
-              <th class="align-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
+              <th nzWidth="8em" nzColumnKey="sheetName" [nzSortFn]="true">Tên Sheet</th>
+              <th nzWidth="15em">Thông tin Sheet Id</th>
+              <th nzWidth="15em">Thông tin Firebase</th>
+              <th nzWidth="8em" nzColumnKey="codeAppVetgo" [nzSortFn]="true">Code App</th>
+              <th nzWidth="8em" nzColumnKey="customer_id">Khách hàng</th>
+              <th nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                 Ngày cập nhật
               </th>
-              <th class="align-center" nzWidth="12em" [nzFilters]="STATUS_CONFIG.LIST" [nzFilterFn]="true"
+              <th nzWidth="12em" [nzFilters]="STATUS_CONFIG.LIST" [nzFilterFn]="true"
                   nzColumnKey="t1.status">Trạng thái
               </th>
-              <th class="align-center" nzWidth="10em" nzColumnKey="action">Thao tác</th>
+              <th nzWidth="10em" nzColumnKey="action">Thao tác</th>
             </tr>
             </thead>
             <tbody>
@@ -44,19 +44,19 @@
                   nzTooltipPlacement="bottom">{{dt.firebase}}</td>
               <td>{{dt.codeAppVetgo}}</td>
               <ng-container *ngIf="dt.customerId; else emptyUser">
-                <td class="align-center">
+                <td>
                   <nz-avatar nzSrc="{{dt.avatar}}" nz-tooltip
                              nzTooltipTitle="{{dt.userName}}"></nz-avatar>
                 </td>
               </ng-container>
               <ng-template #emptyUser>
-                <td class="align-center">
+                <td>
                   <nz-avatar style="background-color: #87d068" nz-tooltip nzTooltipTitle="User"
                              nzIcon="user"></nz-avatar>
                 </td>
               </ng-template>
-              <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
-              <td class="align-center">
+              <td>{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+              <td>
                 <ng-container [ngSwitch]="dt.status">
                   <span *ngSwitchCase="STATUS_CONFIG.IN_ACTIVE.value">
                     <vet-status-danger [content]="STATUS_CONFIG.IN_ACTIVE.text"></vet-status-danger>
@@ -69,7 +69,7 @@
                   </span>
                 </ng-container>
               </td>
-              <td class="align-center action">
+              <td class="action">
                 <nz-space>
                   <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline"
                         (click)="showModal(dt)"

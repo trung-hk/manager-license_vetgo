@@ -1,97 +1,103 @@
-<div *ngIf="action || search" nz-row [ngStyle]=" selectSearchByUser && search ? {'margin-top': '15px'} : {}">
-  <ng-container *ngIf="action && search">
-    <div nz-col [nzXXl]="8" [nzXl]="10" [nzLg]="10" [nzMd]="8" [nzSm]="10" [nzXs]="8">
-      <ng-container *ngxPermissionsOnly="action.roles!">
-        <button *ngIf="!action.isShow" type="button" (click)="actionClick.emit()"
-                class="btn btn-success">
-          <i class="fas fa-plus"></i> {{action.name}}
-        </button>
-      </ng-container>
-    </div>
-    <div nz-col [nzXXl]="{ span: 6, offset: 10 }"
-         [nzXl]="{ span: 8, offset: 6 }"
-         [nzLg]="{ span: 10, offset: 4 }"
-         [nzMd]="{ span: 12, offset: 4 }"
-         [nzSm]="{ span: 12, offset: 2 }"
-         [nzXs]="16">
-      <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
-        <input nzSize="large" type="text" nz-input [placeholder]="search.placeholder"
-               (keyup.enter)="keyEnterSearch.emit($event)"/>
-      </nz-input-group>
-      <ng-template #suffixIconSearch>
-        <span nz-icon nzType="search"></span>
-      </ng-template>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="!action && search">
-    <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
-         [nzXl]="{ span: 8, offset: 16 }"
-         [nzLg]="{ span: 10, offset: 14 }"
-         [nzMd]="{ span: 12, offset: 12 }"
-         [nzSm]="24"
-         [nzXs]="24">
-      <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
-        <input nzSize="large" type="text" nz-input [placeholder]="search.placeholder"
-               (keyup.enter)="keyEnterSearch.emit($event)"/>
-      </nz-input-group>
-      <ng-template #suffixIconSearch>
-        <span nz-icon nzType="search"></span>
-      </ng-template>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="action && !search">
-    <div nz-col [nzXXl]="8" [nzXl]="10" [nzLg]="10" [nzMd]="8" [nzSm]="10" [nzXs]="8">
-      <ng-container *ngxPermissionsOnly="action.roles!">
-        <button *ngIf="action.isShow" type="button" (click)="actionClick.emit()"
-                class="btn btn-success">
-          <i class="fas fa-plus"></i> {{action.name}}
-        </button>
-      </ng-container>
-    </div>
-  </ng-container>
-</div>
-<ng-container *ngIf="selectSearchByUser">
-  <div *ngxPermissionsOnly="selectSearchByUser.roles!" nz-row [ngStyle]="{'margin-top': '15px'}" >
-    <div nz-col [nzXXl]="{ span: 6, offset: 18 }"
-         [nzXl]="{ span: 8, offset: 16 }"
-         [nzLg]="{ span: 10, offset: 14 }"
-         [nzMd]="{ span: 12, offset: 12 }"
-         [nzSm]="{ span: 12, offset: 12 }"
-         [nzXs]="24">
-      <nz-select
-          style="width: 100%"
-          nzShowSearch
-          nzServerSearch
-          nzAllowClear
-          [nzPlaceHolder]="selectSearchByUser.placeholder!"
-          [(ngModel)]="selectSearchByUser.value"
-          [nzShowArrow]="false"
-          [nzFilterOption]="nzFilterOption"
-          (nzOnSearch)="handleInputChange($event)"
-          (ngModelChange)="onChangeByUser.emit($event)"
-      >
-        <ng-container *ngIf="selectSearchByUser.isOnlySelectUserId">
-          <nz-option *ngFor="let user of selectSearchByUser.userList"
-                     [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
-                     [nzValue]="user.id">
-          </nz-option>
-        </ng-container>
-        <ng-container *ngIf="!selectSearchByUser.isOnlySelectUserId">
-          <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]; else option">
-            <nz-option *ngFor="let user of selectSearchByUser.userList"
-                       [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
-                       [nzValue]="user.code"></nz-option>
-          </ng-container>
-          <ng-template #option>
-            <nz-option *ngFor="let user of selectSearchByUser.userList"
-                       [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
-                       [nzValue]="user.id">
-            </nz-option>
-          </ng-template>
-        </ng-container>
-        
-      </nz-select>
-    </div>
+<div *ngIf="action" nz-row>
+  <div *ngxPermissionsOnly="action.roles!" nz-col [nzXXl]="8">
+    <button *ngIf="!action.isShow" type="button" (click)="actionClick.emit()"
+            class="btn btn-success">
+      <i class="fas fa-plus"></i> {{action.name}}
+    </button>
   </div>
-</ng-container>
+</div>
+<div nz-row [nzGutter]="16">
+  <div *ngIf="filterByDate" nz-col
+       [nzXXl]="8"
+       [nzXl]="12"
+       [nzLg]="24"
+       [nzMd]="24"
+       [nzSm]="24"
+       [nzXs]="24"
+       [ngStyle]="{'margin-top': '15px'}">
+    <ng-container *ngTemplateOutlet="filterDate" ></ng-container>
+  </div>
+  <div nz-col *ngIf="search"
+       [nzXXl]="{span:8, offset: filterByDate ? 8 : 16}"
+       [nzXl]="{span:8, offset: filterByDate ? 4 : 16}"
+       [nzLg]="24"
+       [nzMd]="24"
+       [nzSm]="24"
+       [nzXs]="24"
+       [ngStyle]="{'margin-top': '15px'}">
+    <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
+      <input nzSize="small" type="text" nz-input [placeholder]="search.placeholder"
+             (keyup.enter)="handleSearch($event)"/>
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <button class="btn btn-sm" type="button" (click)="handleSearch($event)">
+        <i class="fas fa-search"></i>
+      </button>
+    </ng-template>
+  </div>
+</div>
+<div *ngIf="selectSearchByUser" nz-row [nzGutter]="16" nzJustify="end" [ngStyle]="{'margin-top': '15px'}">
+  <div nz-col [nzXXl]="{span:8, offset: 8}"
+       [nzXl]="{span:8, offset: 4}"
+       [nzLg]="24"
+       [nzMd]="24"
+       [nzSm]="24"
+       [nzXs]="24">
+    <ng-container *ngTemplateOutlet="selectSearch"></ng-container>
+  </div>
+  
+</div>
+<ng-template #selectSearch>
+  <nz-select *ngIf="selectSearchByUser" nzSize="large"
+      style="width: 100%"
+      nzShowSearch
+      nzServerSearch
+      nzAllowClear
+      [nzPlaceHolder]="selectSearchByUser.placeholder!"
+      [(ngModel)]="selectSearchByUser.value"
+      [nzShowArrow]="false"
+      [nzFilterOption]="nzFilterOption"
+      (nzOnSearch)="handleInputChange($event)"
+      (ngModelChange)="onChangeByUser.emit($event)"
+  >
+    <ng-container *ngIf="selectSearchByUser.isOnlySelectUserId">
+      <nz-option *ngFor="let user of selectSearchByUser.userList"
+                 [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
+                 [nzValue]="user.id">
+      </nz-option>
+    </ng-container>
+    <ng-container *ngIf="!selectSearchByUser.isOnlySelectUserId">
+      <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]; else option">
+        <nz-option *ngFor="let user of selectSearchByUser.userList"
+                   [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
+                   [nzValue]="user.code"></nz-option>
+      </ng-container>
+      <ng-template #option>
+        <nz-option *ngFor="let user of selectSearchByUser.userList"
+                   [nzLabel]="user?.code! + ' - ' + (user?.phone! |  mask: Constant.FORMAT_PHONE: Constant.FORMAT_DEFAULT_CONFIG)"
+                   [nzValue]="user.id">
+        </nz-option>
+      </ng-template>
+    </ng-container>
+  
+  </nz-select>
+</ng-template>
+<ng-template #filterDate>
+  <nz-space>
+    <nz-select *nzSpaceItem [(ngModel)]="modeFilterDate" nzSize="large">
+      <nz-option [nzValue]="MODE_DATE_FILTER.RANGE.value" [nzLabel]="MODE_DATE_FILTER.RANGE.text"></nz-option>
+      <nz-option [nzValue]="MODE_DATE_FILTER.DATE.value" [nzLabel]="MODE_DATE_FILTER.DATE.text"></nz-option>
+      <nz-option [nzValue]="MODE_DATE_FILTER.WEEK.value" [nzLabel]="MODE_DATE_FILTER.WEEK.text"></nz-option>
+      <nz-option [nzValue]="MODE_DATE_FILTER.MONTH.value" [nzLabel]="MODE_DATE_FILTER.MONTH.text"></nz-option>
+      <nz-option [nzValue]="MODE_DATE_FILTER.YEAR.value" [nzLabel]="MODE_DATE_FILTER.YEAR.text"></nz-option>
+    </nz-select>
+    <ng-container *ngIf="modeFilterDate == MODE_DATE_FILTER.RANGE.value; else datePicker">
+      <nz-range-picker *nzSpaceItem ngModel="" (ngModelChange)="onChangeRange($event)" nzSize="large" style="width: 100%"></nz-range-picker>
+    </ng-container>
+    <ng-template #datePicker>
+      <nz-date-picker *nzSpaceItem [nzMode]="modeFilterDate" ngModel="" (ngModelChange)="onChangeDateFilter($event)" nzSize="large"></nz-date-picker>
+    </ng-template>
+  </nz-space>
+</ng-template>
+<ng-content></ng-content>
 <nz-divider></nz-divider>

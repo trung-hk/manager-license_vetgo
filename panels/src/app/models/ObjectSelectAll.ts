@@ -5,7 +5,10 @@ export class ObjectSelectAll{
     sort?: string | null;
     filter?: Array<{ key: string; value: string[]}> | null;
     keyword?: string | null;
-    type?: string
-    userId? : string | null
+    type?: string;
+    userId? : string | null;
+    fromCreatedDate? : string;
+    toCreatedDate? : string;
+    referenceType? : string;
 }
 

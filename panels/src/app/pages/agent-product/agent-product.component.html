@@ -5,7 +5,7 @@
         <div nz-col nzSpan="24">
           <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
             <vet-title-action [search]="{placeholder: 'Tìm kiếm'}"
-                              (keyEnterSearch)="search($event)">
+                              [filterReload]="callbackReloadData">
             </vet-title-action>
             <nz-list nzGrid>
               <div nz-row [nzGutter]="16">

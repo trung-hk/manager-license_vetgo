@@ -171,9 +171,10 @@ export enum TYPE_ORDER_SERVICE {
     CUSTOMER_ORDER = "CUSTOMER_ORDER",
 }
 export class TYPE_REFERENCE_PAYMENT {
+    static readonly PAYMENT_ORDER_PRODUCT: Enum = {text: "Thanh toán sản phẩm", value: "PAYMENT_ORDER_PRODUCT"};
     static readonly PAYMENT_ORDER_SERVICE: Enum = {text: "Thanh toán dịch vụ", value: "PAYMENT_ORDER_SERVICE"};
     static readonly REFUND_COMMISSION_APPROVE: Enum = {text: "Hoàn tiền chiết khấu", value: "REFUND_COMMISSION_APPROVE"};
-    static readonly LIST: Enum[] = [this.PAYMENT_ORDER_SERVICE, this.REFUND_COMMISSION_APPROVE];
+    static readonly LIST: Enum[] = [this.PAYMENT_ORDER_PRODUCT, this.PAYMENT_ORDER_SERVICE, this.REFUND_COMMISSION_APPROVE];
 }
 export class STATUS_SETTING_BANKING_INFO {
     static readonly IN_ACTIVE: Enum = {text: "Ngừng hoạt động", value: "IN_ACTIVE"};
@@ -203,4 +204,12 @@ export enum TYPE_REPORT {
     CUSTOMER = "CUSTOMER",
     ORDER_PAID = "ORDER_PAID",
     REFUND = "REFUND",
+}
+export class MODE_DATE_FILTER {
+    static readonly RANGE: Enum = {text: "From-To", value: ""};
+    static readonly DATE: Enum = {text: "Ngày", value: "date"};
+    static readonly WEEK: Enum = {text: "Tuần", value: "week"};
+    static readonly MONTH: Enum = {text: "Tháng", value: "month"};
+    static readonly YEAR: Enum = {text: "Năm", value: "year"};
+    static readonly LIST: Enum[] = [this.RANGE, this.DATE, this.WEEK, this.MONTH, this.YEAR];
 }

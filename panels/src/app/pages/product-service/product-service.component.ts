@@ -4,25 +4,25 @@ import {FormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
-import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {Item} from "../../models/Item";
 import {URL} from "../../Constants/api-urls";
 import {
     STATUS_PRODUCT_SERVICE,
     TYPE_PACKAGE,
-    TYPE_PRODUCT, CONFIG, Enum, TYPE_PAYMENT_PACKAGE, Constant,
+    TYPE_PRODUCT, CONFIG, TYPE_PAYMENT_PACKAGE, Constant,
 } from "../../Constants/vg-constant";
 import {PACKAGE_PRODUCT_SERVICE_FORM, PRODUCT_SERVICE_FORM} from "../../Constants/Form";
 import {PackageProduct} from "../../models/PackageProduct";
 import {Message} from "../../Constants/message-constant";
 import {AttributeObjectProductService} from "../../models/AttributeObjectProductService";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 @Component({
     selector: 'app-product-service',
     templateUrl: './product-service.component.html',
 })
-export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProductServiceComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly STATUS_PRODUCT_SERVICE = STATUS_PRODUCT_SERVICE;
     protected readonly TYPE_PAYMENT_PACKAGE = TYPE_PAYMENT_PACKAGE;
     protected readonly JSON = JSON;
@@ -32,12 +32,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     CONFIG_MAP = new Map(this.CONFIG_LIST.map(config => [config.value, config]));
     listScript = [];
     dataList: Item[] = [];
-    total: number = 1;
-    loading: boolean = true;
-    pageSize: number = 10;
-    pageIndex: number = 1;
-    sort: string | null = "last_modified_date,desc";
-    changeFirst: boolean = true;
     isVisible: boolean = false;
     isVisibleDelete = false;
     isConfirmLoadingDelete: boolean = false;
@@ -48,7 +42,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
     attributeArrayForm: string = "packages";
     idDelete: number | string | null | undefined = -1;
     idShowModal: number | string | null | undefined = null;
-    filter: Array<{ key: string; value: string[] }> | null = null;
     formPackage!: FormArray;
 
     constructor(private loadScript: LazyLoadScriptService,
@@ -56,6 +49,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                 private renderer: Renderer2,
                 public scriptFC: ScriptCommonService,
                 private fb: UntypedFormBuilder) {
+        super()
     }
 
     ngOnInit() {
@@ -81,7 +75,7 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
         this.loadDataFromServer();
     }
 
-    loadDataFromServer(keyWork?: string): void {
+    loadDataFromServer(from?: string, to?: string, keyWork?: string): void {
         this.loading = true;
         const objectSelectItem: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
         this.api.getAll<ResponseDataGetAll<Item>>(URL.API_ITEM, objectSelectItem).subscribe((data) => {
@@ -92,29 +86,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
             this.dataList.forEach(d => d.packages = this.scriptFC.getPackageService(d.attributes));
         });
     }
-
-    onQueryParamsChange(params: NzTableQueryParams): void {
-        if (this.changeFirst) {
-            this.changeFirst = false;
-            return;
-        }
-        console.log(params)
-        const {pageSize, pageIndex, sort, filter} = params;
-        const currentSort = sort.find(item => item.value !== null);
-        const sortField = (currentSort && currentSort.key) || null;
-        this.pageIndex = pageIndex;
-        this.pageSize = pageSize;
-        this.filter = filter;
-        if (!sortField) {
-            this.sort = "last_modified_date,desc";
-        } else {
-            let sortOrder = (currentSort && currentSort.value) || null;
-            sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-            this.sort = `${sortField},${sortOrder}`;
-        }
-        this.loadDataFromServer();
-    }
-
     showModal(product?: Item): void {
         this.isVisible = true;
         this.formPackage.clear();
@@ -263,11 +234,6 @@ export class ProductServiceComponent implements OnInit, AfterViewInit, OnDestroy
                 this.isConfirmLoadingDelete = false;
             });
         }
-    }
-
-    search(event: any): void {
-        this.loadDataFromServer(event.target.value);
-        event.target.value = "";
     }
 
     addPackage() {

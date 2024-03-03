@@ -12,7 +12,6 @@ import {
     STATUS_ORDER,
     STATUS_PAYMENT, TYPE_PAYMENT, USER_TYPE
 } from "../../Constants/vg-constant";
-import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {Message} from "../../Constants/message-constant";
 import {OrderService} from "../../models/OrderService";
 import {Item} from "../../models/Item";
@@ -24,12 +23,13 @@ import {User} from "../../models/User";
 import {BehaviorSubject, debounceTime, distinctUntilChanged} from "rxjs";
 import {AttributesModalFormOrderService} from "../../models/AttributesModalFormOrderService";
 import {RouteURL} from "../../Constants/route-url";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 @Component({
     selector: 'app-orders',
     templateUrl: './orders.component.html',
 })
-export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
+export class OrdersComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy {
     protected readonly STATUS_PAYMENT = STATUS_PAYMENT;
     protected readonly STATUS_ORDER = STATUS_ORDER;
     protected readonly ROLES = ROLES;
@@ -43,19 +43,12 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     dataList: OrderService[] = [];
     productList: Item[] = [];
     userList: User[] = [];
-    total: number = 1;
-    loading: boolean = true;
-    pageSize: number = 10;
-    pageIndex: number = 1;
-    sort: string | null = "last_modified_date,desc";
-    changeFirst: boolean = true;
     isVisible: boolean = false;
     isVisibleDelete = false;
     isRePayment = false;
     isConfirmLoadingDelete = false;
     orderDelete: OrderService | null | undefined = null;
     orderRepayment: OrderService | null | undefined = null;
-    filter: Array<{ key: string; value: string[] }> = [];
     selectUser: string = "";
     private searchSubject = new BehaviorSubject<string>('');
     search$ = this.searchSubject.asObservable();
@@ -69,6 +62,7 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 public scriptFC: ScriptCommonService,
                 private viewContainerRef: ViewContainerRef,
                 private elRef: ElementRef,) {
+        super()
     }
     expandSet = new Set<string>();
     onExpandChange(id: string, checked: boolean): void {
@@ -110,11 +104,11 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadDataFromServer().then();
     }
 
-    async loadDataFromServer(keyWork?: string): Promise<void> {
+    async loadDataFromServer(from?: string, to?: string, keyWork?: string): Promise<void> {
         this.loading = true;
         let loading_success_1 = false;
         let loading_success_2 = false;
-        const objectSelectOrderService: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
+        const objectSelectOrderService: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork, fromCreatedDate: from, toCreatedDate: to}
         this.api.getAll<ResponseDataGetAll<OrderService>>(URL.API_ORDER_SERVICE, objectSelectOrderService).subscribe((data) => {
             console.log(data)
             loading_success_1 = true;
@@ -156,26 +150,6 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             });
     }
 
-    onQueryParamsChange(params: NzTableQueryParams): void {
-        if (this.changeFirst) {
-            this.changeFirst = false;
-            return;
-        }
-        console.log(params)
-        const {pageSize, pageIndex, sort, filter} = params;
-        const currentSort = sort.find(item => item.value !== null);
-        const sortField = (currentSort && currentSort.key) || null;
-        this.pageIndex = pageIndex;
-        this.pageSize = pageSize;
-        if (!sortField) {
-            this.sort = "last_modified_date,desc";
-        } else {
-            let sortOrder = (currentSort && currentSort.value) || null;
-            sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-            this.sort = `${sortField},${sortOrder}`;
-        }
-        this.loadDataFromServer().then();
-    }
     handleCancel(): void {
         this.isVisible = false;
     }
@@ -210,11 +184,6 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.isConfirmLoadingDelete = false;
             });
         }
-    }
-
-    search(event: any): void {
-        this.loadDataFromServer(event.target.value).then();
-        event.target.value = "";
     }
 
     createComponentModal(modeOpen: string, order?: OrderService): void {

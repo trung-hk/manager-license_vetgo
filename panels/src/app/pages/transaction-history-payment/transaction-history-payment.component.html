@@ -4,7 +4,27 @@
       <div nz-col nzSpan="24">
         <nz-card style="width: 100%" [nzTitle]="titleLeft" [nzBordered]="false">
           <vet-title-action [search]="{placeholder: 'Nhập nội dung thanh toán'}"
-                            (keyEnterSearch)="search($event)">
+                            [filterReload]="callbackReloadData" [filterByDate]="true">
+            <div nz-row [ngStyle]="{'margin-top': '15px'}" nzJustify="end" [nzGutter]="16">
+              <div nz-col [nzXXl]="8"
+                   [nzXl]="8"
+                   [nzLg]="24"
+                   [nzMd]="24"
+                   [nzSm]="24"
+                   [nzXs]="24">
+                <nz-select style="width: 100%"
+                           nzShowSearch
+                           nzServerSearch
+                           nzAllowClear
+                           nzPlaceHolder="Chọn loại giao dịch"
+                           [nzShowArrow]="false"
+                           [(ngModel)]="selectReference"
+                           nzSize="large"
+                           (ngModelChange)="onChangeReference($event)">
+                  <nz-option *ngFor="let item of TYPE_REFERENCE_PAYMENT.LIST" [nzValue]="item.value" [nzLabel]="item.text"></nz-option>
+                </nz-select>
+              </div>
+            </div>
           </vet-title-action>
           <nz-table
               nzShowSizeChanger

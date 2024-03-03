@@ -26,6 +26,7 @@ import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
 import {OrderService} from "../../models/OrderService";
 import {RouteURL} from "../../Constants/route-url";
 import {CommissionApprovePending} from "../../models/CommissionApprovePending";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 interface ObjectByRole {
   userType: string,
@@ -35,7 +36,7 @@ interface ObjectByRole {
   selector: 'app-commission-approve',
   templateUrl: './commission-approve.component.html',
 })
-export class CommissionApproveComponent implements OnInit, AfterViewInit, OnDestroy{
+export class CommissionApproveComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly Constant = Constant;
   protected readonly STATUS_SETTING_BANKING_INFO = STATUS_SETTING_BANKING_INFO;
   listScript = [];
@@ -45,13 +46,6 @@ export class CommissionApproveComponent implements OnInit, AfterViewInit, OnDest
   bankingInfo: BankingInfo[] = [];
   bankingInfoMap: Map<string, BankingInfo> = new Map<string, BankingInfo>();
 
-  total: number = 1;
-  loading: boolean = true;
-  pageSize: number = 10;
-  pageIndex: number = 1;
-  sort: string | null = "last_modified_date,desc";
-  changeFirst: boolean = true;
-  filter: Array<{ key: string; value: string[] }> | null = null;
   isShowForm: boolean = false;
   validateForm!: UntypedFormGroup;
   isConfirmLoading: boolean = false;
@@ -72,6 +66,7 @@ export class CommissionApproveComponent implements OnInit, AfterViewInit, OnDest
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,
               private fb: UntypedFormBuilder) {
+    super()
   }
 
   ngOnInit() {
@@ -94,7 +89,7 @@ export class CommissionApproveComponent implements OnInit, AfterViewInit, OnDest
   init(): void {
     this.loadDataFromServer().then();
   }
-  async loadDataFromServer(keyWork?: string): Promise<void> {
+  async loadDataFromServer(from?: string, to?: string, keyWork?: string): Promise<void> {
     this.loading = true;
     if (!this.objectByRole) this.objectByRole = await this.getObjectByRoles();
     let loading_success_1 = false;
@@ -156,31 +151,6 @@ export class CommissionApproveComponent implements OnInit, AfterViewInit, OnDest
         if (result) rs({userType:USER_TYPE.PARTNER});
       });
     });
-  }
-  onQueryParamsChange(params: NzTableQueryParams): void {
-    if (this.changeFirst) {
-      this.changeFirst = false;
-      return;
-    }
-    console.log(params)
-    const {pageSize, pageIndex, sort, filter} = params;
-    const currentSort = sort.find(item => item.value !== null);
-    const sortField = (currentSort && currentSort.key) || null;
-    this.pageIndex = pageIndex;
-    this.pageSize = pageSize;
-    this.filter = filter;
-    if (!sortField) {
-      this.sort = "last_modified_date,desc";
-    } else {
-      let sortOrder = (currentSort && currentSort.value) || null;
-      sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-      this.sort = `${sortField},${sortOrder}`;
-    }
-    this.loadDataFromServer();
-  }
-  search(event: any): void {
-    this.loadDataFromServer(event.target.value);
-    event.target.value = "";
   }
   showModal(settingBankingInfo?: SettingBankingInfo) {
     this.isShowForm = true;

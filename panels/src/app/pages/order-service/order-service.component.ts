@@ -74,11 +74,6 @@ export class OrderServiceComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    search(event: any): void {
-        this.loadDataFromServer(event.target.value).then();
-        event.target.value = "";
-    }
-
     createComponentModal(idSelect: string): void {
         const attributesInsert: AttributesModalFormOrderService = {
             modeOpen: MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT,

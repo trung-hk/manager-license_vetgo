@@ -44,7 +44,4 @@ export class PaymentDetailsModalComponent implements OnInit, AfterViewInit, OnDe
         }
         this.loading = false;
     }
-    loadDataTransactionLog(id: string) {
-
-    }
 }

@@ -15,22 +15,17 @@ import {Message} from "../../Constants/message-constant";
 import {Commission, CommissionAccumulates} from "../../models/Commission";
 import {ResponseError} from "../../models/ResponseError";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 @Component({
   selector: 'app-commissions',
   templateUrl: './commissions.component.html',
 })
-export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CommissionsComponent  extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly TYPE_COMMISSION = TYPE_COMMISSION;
   listScript = [];
   dataList: Commission[] = [];
-  total: number = 1;
-  loading: boolean = true;
   modalLoading: boolean = true;
-  pageSize: number = 10;
-  pageIndex: number = 1;
-  sort: string | null = "last_modified_date,desc";
-  changeFirst: boolean = true;
   isVisible: boolean = false;
   isVisibleDelete = false;
   isConfirmLoadingDelete = false;
@@ -40,13 +35,13 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
   attributeArrayForm: string = "accumulates";
   idDelete: number | string | null | undefined = -1;
   idShowModal: number | string | null | undefined = null;
-  filter: Array<{ key: string; value: string[] }> | null = null;
   formAccumulates!: FormArray;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,
               private fb: UntypedFormBuilder) {
+    super()
   }
 
   ngOnInit() {
@@ -75,7 +70,7 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadDataFromServer();
   }
 
-  loadDataFromServer(keyWork?: string): void {
+  loadDataFromServer(from?: string, to?: string, keyWork?: string): void {
     this.loading = true;
     const objectSelectCommission: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
     this.api.getAll<ResponseDataGetAll<Commission>>(URL.API_COMMISSION, objectSelectCommission).subscribe((data) => {
@@ -84,28 +79,6 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.total = data.totalElements;
       this.dataList = data.content;
     });
-  }
-
-  onQueryParamsChange(params: NzTableQueryParams): void {
-    if (this.changeFirst) {
-      this.changeFirst = false;
-      return;
-    }
-    console.log(params)
-    const {pageSize, pageIndex, sort, filter} = params;
-    const currentSort = sort.find(item => item.value !== null);
-    const sortField = (currentSort && currentSort.key) || null;
-    this.pageIndex = pageIndex;
-    this.pageSize = pageSize;
-    this.filter = filter;
-    if (!sortField) {
-      this.sort = "last_modified_date,desc";
-    } else {
-      let sortOrder = (currentSort && currentSort.value) || null;
-      sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-      this.sort = `${sortField},${sortOrder}`;
-    }
-    this.loadDataFromServer();
   }
 
   showModal(commission?: Commission): void {
@@ -255,11 +228,6 @@ export class CommissionsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isConfirmLoadingDelete = false;
       });
     }
-  }
-
-  search(event: any): void {
-    this.loadDataFromServer(event.target.value);
-    event.target.value = "";
   }
 
   addCommission() {

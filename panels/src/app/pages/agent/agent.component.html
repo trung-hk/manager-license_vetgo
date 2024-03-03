@@ -6,7 +6,7 @@
           <vet-title-action [action]="{name: 'Thêm mới'}"
                             (actionClick)="showModal()"
                             [search]="{placeholder: 'Tìm kiếm'}"
-                            (keyEnterSearch)="search($event)">
+                            [filterReload]="callbackReloadData">
           </vet-title-action>
           <nz-table
               nzShowSizeChanger
@@ -20,18 +20,18 @@
               [nzScroll]="{ x: '500px' }">
             <thead>
             <tr>
-              <th nzWidth="20em">Thông tin đại lý</th>
+              <th nzWidth="15em">Thông tin đại lý</th>
               <th nzWidth="20em">Thông tin liên lạc</th>
               <th nzWidth="20em">Tên miền web</th>
-              <th nzWidth="10em" class="text-center">Chiết khấu</th>
-              <th class="text-center" nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
+              <th nzWidth="15em">Chiết khấu</th>
+              <th nzWidth="12em" nzColumnKey="last_modified_date" [nzSortFn]="true">
                 Ngày cập nhật
               </th>
-              <th class="text-center" nzColumnKey="status" nzWidth="12em" [nzSortFn]="true"
+              <th nzColumnKey="status" nzWidth="12em" [nzSortFn]="true"
                   [nzFilters]="STATUS_AGENT.LIST" [nzFilterFn]="true">
                 Trạng thái
               </th>
-              <th class="text-center" nzWidth="10em">Thao tác</th>
+              <th nzWidth="10em">Thao tác</th>
             </tr>
             </thead>
             <tbody>
@@ -54,14 +54,14 @@
               </td>
               <td><a href="https://{{dt.realm}}.{{extensionDomain}}">https://{{dt.realm}}.{{extensionDomain}}</a></td>
               <td>{{dataCommissionMap.get(dt.commissionId!)?.name}}</td>
-              <td class="align-center">{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
-              <td class="align-center">
+              <td>{{dt.lastModifiedDate | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+              <td>
                 <ng-container [ngSwitch]="dt.status">
                   <span *ngSwitchCase="STATUS_AGENT.IN_ACTIVE.value"><vet-status-danger [content]="STATUS_AGENT.IN_ACTIVE.text"></vet-status-danger></span>
-                  <span *ngSwitchCase="STATUS_AGENT.IN_ACTIVE.value"><vet-status-success [content]="STATUS_AGENT.ACTIVATED.text"></vet-status-success></span>
+                  <span *ngSwitchCase="STATUS_AGENT.ACTIVATED.value"><vet-status-success [content]="STATUS_AGENT.ACTIVATED.text"></vet-status-success></span>
                 </ng-container>
               </td>
-              <td class="align-center action">
+              <td class="action">
                 <nz-space>
                   <span *nzSpaceItem nz-icon nzType="edit" nzTheme="outline"
                           (click)="showModal(dt)"

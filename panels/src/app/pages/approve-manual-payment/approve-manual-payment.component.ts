@@ -2,7 +2,6 @@ import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2} from '@angular/c
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
-import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {
   Constant,
   STATUS_PAYMENT,
@@ -14,31 +13,26 @@ import {ObjectSelectAll} from "../../models/ObjectSelectAll";
 import {OrderService} from "../../models/OrderService";
 import {RouteURL} from "../../Constants/route-url";
 import {PayloadApprovePayment} from "../../models/PayloadApprovePayment";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 @Component({
   selector: 'app-approve-manual-payment',
   templateUrl: './approve-manual-payment.component.html'
 })
-export class ApproveManualPaymentComponent implements OnInit, AfterViewInit, OnDestroy{
+export class ApproveManualPaymentComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly Constant = Constant;
   protected readonly STATUS_PAYMENT = STATUS_PAYMENT;
   protected readonly RouteURL = RouteURL;
   listScript = [];
   dataOrderList: OrderService[] = [];
-  total: number = 1;
-  loading: boolean = true;
-  pageSize: number = 10;
-  pageIndex: number = 1;
-  sort: string | null = "last_modified_date,desc";
-  changeFirst: boolean = true;
   idShowModal: boolean = false;
-  filter: Array<{ key: string; value: string[] }> | null = [];
   orderApprove!: OrderService | null;
   isAwaitApprove: boolean = false;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,) {
+    super()
   }
   ngOnInit() {
     this.init();
@@ -61,11 +55,11 @@ export class ApproveManualPaymentComponent implements OnInit, AfterViewInit, OnD
   init(): void {
     this.loadDataFromServer();
   }
-  loadDataFromServer(keyWork?: string) {
+  loadDataFromServer(from?: string, to?: string, keyWork?: string) {
     this.loading = true;
     this.filter?.push({key: "ods.payment_status", value: [this.STATUS_PAYMENT.IN_PAYMENT.value]});
     console.log(this.filter)
-    const objectGetAll: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
+    const objectGetAll: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork, fromCreatedDate: from, toCreatedDate: to}
     this.api.getAll<ResponseDataGetAll<OrderService>>(URL.API_ORDER_SERVICE, objectGetAll).subscribe(data => {
       this.dataOrderList = data.content.map(d => {
         d.attributesObject = this.scriptFC.getAttributeOrderProductService(d.attributes);
@@ -78,32 +72,6 @@ export class ApproveManualPaymentComponent implements OnInit, AfterViewInit, OnD
       this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
       this.loading = false;
     })
-  }
-  onQueryParamsChange(params: NzTableQueryParams): void {
-    if (this.changeFirst) {
-      this.changeFirst = false;
-      return;
-    }
-    console.log(params)
-    const {pageSize, pageIndex, sort, filter} = params;
-    const currentSort = sort.find(item => item.value !== null);
-    const sortField = (currentSort && currentSort.key) || null;
-    this.pageIndex = pageIndex;
-    this.pageSize = pageSize;
-    this.filter = filter;
-    if (!sortField) {
-      this.sort = "last_modified_date,desc";
-    } else {
-      let sortOrder = (currentSort && currentSort.value) || null;
-      sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-      this.sort = `${sortField},${sortOrder}`;
-    }
-    this.loadDataFromServer();
-  }
-
-  search(event: any): void {
-    this.loadDataFromServer(event.target.value);
-    event.target.value = "";
   }
   showApproveModal(order: OrderService) {
     this.idShowModal = true;

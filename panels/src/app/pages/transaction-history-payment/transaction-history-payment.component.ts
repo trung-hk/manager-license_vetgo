@@ -2,7 +2,6 @@ import {AfterViewInit, Component, OnDestroy, OnInit, Renderer2, ViewContainerRef
 import {LazyLoadScriptService} from "../../services/lazy-load-script.service";
 import {ApiCommonService} from "../../services/api-common.service";
 import {ScriptCommonService} from "../../services/script-common.service";
-import {NzTableQueryParams} from "ng-zorro-antd/table";
 import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
 import {Transaction} from "../../models/Transaction";
 import {URL} from "../../Constants/api-urls";
@@ -12,28 +11,24 @@ import {Constant, STATUS_PAYMENT, TYPE_REFERENCE_PAYMENT} from "../../Constants/
 import {OrderService} from "../../models/OrderService";
 import {CommissionApproved} from "../../models/CommissionApproved";
 import {IModalViewPaymentData} from "../../models/ModalData";
+import {CommonParamComponent} from "../../models/CommonParamComponent";
 
 @Component({
   selector: 'app-transaction-history-payment',
   templateUrl: './transaction-history-payment.component.html',
 })
-export class TransactionHistoryPaymentComponent implements OnInit, AfterViewInit, OnDestroy{
+export class TransactionHistoryPaymentComponent extends CommonParamComponent implements OnInit, AfterViewInit, OnDestroy{
   protected readonly Constant = Constant;
   protected readonly STATUS_PAYMENT = STATUS_PAYMENT;
   listScript = [];
   dataList: Transaction[] = [];
-  total: number = 1;
-  loading: boolean = true;
-  pageSize: number = 10;
-  pageIndex: number = 1;
-  sort: string | null = "last_modified_date,desc";
-  changeFirst: boolean = true;
-  filter: Array<{ key: string; value: string[] }> | null = null;
+  selectReference?: string;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
               private renderer: Renderer2,
               public scriptFC: ScriptCommonService,
               private viewContainerRef: ViewContainerRef) {
+    super()
   }
 
   ngOnInit() {
@@ -56,9 +51,9 @@ export class TransactionHistoryPaymentComponent implements OnInit, AfterViewInit
   init(): void {
     this.loadDataFromServer();
   }
-  loadDataFromServer(keyWork?: string): void {
+  loadDataFromServer(from?: string, to?: string, keyWork?: string): void {
     this.loading = true;
-    const objectSelect: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
+    const objectSelect: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork, fromCreatedDate: from, toCreatedDate: to, referenceType: this.selectReference}
     this.api.getAll<ResponseDataGetAll<Transaction>>(URL.API_TRANSACTION_HISTORY_PAYMENT, objectSelect).subscribe(data => {
       this.dataList = data.content;
       this.total = data.totalElements;
@@ -68,31 +63,6 @@ export class TransactionHistoryPaymentComponent implements OnInit, AfterViewInit
       this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
       this.loading = false;
     })
-  }
-  onQueryParamsChange(params: NzTableQueryParams): void {
-    if (this.changeFirst) {
-      this.changeFirst = false;
-      return;
-    }
-    console.log(params)
-    const {pageSize, pageIndex, sort, filter} = params;
-    const currentSort = sort.find(item => item.value !== null);
-    const sortField = (currentSort && currentSort.key) || null;
-    this.pageIndex = pageIndex;
-    this.pageSize = pageSize;
-    this.filter = filter;
-    if (!sortField) {
-      this.sort = "last_modified_date,desc";
-    } else {
-      let sortOrder = (currentSort && currentSort.value) || null;
-      sortOrder = sortOrder && sortOrder === 'ascend' ? 'asc' : 'desc';
-      this.sort = `${sortField},${sortOrder}`;
-    }
-    this.loadDataFromServer();
-  }
-  search(event: any): void {
-    this.loadDataFromServer(event.target.value);
-    event.target.value = "";
   }
   createComponentPaymentDetailsModal(id: string, typePayment: string) {
     let paymentData: IModalViewPaymentData = {};
@@ -119,6 +89,9 @@ export class TransactionHistoryPaymentComponent implements OnInit, AfterViewInit
         break;
     }
 
+  }
+  onChangeReference(value: string): void {
+    this.loadDataFromServer();
   }
 
   protected readonly TYPE_REFERENCE_PAYMENT = TYPE_REFERENCE_PAYMENT;
