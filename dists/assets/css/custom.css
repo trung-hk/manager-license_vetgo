@@ -195,7 +195,7 @@ table td.action [nz-icon], table div.action [nz-icon] {
 .search-input {
     padding: 6px 11px !important;
 }
-nz-input-group, [nz-input], nz-select-top-control, nz-input-number {
+nz-input-group, [nz-input], nz-select-top-control, nz-input-number, nz-range-picker, nz-date-picker {
     border-radius: 5px !important;
 }
 .main-sidebar .sidebar-menu li a [nz-icon] {
