@@ -202,8 +202,9 @@ export const isEnvironmentDev = (): boolean => {
 
 export enum TYPE_REPORT {
     CUSTOMER = "CUSTOMER",
-    ORDER_PAID = "ORDER_PAID",
+    REVENUE = "REVENUE",
     REFUND = "REFUND",
+    TOTAL_ORDER = "TOTAL_ORDER",
 }
 export class MODE_DATE_FILTER {
     static readonly RANGE: Enum = {text: "From-To", value: ""};
@@ -212,4 +213,8 @@ export class MODE_DATE_FILTER {
     static readonly MONTH: Enum = {text: "Tháng", value: "month"};
     static readonly YEAR: Enum = {text: "Năm", value: "year"};
     static readonly LIST: Enum[] = [this.RANGE, this.DATE, this.WEEK, this.MONTH, this.YEAR];
+}
+export class STATUS_REPORT {
+    static readonly DECREASE: Enum = {text: "Giảm", value: "DECREASE"};
+    static readonly INCREASE: Enum = {text: "Tăng", value: "INCREASE"};
 }
