@@ -40,13 +40,14 @@ export class TitleActionComponent implements OnInit, AfterViewInit{
   search$ = this.searchSubject.asObservable();
   protected readonly MODE_DATE_FILTER = MODE_DATE_FILTER;
   modeFilterDate: string = MODE_DATE_FILTER.RANGE.value;
+  keyWorkSearch?: string;
   ngOnInit(): void {
   }
   ngAfterViewInit(): void {
   }
-  handleSearch(event: any): void {
-    this.filterReload?.reloadData(undefined, undefined, event.target.value);
-    event.target.value = "";
+  handleSearch(): void {
+    this.filterReload?.reloadData(undefined, undefined, this.keyWorkSearch);
+    //event.target.value = "";
   }
   handleInputChange(searchText: any): void {
     // Cập nhật giá trị BehaviorSubject khi có sự thay đổi

@@ -27,10 +27,10 @@
        [ngStyle]="{'margin-top': '15px'}">
     <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
       <input nzSize="small" type="text" nz-input [placeholder]="search.placeholder"
-             (keyup.enter)="handleSearch($event)"/>
+             (keyup.enter)="handleSearch()" [(ngModel)]="keyWorkSearch" />
     </nz-input-group>
     <ng-template #suffixIconSearch>
-      <button class="btn btn-sm" type="button" (click)="handleSearch($event)">
+      <button class="btn btn-sm" type="button" (click)="handleSearch()">
         <i class="fas fa-search"></i>
       </button>
     </ng-template>

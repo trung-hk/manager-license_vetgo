@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, Inject} from '@angular/core';
 import {CommunicationService} from "./services/communication.service";
 import {DOCUMENT} from "@angular/common";
+import {isEnvironmentPro} from "./Constants/vg-constant";
 
 @Component({
   selector: 'app-root',

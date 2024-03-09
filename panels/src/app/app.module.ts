@@ -27,7 +27,9 @@ import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import {isEnvironmentPro, REALM} from "./Constants/vg-constant";
 import {ComponentCommonModule} from "./component-common/component-common.module";
 registerLocaleData(vi);
-
+if (isEnvironmentPro()) {
+    console.log = function () {};
+}
 // for production
 const realm = REALM();
 const URL_KEY_CLOAK_PRO: string = 'https://keycloak.phanmemvet.vn';
