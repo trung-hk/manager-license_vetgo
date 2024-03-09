@@ -2,7 +2,7 @@ export class RouteURL {
     static readonly PAGE_DASHBOARD: string = "dashboard";
     static readonly PAGE_AGENTS: string = "agents";
     static readonly PAGE_AGENT_PRODUCT: string = "agent-product";
-    static readonly PAGE_MANAGER_CONFIG_APP: string = "'manager-config-app";
+    static readonly PAGE_MANAGER_CONFIG_APP: string = "manager-config-app";
     static readonly PAGE_PRODUCT: string = "product";
     static readonly PAGE_PROFILE: string = "profile";
     static readonly PAGE_PRODUCT_SERVICE: string = "product-service";

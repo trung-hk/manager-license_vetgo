@@ -46,7 +46,7 @@
         <a class="nav-link" [routerLink]="RouteURL.PAGE_AGENTS"><i
             nz-icon nzType="apartment" nzTheme="outline"></i><span>Đại lý</span></a>
       </li>
-      <li class="dropdown agent-product" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT]">
+      <li class="dropdown agent-product" *ngxPermissionsOnly="[ROLES.AGENT]">
         <a class="nav-link" [routerLink]="RouteURL.PAGE_AGENT_PRODUCT"><i nz-icon nzType="appstore-add" nzTheme="outline"></i><span>Sản phẩm đăng ký</span></a>
       </li>
 <!--      <li class="dropdown commission-list" *ngxPermissionsOnly="[ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR]">-->
