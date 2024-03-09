@@ -91,3 +91,11 @@
 <ng-template #titleLeft>
   <vet-title-content-left [quantity]="total">Danh sách chiết khấu đã duyệt</vet-title-content-left>
 </ng-template>
+<nz-modal [(nzVisible)]="isRePayment" nzTitle="Xác nhận thanh toán lại" nzOkText="Đồng ý"
+          nzCancelText="Hủy bỏ" (nzOnOk)="rePayment()"
+          (nzOnCancel)="handleCancelRePaymentModalPopup()">
+  <ng-container *nzModalContent>
+    <span>Bạn xác nhận có muốn thanh toán lại cho đơn hàng này?</span> <br>
+    <span style="color: #ff4d4f">Lưu ý: Nếu bạn đồng ý thì trạng thái thanh toán trước đó sẽ bị hủy</span>
+  </ng-container>
+</nz-modal>
