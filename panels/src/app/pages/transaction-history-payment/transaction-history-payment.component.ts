@@ -22,7 +22,7 @@ export class TransactionHistoryPaymentComponent extends CommonParamComponent imp
   protected readonly STATUS_PAYMENT = STATUS_PAYMENT;
   listScript = [];
   dataList: Transaction[] = [];
-  selectReference?: string;
+  selectReference?: string = TYPE_REFERENCE_PAYMENT.PAYMENT_ORDER_SERVICE.value;
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
               private renderer: Renderer2,
