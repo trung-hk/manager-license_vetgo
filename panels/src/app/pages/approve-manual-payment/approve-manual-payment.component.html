@@ -59,12 +59,14 @@
               <td>{{dt.paymentCode}}</td>
               <td class="align-center action">
                 <nz-space>
-                  <span *nzSpaceItem
-                        nz-icon nzType="transaction"
-                        nzTheme="outline"
-                        (click)="showApproveModal(dt)"
-                        title="Xác nhận thanh toán">
+                  <ng-container *ngIf="dt.paymentStatus == STATUS_PAYMENT.IN_PAYMENT.value">
+                    <span *nzSpaceItem
+                          nz-icon nzType="transaction"
+                          nzTheme="outline"
+                          (click)="showApproveModal(dt)"
+                          title="Xác nhận thanh toán">
                   </span>
+                  </ng-container>
                 </nz-space>
               </td>
             </tr>
