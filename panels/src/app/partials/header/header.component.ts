@@ -1,5 +1,6 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {KeycloakService} from "keycloak-angular";
+import {RouteURL} from "../../Constants/route-url";
 
 interface DataKeycloak{
     preferred_username: string
@@ -18,6 +19,9 @@ export class HeaderComponent implements OnInit{
     }
 
     ngOnInit(): void {
+        console.log(this.keycloak.getKeycloakInstance());
         this.username = (this.keycloak.getKeycloakInstance().tokenParsed as DataKeycloak).preferred_username;
     }
+
+    protected readonly RouteURL = RouteURL;
 }

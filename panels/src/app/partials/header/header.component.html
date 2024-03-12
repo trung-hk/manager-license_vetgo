@@ -130,20 +130,21 @@
         </div>
       </div>
     </li>-->
+    
     <li class="dropdown"><a href="#" data-toggle="dropdown"
                             class="nav-link dropdown-toggle nav-link-lg nav-link-user"> <img alt="image" src="assets/img/user.png"
                                                                                              class="user-img-radious-style"> <span class="d-sm-none d-lg-inline-block"></span></a>
-      <div class="dropdown-menu dropdown-menu-right pullDown">
-        <div class="dropdown-title">Xin chào {{username}}</div>
-        <!--<a href="profile.html" class="dropdown-item has-icon"> <i class="far fa-user"></i>
-          Profile
+      <div class="dropdown-menu dropdown-menu-right pullDown" style="width: 300px">
+        <div class="dropdown-title text-center">Xin chào {{username}}</div>
+        <a [routerLink]="RouteURL.PAGE_PROFILE" class="dropdown-item has-icon"> <i class="far fa-user"></i>
+          Thông tin
         </a>
         <a href="timeline.html" class="dropdown-item has-icon"> <i class="fas fa-bolt"></i>
-        Activities
+        Đổi mật khẩu
       </a>
-        <a href="#" class="dropdown-item has-icon"> <i class="fas fa-cog"></i>
-        Settings
-      </a>-->
+<!--        <a href="#" class="dropdown-item has-icon"> <i class="fas fa-cog"></i>-->
+<!--        Settings-->
+<!--      </a>-->
         <div class="dropdown-divider"></div>
         <a id="logout" href="javascript:void(0)" (click)="logout()" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i>
           Logout
