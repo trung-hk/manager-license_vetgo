@@ -39,6 +39,7 @@ import {AccountInfo} from "../models/LicenseZalo";
 import {RouteURL} from "../Constants/route-url";
 import {CommissionApproved} from "../models/CommissionApproved";
 import {PaymentDetailsModalComponent} from "../pages/payment-details-modal/payment-details-modal.component";
+import {KeycloakService} from "keycloak-angular";
 
 @Injectable({
     providedIn: 'root'
@@ -49,7 +50,8 @@ export class ScriptCommonService {
                 private permissionsService: NgxPermissionsService,
                 private dataService: DataService,
                 private api: ApiCommonService,
-                private activatedRoute: ActivatedRoute,) {
+                private activatedRoute: ActivatedRoute,
+                private keycloak: KeycloakService) {
     }
     getParamUrl(param: string, activatedRoute: ActivatedRoute): string | null {
         console.log("nani", activatedRoute.snapshot.paramMap)
@@ -386,5 +388,9 @@ export class ScriptCommonService {
         }
         this.dataService.setData(dataRedirect);
         this.dataService.navigateToPage(RouteURL.nextToPageWithId(RouteURL.PAGE_PAYMENT_COMPLETE_DETAILS, id!));
+    }
+    getUserIdLogin(): string | null {
+        let userId = this.keycloak.getKeycloakInstance().tokenParsed?.realm_access?.roles.find(role => role.startsWith("USER_ID"));
+        return userId == undefined ? null : userId.replace("USER_ID_", "");
     }
 }

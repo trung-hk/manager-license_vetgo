@@ -66,6 +66,9 @@ export class ApiCommonService {
     update<T>(id: number | string | null | undefined, data: T, api: string): Observable<T | ResponseError> {
         return this.httpClient.put<T | ResponseError>(`${this.url}/${api}/${id}`, data);
     }
+    updateProfileUser<T>(data: T): Observable<T | ResponseError> {
+        return this.httpClient.put<T | ResponseError>(`${this.url}/${URL.API_UPDATE_PROFILE_USER}`, data);
+    }
 
     delete<T>(id: number | string, api: string): Observable<T | ResponseError> {
         return this.httpClient.delete<T | ResponseError>(`${this.url}/${api}/${id}`);

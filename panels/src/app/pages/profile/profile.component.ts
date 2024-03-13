@@ -1,12 +1,14 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {ApiCommonService} from "../../services/api-common.service";
-import {ObjectSelectAll} from "../../models/ObjectSelectAll";
-import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
-import {SettingBankingInfo} from "../../models/SettingBankingInfo";
 import {URL} from "../../Constants/api-urls";
-import {Message} from "../../Constants/message-constant";
 import {User} from "../../models/User";
-import {BankingInfo} from "../../models/BankingInfo";
+import {ScriptCommonService} from "../../services/script-common.service";
+import {RouteURL} from "../../Constants/route-url";
+import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
+import {Constant} from "../../Constants/vg-constant";
+import {PROFILE_FORM, ProfileForm} from "../../Constants/Form";
+import {Message} from "../../Constants/message-constant";
+import {DataService} from "../../services/data.service";
 
 @Component({
   selector: 'app-profile',
@@ -14,7 +16,12 @@ import {BankingInfo} from "../../models/BankingInfo";
 })
 export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   loading: boolean = false;
-  constructor(private api: ApiCommonService,) {
+  user?: User;
+  validateForm!: UntypedFormGroup;
+  constructor(private api: ApiCommonService,
+              public scriptFC: ScriptCommonService,
+              private fb: UntypedFormBuilder,
+              private dataService: DataService) {
   }
   ngAfterViewInit(): void {
   }
@@ -23,6 +30,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.validateForm = this.fb.group(PROFILE_FORM);
     this.init();
   }
   init(): void {
@@ -30,50 +38,49 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
    loadDataFromServer(): void {
     this.loading = true;
-    let loading_success_1 = false;
-    let loading_success_2 = false;
-    let loading_success_3 = false;
-    // const objectSelect: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
-    // this.api.getAll<ResponseDataGetAll<SettingBankingInfo>>(URL.API_SETTING_BANK_INFO, objectSelect).subscribe(data => {
-    //   this.dataList = data.content;
-    //   this.total = data.totalElements;
-    //   loading_success_1 = true;
-    //   this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
-    // }, error => {
-    //   console.log(error);
-    //   this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-    //   this.loading = false;
-    // });
-    // if (this.isLoadFirstData) {
-    //   const userType = await this.getUserType();
-    //   this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, userType).subscribe((data) => {
-    //     console.log(data)
-    //     this.userList = data.content;
-    //     this.userMap = new Map<string, User>(this.userList.map(user => [user.id!, user]));
-    //     loading_success_2 = true;
-    //     this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
-    //   }, error => {
-    //     console.log(error);
-    //     this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-    //     this.loading = false;
-    //   });
-    //   this.api.getAll<ResponseDataGetAll<BankingInfo>>(URL.API_BANK_INFO).subscribe((data) => {
-    //     console.log(data)
-    //     this.bankingInfo = data.content;
-    //     this.bankingInfoMap = new Map<string, BankingInfo>(this.bankingInfo.map(banking => [banking.bin!, banking]));
-    //     loading_success_3 = true;
-    //     this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
-    //   }, error => {
-    //     console.log(error);
-    //     this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-    //     this.loading = false;
-    //   });
-    //   this.isLoadFirstData = false;
-    // } else {
-    //   loading_success_2 = true;
-    //   loading_success_3 = true;
-    //   this.loading = !(loading_success_1 && loading_success_2 && loading_success_3);
-    // }
+    this.api.getById<User>(this.scriptFC.getUserIdLogin(), URL.API_USER).subscribe(data => {
+        if (!this.scriptFC.validateResponseAPI(data.status)) {
+            this.user = data;
+            this.setProfileForm(this.user);
+        } else {
+        }
+        console.log(data);
 
+        this.loading = false;
+    })
   }
+  setProfileForm(user: User) {
+      this.validateForm.setValue({
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          address: user.address
+      } as ProfileForm)
+  }
+
+    saveData() {
+        if (this.validateForm.invalid) {
+            Object.values(this.validateForm.controls).forEach(control => {
+                if (control.invalid) {
+                    control.markAsDirty();
+                    control.updateValueAndValidity({onlySelf: true});
+                }
+            });
+            return
+        }
+        const data: User = this.validateForm.value;
+        data.id = this.user?.id;
+        this.api.updateProfileUser(data).subscribe(data => {
+            if (this.scriptFC.validateResponseAPI(data?.status)) {
+                this.scriptFC.alertShowMessageError(Message.MESSAGE_SAVE_FAILED);
+            } else {
+                this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
+                this.loadDataFromServer();
+                this.dataService.getReLoadDataFunc().reloadData();
+            }
+        })
+    }
+
+    protected readonly RouteURL = RouteURL;
+    protected readonly Constant = Constant;
 }

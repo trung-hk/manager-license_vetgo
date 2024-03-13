@@ -1,4 +1,4 @@
-import {Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {TYPE_PACKAGE, TYPE_PAYMENT_PACKAGE} from "./vg-constant";
 import {PackageProduct} from "../models/PackageProduct";
 
@@ -123,4 +123,17 @@ export const COMMISSION_APPROVE_PENDING_FORM = {
     userId: [null],
     userType: [[null], [Validators.required]],
     note: [[null], [Validators.required, Validators.maxLength(255)]],
+}
+export class ProfileForm {
+    name?: any;
+    email?: any;
+    phone?: any;
+    address?: any;
+
+}
+export const PROFILE_FORM: ProfileForm = {
+    name: [null, [Validators.required]],
+    email: [{value: [null], disabled: true}],
+    phone: [{value: [null], disabled: true}],
+    address: [null, Validators.maxLength(500)]
 }
