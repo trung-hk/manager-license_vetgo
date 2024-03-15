@@ -27,6 +27,9 @@ export class RouteURL {
     static readonly PAGE_ERROR: string = "error";
     static readonly PAGE_ERROR_403: string = this.PAGE_ERROR +"/403";
     static readonly PAGE_ERROR_404: string = this.PAGE_ERROR +"/404";
+    //Page auth
+    static readonly PAGE_AUTH: string = "auth";
+    static readonly PAGE_AUTH_FORGOT_PASSWORD: string = this.PAGE_ERROR +"/forgot-password";
     static nextToPage(page: string) {
         return `/${page}`;
     }

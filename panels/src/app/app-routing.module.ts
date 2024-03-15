@@ -87,7 +87,14 @@ const routes: Routes = [
       },
       {
         path: RouteURL.PAGE_PROFILE,
-        component: ProfileComponent
+        component: ProfileComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+            only: [ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER, ROLES.CUSTOMER],
+            redirectTo:  RouteURL.nextToPage(RouteURL.PAGE_ERROR_403)
+          }
+        }
       },
       {
         path: RouteURL.PAGE_PRODUCT_SERVICE,
@@ -283,10 +290,10 @@ const routes: Routes = [
     ],
     canActivate: [isAuthenticated],
   },
-  {
-    path: 'demo',
-    loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule)
-  },
+  // {
+  //   path: RouteURL.PAGE_AUTH,
+  //   loadChildren: () => import('./authentication-pages/authentication-pages.module').then(m => m.AuthenticationPagesModule)
+  // },
   {
     path: RouteURL.PAGE_ERROR,
     loadChildren: () => import('./error/error.module').then(m => m.ErrorModule)

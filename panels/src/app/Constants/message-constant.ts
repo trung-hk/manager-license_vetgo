@@ -18,4 +18,5 @@ export class Message {
     static readonly MESSAGE_EXECUTE_API_FAILED = "Thực thi Api Thất bại";
     static readonly MESSAGE_NOT_SETTING_BANKING_INFO = "Tài khoản chưa cập nhật thông tin ngân hàng, không thể thanh toán";
     static readonly MESSAGE_LOAD_PAYMENT_DATA_VIETQR_FAILED = "Load dữ liệu VietQR thất bại, kiểm tra lại thông tin ngân hàng";
+    static readonly MESSAGE_CHANGE_PASSWORD_SUCCESS = "Đổi mật khẩu thành công";
 }

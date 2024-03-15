@@ -31,18 +31,6 @@ import { ApproveManualPaymentCommissionComponent } from './approve-manual-paymen
 import {ComponentCommonModule} from "../component-common/component-common.module";
 import {PaymentDetailsModalComponent} from "./payment-details-modal/payment-details-modal.component";
 
-const routes: Routes =
-    [
-        // {
-        //     path: 'demo',
-        //     component: AntDemoComponent
-        // },
-        // {
-        //     path: 'pagination',
-        //     component: DemPaginationComponent
-        // }
-    ]
-
 @NgModule({
     declarations: [AgentProductComponent,
         DistributorComponent,
@@ -67,7 +55,6 @@ const routes: Routes =
         PaymentDetailsModalComponent],
     imports: [
         CommonModule,
-        RouterModule.forChild(routes),
         DragDropModule,
         ScrollingModule,
         NgZorroAntdModule,

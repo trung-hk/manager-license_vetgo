@@ -107,6 +107,8 @@ export class AgentComponent extends CommonParamComponent implements OnInit, Afte
             });
             this.validateForm.get("realm")?.disable();
             this.validateForm.get("code")?.disable();
+            this.validateForm.get("email")?.disable();
+            this.validateForm.get("phone")?.disable();
         } else {
             this.validateForm.get("realm")?.enable();
             this.validateForm.get("code")?.enable();
@@ -122,9 +124,10 @@ export class AgentComponent extends CommonParamComponent implements OnInit, Afte
         try {
             if (this.validateForm.valid) {
                 this.isConfirmLoading = true;
-                this.validateForm.get("code")?.enable();
-                this.validateForm.get("realm")?.enable();
-                const data: User = this.validateForm.value
+                // this.validateForm.get("code")?.enable();
+                // this.validateForm.get("realm")?.enable();
+                const data: User = this.validateForm.getRawValue();
+                console.log(data);
                 data.type = USER_TYPE.AGENT;
                 if (data.id) {
                     this.api.update(data.id, data, URL.API_USER).subscribe((data) => {

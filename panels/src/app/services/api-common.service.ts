@@ -9,6 +9,7 @@ import {isEnvironmentPro} from "../Constants/vg-constant";
 import {PayloadApprovePayment} from "../models/PayloadApprovePayment";
 import {ConfirmCommissionApproveRequest} from "../models/ConfirmCommissionApproveRequest";
 import {ObjectSelectReport} from "../models/ObjectSelectReport";
+import {ChangePasswordForm} from "../Constants/Form";
 
 @Injectable({
     providedIn: 'root'
@@ -90,5 +91,8 @@ export class ApiCommonService {
         if (objectData.from) params = params.append("from", objectData.from);
         if (objectData.to) params = params.append("to", objectData.to);
         return this.httpClient.get<T>(`${this.url}/${api}/${typeReport}`, {params});
+    }
+    changePassword<T>(dataRequest: ChangePasswordForm): Observable<T | ResponseError> {
+        return this.httpClient.post<T | ResponseError>(`${this.url}/${URL.API_CHANGE_PASSWORD_USER}`, dataRequest);
     }
 }

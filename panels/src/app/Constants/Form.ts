@@ -129,11 +129,21 @@ export class ProfileForm {
     email?: any;
     phone?: any;
     address?: any;
-
 }
 export const PROFILE_FORM: ProfileForm = {
     name: [null, [Validators.required]],
     email: [{value: [null], disabled: true}],
     phone: [{value: [null], disabled: true}],
     address: [null, Validators.maxLength(500)]
+}
+
+export class ChangePasswordForm {
+    oldPassword?: any;
+    newPassword?: any;
+    reNewPassword?: any;
+}
+export const CHANGE_PASSWORD_FORM: ChangePasswordForm = {
+    oldPassword: [null, [Validators.required]],
+    newPassword: [null, [Validators.required]],
+    reNewPassword: [null, [Validators.required]]
 }
