@@ -147,3 +147,27 @@ export const CHANGE_PASSWORD_FORM: ChangePasswordForm = {
     newPassword: [null, [Validators.required]],
     reNewPassword: [null, [Validators.required]]
 }
+
+export class ForgotPasswordForm {
+    realm?: any;
+    userName?: any;
+    newPassword?: any;
+    reNewPassword?: any;
+}
+export const FORGOT_PASSWORD_FORM: ForgotPasswordForm = {
+    realm: [null, [Validators.required]],
+    userName: [null, [Validators.required]],
+    newPassword: [null, [Validators.required]],
+    reNewPassword: [null, [Validators.required]]
+}
+
+export class ConfirmResetPasswordForm {
+    realm?: any;
+    userName?: any;
+    pinCode?: any;
+}
+export const CONFIRM_RESET_PASSWORD_FORM: ConfirmResetPasswordForm = {
+    realm: [null, [Validators.required]],
+    userName: [null, [Validators.required]],
+    pinCode: [null, [Validators.required]],
+}

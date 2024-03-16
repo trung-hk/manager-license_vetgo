@@ -218,3 +218,8 @@ export class STATUS_REPORT {
     static readonly DECREASE: Enum = {text: "Giảm", value: "DECREASE"};
     static readonly INCREASE: Enum = {text: "Tăng", value: "INCREASE"};
 }
+export enum STATUS_FORGOT_PASSWORD {
+    INPUT_INFO = "INPUT_INFO",
+    INPUT_PIN_CODE = "INPUT_PIN_CODE",
+    FINISH = "FINISH",
+}

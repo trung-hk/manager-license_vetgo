@@ -7,6 +7,8 @@ export class URL {
     static readonly API_USER_BY_TYPE: string = "users/type";
     static readonly API_UPDATE_PROFILE_USER: string = "users/my-profile";
     static readonly API_CHANGE_PASSWORD_USER: string = "users/update-password";
+    static readonly API_RESET_PASSWORD_USER: string = "users/reset-password";
+    static readonly API_CONFIRM_RESET_PASSWORD_USER: string = "users/confirm-reset-password";
     static readonly API_CUSTOMER_BY_PHONE: string = "users/customer-phone";
     static readonly API_AGENT_PRODUCT: string = "agent-items";
     static readonly API_ORDER_SERVICE: string = "vg-order-service";

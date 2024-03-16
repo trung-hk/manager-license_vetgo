@@ -26,6 +26,7 @@ import {ShareModule} from "./pipe/share/share.module";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import {isEnvironmentPro, REALM} from "./Constants/vg-constant";
 import {ComponentCommonModule} from "./component-common/component-common.module";
+import {PagesModule} from "./pages/pages.module";
 registerLocaleData(vi);
 if (isEnvironmentPro()) {
     console.log = function () {};
@@ -77,7 +78,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
         ShareModule,
         NgxMaskPipe,
         NgxMaskDirective,
-        ComponentCommonModule
+        ComponentCommonModule,
+        PagesModule
     ],
   providers: [
     {

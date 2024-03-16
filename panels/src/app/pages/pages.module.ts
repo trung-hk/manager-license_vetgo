@@ -29,6 +29,7 @@ import { CommissionApprovePendingComponent } from './commission-approve-pending/
 import { ApproveManualPaymentCommissionComponent } from './approve-manual-payment-commission/approve-manual-payment-commission.component';
 import {ComponentCommonModule} from "../component-common/component-common.module";
 import {PaymentDetailsModalComponent} from "./payment-details-modal/payment-details-modal.component";
+import {RouterModule} from "@angular/router";
 
 @NgModule({
     declarations: [AgentProductComponent,
@@ -63,8 +64,37 @@ import {PaymentDetailsModalComponent} from "./payment-details-modal/payment-deta
         FormsModule,
         NgxMaskDirective,
         NgxMaskPipe,
-        ComponentCommonModule
+        ComponentCommonModule,
+        RouterModule
+    ],
+    exports: [
+        AgentProductComponent,
+        DistributorComponent,
+        OrderServiceComponent,
+        FormOrderServiceModalComponent,
+        OrdersComponent,
+        CommissionsComponent,
+        ProductServiceDetailsModalComponent,
+        PaymentBankTransferComponent,
+        PaymentCompleteDetailsComponent,
+        CustomersComponent,
+        CustomerDetailsModalComponent,
+        LicenseZaloConfigComponent,
+        PackagePurchasedComponent,
+        PackageRenewalComponent,
+        ApproveManualPaymentComponent,
+        TransactionHistoryPaymentComponent,
+        SettingBankingComponent,
+        CommissionApproveComponent,
+        CommissionApprovePendingComponent,
+        ApproveManualPaymentCommissionComponent,
+        PaymentDetailsModalComponent
     ]
+
+
+
+
+
 })
 export class PagesModule {
 }

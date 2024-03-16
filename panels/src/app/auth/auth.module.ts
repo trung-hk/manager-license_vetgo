@@ -3,6 +3,8 @@ import {CommonModule} from '@angular/common';
 import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
 import {RouterModule, Routes} from "@angular/router";
 import {RouteURL} from "../Constants/route-url";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {NgZorroAntdModule} from "../ng-zorro-antd.module";
 
 const routes: Routes =
     [
@@ -18,7 +20,10 @@ const routes: Routes =
     ],
     imports: [
         CommonModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        FormsModule,
+        ReactiveFormsModule,
+        NgZorroAntdModule
     ]
 })
 export class AuthModule {

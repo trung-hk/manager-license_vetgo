@@ -9,7 +9,7 @@ import {isEnvironmentPro} from "../Constants/vg-constant";
 import {PayloadApprovePayment} from "../models/PayloadApprovePayment";
 import {ConfirmCommissionApproveRequest} from "../models/ConfirmCommissionApproveRequest";
 import {ObjectSelectReport} from "../models/ObjectSelectReport";
-import {ChangePasswordForm} from "../Constants/Form";
+import {ChangePasswordForm, ConfirmResetPasswordForm, ForgotPasswordForm} from "../Constants/Form";
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +18,10 @@ import {ChangePasswordForm} from "../Constants/Form";
 export class ApiCommonService {
     URL_DEV: string = "https://api.moonpet.vn/api";
     URL_PRO: string = "https://api.phanmemvet.vn/api";
+    URL_PUBLIC_DEV: string = "https://api.moonpet.vn/public/api";
+    URL_PUBLIC_PRO: string = "https://api.phanmemvet.vn/public/api";
     url: string = isEnvironmentPro() ? this.URL_PRO: this.URL_DEV;
+    urlPublic: string = isEnvironmentPro() ? this.URL_PUBLIC_PRO: this.URL_PUBLIC_DEV;
     regex = /^(?!\s*$).+/;
     constructor(private httpClient: HttpClient) {
     }
@@ -94,5 +97,11 @@ export class ApiCommonService {
     }
     changePassword<T>(dataRequest: ChangePasswordForm): Observable<T | ResponseError> {
         return this.httpClient.post<T | ResponseError>(`${this.url}/${URL.API_CHANGE_PASSWORD_USER}`, dataRequest);
+    }
+    resetPassword<T>(dataRequest: ForgotPasswordForm): Observable<T | ResponseError> {
+        return this.httpClient.post<T | ResponseError>(`${this.urlPublic}/${URL.API_RESET_PASSWORD_USER}`, dataRequest);
+    }
+    confirmResetPassword<T>(dataRequest: ConfirmResetPasswordForm): Observable<T | ResponseError> {
+        return this.httpClient.post<T | ResponseError>(`${this.urlPublic}/${URL.API_CONFIRM_RESET_PASSWORD_USER}`, dataRequest);
     }
 }
