@@ -1,0 +1,218 @@
+/*# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY3VzdG9tLmNzcyIsInNvdXJjZXMiOlsiY3VzdG9tLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiJ9 */
+
+/*# sourceMappingURL=custom.css.map */
+.main-footer {
+    margin-top: 30px;
+}
+
+.select-scroll {
+    overflow-y: auto;
+}
+
+.select-scroll option {
+    overflow-y: scroll;
+}
+
+.loader-data {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url("../img/loading.gif") 50% 50% no-repeat #f9f9f9;
+    opacity: 1
+}
+#category-nav {
+    padding-left: 5px;
+}
+#category-nav a {
+    color: #333;
+    display: flex;
+}
+#category-nav ul {
+    list-style: none;
+}
+#category-nav > ul {
+    padding-left: unset;
+}
+#category-nav ul li a {
+    display: inline-block;
+    padding: 5px 0px;
+    text-decoration: none;
+    -webkit-transition: 0.2s linear;
+    -moz-transition: 0.2s linear;
+    -ms-transition: 0.2s linear;
+    -o-transition: 0.2s linear;
+    transition: 0.2s linear;
+}
+#category-nav .fas {
+    cursor: pointer;
+}
+#category-nav li.active > a {
+    color:#6777ef;
+}
+table td {
+    word-break: break-all;
+}
+table thead{
+    background-color: #dcf4fc;
+}
+#config-app-table{
+    width: 100% !important;
+}
+.title-modal {
+    background-color: #dcf4fc;
+}
+.a-icon {
+    color: black !important;
+
+}
+.package-view {
+    border-radius: unset;
+    margin: 1px;
+    width: 100%;
+}
+.status-package-view {
+    width: 100%;
+}
+.custom-scrollbar {
+    max-height: 210px;
+    overflow-y: hidden;
+}
+.custom-scrollbar:hover {
+    overflow-y: auto;
+}
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    background-color: #949292;
+    -moz-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+.package-scrollbar{
+    height: 140px;
+    overflow-y: hidden;
+}
+.package-scrollbar:hover {
+    overflow-y: auto;
+}
+.package-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    background-color: #949292;
+    -moz-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+.package-view-for-agent{
+    height: 210px;
+    overflow-y: hidden;
+}
+.package-view-for-agent:hover {
+    overflow-y: auto;
+}
+.package-view-for-agent::-webkit-scrollbar {
+    width: 4px;
+    background-color: #949292;
+    -moz-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+@keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        overflow:hidden;
+    }
+}
+@-webkit-keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        visibility:hidden;
+    }
+}
+.card-item-background-color, .card-item-background-color > .ant-card-actions, .card-item-background-color > .ant-card-head {
+    background-color: #f6ffed !important;
+    border-color: #b7eb8f !important;
+}
+.card-item-background-color-unregistered, .card-item-background-color-unregistered > .ant-card-actions, .card-item-background-color-unregistered > ant-card-head {
+    background-color: #fffbe6 !important;
+    border-color: #ffe58f !important;
+}
+.payment-icon{
+    cursor: pointer;
+}
+button:focus{
+    outline: unset !important;
+}
+table td.action [nz-icon], table div.action [nz-icon] {
+    font-size: 20px;
+    color: dodgerblue;
+    cursor: pointer;
+}
+.dynamic-delete-button {
+    cursor: pointer;
+    position: relative;
+    top: 4px;
+    font-size: 24px;
+    color: dodgerblue !important;
+    transition: all 0.3s;
+}
+.table-th-right .ant-descriptions-item-label {
+    text-align: right;
+}
+.table-th-right .ant-descriptions-header {
+    margin-bottom: 10px;
+}
+.custom-button-toggled [nz-row-expand-button] {
+    display: flex;
+    top: 1.5em;
+}
+.icon-center-row {
+    align-items: center;
+    display: flex !important;
+    justify-content: end;
+}
+.search-input {
+    padding: 6px 11px !important;
+}
+nz-input-group, [nz-input], nz-select-top-control, nz-input-number, nz-range-picker, nz-date-picker {
+    border-radius: 5px !important;
+}
+.main-sidebar .sidebar-menu li a [nz-icon] {
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+}
+.pricing .pricing-details .pricing-item .pricing-item-icon i {
+     font-size: 13px;
+}
+.pricing .pricing-price div:first-child {
+    font-size: 20px;
+}
+.pricing .pricing-price div:last-child {
+    font-weight: 600;
+    font-size: 30px;
+}
