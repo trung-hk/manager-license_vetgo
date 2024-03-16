@@ -290,10 +290,10 @@ const routes: Routes = [
     ],
     canActivate: [isAuthenticated],
   },
-  // {
-  //   path: RouteURL.PAGE_AUTH,
-  //   loadChildren: () => import('./authentication-pages/authentication-pages.module').then(m => m.AuthenticationPagesModule)
-  // },
+  {
+    path: RouteURL.PAGE_AUTH,
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+  },
   {
     path: RouteURL.PAGE_ERROR,
     loadChildren: () => import('./error/error.module').then(m => m.ErrorModule)

@@ -3,15 +3,16 @@ import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from "@angular/router";
 import {ErrorForbiddenComponent} from './error-forbidden/error-forbidden.component';
 import {ErrorNotFoundComponent} from './error-not-found/error-not-found.component';
+import {RouteURL} from "../Constants/route-url";
 
 const routes: Routes =
     [
         {
-            path: '403',
+            path: RouteURL.PAGE_403,
             component: ErrorForbiddenComponent
         },
         {
-            path: '404',
+            path: RouteURL.PAGE_404,
             component: ErrorNotFoundComponent
         },
 

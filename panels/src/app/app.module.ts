@@ -77,7 +77,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         ShareModule,
         NgxMaskPipe,
         NgxMaskDirective,
-        ComponentCommonModule,
+        ComponentCommonModule
     ],
   providers: [
     {

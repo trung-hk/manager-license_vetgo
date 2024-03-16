@@ -29,7 +29,6 @@ export class AuthGuard extends KeycloakAuthGuard {
 
     const requiredRoles = route.data['rollen'];
     const rolesList = this.keycloak.getKeycloakInstance().realmAccess?.roles || [];
-    //console.log(this.keycloak.getKeycloakInstance().createLoginUrl())
     this.permissionsService.loadPermissions(rolesList);
     // Allow the user to proceed if no additional roles are required to access the route.
     if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) {
