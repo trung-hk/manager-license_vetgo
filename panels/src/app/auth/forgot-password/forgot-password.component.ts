@@ -40,8 +40,7 @@ export class ForgotPasswordComponent implements OnInit {
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
                 public scriptFC: ScriptCommonService,
-                private fb: UntypedFormBuilder,
-                private dataService: DataService) {
+                private fb: UntypedFormBuilder,) {
     }
 
     ngOnInit(): void {

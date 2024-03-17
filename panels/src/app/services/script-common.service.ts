@@ -121,6 +121,9 @@ export class ScriptCommonService {
         let buttonText;
         switch (attributes.modeOpen) {
             case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT:
+                titleModal = "Đặt đơn hàng";
+                buttonText = "Đăng ký sản phẩm";
+                break;
             case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.CUSTOMER_ORDER:
                 titleModal = "Đặt đơn hàng";
                 buttonText = "Thêm đơn hàng";
@@ -146,27 +149,42 @@ export class ScriptCommonService {
             nzOkText: buttonText,
             nzOnOk: (componentInstance: FormOrderServiceModalComponent) => {
                 return new Promise((resolve) => {
-                    componentInstance.handleSubmit().then(() => {
-                        callBack?.reloadData();
+                    if (componentInstance.selectTabIndex == 0) {
+                        componentInstance.selectTabIndex = componentInstance.selectTabIndex + 1;
                         resolve(null);
-                    });
+                    } else {
+                        componentInstance.handleSubmit().then(() => {
+                            callBack?.reloadData();
+                            resolve(null);
+                        });
+                    }
                 }).then(() => false); // Ngăn chặn đóng modal
             },
         });
         const instance = modal.getContentComponent();
+        const modalOption = modal.getConfig();
         modal.afterOpen.subscribe(() => {
             switch (attributes.modeOpen) {
                 case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT:
                 case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE:
-                    modal.getConfig().nzOkDisabled = instance.validateCustomerForm.invalid || instance.validateOrderForm.invalid;
-                    // Lắng nghe sự kiện statusChanges của form để cập nhật trạng thái của button disabled
+                    modal.getConfig().nzOkDisabled = instance.validateCustomerForm.invalid;
                     instance.validateCustomerForm.statusChanges.subscribe(status => {
-                        modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateOrderForm.invalid;
+                        modal.getConfig().nzOkDisabled = status === 'INVALID';
                     });
                     instance.validateOrderForm.statusChanges.subscribe(status => {
                         modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateCustomerForm.invalid;
                     });
                     break;
+                // case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.UPDATE:
+                //     modal.getConfig().nzOkDisabled = instance.validateCustomerForm.invalid || instance.validateOrderForm.invalid;
+                //     // Lắng nghe sự kiện statusChanges của form để cập nhật trạng thái của button disabled
+                //     instance.validateCustomerForm.statusChanges.subscribe(status => {
+                //         modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateOrderForm.invalid;
+                //     });
+                //     instance.validateOrderForm.statusChanges.subscribe(status => {
+                //         modal.getConfig().nzOkDisabled = status === 'INVALID' || instance.validateCustomerForm.invalid;
+                //     });
+                //     break;
                 case MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG:
                     modal.getConfig().nzOkDisabled = instance.validateConfigForm.invalid;
                     instance.validateConfigForm.statusChanges.subscribe(status => {

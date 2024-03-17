@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
 import {IModalData} from "../../models/ModalData";
 import {FormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
@@ -45,6 +45,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     validateConfigForm!: UntypedFormGroup;
     attributePhoneFormArray = "phones";
     phonesArrayForm!: FormArray;
+    selectTabIndex: number = 0;
 
     constructor(private fb: UntypedFormBuilder,
                 public scriptFC: ScriptCommonService,
@@ -382,6 +383,18 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
             if (this.scriptFC.validateResponseAPI(data.status)) return;
             this.setValueFormCustomer(data as User, true);
         })
-
+    }
+    switchTab() {
+        if (this.attributes.modeOpen == MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT) {
+            if (this.selectTabIndex == 0) {
+                this.#modal.getConfig().nzOkText = "Đăng ký sản phẩm"
+                this.#modal.getConfig().nzOkDisabled = false;
+            } else {
+                if (this.selectTabIndex == 1) {
+                    this.#modal.getConfig().nzOkText = "Thêm đơn hàng"
+                    this.#modal.getConfig().nzOkDisabled = this.validateCustomerForm.invalid || this.validateOrderForm.invalid;
+                }
+            }
+        }
     }
 }

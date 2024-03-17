@@ -1,5 +1,5 @@
-<nz-tabset>
-  <nz-tab *ngIf="attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT" nzTitle="Khách hàng">
+<nz-tabset [(nzSelectedIndex)]="selectTabIndex" (nzSelectChange)="switchTab()">
+  <nz-tab *ngIf="attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT" nzTitle="Khách hàng" >
     <form nz-form [formGroup]="validateCustomerForm">
       <input type="hidden" formControlName="id">
       <input type="hidden" formControlName="status">
@@ -37,7 +37,7 @@
       </nz-form-item>
     </form>
   </nz-tab>
-  <nz-tab nzTitle="Sản phẩm" *ngIf="attributes.modeOpen !== MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG">
+  <nz-tab nzTitle="Sản phẩm" *ngIf="attributes.modeOpen !== MODE_OPEN_MODAL_FORM_ORDER_SERVICE.ADD_CONFIG" [nzDisabled]="validateCustomerForm.invalid">
     <form nz-form [formGroup]="validateOrderForm">
       <input type="hidden" formControlName="id">
       <nz-form-item>
