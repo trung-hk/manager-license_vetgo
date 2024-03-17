@@ -6,7 +6,7 @@
                  [nzBodyStyle]="{'padding': 'unset' }">
           <vet-title-action [search]="{placeholder: 'Tìm kiếm'}"
                             [filterReload]="callbackReloadData"
-                            [selectSearchByUser]="{placeholder: placeHolder, roles: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR], value: selectUser, userList: userList}"
+                            [selectSearchByUser]="{placeholder: placeHolder, roles: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR], value: selectUser}"
                             (onChangeByUser)="filterOrder($event)">
           </vet-title-action>
           <nz-table *ngIf="modeView === MODE_DISPLAY.PC" [nzScroll]="{ x: '500px' }"

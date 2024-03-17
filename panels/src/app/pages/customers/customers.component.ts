@@ -29,7 +29,6 @@ export class CustomersComponent extends CommonParamComponent implements OnInit, 
   protected readonly STATUS_CUSTOMER = STATUS_CUSTOMER;
   listScript = [];
   dataList: User[] = [];
-  userList: User[] = [];
   isVisible: boolean = false;
   isVisibleDelete = false;
   isConfirmLoadingDelete = false;
@@ -37,10 +36,11 @@ export class CustomersComponent extends CommonParamComponent implements OnInit, 
   userDelete: User | null | undefined = null;
   selectUser: string = "";
   private searchSubject = new BehaviorSubject<string>('');
-  search$ = this.searchSubject.asObservable();
   nzFilterOption = (): boolean => true;
   modeView!: string;
   validateForm!: UntypedFormGroup;
+  childrenIdFilter!: string;
+
   constructor(private loadScript: LazyLoadScriptService,
               private api: ApiCommonService,
               private renderer: Renderer2,
@@ -62,15 +62,6 @@ export class CustomersComponent extends CommonParamComponent implements OnInit, 
   ngOnInit() {
     this.modeView = this.elRef.nativeElement.offsetWidth < 765 ? MODE_DISPLAY.MOBILE : MODE_DISPLAY.PC;
     this.init();
-    this.search$
-        .pipe(
-            debounceTime(500), // Đặt thời gian debounce (miligiây)
-            distinctUntilChanged() // Chỉ gọi khi giá trị thay đổi
-        )
-        .subscribe(searchText => {
-          // Gọi hàm tìm kiếm của bạn ở đây
-          this.onSearch(searchText);
-        });
   }
 
   ngAfterViewInit(): void {
@@ -93,7 +84,7 @@ export class CustomersComponent extends CommonParamComponent implements OnInit, 
 
   loadDataFromServer(from?: string, to?: string, keyWork?: string): void {
     this.loading = true;
-    const objectSelectUser: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork}
+    const objectSelectUser: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork, childrenId: this.childrenIdFilter}
     this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.CUSTOMER, objectSelectUser).subscribe((data) => {
       console.log(data)
       this.total = data.totalElements;
@@ -191,43 +182,6 @@ export class CustomersComponent extends CommonParamComponent implements OnInit, 
       });
     }
   }
-  onSearch(searchText: string): void {
-    // Gọi hàm tìm kiếm của bạn ở đây
-    console.log('Searching for:', searchText);
-    const objectSelectUser: ObjectSelectAll = {keyword: searchText}
-    this.scriptFC.hasPermission(ROLES.ADMIN).then(result => {
-      if (result) {
-        this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.AGENT, objectSelectUser).subscribe((data) => {
-          console.log(data)
-          this.userList = data.content;
-        });
-      }
-    })
-    this.scriptFC.hasPermission(ROLES.AGENT).then(result => {
-      if (result) {
-        this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.DISTRIBUTOR, objectSelectUser).subscribe((data) => {
-          console.log(data)
-          this.userList = data.content;
-        });
-      }
-    })
-    this.scriptFC.hasPermission(ROLES.DISTRIBUTOR).then(result => {
-      if (result) {
-        this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.PARTNER, objectSelectUser).subscribe((data) => {
-          console.log(data)
-          this.userList = data.content;
-        });
-      }
-    })
-    this.scriptFC.hasPermission(ROLES.PARTNER).then(result => {
-      if (result) {
-        this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.CUSTOMER, objectSelectUser).subscribe((data) => {
-          console.log(data)
-          this.userList = data.content;
-        });
-      }
-    })
-  }
   filterOrder(e: string) {
     this.setFilter(e).then(() => {
       this.loadDataFromServer();
@@ -237,19 +191,19 @@ export class CustomersComponent extends CommonParamComponent implements OnInit, 
     return new Promise( rs => {
       this.scriptFC.hasPermission(ROLES.ADMIN).then(result => {
         if (result) {
-          this.filter = [{key: "ods.realm", value: [value]}];
+          this.filter = [{key: "vu.realm", value: [value]}];
           rs();
         }
       })
       this.scriptFC.hasPermission(ROLES.AGENT).then(result => {
         if (result) {
-          this.filter = [{key: "ods.distributor_id", value: [value]}];
+          this.childrenIdFilter = value;
           rs();
         }
       })
       this.scriptFC.hasPermission(ROLES.DISTRIBUTOR).then(result => {
         if (result) {
-          this.filter = [{key: "ods.partner_id", value: [value]}];
+          this.childrenIdFilter = value;
           rs();
         }
       })

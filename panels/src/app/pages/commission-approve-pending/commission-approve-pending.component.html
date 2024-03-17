@@ -7,7 +7,7 @@
                             (actionClick)="showModal()"
                             [search]="{placeholder: 'Tìm kiếm'}"
                             [filterReload]="callbackReloadData"
-                            [selectSearchByUser]="{placeholder: placeHolder, roles: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR], value: selectUser, userList: userList, isOnlySelectUserId: true}"
+                            [selectSearchByUser]="{placeholder: placeHolder, roles: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR], value: selectUser, isOnlySelectUserId: true}"
                             (onChangeByUser)="filterOrder($event)" [filterByDate]="true">
           </vet-title-action>
           <nz-table

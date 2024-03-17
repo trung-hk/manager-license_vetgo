@@ -10,7 +10,7 @@ import {
     MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
     ROLES,
     STATUS_ORDER,
-    STATUS_PAYMENT, TYPE_PAYMENT, USER_TYPE
+    STATUS_PAYMENT, TYPE_PAYMENT
 } from "../../Constants/vg-constant";
 import {Message} from "../../Constants/message-constant";
 import {OrderService} from "../../models/OrderService";
@@ -19,8 +19,6 @@ import {AgentProduct} from "../../models/AgentProduct";
 import {ModalFormOrderServiceCallback} from "../../models/ModalFormOrderServiceCallback";
 import {PAYMENTS_METHOD} from "../../Constants/payment-urls";
 import {ObjectSelectAll} from "../../models/ObjectSelectAll";
-import {User} from "../../models/User";
-import {BehaviorSubject, debounceTime, distinctUntilChanged} from "rxjs";
 import {AttributesModalFormOrderService} from "../../models/AttributesModalFormOrderService";
 import {RouteURL} from "../../Constants/route-url";
 import {CommonParamComponent} from "../../models/CommonParamComponent";
@@ -42,7 +40,6 @@ export class OrdersComponent extends CommonParamComponent implements OnInit, Aft
     listScript = [];
     dataList: OrderService[] = [];
     productList: Item[] = [];
-    userList: User[] = [];
     isVisible: boolean = false;
     isVisibleDelete = false;
     isRePayment = false;
@@ -50,8 +47,6 @@ export class OrdersComponent extends CommonParamComponent implements OnInit, Aft
     orderDelete: OrderService | null | undefined = null;
     orderRepayment: OrderService | null | undefined = null;
     selectUser: string = "";
-    private searchSubject = new BehaviorSubject<string>('');
-    search$ = this.searchSubject.asObservable();
     nzFilterOption = (): boolean => true;
 
     modeView!: string;
@@ -76,15 +71,6 @@ export class OrdersComponent extends CommonParamComponent implements OnInit, Aft
     ngOnInit() {
         this.modeView = this.elRef.nativeElement.offsetWidth < 765 ? MODE_DISPLAY.MOBILE : MODE_DISPLAY.PC;
         this.init();
-        this.search$
-            .pipe(
-                debounceTime(500), // Đặt thời gian debounce (miligiây)
-                distinctUntilChanged() // Chỉ gọi khi giá trị thay đổi
-            )
-            .subscribe(searchText => {
-                // Gọi hàm tìm kiếm của bạn ở đây
-                this.onSearch(searchText);
-            });
     }
 
     ngAfterViewInit(): void {
@@ -228,48 +214,6 @@ export class OrdersComponent extends CommonParamComponent implements OnInit, Aft
     payment(order: OrderService, method: string): void {
         this.scriptFC.payment(order, method, RouteURL.PAGE_ORDERS);
     }
-    onSearch(searchText: string): void {
-        // Gọi hàm tìm kiếm của bạn ở đây
-        console.log('Searching for:', searchText);
-        const objectSelectUser: ObjectSelectAll = {keyword: searchText}
-        this.scriptFC.hasPermission(ROLES.ADMIN).then(result => {
-            if (result) {
-                this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.AGENT, objectSelectUser).subscribe((data) => {
-                    console.log(data)
-                    this.userList = data.content;
-                });
-            }
-        })
-        this.scriptFC.hasPermission(ROLES.AGENT).then(result => {
-            if (result) {
-                this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.DISTRIBUTOR, objectSelectUser).subscribe((data) => {
-                    console.log(data)
-                    this.userList = data.content;
-                });
-            }
-        })
-        this.scriptFC.hasPermission(ROLES.DISTRIBUTOR).then(result => {
-            if (result) {
-                this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.PARTNER, objectSelectUser).subscribe((data) => {
-                    console.log(data)
-                    this.userList = data.content;
-                });
-            }
-        })
-        this.scriptFC.hasPermission(ROLES.PARTNER).then(result => {
-            if (result) {
-                this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.CUSTOMER, objectSelectUser).subscribe((data) => {
-                    console.log(data)
-                    this.userList = data.content;
-                });
-            }
-        })
-    }
-
-    handleInputChange(searchText: any): void {
-        // Cập nhật giá trị BehaviorSubject khi có sự thay đổi
-        this.searchSubject.next(searchText);
-    }
     filterOrder(e: string) {
         this.setFilter(e).then(() => {
             this.loadDataFromServer().then();
@@ -315,7 +259,5 @@ export class OrdersComponent extends CommonParamComponent implements OnInit, Aft
         this.isRePayment = false;
         this.orderRepayment = null;
     }
-
-
     protected readonly TYPE_PAYMENT = TYPE_PAYMENT;
 }

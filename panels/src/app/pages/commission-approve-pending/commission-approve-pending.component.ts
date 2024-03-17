@@ -16,7 +16,6 @@ import {
 } from "../../Constants/vg-constant";
 import {ResponseError} from "../../models/ResponseError";
 import {CommissionApprovePending} from "../../models/CommissionApprovePending";
-import {BehaviorSubject} from "rxjs";
 import {ConfirmCommissionApproveRequest} from "../../models/ConfirmCommissionApproveRequest";
 import {CommonParamComponent} from "../../models/CommonParamComponent";
 
@@ -36,19 +35,14 @@ export class CommissionApprovePendingComponent extends CommonParamComponent impl
   protected readonly STATUS_COMMISSION_APPROVE_PENDING = STATUS_COMMISSION_APPROVE_PENDING;
   listScript = [];
   dataList: CommissionApprovePending[] = [];
-  userList: User[] = [];
-  userMap: Map<string, User> = new Map<string, User>();
 
   isShowForm: boolean = false;
   validateForm!: UntypedFormGroup;
   isConfirmLoading: boolean = false;
-  isLoadFirstData: boolean = true;
   objectByRole!: ObjectByRole;
 
   selectUser: string | null = null;
   nzFilterOption = (): boolean => true;
-  private searchSubject = new BehaviorSubject<string>('');
-  search$ = this.searchSubject.asObservable();
   canApprove: boolean = false;
 
   constructor(private loadScript: LazyLoadScriptService,
@@ -83,14 +77,11 @@ export class CommissionApprovePendingComponent extends CommonParamComponent impl
     this.canApprove = false;
     if (!this.objectByRole) this.objectByRole = await this.getObjectByRoles();
     this.loading = true;
-    let loading_success_1 = false;
-    let loading_success_2 = false;
     const objectSelect: ObjectSelectAll = {page: this.pageIndex - 1, size: this.pageSize, sort: this.sort, filter: this.filter, keyword: keyWork, userId: this.selectUser, fromCreatedDate: from, toCreatedDate: to}
     this.api.getAll<ResponseDataGetAll<CommissionApprovePending>>(this.objectByRole.apiUrl, objectSelect).subscribe(data => {
       this.dataList = data.content;
       this.total = data.totalElements;
-      loading_success_1 = true;
-      this.loading = !(loading_success_1 && loading_success_2);
+      this.loading = false;
       console.log(this.selectUser)
       if (this.selectUser) {
         this.dataList.forEach(dt => {
@@ -104,24 +95,6 @@ export class CommissionApprovePendingComponent extends CommonParamComponent impl
       this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
       this.loading = false;
     });
-    if (this.isLoadFirstData) {
-      this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, this.objectByRole.userType).subscribe((data) => {
-        console.log(data)
-        this.userList = data.content;
-        this.userMap = new Map<string, User>(this.userList.map(user => [user.id!, user]));
-        loading_success_2 = true;
-        this.loading = !(loading_success_1 && loading_success_2);
-      }, error => {
-        console.log(error);
-        this.scriptFC.alertShowMessageError(Message.MESSAGE_LOAD_DATA_FAILED);
-        this.loading = false;
-      });
-      this.isLoadFirstData = false;
-    } else {
-      loading_success_2 = true;
-      this.loading = !(loading_success_1 && loading_success_2);
-    }
-
   }
   getObjectByRoles(): Promise<ObjectByRole> {
     return new Promise((rs) => {
@@ -185,10 +158,6 @@ export class CommissionApprovePendingComponent extends CommonParamComponent impl
   filterOrder(e: string) {
     this.selectUser = e;
     this.loadDataFromServer().then();
-  }
-  handleInputChange(searchText: any): void {
-    // Cập nhật giá trị BehaviorSubject khi có sự thay đổi
-    this.searchSubject.next(searchText);
   }
 
 }

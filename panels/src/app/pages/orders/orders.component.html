@@ -8,7 +8,7 @@
                             (actionClick)="createComponentModal(MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT)"
                             [search]="{placeholder: 'Mã đơn hàng'}"
                             [filterReload]="callbackReloadData"
-                            [selectSearchByUser]="{placeholder: placeHolder, roles: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER], value: selectUser, userList: userList}"
+                            [selectSearchByUser]="{placeholder: placeHolder, roles: [ROLES.ADMIN, ROLES.AGENT, ROLES.DISTRIBUTOR, ROLES.PARTNER], value: selectUser}"
                             (onChangeByUser)="filterOrder($event)" [filterByDate]="true">
           
           </vet-title-action>

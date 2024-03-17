@@ -12,5 +12,6 @@ export class User extends AbstractModel{
     keycloakId?: string | null;
     parentId?: string | null;
     commissionId?: string | null;
+    wifiMarketingDTOs?: string | null;
 }
 

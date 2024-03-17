@@ -36,6 +36,7 @@ export class ForgotPasswordComponent implements OnInit {
     loading: boolean = false;
     isResendCodeConfirm: boolean = true;
     countDownResendCode: number = 60;
+    emailForget!: string
     constructor(private loadScript: LazyLoadScriptService,
                 private api: ApiCommonService,
                 public scriptFC: ScriptCommonService,
@@ -65,15 +66,16 @@ export class ForgotPasswordComponent implements OnInit {
         }
         const dataForm: ForgotPasswordForm = this.validateForgotPasswordForm.getRawValue();
         console.log(dataForm)
-        this.api.resetPassword<ResponseError>(dataForm).subscribe(data => {
+        this.api.resetPassword<{status: string, email: string}>(dataForm).subscribe(data => {
             if (this.scriptFC.validateResponseAPI(data.status)) {
-                this.scriptFC.alertShowMessageError(data.message!);
+                this.scriptFC.alertShowMessageError((data as ResponseError).message!);
             } else {
                 this.statusForgotPassword = STATUS_FORGOT_PASSWORD.INPUT_PIN_CODE;
                 this.validateConfirmResetPasswordForm.patchValue({
                     realm: dataForm.realm,
                     userName: dataForm.userName
                 } as ConfirmResetPasswordForm);
+                this.emailForget = (data as {status: string, email: string}).email;
                 if (isResend) {
                     this.isResendCodeConfirm = false;
                     const interval = setInterval(() => {
@@ -88,14 +90,6 @@ export class ForgotPasswordComponent implements OnInit {
             this.loading = false;
             console.log(data)
         })
-    }
-    awaitReSendPinCode() {
-        const interval = setInterval(function(countDown: number, isResendCodeConfirm: boolean ){
-            if (countDown-- === 0) {
-                isResendCodeConfirm = true;
-                clearInterval(interval);
-            }
-        }, 1000)
     }
     confirmResetPassword() {
         this.loading = true;

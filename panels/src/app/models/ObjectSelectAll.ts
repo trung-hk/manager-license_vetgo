@@ -10,5 +10,7 @@ export class ObjectSelectAll{
     fromCreatedDate? : string;
     toCreatedDate? : string;
     referenceType? : string;
+    childrenId? : string;
+
 }
 

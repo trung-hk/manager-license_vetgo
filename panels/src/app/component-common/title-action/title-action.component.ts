@@ -3,11 +3,11 @@ import {
   Constant,
   MODE_DATE_FILTER,
   MODE_OPEN_MODAL_FORM_ORDER_SERVICE,
-  ROLES
+  ROLES, USER_TYPE
 } from "../../Constants/vg-constant";
 import {NzSafeAny} from "ng-zorro-antd/core/types";
 import {User} from "../../models/User";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, debounceTime, distinctUntilChanged} from "rxjs";
 import {
   lastDayOfISOWeek,
   lastDayOfMonth,
@@ -19,6 +19,11 @@ import {
 } from "date-fns";
 import {CallbackLoadDataServer} from "../../models/CallbackLoadDataServer";
 import {isValidDate} from "rxjs/internal/util/isDate";
+import {ScriptCommonService} from "../../services/script-common.service";
+import {ApiCommonService} from "../../services/api-common.service";
+import {ObjectSelectAll} from "../../models/ObjectSelectAll";
+import {ResponseDataGetAll} from "../../models/ResponseDataGetAll";
+import {URL} from "../../Constants/api-urls";
 
 @Component({
   selector: 'vet-title-action',
@@ -28,7 +33,7 @@ export class TitleActionComponent implements OnInit, AfterViewInit{
   @Input() action?: {name: string, roles?: string[], isShow?: boolean};
   @Output() actionClick: EventEmitter<any> = new EventEmitter();
   @Input() search?: {placeholder?: string};
-  @Input() selectSearchByUser?: {placeholder?: string | TemplateRef<NzSafeAny> | null, roles?: string[], value: string | null, userList: User[], isOnlySelectUserId?: boolean};
+  @Input() selectSearchByUser?: {placeholder?: string | TemplateRef<NzSafeAny> | null, roles?: string[], value: string | null, isOnlySelectUserId?: boolean};
   @Output() onChangeByUser: EventEmitter<any> = new EventEmitter();
   @Input() filterByDate?: boolean;
   @Input() filterReload?: CallbackLoadDataServer;
@@ -41,7 +46,20 @@ export class TitleActionComponent implements OnInit, AfterViewInit{
   protected readonly MODE_DATE_FILTER = MODE_DATE_FILTER;
   modeFilterDate: string = MODE_DATE_FILTER.RANGE.value;
   keyWorkSearch?: string;
+  userList: User[] = [];
+  constructor(private scriptFC: ScriptCommonService,
+              private api: ApiCommonService,) {
+  }
   ngOnInit(): void {
+    this.search$
+        .pipe(
+            debounceTime(500), // Đặt thời gian debounce (miligiây)
+            distinctUntilChanged() // Chỉ gọi khi giá trị thay đổi
+        )
+        .subscribe(searchText => {
+          // Gọi hàm tìm kiếm của bạn ở đây
+          this.handleInputChange(searchText);
+        });
   }
   ngAfterViewInit(): void {
   }
@@ -49,10 +67,46 @@ export class TitleActionComponent implements OnInit, AfterViewInit{
     this.filterReload?.reloadData(undefined, undefined, this.keyWorkSearch);
     //event.target.value = "";
   }
+
   handleInputChange(searchText: any): void {
     // Cập nhật giá trị BehaviorSubject khi có sự thay đổi
-    console.log(this.searchSubject)
-    this.searchSubject.next(searchText);
+    // console.log(this.searchSubject)
+    // this.searchSubject.next(searchText);
+    // Gọi hàm tìm kiếm của bạn ở đây
+    console.log('Searching for:', searchText);
+    const objectSelectUser: ObjectSelectAll = {keyword: searchText}
+    this.scriptFC.hasPermission(ROLES.ADMIN).then(result => {
+      if (result) {
+        this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.AGENT, objectSelectUser).subscribe((data) => {
+          console.log(data)
+          this.userList = data.content;
+        });
+      }
+    })
+    this.scriptFC.hasPermission(ROLES.AGENT).then(result => {
+      if (result) {
+        this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.DISTRIBUTOR, objectSelectUser).subscribe((data) => {
+          console.log(data)
+          this.userList = data.content;
+        });
+      }
+    })
+    this.scriptFC.hasPermission(ROLES.DISTRIBUTOR).then(result => {
+      if (result) {
+        this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.PARTNER, objectSelectUser).subscribe((data) => {
+          console.log(data)
+          this.userList = data.content;
+        });
+      }
+    })
+    this.scriptFC.hasPermission(ROLES.PARTNER).then(result => {
+      if (result) {
+        this.api.getAllUsersByType<ResponseDataGetAll<User>>(URL.API_USER_BY_TYPE, USER_TYPE.CUSTOMER, objectSelectUser).subscribe((data) => {
+          console.log(data)
+          this.userList = data.content;
+        });
+      }
+    })
   }
   onChangeDateFilter(result: Date) {
     let from,to;
