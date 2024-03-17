@@ -4,6 +4,8 @@ import {IModalViewCustomerData} from "../../models/ModalData";
 import {ScriptCommonService} from "../../services/script-common.service";
 import {User} from "../../models/User";
 import {Constant} from "../../Constants/vg-constant";
+import {ApiCommonService} from "../../services/api-common.service";
+import {URL} from "../../Constants/api-urls";
 
 @Component({
   selector: 'app-customer-details-modal',
@@ -12,11 +14,22 @@ import {Constant} from "../../Constants/vg-constant";
 export class CustomerDetailsModalComponent implements OnInit {
   readonly #modal = inject(NzModalRef);
   readonly nzModalData: IModalViewCustomerData = inject(NZ_MODAL_DATA);
-  customer!: User;
-  constructor(public scriptFC: ScriptCommonService,) {
+  customer?: User;
+  loading: boolean = true;
+  constructor(public scriptFC: ScriptCommonService,
+              private api: ApiCommonService) {
   }
   ngOnInit(): void {
-    this.customer = this.nzModalData.customer;
+    this.api.getById<User>(this.nzModalData.idUser, URL.API_USER).subscribe(data => {
+      console.log(data)
+      this.customer = data;
+      this.customer.wifiMarketingDTOs?.forEach(wifiDTO => {
+        wifiDTO.attributesObject = JSON.parse(wifiDTO.attributes!);
+      })
+      console.log(this.customer)
+      this.loading = false;
+    })
+
   }
 
     protected readonly Constant = Constant;

@@ -1,4 +1,5 @@
 import {AbstractModel} from "./AbstractModel";
+import {WifiMarketing} from "./WifiMarketing";
 
 export class User extends AbstractModel{
     id?: string | null;
@@ -12,6 +13,6 @@ export class User extends AbstractModel{
     keycloakId?: string | null;
     parentId?: string | null;
     commissionId?: string | null;
-    wifiMarketingDTOs?: string | null;
+    wifiMarketingDTOs?: WifiMarketing[] | null;
 }
 

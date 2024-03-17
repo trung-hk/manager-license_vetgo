@@ -209,8 +209,9 @@ export class CustomersComponent extends CommonParamComponent implements OnInit, 
       })
     })
   }
-  createComponentModalViewCustomer(user: User) {
-    this.scriptFC.createComponentModalViewCustomerDetails(user, this.viewContainerRef);
+  createComponentModalViewCustomer(idUser: string) {
+
+    this.scriptFC.createComponentModalViewCustomerDetails(idUser, this.viewContainerRef);
   }
 
     protected readonly Constant = Constant;

@@ -220,14 +220,14 @@ export class ScriptCommonService {
             ]
         });
     }
-    createComponentModalViewCustomerDetails(customer: User, viewContainerRef: ViewContainerRef): void {
+    createComponentModalViewCustomerDetails(idUser: string, viewContainerRef: ViewContainerRef): void {
         const modal = this.modal.create<CustomerDetailsModalComponent, IModalViewCustomerData>({
             nzTitle: "Thông tin khách hàng",
             nzContent: CustomerDetailsModalComponent,
             nzWidth: "800px",
             nzViewContainerRef: viewContainerRef,
             nzData: {
-                customer: customer,
+                idUser: idUser,
             },
             nzFooter: [
                 {

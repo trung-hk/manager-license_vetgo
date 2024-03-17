@@ -22,9 +22,10 @@
             <thead>
             <tr>
               <th nzWidth="15em" nzColumnKey="code" [nzSortFn]="true">Khách hàng</th>
-              <th nzWidth="15em" nzColumnKey="name" [nzSortFn]="true">E-mail</th>
+              <th nzWidth="15em">E-mail</th>
               <th nzWidth="15em" nzColumnKey="name" [nzSortFn]="true">Địa chỉ</th>
-              <th class="text-center" nzWidth="10em">Thao tác</th>
+              <th *ngxPermissionsOnly="[ROLES.ADMIN]" nzWidth="10em">Đại lý</th>
+              <th nzWidth="10em">Thao tác</th>
             </tr>
             </thead>
             <tbody>
@@ -49,10 +50,13 @@
               <td>
                 <div class="text-break custom-scrollbar" [innerHtml]="dt.address! | lineBreak"></div>
               </td>
-              <td class="align-center action">
+              <td *ngxPermissionsOnly="[ROLES.ADMIN]">
+                {{dt.realm}}
+              </td>
+              <td class="action">
                 <nz-space>
                   <span *nzSpaceItem nz-icon nzType="idcard" nzTheme="outline"
-                        (click)="createComponentModalViewCustomer(dt)"
+                        (click)="createComponentModalViewCustomer(dt.id!)"
                         title="Xem chi tiết">
                   </span>
                   <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">
@@ -93,7 +97,7 @@
                       <div class="action">
                         <nz-space>
                           <span *nzSpaceItem nz-icon nzType="idcard" nzTheme="outline"
-                                (click)="createComponentModalViewCustomer(dt)"
+                                (click)="createComponentModalViewCustomer(dt.id!)"
                                 title="Xem chi tiết">
                           </span>
                           <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">

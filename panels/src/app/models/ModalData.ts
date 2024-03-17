@@ -12,7 +12,7 @@ export interface IModalViewProductServiceData {
     product: Item;
 }
 export interface IModalViewCustomerData {
-    customer: User;
+    idUser: string;
 }
 export interface IModalViewOrderServiceData {
     order: OrderService;
