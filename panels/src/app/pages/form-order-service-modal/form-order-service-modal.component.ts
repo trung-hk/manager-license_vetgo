@@ -1,5 +1,5 @@
 import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
+import {NZ_MODAL_DATA, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {IModalData} from "../../models/ModalData";
 import {FormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {
@@ -17,7 +17,7 @@ import {
     CONFIG, Constant,
     MODE_OPEN_MODAL_FORM_ORDER_SERVICE, MODE_ORDER,
     STATUS_CUSTOMER,
-    STATUS_ORDER, TYPE_ORDER_SERVICE,
+    STATUS_ORDER, STATUS_PAYMENT, TYPE_ORDER_SERVICE,
     USER_TYPE
 } from "../../Constants/vg-constant";
 import {Message} from "../../Constants/message-constant";
@@ -50,7 +50,7 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
     constructor(private fb: UntypedFormBuilder,
                 public scriptFC: ScriptCommonService,
                 private api: ApiCommonService,
-                private dataService: DataService,) {
+                private modalService: NzModalService,) {
     }
 
     readonly #modal = inject(NzModalRef);
@@ -247,7 +247,15 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
                 return;
             }
             // xử lý insertOrUpdate order
-            await this.insertOrUpdateOrder(dataOrder);
+            const orderService = await this.insertOrUpdateOrder(dataOrder);
+            console.log(orderService);
+            if (orderService.paymentStatus == STATUS_PAYMENT.PAID.value) return;
+            const titleConfirm = this.attributes.modeOpen === MODE_OPEN_MODAL_FORM_ORDER_SERVICE.INSERT ? "<i>Thêm đơn hàng thành công</i>"  : "<i>Cập nhật đơn hàng thành công</i>"
+             this.modalService.confirm({
+                nzTitle: titleConfirm,
+                nzContent: '<b>Đi tới trang thanh toán?</b>',
+                nzOnOk: () => this.scriptFC.payment(orderService, PAYMENTS_METHOD.VIET_QR, RouteURL.PAGE_ORDERS)
+            });
             // Trường hợp update config order
         } else {
             await this.updateConfigOrder();
@@ -344,7 +352,6 @@ export class FormOrderServiceModalComponent implements OnInit, OnDestroy {
                          this.scriptFC.alertShowMessageSuccess(Message.MESSAGE_SAVE_SUCCESS);
                          this.destroyModal();
                          rs(data);
-                         this.scriptFC.payment(data, PAYMENTS_METHOD.VIET_QR, RouteURL.PAGE_PACKAGE_PURCHASED);
                      }
                  }, error => {
                      console.log(error);

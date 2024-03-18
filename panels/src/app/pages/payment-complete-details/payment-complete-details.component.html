@@ -5,28 +5,28 @@
         <nz-skeleton [nzLoading]="loading">
           <!--Payment order-->
           <nz-card *ngIf="orderService" style="width: 100%" [nzTitle]="'Hóa đơn ' + orderService.code" [nzBordered]="true">
-            <b>Thông tin khách hàng</b>
-            <br>
+            <h6><b>Thông tin khách hàng</b></h6>
+            <nz-divider></nz-divider>
             Tên: {{orderService.customerName}}
             <br>
             Số điện thoại: <vet-phone [content]="orderService.customerPhone"></vet-phone>
             <br>
             E-mail: {{orderService.customerAddress}}
             <nz-divider></nz-divider>
-            <nz-descriptions nzSize="small" nzBordered>
+            <nz-descriptions nzTitle="Thông tin đơn hàng" nzSize="small" [nzColumn]="3" nzBordered nzLayout="vertical">
               <nz-descriptions-item nzTitle="Sản phẩm">{{orderService.attributesObject?.itemName}}</nz-descriptions-item>
               <nz-descriptions-item nzTitle="Gói">{{packageOrder?.name}}</nz-descriptions-item>
               <nz-descriptions-item nzTitle="Giá"><vet-money [content]="orderService.totalAmount"></vet-money></nz-descriptions-item>
             </nz-descriptions>
             <nz-divider></nz-divider>
-            <b>Thông tin thanh toán</b>
-            <br>
-            Phương thức thanh toán: {{orderService.paymentMethod}}
+            <h6><b>Thông tin thanh toán</b></h6>
+            <nz-divider></nz-divider>
+            Phương thức thanh toán: {{orderService.paymentMethod ? orderService.paymentMethod : "TRỰC TIẾP"}}
             <br>
             Số tiền thanh toán: <vet-money [content]="orderService.totalAmount"></vet-money>
             <br>
             <ng-container [ngSwitch]="orderService.paymentStatus">
-              <span>Trạng thái:</span>
+              <span>Trạng thái: </span>
               <span *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value"><vet-status-warning content="Chưa thanh toán"></vet-status-warning></span>
               <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value"><vet-status-info content="Chờ xác nhận"></vet-status-info></span>
               <span *ngSwitchCase="STATUS_PAYMENT.PAID.value"><vet-status-success content="Thanh toán thành công"></vet-status-success></span>
@@ -55,7 +55,7 @@
             Số tiền thanh toán: <vet-money [content]="commissionApproved.totalCommissionAmount"></vet-money>
             <br>
             <ng-container [ngSwitch]="commissionApproved.status">
-              <span>Trạng thái:</span>
+              <span>Trạng thái: </span>
               <span *ngSwitchCase="STATUS_PAYMENT.UN_PAID.value"><vet-status-warning content="Chưa thanh toán"></vet-status-warning></span>
               <span *ngSwitchCase="STATUS_PAYMENT.IN_PAYMENT.value"><vet-status-info content="Chờ xác nhận"></vet-status-info></span>
               <span *ngSwitchCase="STATUS_PAYMENT.PAID.value"><vet-status-success content="Thanh toán thành công"></vet-status-success></span>

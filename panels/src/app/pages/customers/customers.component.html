@@ -130,7 +130,8 @@
 <ng-template #placeHolder>
   <ng-container *ngxPermissionsOnly="[ROLES.ADMIN]">Đại lý</ng-container>
   <ng-container *ngxPermissionsOnly="[ROLES.AGENT]">Nhà phân phối</ng-container>
-  <ng-container *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">Tạo bởi cộng tác viên</ng-container>
+  <ng-container *ngxPermissionsOnly="[ROLES.DISTRIBUTOR]">Cộng tác viên</ng-container>
+  <ng-container *ngxPermissionsOnly="[ROLES.PARTNER]">Khách hàng</ng-container>
 </ng-template>
 <!-- Create/Update Form -->
 <nz-modal [(nzVisible)]="isVisible"

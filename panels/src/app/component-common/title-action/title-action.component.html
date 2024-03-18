@@ -36,7 +36,7 @@
     </ng-template>
   </div>
 </div>
-<div *ngIf="selectSearchByUser" nz-row [nzGutter]="16" nzJustify="end" [ngStyle]="{'margin-top': '15px'}">
+<div *ngxPermissionsOnly="selectSearchByUser?.roles!" nz-row [nzGutter]="16" nzJustify="end" [ngStyle]="{'margin-top': '15px'}">
   <div nz-col [nzXXl]="{span:8, offset: 8}"
        [nzXl]="{span:8, offset: 4}"
        [nzLg]="24"

@@ -7,23 +7,17 @@
       <nz-descriptions-item nzSpan="2" nzTitle="E-mail">{{customer?.email}}</nz-descriptions-item>
       <nz-descriptions-item nzSpan="3" nzTitle="Địa chỉ"><div [innerHtml]="customer?.address! | lineBreak"></div></nz-descriptions-item>
     </nz-descriptions>
-    <nz-descriptions nzSize="small" nzTitle="Danh sách thiết bị Wifi" nzBordered nzLayout="vertical" [nzColumn]="5">
-      <ng-container *ngIf="customer?.wifiMarketingDTOs?.length == 0">
-        <nz-descriptions-item><nz-empty></nz-empty></nz-descriptions-item>
+    <nz-descriptions *ngIf="customer?.wifiMarketingDTOs?.length != 0" nzSize="small" nzTitle="Danh sách thiết bị Wifi" nzBordered nzLayout="vertical" [nzColumn]="5">
+      <ng-container *ngFor="let wifi of customer?.wifiMarketingDTOs; let i = index">
+        <nz-descriptions-item nzTitle="No">{{i + 1}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="CloudId">{{wifi?.cloudId}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Tên đăng nhập">{{wifi?.userName}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Mật khẩu">{{wifi?.password}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Trạng thái" [ngSwitch]="wifi?.attributesObject?.status">
+          <span *ngSwitchCase="'true'" class="material-symbols-outlined" style="color: green;font-size: 20px;">wifi</span>
+          <span *ngSwitchCase="'false'" class="material-symbols-outlined" style="color: red;font-size: 20px;">wifi_off</span>
+        </nz-descriptions-item>
       </ng-container>
-      <ng-container *ngIf="customer?.wifiMarketingDTOs?.length != 0">
-        <ng-container *ngFor="let wifi of customer?.wifiMarketingDTOs; let i = index">
-          <nz-descriptions-item nzTitle="No">{{i + 1}}</nz-descriptions-item>
-          <nz-descriptions-item nzTitle="CloudId">{{wifi?.cloudId}}</nz-descriptions-item>
-          <nz-descriptions-item nzTitle="Tên đăng nhập">{{wifi?.userName}}</nz-descriptions-item>
-          <nz-descriptions-item nzTitle="Mật khẩu">{{wifi?.password}}</nz-descriptions-item>
-          <nz-descriptions-item nzTitle="Trạng thái" [ngSwitch]="wifi?.attributesObject?.status">
-            <span  *ngSwitchCase="'true'" class="material-symbols-outlined" style="color: green;font-size: 20px;">wifi</span>
-            <span *ngSwitchCase="'false'" class="material-symbols-outlined" style="color: red;font-size: 20px;">wifi_off</span>
-          </nz-descriptions-item>
-        </ng-container>
-      </ng-container>
-      
     </nz-descriptions>
   </article>
 </nz-skeleton>
