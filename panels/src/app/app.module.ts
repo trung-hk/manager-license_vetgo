@@ -33,7 +33,7 @@ if (isEnvironmentPro()) {
 }
 // for production
 const realm = REALM();
-const URL_KEY_CLOAK_PRO: string = 'https://keycloak.phanmemvet.vn';
+const URL_KEY_CLOAK_PRO: string = 'https://keycloakprod.phanmemvet.vn';
 const URL_KEY_CLOAK_DEV: string = 'https://keycloak.moonpet.vn';
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
